@@ -1,0 +1,5 @@
+etc/freecast
+usr/bin
+usr/share/freecast/bin
+usr/share/freecast/lib
+var/log/freecast

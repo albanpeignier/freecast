@@ -1,0 +1,16 @@
+<freecast>
+	<tracker>
+		<connector>
+			<class>http</class>
+			<listenaddress>
+				<host>0.0.0.0</host>
+				<port>1665</port>
+			</listenaddress>
+		</connector>
+	</tracker>
+	<httpserver>
+		<listenaddress>
+			<port>80,8080-8100</port>
+		</listenaddress>
+	</httpserver>
+</freecast>

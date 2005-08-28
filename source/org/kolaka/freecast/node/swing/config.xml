@@ -1,0 +1,32 @@
+<freecast>
+ 	<node>
+  		<peerprovider>
+    		<trackeraddress>
+    			<host>freecast.tryphon.org</host>
+    		</trackeraddress>
+  		</peerprovider>
+		<receiver>
+			<class>peer</class>
+   			<validator>
+   				<class>digest</class>
+   			</validator>
+  		</receiver>
+  		<sender>
+  			<class>socket</class>
+    		<listenaddress>
+    			<port>1664</port>
+    		</listenaddress>
+  		</sender>
+  		<players>
+   			<player>
+   				<class>audio</class>
+   			</player>
+   			<player>
+   				<class>http</class>
+    			<listenaddress>
+    				<port>8001</port>
+    			</listenaddress>
+   			</player>
+  		</players>
+	</node>
+</freecast>

@@ -1,0 +1,323 @@
+<page>
+ <title>
+  <i18n>
+   <text lang="en">Home</text>
+   <text lang="fr">Accueil</text>
+  </i18n>
+ </title> 
+ 
+ <menubar>
+  <menu icon="images/nav/list.png">
+   <title>
+    <i18n>
+     <text lang="en">Home</text>
+     <text lang="fr">Accueil</text>
+    </i18n>
+   </title>
+      
+   <menuitem>
+    <title>
+     <i18n>
+      <text lang="en">Abstract</text>
+      <text lang="fr">Présentation</text>
+     </i18n>
+    </title>
+    <link href="#abstract"/>
+   </menuitem>
+   
+   <menuitem>
+    <title>
+     <i18n>
+      <text lang="en">News</text>
+      <text lang="fr">Actualités</text>
+     </i18n>
+    </title>
+    <link href="#news"/>
+   </menuitem>
+  </menu>
+ </menubar>
+ 
+ <content>
+    <h1>Freecast :
+     <i18n>
+      <text lang="en">Peer-to-peer Streaming</text>
+      <text lang="fr">Diffusion Peer-to-peer</text>
+     </i18n>
+    </h1>
+
+    <div class="summary">
+     <p>
+     <strong>FreeCast</strong> 
+
+     <i18n>
+      <text lang="en">
+       is a Java application which allows peer-to-peer streaming. 
+       It makes possible a stream broadcast to a large number of listeners
+       from a simple DSL connection.
+      </text>
+      <text lang="fr">
+       est une application qui permet une diffusion audio en peer-to-peer. 
+       Elle rend possible la diffusion d'un flux vers un large nombre d'auditeurs
+       à partir d'une simple ligne ADSL.
+      </text>
+     </i18n>
+     </p>
+    </div>
+
+		<h3 id="enduser">
+     <i18n>
+      <text lang="en">Listeners</text>
+      <text lang="fr">Auditeurs</text>
+     </i18n>
+		</h3>
+
+    <img class="screenshot" src="images/screenshots/swing-default.png" alt="FreeCast Swing node"/>
+
+		<p>
+     <i18n>
+      <text lang="en"><strong>FreeCast</strong> allows you to listen a live stream over Internet by using smartly resources. You can listen a webradio or share an event by allowing other listeners to make the same thing in the best conditions.</text>
+      <text lang="fr"><strong>FreeCast</strong> vous permet de profiter d'une retransmission en direct sur Internet utilisant moins de bande passante qu'une diffusion "classique". Vous pouvez écouter une webradio ou partager un évènement tout en permettant aux autres auditeurs de faire de même dans de bonnes conditions.</text>
+     </i18n>
+		</p>
+
+		<p class="go">
+		 <a href="listen">
+     <i18n>
+      <text lang="en">Discover some of the broadcasters which use <strong>FreeCast</strong></text>
+      <text lang="fr">Découvrez quelques uns des diffuseurs utilisant <strong>FreeCast</strong></text>
+     </i18n>
+     </a>
+		</p>		
+
+		<h3 id="broadcasters">
+     <i18n>
+      <text lang="en">Broadcasters</text>
+      <text lang="fr">Diffuseurs</text>
+     </i18n>
+		</h3>
+
+		<p>
+     <i18n>
+      <text lang="en"><strong>FreeCast</strong> offers the possibility to broadcast over Internet without a strict limit of listener count. You can share with the largest number without the economic cost of a large bandwidth.</text>
+      <text lang="fr"><strong>FreeCast</strong> vous ouvre les portes des retransmissions sur Internet sans une stricte limitation du nombre d'auditeurs. Vous pouvez faire partager au plus grand nombre sans le coût financier d'une bande-passante importante. </text>
+     </i18n>
+		</p>
+
+		<p class="go">
+     <i18n>
+      <text lang="en">
+				<a href="about">To discover <strong>FreeCast</strong> in details</a>
+			</text>
+      <text lang="fr">
+				<a href="about">Pour découvrir <strong>FreeCast</strong> plus en détails</a>
+			</text>
+		 </i18n>
+		</p>
+
+    <h3 id="news">
+     <i18n>
+      <text lang="en">News</text>
+      <text lang="fr">Actualités</text>
+     </i18n>
+    </h3>
+
+    <div>
+     <strong>
+      <i18n>
+       <text lang="en">March 31, 2005</text>
+       <text lang="fr">31 mars 2005</text>
+      </i18n>
+     </strong> :
+      <i18n>
+       	<text lang="en">
+       		New <strong>FreeCast</strong> release:
+		</text>
+		<text lang="fr">
+       		Nouvelle version de <strong>FreeCast</strong>:
+		</text>
+	  </i18n>
+		<ul>
+			<li>
+			<i18n>
+				<text lang="en">
+					<strong>Video support: </strong> a FreeCast network can now broadcast a Ogg Theora video stream. The embedded player uses the <a href="http://www.flumotion.net/download/">Cortado Java player</a> provided by <a href="http://www.flumotion.net/">Flumotion</a>.
+				</text>
+				<text lang="fr">
+					<strong>Support de la video: </strong> un réseau FreeCast peut maintenant diffuser un flux video Ogg Theora. Le lecteur embarqué est basé sur <a href="http://www.flumotion.net/download/">Cortado</a> (crée par <a href="http://www.flumotion.net/">Flumotion</a>).
+				</text>
+			</i18n>
+			<i18n>
+				<text lang="en">
+					See <a href="javascript:show('images/screenshots/swing-video.png',452,396)">this screenshot</a>.
+				</text>
+				<text lang="fr">
+					Voir <a href="javascript:show('images/screenshots/swing-video.png',452,396)">cette capture d'écran</a>.
+				</text>
+			</i18n>
+			</li>
+			<li>
+			<i18n>
+				<text lang="en">
+					<strong>User's guide: </strong> to help the FreeCast network deployment, a <a href="http://www.freecast.org/userguide/">FreeCast User's Guide</a> is now available. It includes a lot of configuration samples.
+				</text>
+				<text lang="fr">
+					<strong>Guide de l'utilisateur: </strong> principalement destiné aux diffuseurs voulant déployer leur réseau FreeCast, ce <a href="http://www.freecast.org/userguide/">guide de l'utilisateur</a> passe en revue tout ce qu'il est nécessaire de savoir et de comprendre pour installer, configurer et démarrer un réseau FreeCast. Il comprend de nombreux exemples de configurations.
+				</text>
+			</i18n>
+			</li>
+			<li>
+			<i18n>
+				<text lang="en">
+					<strong>Signed stream: </strong> the stream broadcasted by a FreeCast network can now be signed via a RSA key pair. Listener nodes can authenticates the stream packets by verifying the signature created by the root node.					
+				</text>
+				<text lang="fr">
+					<strong>Signature de flux: </strong> le flux diffusé peut être signé grâce à un jeu de clé privé/publique RSA. Les nodes du réseau peuvent authentifier les données en vérifiant la signature créée par le diffuseur.
+				</text>
+			</i18n>
+			</li>
+			<li>
+			<i18n>
+				<text lang="en">
+					<strong>Webstart improvements: </strong> the stream descriptor file has been improved, the JavaWebStart descriptor is now generated. Deployers can make start FreeCast listener nodes by only creating a small xml file.
+				</text>
+				<text lang="fr">
+					<strong>Amélioration du démarrage par le net: </strong> un simple fichier de description permet maintenant aux diffuseurs de paramétrer le démarrage par le net. Le fichier de configuration JavaWebStart est notamment généré.
+				</text>
+			</i18n>
+			</li>
+			<li>
+			<i18n>
+				<text lang="en">
+					<strong>XML configuration: </strong> to make easier the <strong>FreeCast</strong> network setup, tracker and nodes are now configured via XML files (using the <a href="http://jakarta.apache.org/commons/configuration/">Commons Configuration</a> framework)
+				</text>
+				<text lang="fr">
+					<strong>Configuration XML: </strong> pour faciliter la mise en place des réseaux FreeCast, toutes les applications sont maintenant configurés par l'intermédiaire de fichiers XML (en utilisant le framework <a href="http://jakarta.apache.org/commons/configuration/">Commons Configurations</a>)
+				</text>
+			</i18n>
+			</li>
+			<li>
+			<i18n>
+				<text lang="en">
+					<strong>Shout client receiver: </strong> a FreeCast root node can now retrieve the Ogg stream directly from an media server like <a href="http://www.icecast.org">IceCast</a> or <a href="http://www.flumotion.net/">Flumotion</a>.
+				</text>
+				<text lang="fr">
+					<strong>Client libshout: </strong> un node racine FreeCast peut maintenant récupérer le flux Ogg à diffuser directement auprès d'un serveur de média tel que <a href="http://www.icecast.org">IceCast</a> ou <a href="http://www.flumotion.net/">Flumotion</a>.
+				</text>
+			</i18n>
+			</li>
+		</ul>
+		
+		<p>
+		<i18n>
+		<text lang="en">
+			For more information about this release, see the whole <a href="http://download.freecast.org/README.html">changelog</a>.
+        </text>
+       	<text lang="fr">
+       		Pour plus d'informations à propos de cette version, consultez la <a href="http://download.freecast.org/README.html">liste complète des modifications</a>.
+       	</text>
+       	</i18n>
+		</p>
+    </div>
+
+	<!--
+
+    <div>
+     <strong>
+      <i18n>
+       <text lang="en">February 21, 2005</text>
+       <text lang="fr">21 février 2005</text>
+      </i18n>
+     </strong> :
+      <i18n>
+       <text lang="en">
+       	New <strong>FreeCast</strong> release:
+			 </text>
+			 <text lang="fr">
+       	Nouvelle version de <strong>FreeCast</strong>:
+			 </text>
+			</i18n>
+			<i18n>
+       <text lang="en">
+		<ul>
+			<li>External player support via http: after starting the FreeCast node, you can mute it and use your favor player by playing the location <tt>http://localhost:8001/stream.ogg</tt></li>
+			<li>Dynamic bandwidth: deployers can now use an Ogg/Vorbis stream with a free bitrate. The transport layer is now able to manage a dynamic bandwidth. In the same way, the internal player can now handle a stereo stream.</li>
+		</ul>
+		<p>For more information about this release, see the whole <a href="http://download.freecast.org/README.html">changelog</a>.</p>
+        </text>
+       <text lang="fr">
+		<ul>
+			<li>Support d'un lecteur externe via http : après avoir démarrer le node FreeCast, vous pouvez couper le lecteur interne et utiliser votre lecteur préféré en lui faisant jouer l'adresse <tt>http://localhost:8001/stream.ogg</tt></li>
+			<li>Bande passante dynamique : les diffuseurs peuvent maintenant utiliser un flux Ogg/Vorbis avec un bitrate libre. La couche de transport est maintenant capable de gérer une bande passante dynamique. Dans le même domaine, le player interne supporte maintenant un flux stéréo.</li>
+		</ul>
+		<p>Pour plus d'informations à propos de cette version, consultez la <a href="http://download.freecast.org/README.html">liste complète des modifications</a>.</p>
+       </text>
+      </i18n>
+    </div>
+
+    <p>
+     <strong>
+      <i18n>
+       <text lang="en">February 11, 2005</text>
+       <text lang="fr">11 février 2005</text>
+      </i18n>
+     </strong> : 
+      <i18n>
+       <text lang="en">
+				After a small test period, two french associative radios have chosen <strong>FreeCast</strong> to broadcast their programs on Internet. 
+				<a href="listen">Listen them</a>.
+        </text>
+       <text lang="fr">
+			  Après une courte période de tests, deux radios associatives ont choisi <strong>FreeCast</strong> pour diffuser leurs programmes
+				sur Internet. <a href="listen">Ecoutez les</a>
+       </text>
+      </i18n>
+    </p>
+
+    <p>
+     <strong>
+      <i18n>
+       <text lang="en">December 18, 2004</text>
+       <text lang="fr">18 décembre 2004</text>
+      </i18n>
+     </strong> : 
+      <i18n>
+       <text lang="en">
+		To answer to the user question and help to the FreeCast networks deployment, the wiki pages dedicated to <strong>FreeCast</strong> 
+		have been updated and improved. Visit the FreeCast <a href="wiki">wiki pages</a>.
+        </text>
+       <text lang="fr">
+        Pour répondre aux questions des utilisateurs et aider au déployement de réseaux <strong>FreeCast</strong>, les pages wiki dédiés 
+        à l'application ont été enrichies. Visitez les <a href="wiki">pages wiki</a> de FreeCast.
+       </text>
+      </i18n>
+    </p>
+
+    <p>
+     <strong>
+      <i18n>
+       <text lang="en">September 14, 2004</text>
+       <text lang="fr">14 septembre 2004</text>
+      </i18n>
+     </strong> : 
+      <i18n>
+       <text lang="en">
+        The documentation about <a href="http://wiki.tryphon.org/KolakaWiki/FreeCast/HowToDeployFreeCast">How to Deploy FreeCast</a> is now available. Follow it to setup your own FreeCast network.
+        For more details, subscribe to the <a href="http://lists.tryphon.org/wws/info/freecast-user">FreeCast User</a> mailing-list. 
+        </text>
+       <text lang="fr">
+        La documentation <a href="http://wiki.tryphon.org/KolakaWiki/FreeCast/HowToDeployFreeCast">Comment déployer FreeCast</a> est maintenant disponible. 
+        Utilisez la pour mettre en place votre propre réseau FreeCast.
+        Pour plus de détails, inscrivez vous sur la mailing-list <a href="http://lists.tryphon.org/wws/info/freecast-user">FreeCast User</a>.
+       </text>
+      </i18n>
+    </p>
+    -->
+    
+    <p>
+      <i18n>
+       <text lang="en">See the <strong>FreeCast</strong> <a href="http://blog.tryphon.org/tryphon/archives/category/freecast">blog</a></text>
+       <text lang="fr">Consultez le <a href="http://blog.tryphon.org/tryphon/archives/category/freecast">blog</a> <strong>FreeCast</strong></text>
+      </i18n>
+    </p>
+ </content>
+</page>

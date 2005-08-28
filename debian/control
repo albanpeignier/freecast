@@ -1,0 +1,17 @@
+Source: freecast
+Section: contrib/sound
+Priority: optional
+Maintainer: Alban Peignier <alban.peignier@free.fr>
+Build-Depends: debhelper (>> 3.0.0), ant
+Standards-Version: 3.5.2
+
+Package: freecast
+Architecture: all
+Depends: j2re1.4 | java-virtual-machine, liblog4j1.2-java, libcommons-collections3-java, libcommons-lang-java, libcommons-logging-java, libcommons-cli-java, libcommons-digester-java
+Description: Java application which allows peer-to-peer streaming
+ It makes possible an audio streaming (like Web radio) to a large number 
+ of listeners from a simple DSL connection. The client can be customized  
+ graphically, doesn't require a user configuration step, and is updated at 
+ startup when needed.
+ .
+ For more informations, see http://www.freecast.org/.

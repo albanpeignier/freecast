@@ -1,0 +1,82 @@
+freecast (20050509.1-1) unstable; urgency=low
+
+  * Added JDIC libraries
+  * New upstream release
+
+ -- Alban Peignier <alban.peignier@free.fr>  Mon, 09 May 2005 09:30:00 +0200
+
+freecast (20050331.1-1) unstable; urgency=low
+
+  * Added the configuration samples and the user guide to the included documentation
+  * Changed the start and stop orders of the freecast node
+  * Modified the init and default scripts to use a configuration file
+  * New upstream release
+
+ -- Alban Peignier <alban.peignier@free.fr>  Mon, 29 Mar 2005 16:00:00 +0200
+
+freecast (20050301.1-1) unstable; urgency=low
+
+  * Fixed the jvm version test to allow the use of a j2re 1.5
+
+ -- Alban Peignier <alban.peignier@free.fr>  Tue, 01 Mar 2005 19:45:00 +0100
+
+freecast (20050221.1-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Alban Peignier <alban.peignier@free.fr>  Mon, 21 Feb 2005 08:40:00 +0100
+
+freecast (20050213.1-1) unstable; urgency=low
+
+  * New upstream release
+  * Replaced the -noaudio option by -player null in the freecast init script
+  * Added the support of a PLAYER_HTTP option in the freecast init script
+
+ -- Alban Peignier <alban.peignier@free.fr>  Sat, 13 Feb 2005 23:40:00 +0100
+
+freecast (20050212.1-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Alban Peignier <alban.peignier@free.fr>  Sat, 12 Feb 2005 17:40:00 +0100
+
+freecast (20041217.2-1) unstable; urgency=low
+
+  * Restored the needed commons-io jar file
+
+ -- Alban Peignier <alban.peignier@free.fr>  Tue, 18 Dec 2004 01:00:00 +0100
+
+freecast (20041217.1-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Alban Peignier <alban.peignier@free.fr>  Tue, 17 Dec 2004 18:30:00 +0100
+
+freecast (20041207.1-1) unstable; urgency=low
+
+  * added dependencies
+  * filtered the packaged file list
+  * improved the default configuration files
+  * most of the fixed lintian reports
+
+ -- Alban Peignier <alban.peignier@free.fr>  Tue, 07 Dec 2004 21:30:00 +0100
+
+freecast (20040929.1-1) unstable; urgency=low
+
+  * added JavaWebStart example files to the documentation
+  * New upstream release
+
+ -- Alban Peignier <alban.peignier@free.fr>  Thu, 29 Sep 2004 20:30:00 +0200
+
+freecast (20040729.1-1) unstable; urgency=low
+
+  * improved the debian script by adding the source support
+  * No upstream release - no time :(
+
+ -- Alban Peignier <alban.peignier@free.fr>  Thu, 29 Jul 2004 22:33:00 +0200
+
+freecast (20040616.1-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Alban Peignier <alban.peignier@free.fr>  Tue, 16 Jun 2004 20:38:00 +0200

@@ -1,0 +1,20 @@
+<stream>
+	<!-- the name and the homepage of your stream -->
+	<name>FreeCast Test Network</name>
+	<homepage>http://www.freecast.org</homepage>
+	
+	<!-- 
+		if you don't need a complete configuration file, 
+		you can specify the tracker host and port here.
+		
+		<tracker>
+			<host>freecast.tryphon.org</host>
+		</tracker>
+	-->
+	<jnlp>
+		<!-- specifies the configuration used by the Swing nodes -->
+		<config>http://download.freecast.org/jws/default/config.xml</config>
+		<!-- the FreeCast release to be used -->
+		<version>20050323</version>
+	</jnlp>
+</stream>

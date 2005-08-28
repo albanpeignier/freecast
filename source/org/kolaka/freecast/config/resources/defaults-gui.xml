@@ -1,0 +1,10 @@
+<freecast>
+	<gui>
+		<logo>logo.png</logo>
+		<tray>icon-24.png</tray>
+
+		<main>icon-16.png</main>
+		<quit>quit-16.png</quit>
+		<toolbar>toolbar-16.png</toolbar>
+	</gui>
+</freecast>

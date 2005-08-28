@@ -1,0 +1,83 @@
+<page>
+ <title>
+  <i18n> 
+   <text lang="en">Support</text>
+   <text lang="fr">Support</text>
+  </i18n>
+ </title>
+ <content>
+    <h1>Freecast : 
+     <i18n>
+      <text lang="en">user support</text>
+      <text lang="fr">support des utilisateurs</text>
+     </i18n>
+    </h1>
+    <div class="summary">
+     <p>
+      <i18n>
+       <text lang="en">
+        We need your <strong>feedback</strong>. And if you are expecting any problems with <strong>FreeCast</strong>, tell us by using one of this way
+       </text>
+       <text lang="fr">
+        Nous avons donc besoin de vos <strong>remarques</strong>. Si vous rencontrez un quelconque probleme avec <strong>FreeCast</strong>, faites le nous savoir par l'un des biais suivants
+       </text>
+      </i18n>
+     </p>
+    </div>
+   
+    <h3 id="mail">
+     <i18n>
+      <text lang="en">Mail</text>
+      <text lang="fr">Courriel</text>
+     </i18n>
+    </h3> 
+    <p>
+     <i18n>
+      <text lang="en">
+       You can contact the support team by sending us a at <a href="mailto:freecast-support@lists.tryphon.org" title="Support Team E-Mail">freecast-support@lists.tryphon.org</a>.
+      </text>
+      <text lang="fr">
+       Vous pouvez contacter l'équipe de support de FreeCast en envoyant un courriel à <a href="mailto:freecast-support@lists.tryphon.org" title="Adresse de l'équipe de support">freecast-support@lists.tryphon.org</a>.
+      </text>
+     </i18n>
+    </p>
+    <p>
+     <i18n>
+      <text lang="en">
+       To report us a problem, please join to your explanation the log file of <strong>FreeCast</strong> (<em>Save Log</em> button). 
+      </text>
+      <text lang="fr">
+       Pour nous relater un problème, joignez à votre explication le fichier de log de <strong>FreeCast</strong> (en utilisant le bouton <em>Save Log</em>).
+      </text>
+     </i18n>
+    </p>
+ 
+    <h3 id="irc">IRC</h3>
+    <p>
+     <i18n>
+      <text lang="en">
+       Join the irc freecast channel with your browser : <a href="http://irc.tryphon.org/join/freecast" title="Freecast IRC Channel">#freecast</a>.
+      </text>
+      <text lang="fr">
+       Regoignez le channel irc de <strong>FreeCast</strong> grâce à votre navigateur : <a href="http://irc.tryphon.org/join/freecast" title="Freecast IRC Channel">#freecast</a>.
+      </text>
+     </i18n>
+    </p>
+
+    <h3 id="bugzilla">Bugzilla</h3>
+    <p>
+     <i18n>
+      <text lang="en">
+       You can consult and submit enhancement requests or bug reports by using the dedicated bugzilla instance on 
+       <a href="http://bugzilla.tryphon.org">bugzilla.tryphon.org</a>.
+       See the <a href="http://bugzilla.tryphon.org/cgi-bin/buglist.cgi?product=Kolaka+-+FreeCast">FreeCast buglist</a>.
+      </text>
+      <text lang="fr">
+       Vous pouvez consulter et soumettre des demandes d'évolutions ou des rapports d'anomalies
+       en utilisant le bugzilla mis en place à cette fin.
+       Consultez la <a href="http://bugzilla.tryphon.org/cgi-bin/buglist.cgi?product=Kolaka+-+FreeCast">liste des issues concernant FreeCast</a>.
+      </text>
+     </i18n>
+    </p>
+ </content>
+</page>

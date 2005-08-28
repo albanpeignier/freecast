@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xrn:ReleaseNotes xmlns:xrn="http://xmlreleasenotes.free.fr" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlreleasenotes.free.fr" ID="freecast" version="0.17.2">
+	<Components>
+		<Component ID="Component1" href="http://xmlreleasenotes.free.fr"/>
+	</Components>
+	<Deliveries href="http://download.freecast.org"/>
+	<Summary>Freecast is a Java application which allows peer-to-peer stream broadcast. It make possible a stream broadcast to a large number of listeners from a simple DSL connection.</Summary>
+	<Releases>
+		<!-- next release                          http://www.geekstreet.ca/article.php?sid=3266
+		<Release version="@build.version@" buildDate="@build.date@" builderID="@build.user@">
+		<Deliveries>
+		<Delivery href="freecast-@build.version@.tar.bz">freecast-@build.version@ binary</Delivery>
+		<Delivery href="freecast-@build.version@-src.tar.bz">freecast-@build.version@ sources</Delivery>
+		</Deliveries>
+		<Summary></Summary>
+		<Features>
+		<Feature type="func" why="enhance">
+		</Feature>
+		</Features>
+		</Release>
+		-->
+		<Release version="@build.version@" buildDate="@build.date@" builderID="@build.user@">
+			<Deliveries>
+				<Delivery href="freecast-@build.version@.tar.bz">freecast-@build.version@ binary</Delivery>
+				<Delivery href="freecast-@build.version@-src.tar.bz">freecast-@build.version@ sources</Delivery>
+			</Deliveries>
+			<Summary></Summary>
+			<Features>
+				<Feature type="func" why="enhance" fixID="27">
+					<Title>FreeCast Manager</Title>
+					<Item>
+						The FreeCast Manager is a graphical interface for tracker and root node.
+						JavaWebStart, no configuration, predefined content, internal http server
+                    </Item>
+				</Feature>
+				<Feature type="func" why="enhance">
+					<Title>GUI improvements</Title>
+					<Item>
+                        A systray icon is now available for Gnome and Windows platforms by
+						using the JDesktop Integration Components (https://jdic.dev.java.net/).
+					</Item>
+					<Item>
+						A popmenu regroups all available actions.
+					</Item>
+					<Item>
+						Startup errors are now catched and displayed.
+					</Item>
+				</Feature>
+				<Feature type="func" why="enhance" fixID="15">
+					<Title>Http loading for GUI customization resources</Title>
+					<Item>Swing node can be customized via simple configuration options and http resources.</Item>
+				</Feature>
+				<Feature type="func" why="enhance" fixID="17">
+					<Title>Log dialog improvement</Title>
+					<Item>
+						The log display has been simplified. Icons are now used to illustrate the log level.
+						To make easier the user issue report, an email can be sent directly with the log.
+                    </Item>
+				</Feature>
+				<Feature type="tech" why="enhance" fixID="23">
+					<Title>Port range</Title>
+					<Item>
+						Port range can now be used into the configuration to avoid configuration problems
+                        for listen ports used by FreeCast. The possible ports are silently tested.
+					</Item>
+				</Feature>
+				<Feature type="func" why="enhance" fixID="34">
+					<Title>Multiple reference</Title>
+					<Item>
+						A node can now specify a reference which can contain several inet references.
+						This allows to the node to be accessible from several networks, like Internet and
+						a local network.
+					</Item>
+				</Feature>
+				<Feature type="func" why="enhance" fixID="35">
+					<Title>Automatic reference</Title>
+					<Item>
+                        To avoid a manual configuration step, an automatic reference is determinate by the node.
+						It includes a public reference (determinate via the freecast.org server) and local references.
+					</Item>
+				</Feature>
+			</Features>
+		</Release>
+		<Release version="20050331" buildDate="2005.03.31" builderID="Alban">
+			<Deliveries>
+				<Delivery href="freecast-20050331.tar.bz">freecast-20050331 binary</Delivery>
+				<Delivery href="freecast-20050331-src.tar.bz">freecast-20050331 sources</Delivery>
+			</Deliveries>
+			<Summary>Threora support, stream signature, XML configuration</Summary>
+			<Features>
+				<Feature type="func" why="enhance">
+					<Title>XML Configuration</Title>
+					<Item>Tracker and nodes use now a configuration system (based on the Commons Configuration API). 
+					The option -config allows to specify a configuration file at startup. The option -dryryn allows
+					to test this configuration without starting really the application. All configuration details
+					are described into the User Guide.</Item>
+				</Feature>
+				<Feature type="func" why="enhance">
+					<Title>Stream Signature</Title>
+					<Item>The FreeCast stream can now be signed by the root node. The listener nodes can verify the signature.</Item>
+					<Item>Use freecast-keygenerator to generate the private/public keys. Use "-signer sign -signerURL &lt;url&gt;" to specify the private key to the root node and the public key to the listener nodes.</Item>
+					<Item>A simple checksum can be used instead of a signature, use the "-signer digest".</Item>
+				</Feature>
+				<Feature type="tech" why="enhance">
+					<Title>Logical page management</Title>
+					<Item>To improve the stream robustness, the FreeCast stream packets are regrouped into logical pages (corresponding to the contained Ogg pages). Incompletely received logical pages are ignored.</Item>
+				</Feature>
+				<Feature type="tech" why="enhance">
+					<Title>Ogg Receiver refactory</Title>
+					<Item>All Receivers which read a Ogg stream are now based on OggSourceReceiver. Receivers are renamed into PlaylistReceiver, ShoutClientReceiver, ShoutServerReceiver.</Item>
+				</Feature>
+				<Feature type="func" why="enhance">
+					<Title>Theora video codec support</Title>
+					<Item>After minor improvements, a Ogg stream containing a theora logical stream can be transported by a FreeCast network. Many thanks to tim for the help.</Item>
+				</Feature>
+				<Feature type="func" why="enhance">
+					<Title>New source definition into the CLI node</Title>
+					<Item>The option -source specifies now the source type. The -sourceurl provides the needed URL.</Item>
+					<Item>Available source types are: shoutclient (with the url of the stream to retrieve), shoutserver (with the listen address and port to receive the stream), playlist (with the playlist url) and none</Item>
+				</Feature>
+				<Feature type="tech" why="enhance">
+					<Title>Adaptive header detection</Title>
+					<Item>The Receivers detect now dynamicaly the Ogg pages to be included into the FreeCast stream headers.</Item>
+				</Feature>
+				<Feature type="tech" why="enhance">
+					<Title>Ogg analysis improvements</Title>
+					<Item>More informations are extracted from the Ogg stream (like the absolute granulate position). See the org.kolaka.freecast.ogg package</Item>
+				</Feature>
+				<Feature type="tech" why="enhance">
+					<Title>ShoutClientReceiver</Title>
+					<Item>Allows to receive stream from a shout serveur (like icecast). Use something "-source shoutclient -sourceurl http://localhost:8000/stream.ogg". Use commons-httpclient.</Item>
+				</Feature>
+			</Features>
+		</Release>
+		<Release version="20050221" buildDate="2005.02.21" builderID="Alban">
+			<Deliveries>
+				<Delivery href="freecast-20050221.tar.bz">freecast-20050221 binary</Delivery>
+				<Delivery href="freecast-20050221-src.tar.bz">freecast-20050221 sources</Delivery>
+			</Deliveries>
+			<Summary>Externel player support for the GUI</Summary>
+			<Features>
+				<Feature type="func" why="enhance" fixID="2">
+					<Title>External player support via http for the GUI node</Title>
+					<Item>the GUI node can be accept http connections on the port 8001 (not configurable for the moment).</Item>
+					<Item>Use something like http://localhost:8001/stream.ogg.</Item>
+				</Feature>
+				<Feature type="tech" why="enhance">
+					<Title>OptionalStartable</Title>
+					<Item>allows to ignore an error during the start step of a Startable implementation</Item>
+				</Feature>
+			</Features>
+		</Release>
+		<Release version="20050213" buildDate="2005.02.13" builderID="Alban">
+			<Deliveries>
+				<Delivery href="freecast-20050213.tar.bz">freecast-20050213 binary</Delivery>
+				<Delivery href="freecast-20050213-src.tar.bz">freecast-20050213 sources</Delivery>
+			</Deliveries>
+			<Summary>Externel player support</Summary>
+			<Features>
+				<Feature type="tech" why="enhance">
+					<Title>PlayerControler and PlayerSource</Title>
+					<Item>A node can support several players of different kinds (Audio and Http for the moment). The PlayerControler manages the Player instances created by one of the PlayerSource instance (dedicated to a Player kind).</Item>
+				</Feature>
+				<Feature type="func" why="enhance">
+					<Title>-noaudio option replaces by -player audio|http|null option</Title>
+					<Item>the CLI node can be started with the -player option to control the PlayerSource instance used (only one for the moment).</Item>
+				</Feature>
+				<Feature type="func" why="enhance" fixID="2">
+					<Title>External player support via http</Title>
+					<Item>the CLI node can be started with the "-player http" option and accepts http connections on the port 8001 (not configurable for the moment). Concurrent players are supported.</Item>
+					<Item>Tested with ogg123 and xmms. Note that some players doesn't support an URL without filename, so use something like http://localhost:8001/stream.ogg.</Item>
+				</Feature>
+				<Feature type="tech" why="fix" fixID="5">
+					<Title>Avoid freezed Swing GUI Node when the stop procedure hangs</Title>
+					<Item>The JVM is shutdown after 10 seconds (from the stop beginning).</Item>
+				</Feature>
+			</Features>
+		</Release>
+		<Release version="20050212" buildDate="2005.02.12" builderID="Alban">
+			<Deliveries>
+				<Delivery href="freecast-20050212.tar.bz">freecast-20050212 binary</Delivery>
+				<Delivery href="freecast-20050212-src.tar.bz">freecast-20050212 sources</Delivery>
+			</Deliveries>
+			<Summary>Streaming flexibylity and TCP tuning</Summary>
+			<Features>
+				<Feature type="tech" why="enhance">
+					<Title>Dynamic bandwidth and stereo support</Title>
+					<Item>Ogg stream can now use any wanted bitrate (constant or not) and can be stereo</Item>
+				</Feature>
+				<Feature type="tech" why="enhance">
+					<Title>TCP Socket tuning</Title>
+					<Item>Sockets used between peers are configured with small read/write buffers</Item>
+				</Feature>
+				<Feature type="tech" why="fix">
+					<Title>FileReceiver improvements</Title>
+					<Item>Added comment support the playlist reader. Improved the IOException processing</Item>
+				</Feature>
+			</Features>
+		</Release>	
+		<Release version="20041217" buildDate="2004.12.17" builderID="Alban">
+			<Deliveries>
+				<Delivery href="freecast-20041217.tar.bz">freecast-20041217 binary</Delivery>
+				<Delivery href="freecast-20041217-src.tar.bz">freecast-20041217 sources</Delivery>
+			</Deliveries>
+			<Summary>Http tracker</Summary>
+			<Features>
+				<Feature type="func" why="enhance">
+					<Title>Http tracker</Title>
+					<Item>Tracker and nodes use now an http protocol (again RMI).</Item>
+					<Item>It has made possible with hessian and jetty. Thanks to fx and stephane for the idea.</Item>
+				</Feature>
+				<Feature type="tech" why="enhance">
+					<Title>http download for the track directory</Title>
+					<Item>The freecast sources were very heavy to download because of an import directory of 50Mb.</Item>
+					<Item>These resources are now download directly from the "sources". The track directory is defined via a virtual filesystem and synchronized by the prepare.track task. The whole synchronization takes 2 minutes.</Item>
+				</Feature>
+				<Feature type="tech" why="enhance">
+					<Title>Build improvements</Title>
+					<Item>Jar signatures is disable when no keystore is found. Modified the targets to avoid multiple jar signatures and documentation generations. Source export is now performed by the target export</Item>
+				</Feature>
+			</Features>
+		</Release>
+		<Release version="20041001" buildDate="2004.10.01" builderID="Alban">
+			<Deliveries>
+				<Delivery href="freecast-20041001.tar.bz">freecast-20041001 binary</Delivery>
+				<Delivery href="freecast-20041001-src.tar.bz">freecast-20041001 sources</Delivery>
+			</Deliveries>
+			<Summary>customizable Swing GUI</Summary>
+			<Features>
+				<Feature type="func" why="enhance">
+					<Title>customizable Swing GUI</Title>
+					<Item>Graphic resources are configurable via a properties file.</Item>
+					<Item>See http://kolaka.tryphon.org/freecast/docs/api/org/kolaka/freecast/node/swing/Resources.html</Item>
+				</Feature>
+			</Features>
+		</Release>
+		<Release version="20040929" buildDate="2004.09.29" builderID="Alban">
+			<Deliveries>
+				<Delivery href="freecast-20040929.tar.bz">freecast-20040929 binary</Delivery>
+			</Deliveries>
+			<Summary>FileReceiver support</Summary>
+			<Features>
+				<Feature type="func" why="enhance">
+					<Title>FileReceiver</Title>
+					<Item>Receiver implementation with allows to use a playlist of ogg files as source.</Item>
+					<Item>Use the -source option to specify the playlist file.</Item>
+				</Feature>
+				<Feature type="tech" why="enhance">
+					<Title>XMLReleaseNotes</Title>
+					<Item>Changelog started with XMLReleaseNotes (http://xmlreleasenotes.free.fr)</Item>
+				</Feature>
+			</Features>
+		</Release>
+	</Releases>
+</xrn:ReleaseNotes>

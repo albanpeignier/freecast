@@ -1,0 +1,19 @@
+<freecast>
+ 	<node>
+  		<players>
+   			<player>
+   				<class>audio</class>
+   			</player>
+  		</players>
+  	</node>
+	<gui>
+		<background>#fbb033</background>
+		<logo>logo.png</logo>
+		<tray>icon-24.png</tray>
+
+		<player>
+			<started>org/kolaka/freecast/node/swing/resources/player-started.png</started>
+			<stopped>org/kolaka/freecast/node/swing/resources/player-stopped.png</stopped>
+		</player>
+	</gui>
+</freecast>

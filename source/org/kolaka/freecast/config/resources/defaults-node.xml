@@ -1,0 +1,19 @@
+<freecast>
+ 	<node>
+  		<peerprovider>
+    		<trackeraddress>
+    			<port>1665</port>
+    		</trackeraddress>
+  		</peerprovider>
+  		<sender>
+  			<class>socket</class>
+    		<listenaddress>
+    			<host>0.0.0.0</host>
+    			<port>1664-1670</port>
+    		</listenaddress>
+  		</sender>
+  		<receiver>	
+  			<class>peer</class>
+  		</receiver>
+  	</node>
+</freecast>

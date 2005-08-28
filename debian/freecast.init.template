@@ -1,0 +1,122 @@
+#! /bin/sh -e
+#
+# /etc/init.d/freecast -- startup script for the FreeCast @DESC@
+#
+# Writed by Alban Peignier <alban.peignier@free.fr>.
+
+PATH=/usr/bin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+NAME=@NAME@
+DESC="FreeCast @DESC@"
+DAEMON=/usr/bin/$NAME
+
+# The following variables can be overwritten in /etc/default/@NAME@
+
+# If "true", allows FreeCast to starting automatically
+ENABLED=false
+# Run FreeCast as this user ID (default: freecast)
+FREECAST_USER=freecast
+# Used Configuration URL
+@CONFIG@
+
+# End of variables that can be overwritten in /etc/default/@NAME@
+
+# overwrite settings from default file
+if [ -f /etc/default/$NAME ]; then
+    . /etc/default/$NAME
+fi
+
+test -f $DAEMON || exit 0
+if [ -n "$CONFIG" ]; then
+	if [ ! -f $CONFIG ]; then 
+		echo "The specified configuration file doesn't exist ($CONFIG)."
+		echo "See configuration samples into /usr/share/doc/freecast."
+		exit 0
+	fi
+fi
+
+# The first existing directory is used for JAVA_HOME (if JAVA_HOME is not
+# defined in /etc/default/freecast)
+JAVA_DIRS=`ls -d /usr/lib/j2sdk* /usr/lib/j2re* 2> /dev/null || true`
+
+# Look for the right JVM to use
+for jdir in $JAVA_DIRS; do
+    if [ -z "${JAVA_HOME}" -a -d "$jdir" -a -x "$jdir/bin/java" ]; then
+        JAVA_HOME="$jdir"
+    fi
+done
+export JAVA_HOME
+
+if [ -z "$JAVA_HOME" ]; then
+    echo "Could not start $DESC because no Java Runtime Enviroment"
+    echo "(JRE) was found. Please download and install JRE 1.4 or higher and set"
+    echo "JAVA_HOME in /etc/default/freecast to the JRE's installation directory."
+    exit 0
+fi
+
+if [ -n "$CONFIG" ]; then
+	FREECAST_OPTS="-config $CONFIG"
+fi
+
+# Define other required variables
+FREECAST_PIDFILE="/var/run/$NAME.pid"
+
+function check_for_no_start() {
+  if [ "$ENABLED" != "true" -o -z "$FREECAST_USER" ]; then
+    echo "(disabled)"
+    exit 0
+  fi
+}
+
+case "$1" in
+  start)
+    echo -n "Starting $DESC: "
+    check_for_no_start
+
+    if start-stop-daemon --test --start --pidfile "$FREECAST_PIDFILE" \
+        --user $FREECAST_USER --startas "$JAVA_HOME/bin/java" \
+        >/dev/null; then
+        # -p preserves the environment (for $JAVA_HOME etc.)
+        # -s is required because freecast's login shell is /bin/false
+        su -p -s /bin/sh $FREECAST_USER \
+            -c "exec $DAEMON $FREECAST_OPTS" \
+            > /dev/null 2>&1 &
+        echo $! > "$FREECAST_PIDFILE"
+        echo "$NAME."
+    else
+        echo "(already running)."
+    fi
+    ;;
+  stop)
+    echo -n "Stopping $DESC: "
+        if start-stop-daemon --test --start --pidfile "$FREECAST_PIDFILE" \
+                --startas "$JAVA_HOME/bin/java" \
+        >/dev/null; then
+        echo "(not running)."
+    else
+        stop_options=""
+        if [ -n "$FREECAST_USER" ]; then
+            stop_options="--user $FREECAST_USER"
+        fi
+
+        start-stop-daemon --stop --oknodo --quiet \
+            --pidfile "$FREECAST_PIDFILE" $stop_options
+        rm -f "$FREECAST_PIDFILE"
+        echo "$NAME."
+    fi
+    ;;
+  restart|force-reload)
+    echo -n "Restarting $DESC: "
+    check_for_no_start
+
+    $0 stop
+    sleep 1
+    $0 start
+    ;;
+  *)
+    #echo "Usage: /etc/init.d/freecast {start|stop|restart|reload|force-reload}" >&2
+    echo "Usage: /etc/init.d/freecast {start|stop|restart|force-reload}" >&2
+    exit 1
+    ;;
+esac
+
+exit 0

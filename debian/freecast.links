@@ -1,0 +1,12 @@
+usr/share/freecast/bin/freecast usr/bin/freecast
+usr/share/freecast/bin/freecast-swing usr/bin/freecast-swing
+usr/share/freecast/bin/freecast-tracker usr/bin/freecast-tracker
+usr/share/freecast/bin/freecast-keygenerator usr/bin/freecast-keygenerator
+usr/share/freecast/bin/freecast-manager usr/bin/freecast-manager
+usr/share/java/log4j-1.2.jar usr/share/freecast/lib/log4j.jar
+usr/share/java/commons-collections3.jar usr/share/freecast/lib/commons-collections3.jar
+usr/share/java/commons-lang.jar usr/share/freecast/lib/commons-lang.jar
+usr/share/java/commons-logging.jar usr/share/freecast/lib/commons-logging.jar
+usr/share/java/commons-cli.jar usr/share/freecast/lib/commons-cli.jar
+usr/share/java/commons-beanutils.jar usr/share/freecast/lib/commons-beanutils.jar
+usr/share/java/commons-digester.jar usr/share/freecast/lib/commons-digester.jar

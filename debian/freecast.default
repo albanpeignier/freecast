@@ -1,0 +1,23 @@
+#
+# Enable the FreeCast node at startup
+#
+# default: ENABLED=false
+#ENABLED=true
+
+#
+# Run FreeCast as this user ID (default: freecast)
+#
+# default: FREECAST_USER="freecast"
+#FREECAST_USER="freecast"
+
+#
+# Specifies the config file to be used by the FreeCast node
+# 
+# default: CONFIG=/etc/freecast/freecast-node-root.xml
+#CONFIG=/etc/freecast/freecast-node-root.xml
+
+#
+# The home directory of the Java development kit (JDK).
+#
+# default: JAVA_HOME automatically detected 
+#JAVA_HOME="/usr/local/j2sdk1.4.2_04"

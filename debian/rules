@@ -1,0 +1,81 @@
+#!/usr/bin/make -f
+# Sample debian/rules that uses debhelper.
+# This file is public domain software, originally written by Joey Hess. 
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+build: build-stamp
+build-stamp:
+	dh_testdir
+
+	ant dist
+
+	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp
+
+	ant clean
+
+	rm -f debian/freecast.init debian/freecast-tracker.init
+	dh_clean
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+
+	ant dist.debian -Ddist.debian.dir=debian/tmp
+
+# Build architecture-dependent files here.
+binary-arch: build install
+# We have nothing to do by default.
+
+# Build architecture-independent files here.
+binary-indep: build install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs
+
+	dh_installdocs
+
+	dh_installexamples
+#	dh_install
+#	dh_installmenu
+#	dh_installdebconf	
+#	dh_installlogrotate
+#	dh_installemacsen
+#	dh_installcatalogs
+#	dh_installpam
+#	dh_installmime
+	
+	sed -e 's|@NAME@|freecast-tracker|g' -e 's|@DESC@|tracker|g' -e 's|@CONFIG@|#CONFIG=(none)|' debian/freecast.init.template > debian/freecast-tracker.init
+	dh_installinit --name=freecast-tracker
+	sed -e 's|@NAME@|freecast|g' -e 's|@DESC@|node|g' -e 's|@CONFIG@|CONFIG=/etc/freecast/freecast-node-root.xml|' debian/freecast.init.template > debian/freecast.init
+	
+	# node must started after the tracker ;)
+	dh_installinit --update-rcd-params="defaults 21 19"
+	
+#	dh_installcron
+#	dh_installinfo
+#	dh_undocumented
+	dh_installman
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+#	dh_perl
+#	dh_python
+#	dh_makeshlibs
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install

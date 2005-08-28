@@ -1,0 +1,86 @@
+<page>
+  <title>
+   <i18n>
+    <text lang="en">Listen</text>
+    <text lang="fr">Ecoutez</text>
+   </i18n>
+  </title>
+
+ <content>
+    <h1>
+     <i18n>
+      <text lang="en">Listen with</text>
+      <text lang="fr">Ecoutez avec</text>
+     </i18n>
+     FreeCast
+    </h1>
+    <div class="summary">
+     <p>
+     <strong>Freecast</strong> 
+     <i18n>
+      <text lang="en">
+		is used for more and more broadcastings. This is small list of FreeCast networks.
+      </text>
+      <text lang="fr">
+       est utilisé par de plus en plus de diffuseurs. Voici une petite liste de réseaux FreeCast actuellement en place.
+      </text>
+     </i18n>
+     </p>
+	<p>
+     <i18n>
+      <text lang="en">
+		Visit their web sites to discover that they're providing and to listen their <strong>FreeCast</strong> streams.
+      </text>
+      <text lang="fr">
+		Visitez leurs sites Internet pour découvrir ce qu'ils proposent et pour écouter leurs flux <strong>FreeCast</strong>.
+      </text>
+     </i18n>
+	</p>
+    </div>
+   
+    <h3 id="networks">
+     <i18n>
+      <text lang="en">
+		Networks
+      </text>
+      <text lang="fr">
+       Réseaux
+      </text>
+     </i18n>
+    </h3> 
+
+     <div class="network">
+     	<h4><a href="http://frequencek.com">Radio Frequence K</a></h4>
+		<a href="http://frequencek.com"><img src="images/listen/logo-frequencek.jpg" alt="Frequence K"/></a>
+     </div>
+
+     <div class="network">
+     	<h4><a href="http://radioclapas.free.fr">Radio Clapas</a></h4>
+		<a href="http://radioclapas.free.fr"><img src="images/listen/logo-radioclapas.jpg" alt="Radio Clapas"/></a>
+     </div>
+
+     <div class="network">
+     	<h4><a href="http://www.radiosoundsystem.org">Radio Sound System</a></h4>
+		<a href="http://www.radiosoundsystem.org"><img src="images/listen/logo-radiosoundsystem.gif" alt="Radio Sound System"/></a>
+     </div>
+    
+     <div class="network">
+     	<h4><a href="javascript:start('www.radiosoundsystem.org/freecast/descriptor.xml')">Radio ExtraMundi</a></h4>
+		<a href="javascript:start('www.radiosoundsystem.org/freecast/descriptor.xml')">
+			<img src="images/listen/logo-radioextramundi.jpg" alt="Radio ExtraMundi"/>
+		</a>
+     </div>
+     <div class="network">
+     	<h4><a href="javascript:start('download.freecast.org/jws/stable/descriptor.xml')">FreeCast Stable Test Network</a></h4>
+		<a href="javascript:start('download.freecast.org/jws/stable/descriptor.xml')">
+			<img src="images/header/freecast.png" alt="FreeCast Stable Test Network"/>
+		</a>
+     </div>
+     <div class="network">
+     	<h4><a href="javascript:start('download.freecast.org/jws/unstable/descriptor.xml')">FreeCast Unstable Test Network</a></h4>
+		<a href="javascript:start('download.freecast.org/jws/unstable/descriptor.xml')">
+			<img src="images/header/freecast.png" alt="FreeCast Unstable Test Network"/>
+		</a>
+     </div>
+ </content>
+</page>

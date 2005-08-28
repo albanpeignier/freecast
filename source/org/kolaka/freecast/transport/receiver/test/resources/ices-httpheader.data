@@ -1,0 +1,11 @@
+SOURCE /radiomatanza.ogg HTTP/1.0
+Authorization: Basic c291cmNlOmhlbmRyaXg=
+ice-name: Radio Matanza
+ice-url: http://wiki.tryphon.org/RadioMatanza/
+ice-genre: Alternative
+ice-audio-info: samplerate=44100;channels=1;quality=3%2e00
+ice-public: 0
+ice-description: Musiques festives et militantes
+User-Agent: IceS 2.0-Beta4
+Content-Type: application/ogg
+

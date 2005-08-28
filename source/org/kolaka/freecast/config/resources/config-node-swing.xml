@@ -1,0 +1,5 @@
+<configuration>
+  <xml fileName="defaults-node.xml"/>
+  <xml fileName="defaults-gui.xml"/>
+  <xml fileName="defaults-node-swing.xml"/>
+</configuration>

@@ -1,0 +1,58 @@
+/*
+ * FreeCast - streaming over Internet
+ *
+ * This code was developped by Alban Peignier (http://people.tryphon.org/~alban/) 
+ * and contributors (their names can be found in the CONTRIBUTORS file).
+ *
+ * Copyright (C) 2004 Alban Peignier
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
+package org.kolaka.freecast.swing;
+
+import org.apache.log4j.Logger;
+
+import javax.swing.*;
+import java.awt.*;
+
+/**
+ * @author alban
+ * 
+ * TODO To change the template for this generated type comment go to Window -
+ * Preferences - Java - Code Style - Code Templates
+ */
+public class LogDialog extends JDialog {
+
+    private LogPane logPane;
+
+    public LogDialog(JFrame parent) {
+        super(parent, parent.getTitle() + " - Log");
+        setDefaultCloseOperation(HIDE_ON_CLOSE);
+
+        logPane = new LogPane();
+		Logger.getRootLogger().addAppender(logPane.getAppender());
+
+        getContentPane().setLayout(new GridBagLayout());
+
+        GridBagConstraints logPaneConstraints = new GridBagConstraints();
+        logPaneConstraints.fill = GridBagConstraints.BOTH;
+        logPaneConstraints.weightx = logPaneConstraints.weighty = 1.0;
+        getContentPane().add(logPane, logPaneConstraints);
+
+        pack();
+    }
+
+}

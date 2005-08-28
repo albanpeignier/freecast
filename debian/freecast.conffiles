@@ -1,0 +1,5 @@
+/etc/freecast/log4j.xml
+/etc/default/freecast
+/etc/init.d/freecast
+/etc/default/freecast-tracker
+/etc/init.d/freecast-tracker

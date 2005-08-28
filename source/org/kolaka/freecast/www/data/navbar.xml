@@ -1,0 +1,51 @@
+ <navbar>
+  <navitem>
+   <title>
+    <i18n>
+     <text lang="en">Home</text>
+     <text lang="fr">Accueil</text>
+    </i18n>
+   </title>
+   <link href="."/>
+  </navitem>	 
+  <navitem>
+   <title>
+    <i18n>
+     <text lang="en">Usage</text>
+     <text lang="fr">Utilisation</text>
+    </i18n>
+   </title>
+   <link href="usage"/>
+  </navitem>	 
+  <navitem>
+   <title>
+    <i18n>
+     <text lang="en">Install</text>
+     <text lang="fr">Installation</text>
+    </i18n>
+   </title>
+   <link href="install"/>
+  </navitem>
+  <navitem>
+   <title>
+    <i18n>
+     <text lang="en">Support</text>
+     <text lang="fr">Support</text>
+    </i18n>
+   </title>
+   <link href="support"/>
+  </navitem>
+  <navitem>
+   <title>Wiki</title>
+   <link href="/wiki"/>
+  </navitem>
+  <navitem>
+   <title>
+    <i18n>
+     <text lang="en">About</text>
+     <text lang="fr">A propos</text>
+    </i18n>
+   </title>
+   <link href="about"/>
+  </navitem>
+ </navbar>

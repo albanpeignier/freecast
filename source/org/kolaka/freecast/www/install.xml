@@ -1,0 +1,189 @@
+<page>
+  <title>
+   <i18n>
+    <text lang="en">Install</text>
+    <text lang="fr">Installation</text>
+   </i18n>
+  </title> 
+
+  <content>
+    <h1>
+     Freecast : 
+     <i18n>
+      <text lang="en">requirements and installation</text>
+      <text lang="fr">prérequis et installation</text>
+     </i18n>
+    </h1>
+    
+    <div class="summary">
+     <p>
+     <strong>Freecast</strong> 
+     <i18n>
+      <text lang="en">
+       use <a href="http://java.sun.com" title="Java Technology">Java</a> technologies and particulary <a href="http://java.sun.com/products/javawebstart/" title="Java Web Start">Java Web Start</a> to works. These is how you can obtain and install Java related software.
+      </text>
+      <text lang="fr">
+       utilise les technologies <a href="http://java.sun.com" title="Java Technology">Java</a> et particulierement <a href="http://java.sun.com/products/javawebstart/" title="Java Web Start">Java Web Start</a> pour fonctionner. Voici en quelques mots comment obtenir et installer les logiciels Java requis.
+      </text>
+     </i18n>
+     </p>
+    </div>
+   
+    <h3 id="java">
+     <i18n>
+      <text lang="en">Step</text>
+      <text lang="fr">Etape</text>
+     </i18n>
+     1 - Java
+    </h3> 
+    <p>
+     <i18n>
+      <text lang="en">
+       <a href="http://java.sun.com/webapps/getjava/BrowserRedirect?locale=en&amp;host=www.java.com:80" title="Install Java">
+        <img src="images/install/get_java-button.gif" alt="Java"/>
+       </a>
+      </text>
+      <text lang="fr">
+       <a href="http://java.sun.com/webapps/getjava/BrowserRedirect?locale=fr&amp;host=www.java.com:80" title="Installer Java">
+        <img src="images/install/get_java-button.gif" alt="Java"/>
+       </a>
+      </text>
+     </i18n>
+     <i18n>
+      <text lang="en">
+       Follow <a href="http://java.sun.com/webapps/getjava/BrowserRedirect?locale=en&amp;host=www.java.com:80" title="Download Java">this link</a> to download the Java software. Save the file simply on your disk and execute it.
+      </text>
+      <text lang="fr">
+       Utilisez <a href="http://java.sun.com/webapps/getjava/BrowserRedirect?locale=fr&amp;host=www.java.com:80" title="Télécharger Java">ce lien</a> pour télécharger Java. Enregistrez le fichier sur votre disque et executez le.
+      </text>
+     </i18n>
+    </p>
+    
+    <h3 id="freecast">
+     <i18n>
+      <text lang="en">Step</text>
+      <text lang="fr">Etape</text>
+     </i18n>
+     2 - FreeCast
+    </h3>
+    <p>
+     <a href="http://www.freecast.org/start"><img src="images/install/get_freecast-button.gif" alt="FreeCast"/></a>
+     
+     <i18n>
+      <text lang="en">
+       To install <strong>FreeCast</strong>, you only have to click on this <a href="http://www.freecast.org/start">link</a> .
+      </text>
+      <text lang="fr">
+       Pour installer <strong>FreeCast</strong>, il vous suffit de cliquez sur ce <a href="http://www.freecast.org/start">lien</a>.
+      </text>
+     </i18n>
+    </p>
+
+    <h4>
+     <i18n>
+      <text lang="en">Details</text>
+      <text lang="fr">En détail</text>
+     </i18n>
+    </h4>
+
+ 	<div class="screensuite">  
+     <ul>
+      <li>
+       <img src="images/install/jws-download.small.png" alt="Java Web Start downloads FreeCast"/>
+       <i18n>
+       <text lang="en">
+        JavaWebStart downloads every necessary file needed by <strong>FreeCast</strong>.
+       </text>
+       <text lang="fr">
+        JavaWebStart télécharge les fichiers nécessaires à <strong>FreeCast</strong>.
+       </text>
+       </i18n>
+      </li>
+      <li>
+       <img src="images/install/jws-security.small.png" alt="Java Web Start asks you to authorize FreeCast to be executed"/>
+       <i18n>
+       <text lang="en">
+        JavaWebStart asks you to authorize <strong>FreeCast</strong> to be executed.
+       </text>
+       <text lang="fr">
+        JavaWebStart vous demande d'accepter que <strong>FreeCast</strong> s'exécute.
+       </text>
+       </i18n>
+      </li>
+      <li>
+       <img src="images/install/freecast-start.small.png" alt="FreeCast starts"/>
+       <i18n>
+        <text lang="en">And at last, <strong>FreeCast</strong> is starting.</text>
+        <text lang="fr">Et finalement, <strong>FreeCast</strong> démarre</text>
+       </i18n> 
+      </li>
+     </ul>
+    </div>
+        
+    <p>
+     <i18n>
+      <text lang="en">
+       Congratulations, <strong>FreeCast</strong> is now usable on your computer.
+       See the <a href="usage">usage</a> page for more details.
+      </text>
+      <text lang="fr">
+       Félications, <strong>FreeCast</strong> fonctionne maintenant sur votre ordinateur.
+       Reportez-vous à la page d'<a href="usage">utilisation</a> pour plus de détails.
+      </text>
+     </i18n>
+    </p>
+
+    <h3 id="troubleshooting">
+     <i18n>
+      <text lang="en">Troubleshooting</text>
+      <text lang="fr">Solutions</text>
+     </i18n>
+    </h3>
+    <p>
+    <i18n>
+     <text lang="en">
+      If you experience problems during the installation, look these following tips or contact the <strong>FreeCast</strong> <a href="support">support</a> team which will help you with pleasure.
+     </text>
+     <text lang="fr">
+      Si l'installation vous pose probleme, consultez les points suivants ou n'hésitez pas à contacter l'équipe de <a href="support">support</a> de <strong>FreeCast</strong> qui se fera un plaisir de vous assister dans cette phase d'installation.
+     </text>
+    </i18n>
+    </p>
+    <h4>Java</h4>
+    <p>
+     <i18n>
+      <text lang="en">
+       If the automatic selection of your platform seems wrong, use the <a href="http://java.com/en/download/manual.jsp" title="Download Java manually">manual download</a>.
+      </text>
+      <text lang="fr">
+       Si la sélection automatique de votre plateforme vous parait erronée, utilisez le <a href="http://java.com/fr/download/manual.jsp" title="Télécharger Java manuellement">téléchargement manuel</a>.
+      </text>
+     </i18n>
+	</p>
+	<p>
+     <i18n>
+      <text lang="en">
+       For more information about the Java installation, see the <a href="http://java.com/en/download/manual.jsp" title="Download Java manually">instructions</a> given in the manual download page (for <a href="http://www.java.com/en/download/help/win_auto.jsp" title="Download help for windows">Windows</a>).
+      </text>
+      <text lang="fr">
+       Pour plus d'informations sur l'installation de Java, reportez vous aux <a href="http://java.com/en/download/manual.jsp" title="Télécharger Java manuellement">instructions</a> données sur la page de téléchargement manuel (pour <a href="http://www.java.com/fr/download/help/win_auto.jsp" title="Aide au téléchargement pour Windows">Windows</a>).
+      </text>
+     </i18n>
+    </p>
+    <h4>FreeCast</h4>
+    <p>
+     <i18n>
+      <text lang="en">
+       If your browser ask you what to do with a <code>jnlp</code> file, choose use "Open it with <strong>JavaWebStart</strong>".
+       It's possible that <strong>Java</strong> is not or badly install on your computer. 
+       See the <a href="#java">first installation step</a>. 
+      </text>
+      <text lang="fr">
+       Si votre navigateur vous demande que faire avec un fichier <code>jnlp</code>, choisissez "Ouvrir avec JavaWebStart".
+       Il se peut que <strong>Java</strong> soit pas ou mal installé sur votre ordinateur.
+       Reportez vous à la <a href="#java">première étape d'installation</a>.
+      </text>
+     </i18n>
+    </p>
+ </content>
+</page> 

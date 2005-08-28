@@ -1,0 +1,34 @@
+<freecast>
+ 	<node>
+  		<peerprovider>
+    		<trackeraddress>
+    			<host>localhost</host>
+    		</trackeraddress>
+  		</peerprovider>
+		<receiver>
+			<class>playlist</class>
+			<url>http://download.freecast.org/jws/default/audio.m3u</url>
+			<bandwidth>39</bandwidth>
+			<checksummer>
+				<class>digest</class>
+			</checksummer>
+  		</receiver>
+        <sender>
+            <reference>
+                <class>auto</class>
+            </reference>
+        </sender>
+	</node>
+	<gui>
+		<background>#AEAEF0</background>
+		<name>Manager</name>
+
+		<visit>
+			<browse>
+				<small>http-16.png</small>
+				<larg>http.png</larg>
+			</browse>
+			<email>mail-16.png</email>
+		</visit>
+	</gui>
+</freecast>

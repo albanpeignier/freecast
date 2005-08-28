@@ -1,0 +1,66 @@
+<page> 
+ <title>
+  <i18n> 
+   <text lang="en">Start</text>
+   <text lang="fr">Démarrage</text>
+  </i18n>
+ </title>
+ <content>
+    <h1>  
+     <i18n>
+      <text lang="en">Start</text>
+      <text lang="fr">Démarrer</text>
+     </i18n>
+     FreeCast 
+     <i18n>
+      <text lang="en">to listen</text>
+      <text lang="fr">pour écouter</text>
+     </i18n>
+     <variable name="name"/>
+    </h1>
+    <div class="summary">
+     <p>
+      <i18n>
+       <text lang="en">
+        You've just clicked to start <strong>FreeCast</strong> to listen
+       </text>
+       <text lang="fr">
+        Vous venez de cliquer pour démarrer <strong>FreeCast</strong> pour écouter
+       </text>
+      </i18n>
+       <strong><variable name="name"/></strong>. Java Web Start 
+      <i18n>
+      	<text lang="en">should start shortly.</text>
+		<text lang="fr">devrait démarrer dans quelques secondes.</text>
+	  </i18n>
+     </p>
+    </div>
+   
+    <h3 id="openwith">
+     <i18n>
+      <text lang="en">Open with ...</text>
+      <text lang="fr">Ouvrir avec ...</text>
+     </i18n>
+    </h3> 
+    <p>
+     <i18n>
+      <text lang="en">
+       If your browser asks you what it shoud do with a JNLP file, try yo choose <em>Open with Java Web Start</em> or with <em>JNLP File</em> (for Mozilla users).
+      </text>
+      <text lang="fr">
+       Si votre navigateur vous demande quoi faire avec un fichier JNLP, essayer de choisir <em>Ouvrir avec Java Web Start</em> ou <em>JNLP File</em> (pour les utilisateurs de Mozilla).
+      </text>
+     </i18n>
+    </p>
+    <p>
+     <i18n>
+      <text lang="en">
+       If you don't find Java Web Start, it might because .. Java isn't properly install on your computer. See the <a href="install">install</a> page.
+      </text>
+      <text lang="fr">
+       Si vous ne trouvez pas Java Web Start, c'est peut-etre parce que Java n'est pas correctement installé sur votre ordinateur. Reportez vous à la page d'<a href="install">installation</a>.
+      </text>
+     </i18n>
+    </p>
+ </content>
+</page>

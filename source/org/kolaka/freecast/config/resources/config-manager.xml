@@ -1,0 +1,6 @@
+<configuration>
+	<xml fileName="defaults-manager.xml"/>
+	<xml fileName="defaults-gui.xml"/>
+	<xml fileName="defaults-node.xml"/>
+    <xml fileName="defaults-tracker.xml"/>
+</configuration>

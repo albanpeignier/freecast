@@ -1,0 +1,989 @@
+<project name="freecast" default="test" basedir=".">
+
+	<defaultexcludes add="**/.arch-ids/**"/>
+	<property file="build.properties" />
+	
+	<macrodef name="docbook">
+		<attribute name="in"/>
+		<attribute name="out"/>
+		<attribute name="style"/>
+		<element name="arguments" optional="true"/>
+		<sequential>
+			<java classname="org.apache.xalan.xslt.Process" fork="true">
+				<jvmarg line="-Dorg.apache.xerces.xni.parser.XMLParserConfiguration=org.apache.xerces.parsers.XIncludeParserConfiguration"/>
+				<jvmarg line="-Xbootclasspath/p:/usr/share/java/xercesImpl.jar"/>
+				<classpath>
+					<pathelement path="track/xalan/releases/2.7.0/bin/xalan.jar"/>
+					<pathelement path="track/docbook-xsl/releases/1.68.1/extensions/xalan25.jar"/>
+				</classpath>
+
+				<arg line="-IN @{in}"/>
+				<arg line="-OUT @{out}"/>
+				<arg line="-XSL @{style}"/>
+				<arg line="-PARAM admon.graphics 1"/>
+				<arg line="-PARAM use.extensions 1"/>
+				<arguments/>
+			</java>		
+		</sequential>
+	</macrodef>
+
+	<macrodef name="prepare.track.httpdownload">
+		<attribute name="url" />
+		<attribute name="target" />
+		<attribute name="prefix" default=""/>
+		<sequential>
+			<tempfile property="prepare.track.httpdownload.temp.file" />
+			<get src="@{url}" dest="${prepare.track.httpdownload.temp.file}" />
+
+			<tempfile property="prepare.track.httpdownload.temp.dir" />
+			<untar compression="gzip" src="${prepare.track.httpdownload.temp.file}" dest="${prepare.track.httpdownload.temp.dir}" />
+			<move todir="@{target}">
+				<fileset dir="${prepare.track.httpdownload.temp.dir}/@{prefix}" />
+			</move>
+			<delete file="${prepare.track.httpdownload.temp.file}" />
+			<delete dir="${prepare.track.httpdownload.temp.dir}" />
+		</sequential>
+	</macrodef>
+
+	<target name="prepare.track.commons-vfs.download.check">
+		<available property="prepare.track.commons-vfs.download.notRequired" resource="org/apache/commons/vfs/tasks/tasks.properties">
+			<classpath>
+				<pathelement path="${track.commons.vfs.jar}" />
+			</classpath>
+		</available>
+	</target>
+
+	<target name="prepare.track.commons-vfs.download" depends="prepare.track.commons-vfs.download.check" unless="prepare.track.commons-vfs.download.notRequired">
+		<prepare.track.httpdownload url="${track.commons.vfs.url}" target="${track.commons.vfs.dir}" prefix="commons-vfs-1.0-dev" />
+	</target>
+
+	<target name="prepare.track.commons-vfs" depends="prepare.track.commons-vfs.download, prepare.track.commons-logging, prepare.track.commons-compress">
+		<taskdef resource="org/apache/commons/vfs/tasks/tasks.properties">
+			<classpath>
+				<pathelement path="${track.commons.vfs.jar}" />
+				<pathelement path="${track.commons.logging.jar}" />
+				<pathelement path="${track.commons.compress.jar}" />
+			</classpath>
+		</taskdef>
+	</target>
+
+	<target name="prepare.track.commons-logging.download.check">
+		<available property="prepare.track.commons-logging.download.notRequired" classname="org.apache.commons.logging.Log">
+			<classpath>
+				<pathelement path="${track.commons.logging.jar}" />
+			</classpath>
+		</available>
+	</target>
+
+	<target name="prepare.track.commons-logging.download" depends="prepare.track.commons-logging.download.check" unless="prepare.track.commons-logging.download.notRequired">
+		<prepare.track.httpdownload url="${track.commons.logging.url}" target="${track.commons.logging.dir}" prefix="commons-logging-1.0.4" />
+	</target>
+
+	<target name="prepare.track.commons-logging" depends="prepare.track.commons-logging.download" />
+
+	<target name="prepare.track.commons-compress.download.check">
+		<available property="prepare.track.commons-compress.download.notRequired" classname="org.apache.commons.compress.tar.TarInputStream">
+			<classpath>
+				<pathelement path="${track.commons.compress.jar}" />
+			</classpath>
+		</available>
+	</target>
+
+	<target name="prepare.track.commons-compress.download" depends="prepare.track.commons-compress.download.check" unless="prepare.track.commons-compress.download.notRequired">
+		<prepare.track.httpdownload url="${track.commons.compress.url}" target="${track.commons.compress.dir}" prefix="commons-compress-0.1-dev" />
+	</target>
+
+	<target name="prepare.track.commons-compress" depends="prepare.track.commons-compress.download" />
+
+	<target name="prepare.track.file">
+		<property file="track.properties"/>
+		<tempfile property="prepare.track.file"/>
+		<copy tofile="${prepare.track.file}" file="track.virtual">
+			<filterchain>
+				<expandproperties/>
+			</filterchain>
+		</copy>
+	</target>
+
+	<target name="prepare.track" depends="prepare.track.commons-vfs, prepare.track.file">
+		<echo message="updating the track directory ..." />
+		<v-copy src="virtual:${prepare.track.file}" destdir="track" />
+	</target>
+
+	<target name="prepare.track.optional.check">
+		<available file="${track.dir}" property="prepare.track.optional.notRequired"/>
+	</target>
+		
+	<target name="prepare.track.optional" depends="prepare.track.optional.check"
+		unless="prepare.track.optional.notRequired">
+		<antcall target="prepare.track"/>
+	</target>
+	
+	<target name="prepare.version">
+		<tstamp />
+		<property name="project.version" value="${DSTAMP}" />
+		<property name="project.fullname" value="freecast-${project.version}" />
+	</target>
+
+	<target name="prepare.antlion" depends="prepare.track.optional">
+		<typedef resource="net/sf/antlion/inline/antlib.xml">
+			<classpath>
+				<pathelement location="track/antlion/releases/0.4.0/antlion-inline-0.4.0.jar" />
+			</classpath>
+		</typedef>
+	</target>
+
+	<target name="prepare.libraries" depends="prepare.track.optional, prepare.antlion">
+		<libraryDef>
+			<repository basedir="${track.dir}">
+				<format text="[groupid]/releases/[version]/[artifactid]-[version].[type]" />
+				<format text="[groupid]/releases/[version]/[artifactid].[type]" />
+				<format text="[groupid]/releases/[version]/[groupid]-[version].[type]" />
+				<format text="[groupid]/releases/[version]/[groupid].[type]" />
+				<format text="[groupid]/patches/[version]/[artifactid]-[version].[type]" />
+				<format text="[groupid]/patches/[version]/[artifactid].[type]" />
+				<format text="[groupid]/patches/[version]/[groupid]-[version].[type]" />
+				<format text="[groupid]/patches/[version]/[groupid].[type]" />
+				<!-- for log4j -->
+				<format text="[groupid]/releases/[version]/dist/lib/[groupid]-[version].[type]" />
+				<format text="[groupid]/releases/[version]/lib/[artifactid].[type]" />
+			</repository>
+
+			<library id="lib.jetty">
+				<lib-entry groupid="jetty" version="5.1.4rc0" artifactid="org.mortbay.jetty"/>
+			</library>
+			
+			<library id="lib.servlet">
+				<lib-entry groupid="jetty" version="5.1.4rc0" artifactid="javax.servlet"/>
+			</library>
+
+			<library id="lib.hessian">
+				<library refid="lib.servlet"/>
+				<lib-entry groupid="hessian" version="3.0.8"/>
+			</library>
+
+			<library id="lib.vorbisspi">
+				<lib-entry groupid="vorbisspi" version="1.0.1" artifactid="vorbisspi1.0.1"/>
+				<lib-entry groupid="vorbisspi" version="1.0.1" artifactid="jogg-0.0.7"/>
+				<lib-entry groupid="vorbisspi" version="1.0.1" artifactid="jorbis-0.0.13"/>
+				<lib-entry groupid="vorbisspi" version="1.0.1" artifactid="tritonus_share"/>
+			</library>
+
+			<library id="core">
+				<lib-entry groupid="commons-collections" version="3.1"/>
+				<lib-entry groupid="commons-logging" version="1.0.4"/>
+				<lib-entry groupid="commons-cli" version="1.0"/>
+				<lib-entry groupid="commons-httpclient" version="3.0-rc1"/>
+				<lib-entry groupid="commons-codec" version="1.3"/>
+				<lib-entry groupid="commons-io" version="1.0"/>
+				<lib-entry groupid="log4j" version="1.2.9"/>
+				<lib-entry groupid="commons-lang" version="nightly-20041229" artifactid="commons-lang-2.0"/>
+				<lib-entry groupid="commons-configuration" version="nightly-20050307" artifactid="commons-configuration-1.1RC2"/>
+				<lib-entry groupid="concurrent" version="kolaka"/> 
+				<lib-entry groupid="cortado" version="0.1.0" artifactid="cortado-ovt-0.1.0"/> 
+				<lib-entry groupid="jdic" version="0.9"/> 
+				<library refid="lib.hessian"/>
+				<library refid="lib.jetty"/>
+			</library>
+			
+			<library id="runtime">
+				<library refid="lib.vorbisspi"/>
+				<library refid="core" />
+				<lib-entry groupid="commons-digester" version="1.6"/>
+				<lib-entry groupid="commons-beanutils" version="1.7.0"/>
+			</library>
+
+			<library id="test">
+				<lib-entry groupid="junit" version="3.8.1"/> 
+				<lib-entry groupid="easymock" version="1.1"/> 
+				<lib-entry groupid="mockobjects" version="0.09" artifactid="mockobjects-core"/> 
+				<library refid="runtime" />
+			</library>				
+
+			<library id="coverage">
+				<lib-entry groupid="jcoverage" version="1.0.5"/> 
+				<library refid="test" />
+			</library>				
+		</libraryDef>
+	</target>
+	
+	<target name="clean">
+		<delete dir="build" />
+		<delete dir="dist" />
+		<delete dir="export" />
+		<delete file="jcoverage.ser" />
+	</target>
+
+	<target name="clean.track" depends="prepare.track.commons-vfs, prepare.track.file">
+		<echo message="synchronize the track directory ..." />
+		<v-sync src="virtual:${prepare.track.file}" destdir="track" />
+	</target>
+
+	<macrodef name="configvalidate">
+		<attribute name="file"/>
+		<sequential>
+			<pathconvert dirsep="/" property="build.validate.xsd.file">
+				<path>
+				   <pathelement location="source/org/kolaka/freecast/config/resources/config.xsd"/>
+				</path>
+			</pathconvert>
+			<xmlvalidate lenient="false" failonerror="true" warn="true" file="@{file}">
+				<attribute name="http://apache.org/xml/features/validation/schema" value="true"/>
+				<attribute name="http://xml.org/sax/features/namespaces" value="true"/>
+				<property name="http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation" 
+					value="${build.validate.xsd.file}"/>
+			</xmlvalidate>
+		</sequential>
+	</macrodef>
+		
+	<target name="build.validate">
+		<!--
+		<configvalidate file="source/org/kolaka/freecast/config/resources/defaults-node.xml"/>
+		<configvalidate file="source/org/kolaka/freecast/config/resources/defaults-node-swing.xml"/>
+		-->
+	</target>
+
+	<target name="build.core" depends="prepare.libraries, build.core.classes, build.core.resources"/>
+
+	<target name="build.core.classes" depends="build.validate">
+		<property name="build.core.classes.dir" value="build/core/classes"/>
+		<mkdir dir="${build.core.classes.dir}" />
+		<javac target="1.4" srcdir="source" destdir="${build.core.classes.dir}" debug="true">
+			<classpath refid="path.core" />
+			<exclude name="**/test/*.java"/>
+		</javac>
+	</target>
+
+	<target name="build.core.resources" depends="prepare.version">
+		<copy todir="${build.core.classes.dir}">
+			<fileset dir="source">
+				<include name="**/resources/*"/>
+				<exclude name="**/*.xcf"/>
+				<exclude name="**/test/**"/>
+				<exclude name="org/kolaka/freecast/node/swing/resources/freecast-splash.jpg"/>
+			</fileset>
+		</copy>
+
+		<mkdir dir="${build.core.classes.dir}/org/kolaka/freecast/resources"/>
+		<propertyfile
+			file="${build.core.classes.dir}/org/kolaka/freecast/resources/version.properties"
+			comment="FreeCast version information">
+			<entry key="name" value="${project.version}"/>
+		</propertyfile>
+
+		<copy todir="${build.core.classes.dir}/org/kolaka/freecast/manager/http/resources/data" flatten="true">
+			<fileset dir="source/org/kolaka/freecast/www">
+				<include name="images/header/freecast.png"/>
+				<include name="css/start.css"/>
+				<include name="css/screen.css"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="build.etc">
+		<mkdir dir="build/etc/console-only"/>
+		<style in="source/org/kolaka/freecast/log4j.xml" out="build/etc/console-only/log4j.xml"
+		       style="source/org/kolaka/freecast/log4j.xsl">
+			<param name="file" expression="false"/>
+		</style>
+		<mkdir dir="build/etc/complete"/>
+		<style in="source/org/kolaka/freecast/log4j.xml" out="build/etc/complete/log4j.xml"
+		       style="source/org/kolaka/freecast/log4j.xsl">
+			<param name="file" expression="true"/>
+		</style>
+	</target>
+
+	<target name="build.test" depends="prepare.libraries, build.core, build.etc">
+		<property name="build.test.classes.dir" value="build/test/classes"/>
+		<mkdir dir="${build.test.classes.dir}" />
+		<javac srcdir="source" destdir="${build.test.classes.dir}" debug="true">
+			<classpath refid="path.test" />
+			<include name="**/test/*.java"/>
+		</javac>
+		<copy file="build/etc/console-only/log4j.xml" tofile="${build.test.classes.dir}/log4j.xml"/>
+		<copy todir="${build.test.classes.dir}">
+			<fileset dir="source">
+				<include name="**/test/resources/*" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="build" depends="build.core" />
+
+	<target name="build.changelog">
+		<mkdir dir="build/changelog" />
+		<style in="source/org/kolaka/freecast/changelog.xml" out="build/changelog/changelog.html" 
+			style="${track.xmlreleasenotes.dir}/src/XMLReleaseNotes2HTML.xsl" />
+		<copy todir="build/changelog" file="${track.xmlreleasenotes.dir}/stylesheet.css" />
+	</target>
+
+	<target name="build.docs" depends="build.docs.api, build.docs.xref, build.docs.coverage, build.docs.userguide" />
+
+	<target name="build.docs.api.check">
+		<uptodate property="build.docs.api.notRequired" targetfile="build/docs/api/.touch">
+			<srcfiles dir="source">
+				<include name="**/*.java"/>
+				<include name="**/package.html"/>
+				<include name="docfiles/**"/>
+			</srcfiles>
+		</uptodate>
+	</target>
+	
+	<target name="build.docs.api" depends="prepare.libraries, build.docs.api.check" unless="build.docs.api.notRequired">
+		<mkdir dir="build/docs/api" />
+
+		<javadoc packagenames="org.kolaka.freecast.*" sourcepath="source" destdir="build/docs/api" author="true" use="true">
+			<link href="http://java.sun.com/j2se/1.4.2/docs/api/" />
+			<classpath refid="path.test"/>
+		</javadoc>
+		
+		<touch file="build/docs/api/.touch"/>
+	</target>
+
+	<target name="build.docs.userguide" depends="build.docs.userguide.html,build.docs.userguide.pdf"/>
+	
+	<target name="build.docs.userguide.prepare">
+		<mkdir dir="build/docs/userguide"/>
+		<copy todir="build/docs/userguide" flatten="true">
+			<fileset dir="source">
+				<include name="org/kolaka/freecast/userguide/userguide.xml"/>
+				<include name="org/kolaka/freecast/userguide/gpl.xml"/>
+			</fileset>
+		</copy>
+		<copy todir="build/docs/userguide">
+			<fileset dir="source/org/kolaka/freecast/config/resources">
+				<include name="defaults-tracker.xml"/>
+			</fileset>
+			<fileset dir="source/org/kolaka/freecast/config">
+				<include name="samples/**"/>
+			</fileset>
+			<filterchain>
+				<tokenfilter>
+					<filetokenizer/>
+					<replaceregex pattern="(.*)"
+	                    flags="s"
+	                    replace="&lt;programlisting&gt;&lt;![CDATA[\1]]&gt;&lt;/programlisting&gt;"/>
+				</tokenfilter>
+				<tokenfilter>
+					<replaceregex pattern="\t" flags="gs" replace="  "/>
+				</tokenfilter>
+			</filterchain>
+		</copy>
+		<copy todir="build/docs/userguide/images">
+			<fileset dir="track/docbook-xsl/releases/1.68.1/images">
+				<include name="**"/>
+			</fileset>
+		</copy>
+		<copy todir="build/docs/userguide/images">
+			<fileset dir="source/org/kolaka/freecast/node/swing/install">
+				<include name="screenshot-linux-20050322*.png"/>
+			</fileset>
+			<mapper type="regexp" from="^(.*)-[0-9]+(.*)" to="\1\2"/>
+		</copy>
+		<copy todir="build/docs/userguide/images" flatten="true">
+			<fileset dir="source/org/kolaka/freecast/node/swing/install">
+				<include name="jws/jws15*"/>
+			</fileset>
+		</copy>
+		<xmlvalidate failonerror="yes" lenient="yes" warn="yes" file="build/docs/userguide/userguide.xml"/>
+	</target>
+
+	<target name="build.docs.userguide.html.check">
+		<uptodate property="build.docs.userguide.html.notRequired" targetfile="build/docs/userguide/index.html">
+			<srcfiles dir="build/docs/userguide">
+				<include name="**/*.xml"/>
+			</srcfiles>
+		</uptodate>		
+	</target>
+	
+	<target name="build.docs.userguide.html" depends="build.docs.userguide.prepare, build.docs.userguide.html.check" 
+		unless="build.docs.userguide.html.notRequired">
+		<docbook in="build/docs/userguide/userguide.xml" 
+			out="build/docs/userguide/index.html" style="${track.dir}/docbook-xsl/releases/1.68.1/html/chunk.xsl"/>
+	</target>
+
+	<target name="build.docs.userguide.pdf.check">
+		<uptodate property="build.docs.userguide.pdf.notRequired" targetfile="build/docs/userguide/userguide.pdf">
+			<srcfiles dir="build/docs/userguide">
+				<include name="**/*.xml"/>
+			</srcfiles>
+		</uptodate>		
+	</target>
+
+	<target name="build.docs.userguide.pdf" depends="build.docs.userguide.prepare, build.docs.userguide.pdf.check"
+		unless="build.docs.userguide.pdf.notRequired">
+		<docbook in="build/docs/userguide/userguide.xml" 
+			out="build/docs/userguide/userguide.fo" style="${track.dir}/docbook-xsl/releases/1.68.1/fo/docbook.xsl">
+			<arguments>
+				<arg line="-PARAM paper.type A4"/>
+			</arguments>
+		</docbook>
+		<taskdef name="fop" classname="org.apache.fop.tools.anttasks.Fop">
+			<classpath>
+				<pathelement location="track/fop/releases/0.20.5/build/fop.jar"/>
+				<pathelement location="track/fop/releases/0.20.5/lib/avalon-framework-cvs-20020806.jar"/>
+				<pathelement location="track/fop/releases/0.20.5/lib/batik.jar"/>
+			</classpath>
+		</taskdef>
+ 	    <fop format="application/pdf" 
+	        fofile="build/docs/userguide/userguide.fo"
+	        outfile="build/docs/userguide/userguide.pdf" basedir="build/docs/userguide" />
+	</target>
+	
+	<target name="build.docs.xref.check">
+		<uptodate property="build.docs.xref.notRequired" targetfile="build/docs/xref/.touch">
+			<srcfiles dir="source">
+				<include name="**/*.java"/>
+			</srcfiles>
+		</uptodate>
+	</target>
+
+	<target name="build.docs.xref" depends="build.docs.xref.check" unless="build.docs.xref.notRequired">
+		<taskdef name="jxr" classname="org.kolaka.ant.jxr.Jxr">
+			<classpath>
+				<fileset dir="${track.ant-jxr.dir}">
+					<include name="**/*.jar"/>
+			    </fileset>
+			</classpath>
+		</taskdef>
+
+		<mkdir dir="build/docs/xref" />
+
+		<jxr sourcedir="source" destdir="build/docs/xref" templatedir="${track.ant-jxr.dir}/templates" windowTitle="Kolaka - FreeCast" docTitle="FreeCast" bottom="Copyright 2004. Kolaka Team" />
+
+		<copy todir="build/docs/xref">
+			<fileset dir="${track.ant-jxr.dir}/resources" />
+		</copy>
+
+		<touch file="build/docs/xref/.touch"/>
+	</target>
+
+	<target name="build.docs.coverage.check">
+		<uptodate property="build.docs.coverage.notRequired" targetfile="build/docs/coverage/.touch">
+			<srcfiles dir="source">
+				<include name="**/*.java"/>
+			</srcfiles>
+			<srcfiles dir="${build.core.classes.dir}"/>
+		</uptodate>
+	</target>
+
+	<target name="build.docs.coverage" depends="prepare.libraries, build.test, build.docs.coverage.check" 
+		unless="build.docs.coverage.notRequired">
+		<taskdef resource="tasks.properties">
+			<classpath refid="path.coverage" />
+		</taskdef>
+
+		<mkdir dir="build/coverage" />
+
+		<instrument todir="build/coverage">
+			<ignore regex="org.apache.log4j.*" />
+			<fileset dir="${build.core.classes.dir}">
+		        <include name="**/*.class"/>
+		        <exclude name="**/test/*.class"/>
+		        <exclude name="**/Main.class"/>
+		        <exclude name="**/swing/*.class"/>
+		        <exclude name="**/*Exception.class"/>
+		        <exclude name="**/RMITracker_*.class"/>
+			</fileset>
+		</instrument>
+
+		<mkdir dir="build/docs/coverage" />
+		<junit printsummary="no" haltonfailure="no" includeantruntime="yes" fork="yes">
+			<batchtest todir="build/docs/coverage">
+				<fileset dir="source">
+					<include name="**/test/*Test.java" />
+					<include name="**/test/*TestSuite.java" />
+					<exclude name="**/test/*BaseTest.java" />
+				</fileset>
+			</batchtest>
+			<classpath>
+				<pathelement path="build/coverage" />
+				<pathelement path="${build.core.classes.dir}" />
+				<pathelement path="${build.test.classes.dir}" />
+				<path refid="path.coverage" />
+			</classpath>
+		</junit>
+
+		<report srcdir="source" destdir="build/docs/coverage" />
+		
+		<touch file="build/docs/coverage/.touch"/>
+	</target>
+
+	<target name="build.www">
+		<property name="build.www.dir" location="build/www" />
+		<mkdir dir="${build.www.dir}" />
+
+		<property name="source.www.dir" location="source/org/kolaka/freecast/www" />
+		<patternset id="build.www.xml.patternset">
+			<include name="*.xml"/>
+			<exclude name="start.xml" />
+		</patternset>
+		
+		<xmlvalidate lenient="true" failonerror="true" warn="true">
+			<fileset dir="${source.www.dir}">
+				<include name="*.xml"/>
+			</fileset>
+		</xmlvalidate>
+		
+		<xslt basedir="${source.www.dir}" destdir="${build.www.dir}" style="${source.www.dir}/template.xsl">
+			<param name="lang" expression="en" />
+			<mapper type="glob" from="*.xml" to="*.html.en" />
+			<patternset refid="build.www.xml.patternset"/>
+		</xslt>
+		<xslt basedir="${source.www.dir}" destdir="${build.www.dir}" style="${source.www.dir}/template.xsl">
+			<param name="lang" expression="fr" />
+			<mapper type="glob" from="*.xml" to="*.html.fr" />
+			<patternset refid="build.www.xml.patternset"/>
+		</xslt>
+		<xslt basedir="${source.www.dir}" destdir="${build.www.dir}" style="${source.www.dir}/template.xsl">
+			<param name="lang" expression="es" />
+			<mapper type="glob" from="*.xml" to="*.html.es" />
+			<patternset refid="build.www.xml.patternset"/>
+		</xslt>
+
+		<copy todir="${build.www.dir}">
+			<fileset dir="${source.www.dir}">
+				<include name="robots.txt" />
+				<include name="**/*.css" />
+				<include name="**/*.png" />
+				<include name="**/*.png.*" />
+				<include name="**/*.jpg" />
+				<include name="**/*.gif" />
+				<include name="**/*.ico" />
+				<include name="**/start.*" />
+				<include name="**/jnlp.*" />
+				<include name="**/reference.php" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="test" depends="build.test" description="Run the unit tests">
+		<property name="build.test.results.dir" value="build/test/results"/>
+		<mkdir dir="${build.test.results.dir}" />
+		<property name="test.haltonfailure" value="true" />
+		<junit printsummary="yes" haltonfailure="${test.haltonfailure}" includeantruntime="yes" fork="yes">
+			<formatter type="plain" />
+			<batchtest todir="${build.test.results.dir}">
+				<fileset dir="source">
+					<include name="**/test/*Test.java" />
+					<include name="**/test/*TestSuite.java" />
+					<exclude name="**/test/*BaseTest.java" />
+				</fileset>
+			</batchtest>
+			<classpath>
+				<pathelement path="build/core/classes" />
+				<pathelement path="build/test/classes" />
+				<path refid="path.test" />
+			</classpath>
+		</junit>
+	</target>
+
+	<target name="dist" depends="dist.jar, dist.bin, dist.etc, dist.lib" description="Create the binaries distribution"/>
+
+	<target name="dist.jar" depends="build">
+		<mkdir dir="dist/lib" />
+		<jar jarfile="dist/lib/freecast.jar">
+			<fileset dir="${build.core.classes.dir}"/>
+		</jar>
+	</target>
+
+	<target name="dist.bin">
+		<copy tofile="dist/bin/freecast" file="source/org/kolaka/freecast/freecast-template.sh">
+			<filterset>
+				<filter token="app.name" value="freecast" />
+				<filter token="app.mainclass" value="org.kolaka.freecast.node.cli.Main" />
+			</filterset>
+		</copy>
+
+		<copy tofile="dist/bin/freecast-tracker" file="source/org/kolaka/freecast/freecast-template.sh">
+			<filterset>
+				<filter token="app.name" value="freecast-tracker" />
+				<filter token="app.mainclass" value="org.kolaka.freecast.tracker.Main" />
+			</filterset>
+		</copy>
+
+		<copy tofile="dist/bin/freecast-swing" file="source/org/kolaka/freecast/freecast-template.sh">
+			<filterset>
+				<filter token="app.name" value="freecast-swing" />
+				<filter token="app.mainclass" value="org.kolaka.freecast.node.swing.Main" />
+			</filterset>
+		</copy>
+
+		<copy tofile="dist/bin/freecast-keygenerator" file="source/org/kolaka/freecast/freecast-template.sh">
+			<filterset>
+				<filter token="app.name" value="freecast-keygenerator" />
+				<filter token="app.mainclass" value="org.kolaka.freecast.packet.signer.Main" />
+			</filterset>
+		</copy>
+
+		<copy tofile="dist/bin/freecast-manager" file="source/org/kolaka/freecast/freecast-template.sh">
+			<filterset>
+				<filter token="app.name" value="freecast-manager" />
+				<filter token="app.mainclass" value="org.kolaka.freecast.manager.gui.Main" />
+			</filterset>
+		</copy>
+
+		<copy tofile="dist/bin/freecast.bat" file="source/org/kolaka/freecast/freecast-template.bat">
+			<filterset>
+				<filter token="app.name" value="freecast" />
+				<filter token="app.mainclass" value="org.kolaka.freecast.node.cli.Main" />
+			</filterset>
+		</copy>
+
+		<copy tofile="dist/bin/freecast-tracker.bat" file="source/org/kolaka/freecast/freecast-template.bat">
+			<filterset>
+				<filter token="app.name" value="freecast-tracker" />
+				<filter token="app.mainclass" value="org.kolaka.freecast.tracker.Main" />
+			</filterset>
+		</copy>
+
+		<copy tofile="dist/bin/freecast-keygenerator.bat" file="source/org/kolaka/freecast/freecast-template.bat">
+			<filterset>
+				<filter token="app.name" value="freecast-keygenerator" />
+				<filter token="app.mainclass" value="org.kolaka.freecast.packet.signer.Main" />
+			</filterset>
+		</copy>
+
+		<copy tofile="dist/bin/freecast-swing.bat" file="source/org/kolaka/freecast/freecast-template.bat">
+			<filterset>
+				<filter token="app.name" value="freecast-swing" />
+				<filter token="app.mainclass" value="org.kolaka.freecast.node.swing.Main" />
+			</filterset>
+		</copy>
+
+		<copy tofile="dist/bin/freecast-manager.bat" file="source/org/kolaka/freecast/freecast-template.bat">
+			<filterset>
+				<filter token="app.name" value="freecast-manager" />
+				<filter token="app.mainclass" value="org.kolaka.freecast.manager.gui.Main" />
+			</filterset>
+		</copy>
+
+		<copy todir="dist/bin" file="source/org/kolaka/freecast/classpath.bat" />
+
+		<chmod perm="+x">
+			<fileset dir="dist/bin">
+				<include name="freecast*" />
+				<exclude name="*.bat" />
+			</fileset>
+		</chmod>
+	</target>
+
+	<target name="dist.etc" depends="build.etc">
+		<copy todir="dist/etc" flatten="true">
+			<fileset dir="build/etc/complete"/>
+		</copy>
+	</target>
+
+	<target name="dist.docs" depends="build.docs, build.changelog">
+		<copy todir="dist/docs" includeEmptyDirs="false">
+			<fileset dir="build/docs">
+				<exclude name="**/.touch"/>
+				<exclude name="userguide/**/*.xml"/>
+				<exclude name="userguide/*.fo"/>
+			</fileset>
+			<fileset dir="build/changelog"/>
+		</copy>
+		<copy todir="dist/docs/examples">
+			<fileset dir="source/org/kolaka/freecast/config/samples">
+				<include name="**/*.xml"/>
+			</fileset>
+		</copy>
+		<copy todir="dist/docs/examples/jws">
+			<fileset dir="source/org/kolaka/freecast/node/swing">
+				<include name="config.xml"/>
+				<include name="descriptor.xml"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="dist.lib" depends="prepare.libraries">
+		<copy todir="dist/lib" flatten="true">
+			<fileset refid="fileset.runtime"/>
+		</copy>
+		<copy todir="dist/lib">
+			<fileset dir="track/jdic/releases/0.9">
+				<include name="linux/**"/>
+				<include name="windows/**"/>
+				<include name="sunos/**"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="dist.jws.check">
+		<available file="${dist.jws.keystore}" property="dist.jws.possible"/>
+	</target>
+	
+	<target name="dist.jws.libfreecast" depends="prepare.version, build.etc, dist.jar, dist.lib, dist.jws.check" if="dist.jws.possible">
+		<property name="dist.jws.libfreecast.dir" value="dist/jws/libfreecast"/>
+		<copy tofile="${dist.jws.libfreecast.dir}/libfreecast-${project.version}.jnlp" 
+			file="source/org/kolaka/freecast/node/swing/libfreecast.jnlp">
+			<filterset>
+				<filter token="project.version" value="${project.version}" />
+			</filterset>
+		</copy>
+		<copy tofile="${dist.jws.libfreecast.dir}/freecast-manager.jnlp"
+		      file="source/org/kolaka/freecast/manager/gui/freecast-manager.jnlp">
+			<filterset>
+				<filter token="project.version" value="${project.version}"/>
+			</filterset>
+		</copy>
+
+		<mkdir dir="${dist.jws.libfreecast.dir}/lib" />
+		<jar jarfile="${dist.jws.libfreecast.dir}/lib/freecast-bootstrap.jar">
+			<fileset dir="${build.core.classes.dir}">
+				<include name="org/kolaka/freecast/node/swing/Bootstrap.class" />
+			</fileset>
+		</jar>
+
+		<jar jarfile="${dist.jws.libfreecast.dir}/lib/freecast-etc.jar">
+			<fileset dir="build/etc/console-only"/>
+		</jar>
+
+		<copy todir="${dist.jws.libfreecast.dir}/lib" flatten="true">
+			<fileset dir="dist/lib">
+				<include name="*.jar" />
+				<include name="jws/freecast-bootstrap.jar"/>
+
+				<!-- TODO replace with a dedicated library -->
+				<exclude name="freecast*"/>
+			</fileset>
+		</copy>
+		<copy todir="${dist.jws.libfreecast.dir}/lib">
+			<fileset dir="dist/lib">
+				<include name="linux/*.jar"/>
+				<include name="windows/*.jar"/>
+				<include name="sunos/*.jar"/>
+			</fileset>
+		</copy>
+		<mkdir dir="${dist.jws.libfreecast.dir}/lib/linux"/>
+		<jar jarfile="${dist.jws.libfreecast.dir}/lib/linux/jdic_native_x86.jar">
+            <fileset dir="dist/lib/linux/x86"/>
+		</jar>
+		<mkdir dir="${dist.jws.libfreecast.dir}/lib/windows"/>
+		<jar jarfile="${dist.jws.libfreecast.dir}/lib/windows/jdic_native_x86.jar">
+			<fileset dir="dist/lib/windows/x86"/>
+		</jar>
+		<mkdir dir="${dist.jws.libfreecast.dir}/lib/sunos"/>
+		<jar jarfile="${dist.jws.libfreecast.dir}/lib/sunos/jdic_native_sparc.jar">
+			<fileset dir="dist/lib/sunos/sparc"/>
+		</jar>
+		<jar jarfile="${dist.jws.libfreecast.dir}/lib/sunos/jdic_native_x86.jar">
+			<fileset dir="dist/lib/sunos/x86"/>
+		</jar>
+		<copy tofile="${dist.jws.libfreecast.dir}/lib/freecast-${project.version}.jar" file="dist/lib/freecast.jar"/>
+
+		<signjar keystore="${dist.jws.keystore}" alias="kolaka" storepass="kolaka">
+			<fileset dir="${dist.jws.libfreecast.dir}/lib" includes="**/*.jar">
+				<depend targetdir="${dist.jws.libfreecast.dir}/lib">
+					<mapper type="merge" to=".signjar"/>
+				</depend>
+			</fileset>
+		</signjar>
+		<touch file="${dist.jws.libfreecast.dir}/lib/.signjar"/>
+	</target>
+
+	<target name="dist.jws" depends="dist.jws.libfreecast" />
+
+	<target name="dist.debian" depends="dist.jar, dist.lib, dist.bin, dist.docs, dist.etc">
+		<copy todir="${dist.debian.dir}/usr/share/freecast">
+			<fileset dir="dist">
+				<include name="lib/*.jar" />
+				<include name="lib/linux/**" />
+				<!-- log4j is provided by package dependencies -->
+				<exclude name="lib/log4j*.jar" />
+				<exclude name="lib/commons-cli*.jar" />
+				<exclude name="lib/commons-collections*.jar" />
+ 				<exclude name="lib/commons-logging*.jar" />
+ 				<exclude name="lib/commons-digester*.jar" />
+ 				<exclude name="lib/commons-beanutils*.jar" />
+			
+				<include name="bin/*" />
+				<exclude name="bin/*.bat" />
+			</fileset>
+		</copy>
+
+		<copy todir="${dist.debian.dir}/etc/freecast" includeemptydirs="false">
+			<fileset dir="dist/etc"/>
+		</copy>
+		<chmod perm="+x">
+			<fileset dir="${dist.debian.dir}/usr/share/freecast/bin">
+				<include name="freecast*" />
+			</fileset>
+		</chmod>
+	</target>
+	
+	<macrodef name="tidy">
+		<attribute name="dest"/>
+		<attribute name="failonerror" default="true"/>
+		<element name="filesets" optional="false"/>
+		<sequential>
+			<apply executable="tidy" dest="@{dest}" failonerror="@{failonerror}" verbose="true">
+		      <arg line="-quiet -utf8 -wrap 100 -indent"/>
+		      <arg value="-o"/>
+			  <targetfile/>
+	  		  <srcfile/>
+			  <filesets/>
+	 		  <mapper type="identity"/>
+			</apply>
+		</sequential>
+	</macrodef>
+	
+	<target name="dist.www" depends="build.www, build.docs.userguide">
+	 	<mkdir dir="dist/www"/>
+		<tidy dest="dist/www">
+			<filesets>
+				<fileset dir="build/www">
+					<include name="*.html.*" />
+					<exclude name="start.html.*" />
+				</fileset>
+			</filesets>
+		</tidy>
+
+		<copy todir="dist/www" encoding="UTF-8">
+			<fileset dir="build/www">
+				<exclude name="*.html.*" />
+			</fileset>
+		</copy>
+
+		<mkdir dir="dist/www/userguide"/>
+		<tidy dest="dist/www/userguide" failonerror="false">
+			<filesets>
+				<fileset dir="build/docs/userguide">
+					<include name="*.html" />
+				</fileset>
+			</filesets>
+		</tidy>
+		<copy todir="dist/www/userguide">
+			<fileset dir="build/docs/userguide">
+				<include name="**/*.png" />
+				<include name="*.pdf" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="export" depends="prepare.version, build.changelog, dist, dist.docs"
+		description="Packages binaries and sources distributions">
+		<mkdir dir="export" />
+
+		<tar tarfile="export/${project.fullname}.tar.bz" compression="bzip2">
+			<!-- permissions are not managed by the tar target -->
+			<tarfileset dir="dist" prefix="${project.fullname}" mode="755">
+				<include name="bin/freecast*"/>
+				<exclude name="bin/*.bat" />
+			</tarfileset>
+			<tarfileset dir="dist" prefix="${project.fullname}">
+				<include name="bin/*.bat"/>
+			</tarfileset>
+			<tarfileset dir="dist" prefix="${project.fullname}">
+				<exclude name="bin/**"/>
+				<exclude name="jws/**" />
+				<exclude name="log/**" />
+				<exclude name="docs/**" />
+				<exclude name="install/**"/>
+			</tarfileset>
+			<tarfileset dir="dist/docs" prefix="${project.fullname}/docs">
+				<include name="userguide/**"/>
+				<include name="examples/**"/>
+			</tarfileset>
+		</tar>
+		<tar tarfile="export/${project.fullname}-src.tar.bz" compression="bzip2">
+			<tarfileset dir="source" prefix="${project.fullname}/source">
+				<exclude name="**/.arch-ids/**"/>
+			</tarfileset>
+			<tarfileset dir="dist/docs" prefix="${project.fullname}/docs">
+				<exclude name="**/.touch" />
+			</tarfileset>
+			<tarfileset dir="${basedir}" prefix="${project.fullname}">
+				<include name="build.*" />
+				<include name="track.virtual" />
+				<include name="CONTRIBUTORS" />
+				<include name="LICENSE" />
+			</tarfileset>
+		</tar>
+		
+		<copy tofile="export/README.html" file="build/changelog/changelog.html" />
+		<copy todir="export">
+			<fileset dir="build/changelog">
+				<include name="*.css" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="ccontrol.loop" depends="clean, clean.track, export"/>
+
+	<target name="install.export" depends="export">
+		<property name="install.export.target" value="${user.name}@download.freecast.org:/var/www/kolaka.org/freecast/export" />
+		<exec executable="rsync">
+			<arg value="-avc" />
+			<arg value="export/" />
+			<arg value="${install.export.target}" />
+		</exec>
+	</target>
+
+	<target name="install.docs" depends="dist.docs">
+		<tempfile property="install.docs.tempfile" prefix="freecast-docs-" suffix=".tar.gz" />
+		<basename property="install.docs.tempfilename" file="${install.docs.tempfile}" />
+
+		<tar destfile="${install.docs.tempfile}" basedir="dist/docs" compression="gzip" />
+
+		<exec executable="rsync">
+			<arg value="-av" />
+			<arg value="${install.docs.tempfile}" />
+			<arg value="${user.name}@ssh.tryphon.org:/tmp/" />
+		</exec>
+		<exec executable="ssh">
+			<arg value="${user.name}@ssh.tryphon.org"/>
+			<arg value="tar -xzf /tmp/${install.docs.tempfilename} -C /var/www/kolaka.org/freecast/docs ; rm /tmp/${install.docs.tempfilename}"/>
+		</exec>
+		
+		<delete file="${install.docs.tempfile}" />
+	</target>
+
+	<target name="install.jws" depends="dist.jws">
+		<!--
+			install files needed for the JavaWebStart deployment, can look a bit complicated,
+			but the copy operation must preserve the files already published and the jar
+			signatures modify the jar files (and the last modifications). So retrieve published
+			files, add only missing files, and sync back the remote directory
+        -->
+		<mkdir dir="dist/install/jws"/>
+		<property name="install.jws.target" value="${user.name}@ssh.tryphon.org:/var/www/kolaka.org/freecast/jws"/>
+
+		<exec executable="rsync">
+			<arg value="-av"/>
+			<arg value="${install.jws.target}/libfreecast"/>
+			<arg value="dist/install/jws"/>
+		</exec>
+
+		<copy todir="dist/install/jws" verbose="true">
+			<fileset dir="dist/jws">
+				<include name="**/*.jar"/>
+				<present present="srconly" targetdir="dist/install/jws"/>
+				<exclude name="**/.signjar"/>
+			</fileset>
+			<fileset dir="dist/jws">
+				<include name="**/freecast*.jar"/>
+			</fileset>
+			<fileset dir="dist/jws">
+				<exclude name="**/*.jar"/>
+				<exclude name="**/.signjar"/>
+			</fileset>
+		</copy>
+
+		<exec executable="rsync">
+			<arg value="-av" />
+			<arg value="dist/install/jws/" />
+			<arg value="${user.name}@ssh.tryphon.org:/var/www/kolaka.org/freecast/jws" />
+		</exec>
+	</target>
+
+	<target name="install.www" depends="dist.www">
+		<property name="install.www.target" value="${user.name}@ssh.tryphon.org:/var/www/freecast.org/www/" />
+		<exec executable="rsync">
+			<arg value="-av" />
+			<arg value="dist/www/" />
+			<arg value="${install.www.target}" />
+		</exec>
+	</target>
+
+</project>

@@ -1,0 +1,37 @@
+<freecast>
+ 	<node>
+  		<peerprovider>
+			<!-- specifies where the tracker lives -->
+    		<trackeraddress>
+    			<host>localhost</host>
+    		</trackeraddress>
+  		</peerprovider>
+  		<sender>
+            <reference>
+                <!-- to prevent problem with a reference assignated by a local tracker,
+                  determinate the public reference with the help of freecast.org -->
+	            <class>auto</class>
+            </reference>
+        </sender>
+		<receiver>
+			<!-- just a test playlist, use your own stream ;o) -->
+			<class>playlist</class>
+   			<url>http://download.freecast.org/jws/default/audio.m3u</url>
+			<bandwidth>70</bandwidth>
+   			<checksummer>
+				<!-- the checksum each packet, 
+					must be compatible the listener node validator configuration -->
+   				<class>digest</class>
+   			</checksummer>
+  		</receiver>
+  		<players>
+   			<player>
+   				<!-- accept http clients on the port 8000 -->
+   				<class>http</class>
+    			<listenaddress>
+    				<port>8000</port>
+    			</listenaddress>
+   			</player>
+  		</players>
+	</node>
+</freecast>

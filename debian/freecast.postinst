@@ -1,0 +1,24 @@
+#!/bin/sh -e
+
+case "$1" in
+    configure)
+	if ! id freecast > /dev/null 2>&1 ; then
+	    adduser --system --home /usr/share/freecast --no-create-home \
+		--ingroup nogroup --disabled-password --shell /bin/false \
+		freecast
+	fi
+
+	chown freecast.adm /var/log/freecast
+	chmod 755 /var/log/freecast
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+	echo "$0 called with unknown argument \`$1'" >&2
+	exit 1
+    ;;
+esac
+
+#DEBHELPER#

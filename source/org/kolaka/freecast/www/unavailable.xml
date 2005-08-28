@@ -1,0 +1,62 @@
+<page>
+ <title>
+  <i18n>
+   <text lang="en">unavailable stream</text>
+   <text lang="fr">flux indisponible</text>
+  </i18n>
+ </title> 
+
+ <content>
+    <h1>
+     Radio Extramundi 
+     <i18n>
+      <text lang="en">is no longer available</text>
+      <text lang="fr">n'est plus disponible</text>
+     </i18n>
+    </h1>
+    <div class="summary">
+     <p>
+      <i18n>
+       <text lang="en">
+        The Freecast stream of <strong>Radio Extramundi</strong> is stopped since the <a href="http://www.extramundi.org">ExtraMundi</a> end. 
+       </text>
+       <text lang="fr">
+        Le flux Freecast de <strong>Radio Extramundi</strong> est arrété depuis la fin d'<a href="http://www.extramundi.org">ExtraMundi</a>. 
+       </text>
+      </i18n>
+     </p>
+    </div>
+    <h3 id="extramundi">
+     <i18n>
+      <text lang="en">Finished but</text>
+      <text lang="fr">Fini mais</text>
+     </i18n> ...
+    </h3>
+    <p>
+     <i18n>
+      <text lang="en">
+       You can find the sound and photo archives of this event on the <a href="http://www.radiosoundsystem.org/extramundi" title="Radio ExtraMundi web site">Radio ExtraMundi</a> website.
+      </text>
+      <text lang="fr">
+       Vous pouvez retrouver les archives sonores et photographiques de cet évènement sur le site de <a href="http://www.radiosoundsystem.org/extramundi" title="site de Radio ExtraMundi">Radio ExtraMundi</a>.
+      </text>
+     </i18n>
+    </p>
+    <h3 id="next">
+     <i18n>
+      <text lang="en">To follow</text>
+      <text lang="fr">A suivre</text>
+     </i18n>
+     </h3>
+     <p>
+      <i18n>
+       <text lang="en">
+        In few days, a new <strong>FreeCast</strong> stream, proposed by <a href="http://www.radiosoundsystem.org/">Radio Sound System</a>, will be available.
+       </text>
+       <text lang="fr">
+        Dans quelques jours, un nouveau flux <strong>FreeCast</strong>, proposé par <a href="http://www.radiosoundsystem.org/">Radio Sound System</a>, sera disponible.
+       </text>
+      </i18n>
+     </p>
+ </content>
+</page>

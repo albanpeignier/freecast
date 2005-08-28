@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+	<xsd:element name="freecast" type="FreeCastType"/>
+
+	<xsd:complexType name="FreeCastType">
+    	<xsd:sequence>
+		  	<xsd:element name="node" type="NodeType"/>
+		  	<xsd:element minOccurs="0" name="gui" type="GuiType"/>
+	    </xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="NodeType">
+    	<xsd:sequence>
+		  	<xsd:element minOccurs="0" name="peerprovider" type="PeerProviderType"/>
+		  	<xsd:element minOccurs="0" name="sender" type="SenderType"/>
+		  	<xsd:element minOccurs="0" name="receiver" type="ReceiverType"/>
+		  	<xsd:element minOccurs="0" name="players" type="PlayersType"/>
+	    </xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="PeerProviderType">
+    	<xsd:sequence>
+		  	<xsd:element name="trackeraddress" type="InetAddressType"/>
+	    </xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="SenderType">
+    	<xsd:sequence>
+		  	<xsd:element name="class" type="xsd:string"/>
+		  	<xsd:element name="listenaddress" type="InetAddressType"/>
+	    </xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="ReceiverType">
+    	<xsd:sequence>
+		  	<xsd:element name="class" type="xsd:string"/>
+	    </xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="GuiType">
+	</xsd:complexType>
+
+	<xsd:complexType name="PlayersType">
+    	<xsd:sequence>
+		  	<xsd:element name="player" type="PlayerType"/>
+	    </xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="PlayerType">
+    	<xsd:sequence>
+		  	<xsd:element name="class" type="xsd:string"/>
+	    </xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="InetAddressType">
+    	<xsd:sequence>
+		  	<xsd:element minOccurs="0" name="host" type="xsd:string"/>
+		  	<xsd:element name="port" type="xsd:positiveInteger"/>
+	    </xsd:sequence>
+	</xsd:complexType>
+  
+</xsd:schema>
