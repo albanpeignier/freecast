@@ -14,7 +14,7 @@
 				<jvmarg line="-Xbootclasspath/p:/usr/share/java/xercesImpl.jar"/>
 				<classpath>
 					<pathelement path="track/xalan/releases/2.7.0/xalan.jar"/>
-					<pathelement path="track/docbook-xsl/releases/1.68.1/extensions/xalan25.jar"/>
+					<pathelement path="${track.docbook.dir}/extensions/xalan25.jar"/>
 				</classpath>
 
 				<arg line="-IN @{in}"/>
@@ -205,6 +205,8 @@
 				<library refid="test" />
 			</library>				
 		</libraryDef>
+		
+		<property name="track.docbook.dir" value="${track.dir}/docbook-xsl/releases/1.69.1"/>
 	</target>
 	
 	<target name="clean">
@@ -342,7 +344,7 @@
 
 	<target name="build.docs.userguide" depends="build.docs.userguide.html,build.docs.userguide.pdf"/>
 	
-	<target name="build.docs.userguide.prepare">
+	<target name="build.docs.userguide.prepare" depends="prepare.libraries">
 		<mkdir dir="build/docs/userguide"/>
 		<copy todir="build/docs/userguide" flatten="true">
 			<fileset dir="source">
@@ -370,7 +372,7 @@
 			</filterchain>
 		</copy>
 		<copy todir="build/docs/userguide/images">
-			<fileset dir="track/docbook-xsl/releases/1.68.1/images">
+			<fileset dir="${track.docbook.dir}/images">
 				<include name="**"/>
 			</fileset>
 		</copy>
@@ -399,7 +401,7 @@
 	<target name="build.docs.userguide.html" depends="build.docs.userguide.prepare, build.docs.userguide.html.check" 
 		unless="build.docs.userguide.html.notRequired">
 		<docbook in="build/docs/userguide/userguide.xml" 
-			out="build/docs/userguide/index.html" style="${track.dir}/docbook-xsl/releases/1.68.1/html/chunk.xsl"/>
+			out="build/docs/userguide/index.html" style="${track.docbook.dir}/html/chunk.xsl"/>
 	</target>
 
 	<target name="build.docs.userguide.pdf.check">
@@ -413,7 +415,7 @@
 	<target name="build.docs.userguide.pdf" depends="build.docs.userguide.prepare, build.docs.userguide.pdf.check"
 		unless="build.docs.userguide.pdf.notRequired">
 		<docbook in="build/docs/userguide/userguide.xml" 
-			out="build/docs/userguide/userguide.fo" style="${track.dir}/docbook-xsl/releases/1.68.1/fo/docbook.xsl">
+			out="build/docs/userguide/userguide.fo" style="${track.docbook.dir}/fo/docbook.xsl">
 			<arguments>
 				<arg line="-PARAM paper.type A4"/>
 			</arguments>
