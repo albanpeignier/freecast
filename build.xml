@@ -13,7 +13,7 @@
 				<jvmarg line="-Dorg.apache.xerces.xni.parser.XMLParserConfiguration=org.apache.xerces.parsers.XIncludeParserConfiguration"/>
 				<jvmarg line="-Xbootclasspath/p:/usr/share/java/xercesImpl.jar"/>
 				<classpath>
-					<pathelement path="track/xalan/releases/2.7.0/bin/xalan.jar"/>
+					<pathelement path="track/xalan/releases/2.7.0/xalan.jar"/>
 					<pathelement path="track/docbook-xsl/releases/1.68.1/extensions/xalan25.jar"/>
 				</classpath>
 
