@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="**/.arch-ids/*" kind="src" path="source"/>
+	<classpathentry kind="src" path="source"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="track/commons-cli/releases/1.0/commons-cli-1.0.jar"/>
 	<classpathentry kind="lib" path="track/commons-collections/releases/3.1/commons-collections-3.1.jar"/>
@@ -13,12 +13,12 @@
 	<classpathentry kind="lib" path="track/mockobjects/releases/0.09/mockobjects-core-0.09.jar"/>
 	<classpathentry kind="lib" path="track/concurrent/releases/kolaka/concurrent.jar"/>
 	<classpathentry kind="lib" path="track/hessian/releases/3.0.8/hessian-3.0.8.jar"/>
-	<classpathentry kind="lib" path="track/commons-httpclient/releases/3.0rc1/commons-httpclient-3.0-rc1.jar"/>
-	<classpathentry sourcepath="track/cortado/releases/0.1.0/src" kind="lib" path="track/cortado/releases/0.1.0/cortado-ot-0.1.0.jar"/>
 	<classpathentry kind="lib" path="track/commons-codec/releases/1.3/commons-codec-1.3.jar"/>
 	<classpathentry kind="lib" path="track/commons-configuration/releases/nightly-20050307/commons-configuration-1.1RC2.jar"/>
-	<classpathentry kind="lib" path="track/jetty/releases/4.2.22/lib/javax.servlet.jar"/>
-	<classpathentry kind="lib" path="track/jetty/releases/4.2.22/lib/org.mortbay.jetty.jar"/>
 	<classpathentry kind="lib" path="track/jdic/releases/0.9/jdic.jar"/>
+	<classpathentry kind="lib" path="track/cortado/releases/0.1.0/cortado-ovt-0.1.0.jar"/>
+	<classpathentry kind="lib" path="track/commons-httpclient/releases/3.0-rc1/commons-httpclient-3.0-rc1.jar"/>
+	<classpathentry kind="lib" path="track/jetty/releases/5.1.4rc0/lib/javax.servlet.jar"/>
+	<classpathentry kind="lib" path="track/jetty/releases/5.1.4rc0/lib/org.mortbay.jetty.jar"/>
 	<classpathentry kind="output" path=".eclipse"/>
 </classpath>
