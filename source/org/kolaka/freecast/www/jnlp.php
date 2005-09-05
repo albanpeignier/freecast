@@ -47,7 +47,7 @@
 	
 	$cache_file='jnlp-cache/freecast-' . md5($descriptor) . '.jnlp';
 	
-	if (!$cache_handle = fopen($cache_file, 'a')) {
+	if (!$cache_handle = fopen($cache_file, 'w')) {
   	exit("cannot open jnlp cache file ($cache_file)");
   }
 	if (fwrite($cache_handle, $jnlp) === FALSE) {
@@ -56,15 +56,5 @@
   
   fclose($cache_handle);
 	
-	header('Location: ' . $cache_file);
-	/*
-	
-	header('Content-type: application/x-java-jnlp-file');
-  header('Content-Disposition: filename="freecast.jnlp"');
-    
-	print $jnlp;
-	print "<!-- " . $descriptor . "-->";
-	print "<!-- " . $initial_descriptor . "-->";
-	
-	*/
+	header('Location: /' . $cache_file);
 ?>
