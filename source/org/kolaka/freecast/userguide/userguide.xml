@@ -13,7 +13,7 @@
   <pubdate>Friday, March 31 2005</pubdate>
   <copyright><year>2005</year><holder>Alban Peignier</holder></copyright>
 </bookinfo>
-<preface>
+<preface id="foreword">
 	<title>Foreword</title>
 	<para>
 		This document is mainly dedicated to the broadcasters who want to deploy their own &freecast; network. It should be interesting
@@ -32,7 +32,7 @@
 		into the development project document at <ulink url="http://www.kolaka.org/freecast/docs/userguide"/>.
 	</para>
 </preface>
-<chapter>
+<chapter id="introduction">
 	<title>What's &freecast;</title>
 	<para>
 		&freecast; allows to stream by using a peer-to-peer network model.
@@ -46,17 +46,69 @@
 	<!-- TODO
 	<sect1>
 		<title>Features</title>
-	</sect1>
-	<sect1>
+	</sect1>-->
+	<sect1 id="introduction-architecture">
 		<title>Architecture overview</title>
-	</sect1> -->
+		<para>
+			To understand how to use and deploy a FreeCast network, you need to understand few key concepts.
+			A FreeCast network is able to broadcast a stream. This stream can contain audio and/or video contents.
+			The stream will not be modified by the FreeCast broadcasting. The way and tools to create and play 
+			the stream are near the same than in a classic broadcast.
+		</para>
+		<sect2>
+			<title>Classic broadcast</title>
+			<para>
+				Before explaining the peer-to-peer broadcast, what's a classic broadcast ? 
+				In a classic broadcast, there are two roles: server or client.
+				The server has the stream information and send them directly to each client.
+				That makes things simple for the client. With the server URL, that's simple 
+				to connect and retrieve the information. When the 
+				server bandwidth is enough larg, this classic broadcast allows a great result.
+				The quality of service depends mostly of the client Internet access quality.
+			</para>
+			<para>
+				Things become difficult for the server
+				when the client count grows. It must send the same information to each client. 
+				And all these data are send via the Internet connection of the server. 
+				But the needed infrastructure becomes quickly expansive. If you want to accept
+				up to 50 listeners with a musical stream (typically encoeded at 128kbits), you
+				need an Internet connection with an upload bandwidth larger than 6.25 Mbits. 
+				An classic DSL access provides an upload bandwidth of 0.5Mbits ...
+			</para>
+		</sect2>
+		<sect2>
+			<title>Peer-to-peer broadcast</title>
+			<para>
+				The peer-to-peer broadcast is based on a simple question: 
+				<emphasis>why clients which are retrieving (and listening) the stream 
+				would stay passive ?</emphasis>
+				Nowdays, most of the stream listeners have a DSL access.
+				Instead of concentrating all clients on the server, why clients which 
+				are listening couldn't relay the stream to few other clients ?
+				With a peer-to-peer broadcast, they can.
+			</para>
+			<para>
+				This collaborative approach has evident benefits. 
+				From the broadcaster side, the server bandwidth is less loaded and
+				doesn't limit the client count. For instance, a broadcast can be 
+				started from a simple DSL access. The streaming infrastructure cost 
+				can be reduced dramatically. From the client side, benefits are may
+				be indirect but not null. Because if the peer-to-peer model makes
+				things simplier for the broadcaster, it allows the clients to find
+				more streams, more choices, more  less advertising. A collaborative
+				approach can be initiated between broadcaster and clients: clients 
+				can support the broadcaster by relaying the stream between their 
+				listenings.
+			</para>
+		</sect2>
+	</sect1>
 </chapter>
 <chapter id="install">
 	<title>Installation</title>
 	<para>
 		You've got several ways to install &freecast; on a system.
 	</para>
-	<sect1>
+	<sect1 id="install-binary">
 		<title>Binary distribution</title>
 		<procedure>
 			<step>
@@ -90,7 +142,7 @@
 					</row>
 					<row>
 						<entry><filename>etc</filename></entry>
-						<entry>contains configuration files, see <xref linkend="node.configuration"/></entry>
+						<entry>contains configuration files, see <xref linkend="node-configuration"/></entry>
 					</row>
 					<row>
 						<entry><filename>lib</filename></entry>
@@ -126,7 +178,7 @@
 			</table>			
 		</sect2>
 	</sect1>
-	<sect1>
+	<sect1 id="install-debian">
 		<title>Debian package distribution</title>
 		<para>
 			You need to have a Java Runtime Environement 1.4 or 1.5, see 
@@ -151,17 +203,17 @@ Do you want to continue? [Y/n]</screen>
 		</para>
 	</sect1>
 	<!-- TODO
-	<sect1>
+	<sect1 id="source-install">
 		<title>Source distribution</title>
 	</sect1> -->
 </chapter>
-<chapter>
-	<title>Getting starting</title>
+<chapter id="getting_started">
+	<title>Getting started</title>
 	<para>
 		Once the &freecast; binaries are installed, you can start your first &freecast; network. 
 		This is a small procedure to start a &freecast; tracker, a root node and a first listener.
 	</para>
-	<sect1>
+	<sect1 id="getting_started-tracker">
 		<title>Start a &freecast; tracker</title>
 		<para>The &freecast; tracker doesn't require specific configuration. Just start the <command>freecast-tracker</command>:
 		<screen>[host:~] freecast-tracker
@@ -169,7 +221,7 @@ INFO   [ConfigurationFactory]: Trying to load configuration defaults-tracker.xml
 INFO   [Main]: start a HttpTracker on port /0.0.0.0:1665</screen>
 		</para>
 	</sect1>
-	<sect1>
+	<sect1 id="getting_started-root_node">
 		<title>Start a &freecast; root node</title>
 		<para>
 			When the tracker is running, that's the moment to start the root node. In this example, we will use a ogg stream
@@ -185,7 +237,7 @@ INFO   [ShoutClientOggSourceFactory]: ShoutClient successfully connected to http
 			the receiver implementation to be used and the URL where the ogg stream is retrieved.
 		</para>
 	</sect1>
-	<sect1>
+	<sect1 id="getting_started-node">
 		<title>Start a first &freecast; listener node</title>
 		<para>
 			A &freecast; network without listener isn't really a network .. so let's start a first &freecast; listener node.
@@ -202,9 +254,9 @@ WARN   [SequenceValidator]: sequence broken: 1111311429106 -> 1111311429155</scr
 		</para>
 	</sect1>
 </chapter>
-<chapter>
+<chapter id="tracker">
 	<title>Tracker usage</title>
-	<sect1>
+	<sect1 id="tracker-description">
 		<title>Description</title>
 		<para>
 			The only component which can be configured into the tracker is the <systemitem>connector</systemitem>
@@ -229,7 +281,7 @@ WARN   [SequenceValidator]: sequence broken: 1111311429106 -> 1111311429155</scr
 			<para>The information about the &freecast; network managed by the tracker are lost if the tracker reboots.</para>
 		</caution>
 	</sect1>
-	<sect1>
+	<sect1 id="tracker-configuration">
 		<title>Configuration</title>
 		<table tocentry="1">
 			<title>Tracker configuration</title>
@@ -292,7 +344,7 @@ WARN   [SequenceValidator]: sequence broken: 1111311429106 -> 1111311429155</scr
 			</example>
 		</sect2>
 	</sect1>
-	<sect1>
+	<sect1 id="tracker-cli">
 		<title>Command line usage</title>
 		<para>
 			The &freecast; tracker can be started in command-line via the command <command>freecast-tracker</command> (see <xref linkend="freecast"/>).
@@ -302,9 +354,9 @@ INFO   [Main]: start a HttpTracker on port /0.0.0.0:1665</screen>
 		</para>
 	</sect1>
 </chapter>
-<chapter>
+<chapter id="node">
 	<title>Node usage</title>
-	<sect1>
+	<sect1 id="node-description">
 		<title>Description</title>
 		<para>
 			To use and configure the &freecast; node, you need to understand a part of the internal components.
@@ -324,7 +376,7 @@ INFO   [Main]: start a HttpTracker on port /0.0.0.0:1665</screen>
 				uses a TCP socket, it's used by default. The <systemitem>none</systemitem> <systemitem>sender</systemitem> implementation disables
 				the node relaying (.. discouraged).
 			</para>
-			<sect3 id="sender.socket">
+			<sect3 id="sender-socket">
 				<title>Socket sender</title>
 				<para>
 					The <systemitem>socket</systemitem> <systemitem>sender</systemitem> implementation waits TCP connections
@@ -343,7 +395,7 @@ INFO   [Main]: start a HttpTracker on port /0.0.0.0:1665</screen>
             <para>
                 The node reference are used to localize it over the network. The default reference
                 specifies the ip address and tcp port where the node waits connections from other nodes
-                (see <xref linkend="sender.socket"/>). By default, the ip address of the node is determinated
+                (see <xref linkend="sender-socket"/>). By default, the ip address of the node is determinated
                 by the tracker.
             </para>
             <para>
@@ -443,7 +495,7 @@ INFO   [Main]: start a HttpTracker on port /0.0.0.0:1665</screen>
 				</para>
 			</important>
 			
-			<sect3 id="digester">
+			<sect3 id="validation-digester">
 				<title>Digest checksummer and validator</title>
 				<para>
 					Deployed into the root node, the <systemitem>digest</systemitem> <systemitem>checksummer</systemitem> adds 
@@ -455,7 +507,7 @@ INFO   [Main]: start a HttpTracker on port /0.0.0.0:1665</screen>
 				</para>
 				<para>No specific configuration is needed</para>
 			</sect3>
-			<sect3 id="signer">
+			<sect3 id="validation-signer">
 				<title>Signature checksummer and validator</title>
 				<para>
 					Deployed into the root node with a given private key, the <systemitem>signature</systemitem> 
@@ -487,7 +539,7 @@ Take care to the private key file security</screen>
 		</sect2>
 	</sect1>
 	
-	<sect1 id="node.configuration">
+	<sect1 id="node-configuration">
 		<title>Configuration</title>
 		<table tocentry="1">
 			<title>Node configuration</title>
@@ -686,7 +738,7 @@ Take care to the private key file security</screen>
 				<row>
 					&rowbgcolor1;
 					<entry namest="name" nameend="default">receiver.validator</entry>
-					<entry>see <xref linkend="signer"/></entry>
+					<entry>see <xref linkend="validation-signer"/></entry>
 				</row>
 				<row>
 					<entry>receiver.validator.class</entry>
@@ -697,7 +749,7 @@ Take care to the private key file security</screen>
 				<row>
 					&rowbgcolor2;
 					<entry namest="name" nameend="default">receiver.validator.class=signature</entry>
-					<entry>see <xref linkend="signer"/></entry>
+					<entry>see <xref linkend="validation-signer"/></entry>
 				</row>
 				<row>
 					<entry>receiver.validator.publickey</entry>
@@ -709,7 +761,7 @@ Take care to the private key file security</screen>
 			</tgroup>
 		</table>
 	</sect1>
-	<sect1>
+	<sect1 id="node-configuration-samples">
 		<title>Configuration samples</title>
 		<para>
 			The configuration sample files are part of the &freecast; distributions. See <xref linkend="install"/>.
@@ -758,13 +810,13 @@ Take care to the private key file security</screen>
 			</para>
 		</sect2> -->
 	</sect1>
-	<sect1>
+	<sect1 id="node-cli">
 		<title>Command line usage</title>
 		<para>
 			The CLI &freecast; node can be started in command-line via the command <command>freecast</command> (see <xref linkend="freecast"/>).
 		</para>
 	</sect1>
-	<sect1>
+	<sect1 id="node-swing">
 		<title>Swing usage</title>
 		<para>
 			The Swing &freecast; node can be started via the command <command>freecast-swing</command> (see <xref linkend="freecast"/>). 
@@ -845,7 +897,7 @@ Take care to the private key file security</screen>
 </chapter>
 <chapter id="javawebstart">
 	<title><productname>JavaWebStart</productname> deployment</title>
-	<sect1>
+	<sect1 id="javawebstart-overview">
 		<title>Overview</title>
 		<sect2>
 			<title><productname>JavaWebStart</productname> in few words</title>
@@ -987,7 +1039,7 @@ Take care to the private key file security</screen>
 			<para>There are some examples of stream configuration files.</para>
 			<sect3>
 				<title>Specify a node configuration file</title>
-				<para>You can specify a node configuration file to override the default one. See <xref linkend="node.configuration"/>.</para>
+				<para>You can specify a node configuration file to override the default one. See <xref linkend="node-configuration"/>.</para>
 				<example>
 					<title>Stream description with a node configuration file</title>
 					<programlisting><![CDATA[<stream>
@@ -1007,11 +1059,11 @@ Take care to the private key file security</screen>
 					<title>A possible node configuration file</title>
 					<programlistingco>
 						<areaspec>
-							<area id="tracker" coords='5'/>
-							<area id="signature" coords='11'/>
-							<area id="signature.publickey" coords='13'/>
-							<area id="httpplayer" coords='19'/>
-							<area id="httpplayer.port" coords='21'/>
+							<area id="area_tracker" coords='5'/>
+							<area id="area_signature" coords='11'/>
+							<area id="area_signature.publickey" coords='13'/>
+							<area id="area_httpplayer" coords='19'/>
+							<area id="area_httpplayer.port" coords='21'/>
 						</areaspec>
 						<programlisting><![CDATA[<freecast>
  <node>
@@ -1040,19 +1092,19 @@ Take care to the private key file security</screen>
  </node>
 </freecast>]]></programlisting>
 						<calloutlist>
-							<callout arearefs="tracker">
+							<callout arearefs="area_tracker">
 								<para>set the tracker host (needed if the <option>tracker.host</option> about it isn't used in the stream configuration file)</para>
 							</callout>
-							<callout arearefs="signature signature.publickey">
+							<callout arearefs="area_signature area_signature.publickey">
 								<para>activate the stream validator by signature and specifies the public key to be used</para>
 							</callout>
-							<callout arearefs="httpplayer httpplayer.port">
+							<callout arearefs="area_httpplayer area_httpplayer.port">
 								<para>activate the http player and specifies the port to be used</para>
 							</callout>
 						</calloutlist>
 					</programlistingco>
 				</example>
-				<para>This is only a configuration sample, see see <xref linkend="node.configuration"/> for more information.</para>
+				<para>This is only a configuration sample, see see <xref linkend="node-configuration"/> for more information.</para>
 			</sect3>
 		</sect2>
 	</sect1>
@@ -1088,9 +1140,9 @@ Take care to the private key file security</screen>
 		<para>See the &freecast; <ulink url="http://www.freecast.org/listen">listen page</ulink> source for a real example.</para>
 	</sect1>
 </chapter>
-<chapter>
+<chapter id="samples">
 	<title>Source samples</title>
-	<sect1>
+	<sect1 id="samples-clients">
 		<title>Source clients</title>
 		<para>
 			A source client can be used to create the Ogg stream broadcasted on the &freecast; network.
@@ -1181,7 +1233,7 @@ Take care to the private key file security</screen>
 			</para>
 		</sect2>
 	</sect1>
-	<sect1>
+	<sect1 id="samples-servers">
 		<title>Source servers</title>
 		<para>
 			The Ogg stream broadcasted on the &freecast; network can be retrieved on a source server.
