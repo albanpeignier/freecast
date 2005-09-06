@@ -9,7 +9,7 @@
 		<attribute name="style"/>
 		<element name="arguments" optional="true"/>
 		<sequential>
-			<java classname="org.apache.xalan.xslt.Process" fork="true">
+			<java classname="org.apache.xalan.xslt.Process" fork="true" failonerror="true">
 				<jvmarg line="-Dorg.apache.xerces.xni.parser.XMLParserConfiguration=org.apache.xerces.parsers.XIncludeParserConfiguration"/>
 				<jvmarg line="-Xbootclasspath/p:/usr/share/java/xercesImpl.jar"/>
 				<classpath>
@@ -266,12 +266,15 @@
 			</fileset>
 		</copy>
 
+		<mkdir dir="build/core/version"/>
 		<mkdir dir="${build.core.classes.dir}/org/kolaka/freecast/resources"/>
-		<propertyfile
-			file="${build.core.classes.dir}/org/kolaka/freecast/resources/version.properties"
-			comment="FreeCast version information">
-			<entry key="name" value="${project.version}"/>
-		</propertyfile>
+
+		<echo file="build/core/version/version.properties" message="name=${project.version}"/>
+		<copy todir="${build.core.classes.dir}/org/kolaka/freecast/resources">
+			<fileset dir="build/core/version">
+			    <different targetdir="${build.core.classes.dir}/org/kolaka/freecast/resources"/>
+			</fileset>
+		</copy>
 
 		<copy todir="${build.core.classes.dir}/org/kolaka/freecast/manager/http/resources/data" flatten="true">
 			<fileset dir="source/org/kolaka/freecast/www">
@@ -352,6 +355,14 @@
 				<include name="org/kolaka/freecast/userguide/gpl.xml"/>
 			</fileset>
 		</copy>
+		<copy todir="build/docs/userguide" flatten="true">
+			<fileset dir="source">
+				<include name="org/kolaka/freecast/userguide/*.xsl"/>
+			</fileset>
+			<filterset>
+				<filter token="docbook.xsl.dir" value="${track.docbook.dir}"/>
+			</filterset>
+		</copy>
 		<copy todir="build/docs/userguide">
 			<fileset dir="source/org/kolaka/freecast/config/resources">
 				<include name="defaults-tracker.xml"/>
@@ -373,7 +384,7 @@
 		</copy>
 		<copy todir="build/docs/userguide/images">
 			<fileset dir="${track.docbook.dir}/images">
-				<include name="**"/>
+				<include name="*.png"/>
 			</fileset>
 		</copy>
 		<copy todir="build/docs/userguide/images">
@@ -392,16 +403,33 @@
 
 	<target name="build.docs.userguide.html.check">
 		<uptodate property="build.docs.userguide.html.notRequired" targetfile="build/docs/userguide/index.html">
-			<srcfiles dir="build/docs/userguide">
-				<include name="**/*.xml"/>
-			</srcfiles>
+			<srcfiles dir="build/docs/userguide"/>
 		</uptodate>		
 	</target>
 	
-	<target name="build.docs.userguide.html" depends="build.docs.userguide.prepare, build.docs.userguide.html.check" 
+	<target name="build.docs.userguide.html" depends="build.docs.userguide.prepare, build.docs.userguide.html.check, build.docs.userguide.html.copy" 
 		unless="build.docs.userguide.html.notRequired">
 		<docbook in="build/docs/userguide/userguide.xml" 
-			out="build/docs/userguide/index.html" style="${track.docbook.dir}/html/chunk.xsl"/>
+			out="build/docs/userguide/index.html" 
+			style="build/docs/userguide/userguide-html.xsl">
+			<!-- ${track.docbook.dir}/html/chunk.xsl -->
+			<arguments>
+				<arg line="-PARAM hunker.output.encoding UTF-8"/>
+				<arg line="-PARAM html.stylesheet css/screen.css"/>
+				<arg line="-PARAM use.id.as.filename 1"/>
+				<arg line="-PARAM navig.graphics 1"/>
+				<arg line="-PARAM navig.graphics.extension .png"/>
+			</arguments>
+		</docbook>
+	</target>
+
+	<target name="build.docs.userguide.html.copy"> 
+		<copy todir="build/docs/userguide">
+			<fileset dir="source/org/kolaka/freecast/userguide">
+				<include name="css/*"/>
+				<include name="images/*"/>
+			</fileset>
+		</copy>
 	</target>
 
 	<target name="build.docs.userguide.pdf.check">
@@ -681,10 +709,20 @@
 			<fileset dir="build/docs">
 				<exclude name="**/.touch"/>
 				<exclude name="userguide/**/*.xml"/>
+				<exclude name="userguide/**/*.xsl"/>
 				<exclude name="userguide/*.fo"/>
+				<exclude name="userguide/*.html"/>
 			</fileset>
 			<fileset dir="build/changelog"/>
 		</copy>
+		<tidy dest="dist/docs" failonerror="false">
+			<filesets>
+				<fileset dir="build/docs">
+					<include name="userguide/*.html" />
+				</fileset>
+			</filesets>
+		</tidy>
+		
 		<copy todir="dist/docs/examples">
 			<fileset dir="source/org/kolaka/freecast/config/samples">
 				<include name="**/*.xml"/>
