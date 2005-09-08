@@ -31,4 +31,9 @@
 			<email>mail-16.png</email>
 		</visit>
 	</gui>
+	<httpserver>
+		<listenaddress>
+			<port>80,8080-8100</port>
+		</listenaddress>
+	</httpserver>
 </freecast>

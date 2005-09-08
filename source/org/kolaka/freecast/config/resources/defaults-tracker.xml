@@ -8,9 +8,4 @@
 			</listenaddress>
 		</connector>
 	</tracker>
-	<httpserver>
-		<listenaddress>
-			<port>80,8080-8100</port>
-		</listenaddress>
-	</httpserver>
 </freecast>
