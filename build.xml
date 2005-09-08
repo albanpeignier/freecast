@@ -917,6 +917,7 @@
 			<tarfileset dir="dist" prefix="${project.fullname}">
 				<exclude name="bin/**"/>
 				<exclude name="jws/**" />
+				<exclude name="www/**" />
 				<exclude name="log/**" />
 				<exclude name="docs/**" />
 				<exclude name="install/**"/>
