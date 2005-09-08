@@ -9,11 +9,16 @@ table {
 
 div.navheader, div.navfooter, 
 div.book, div.chapter, div.sect1, 
-div.preface, div.appendix,
+div.preface, div.appendix, div.index,
 div.refnamediv, div.refsect1, div.refsynopsisdiv, div.reference {
 	width: 800px;
 	margin-left: auto;
 	margin-right: auto;
+}
+
+div.navheader {
+	background: #fff url("../images/logo-small.png") no-repeat center top;
+	padding-top: 35px;
 }
 
 div.navfooter {
@@ -28,6 +33,11 @@ img {
 	border: 0px;
 }
 
+div.mediaobject {
+	float: left;
+	margin: 0.6em;
+}
+
 a {
 	color: #C12121; 
 	text-decoration: none;
@@ -40,6 +50,8 @@ div.navheader a, div.navfooter a {
 p {
 	text-indent: 1em;
 	text-align: justify;
+	margin-left: 1em;	
+	margin-right: 1em;	
 }
 
 h1, h2, h3 {
@@ -47,6 +59,7 @@ h1, h2, h3 {
 }
 
 h3 {
+	padding-left: 0.4em;
 	border-bottom: 1px dashed #260e0c;
 }
 

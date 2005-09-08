@@ -34,25 +34,29 @@
 </preface>
 <chapter id="introduction">
 	<title>What's &freecast;</title>
+	<mediaobject>
+		<imageobject>
+			<imagedata fileref="images/logo.png" format="PNG"/>
+		</imageobject>
+		<textobject>
+			<phrase>&freecast;</phrase>
+		</textobject>
+	</mediaobject>
 	<para>
 		&freecast; allows to stream by using a peer-to-peer network model.
 		It makes possible a stream broadcast to a large number of listeners from a simple DSL connection.
-		FreeCast offers the possibility to broadcast over Internet without a strict limit of listener count. 
+		&freecast; offers the possibility to broadcast over Internet without a strict limit of listener count. 
 		You can share with the largest number without the economic cost of a large bandwidth.
 	</para>
 	<para>
 		Visit the &freecast; website: <ulink url="http://www.freecast.org/"/>
 	</para>
-	<!-- TODO
-	<sect1>
-		<title>Features</title>
-	</sect1>-->
 	<sect1 id="introduction-architecture">
 		<title>Architecture overview</title>
 		<para>
-			To understand how to use and deploy a FreeCast network, you need to understand few key concepts.
-			A FreeCast network is able to broadcast a stream. This stream can contain audio and/or video contents.
-			The stream will not be modified by the FreeCast broadcasting. The way and tools to create and play 
+			To understand how to use and deploy a &freecast; network, you need to understand few key concepts.
+			A &freecast; network is able to broadcast a stream. This stream can contain audio and/or video contents.
+			The stream will not be modified by the &freecast; broadcasting. The way and tools to create and play 
 			the stream are near the same than in a classic broadcast.
 		</para>
 		<sect2>
@@ -73,7 +77,7 @@
 				But the needed infrastructure becomes quickly expansive. If you want to accept
 				up to 50 listeners with a musical stream (typically encoeded at 128kbits), you
 				need an Internet connection with an upload bandwidth larger than 6.25 Mbits. 
-				An classic DSL access provides an upload bandwidth of 0.5Mbits ...
+				To compare, an classic DSL access provides an upload bandwidth of 0.5Mbits ...
 			</para>
 		</sect2>
 		<sect2>
@@ -101,8 +105,64 @@
 				listenings.
 			</para>
 		</sect2>
+		<sect2>
+			<title>Key concepts</title>
+			<para>In a &freecast; network is composed of a 
+			<firstterm>tracker</firstterm>, a <firstterm>root node</firstterm> and <firstterm>nodes</firstterm>.</para>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/architecture-network.png" format="PNG"/>
+				</imageobject>
+				<textobject>
+					<phrase>Schema of a &freecast; network</phrase>
+				</textobject>
+			</mediaobject>
+			<sect3>
+				<indexterm><primary>node</primary></indexterm>
+				<title>Node</title>
+				<para>
+					In a &freecast; network, the stream transits via one or more nodes. 
+					Each node can receive, use (play) and send stream information (packets). 
+					All the nodes of a same &freecast; network register themself to the 
+					same tracker.
+				</para>
+			</sect3>
+			<sect3>
+				<indexterm><primary>node</primary><secondary>root</secondary></indexterm>
+				<title>Root Node</title>
+				<para>
+					The root node creates the &freecast; stream 
+					(a sequence of packets) from a classic Ogg stream. The following
+					nodes receive directly or indirectly the packets created by the
+					root node.
+				</para>
+			</sect3>
+			<sect3>
+				<indexterm><primary>tracker</primary></indexterm>
+				<title>Tracker</title>
+				<para>
+					The tracker has an overview of the network. 
+					A &freecast; node can only participates to a &freecast; network after being 
+					registered into the tracker of this network. All nodes of the network 
+					send periodically information to the tracker. 
+					Nodes use the tracker to obtain the references of other nodes.
+				</para>
+			</sect3>
+		</sect2>
 	</sect1>
+	<!-- TODO
+	<sect1>
+		<title>Features</title>
+	</sect1>-->
 </chapter>
+
+<chapter id="getting_started">
+	<title>Getting started</title>
+	<para>
+		with &freecast; Manager - TODO
+	</para>
+</chapter>
+
 <chapter id="install">
 	<title>Installation</title>
 	<para>
@@ -123,7 +183,6 @@
 		</procedure>
 		<sect2>
 			<title>Content</title>
-
 			<table tocentry="1">
 				<title>Binary distribution content</title>
 				<tgroup cols='2'>
@@ -177,7 +236,80 @@
 				</tgroup>
 			</table>			
 		</sect2>
+		<sect2>
+			<title>Getting started</title>
+			<para>
+				Once the &freecast; binaries are installed, you can start your first &freecast; network. 
+				This is a small procedure to start a &freecast; tracker, a root node and a first listener.
+			</para>
+			<para>
+				Start a command line and go to the directory where the &freecast; binaries are installed.
+			</para> 
+			<sect3>
+				<title>Start a &freecast; tracker</title>
+				<para>The &freecast; tracker doesn't require specific configuration. Just start the <command>freecast-tracker</command>:
+					<screen><![CDATA[[host:path/to/freecast] bin/freecast-tracker 
+create log dir: host:path/to/freecast/log
+INFO   [Main]: version 20050907
+INFO   [ConfigurationFactory]: Trying to load configuration defaults-tracker.xml
+INFO   [Main]: start a HttpTracker on port /0.0.0.0:1665]]></screen>
+				</para>
+			</sect3>
+			<sect3>
+				<title>Start a &freecast; root node</title>
+				<para>
+					When the tracker is running, that's the moment to start the root node. 
+					In this example, we will use a default playlist provided by the &freecast; website as source. 
+					This stream will be transmit by your &freecast; network.
+				</para>
+				<screen><![CDATA[[host:path/to/freecast] bin/freecast -config docs/examples/audio/freecast-node-root.xml
+INFO   [Main]: version 20050907
+INFO   [ConfigurationFactory]: Trying to load configuration defaults-node.xml
+INFO   [NodeConfigurator]: set the public reference to [/192.168.x.x:1664{}, /x.x.x.x:1664{}]{}
+WARN   [NodeConfigurator]: the playlist receiver uses a static bandwidth controler
+INFO   [DefaultNodeService]: received node identifier #30CC71CD520A5F31
+INFO   [HttpPlayerSource$1]: wait for http player connection at /0.0.0.0:8000]]></screen>
+				<para>
+					The default node configuration uses the tracker on the same host (localhost). The used command line specifies
+					to use a sample configuration file. It will use a default playlist provided by the &freecast; website.
+				</para>
+				<para>
+					The tracker should logged the following messages when the root node registers itself:
+					<screen><![CDATA[INFO   [Tracker$Auditor]: new registered node [/192.168.x.x:1664{}, /x.x.x.x:1664{}]{}
+INFO   [Tracker$Auditor]: 1 connected nodes]]></screen>
+				</para>
+			</sect3>
+			<sect3>
+				<title>Start a first &freecast; listener node</title>
+				<para>
+					A &freecast; network without listener isn't really a network .. so let's start a first &freecast; listener node.
+				</para>
+				<screen><![CDATA[[host:path/to/freecast] bin/freecast-swing -config docs/examples/audio/freecast-node-listener.xml
+INFO   [Main]: version 20050907
+INFO   [ConfigurationFactory]: Trying to load configuration defaults-node.xml
+INFO   [NodeConfigurator]: set the public reference to /0.0.0.0:1666{}
+INFO   [DefaultNodeService]: received node identifier #30D299519AC4462A
+INFO   [HttpPlayerSource$1]: wait for http player connection at /0.0.0.0:8001
+INFO   [PeerControler$Auditor]: accept connection with [<host>/192.168.x.x:1664{}, /x.x.x.x:1664{}]{identifier=#30CC71CD520A5F31, order=0}
+INFO   [PeerControler$Auditor]: 1 peers connected]]></screen>
+				<para>
+					The listener node connects to the tracker, receive the references of other peers, try to connect to one of them
+					(the root node in your case). When the first stream data are received, the audio player starts to play sound.
+				</para>
+				<para>
+					The tracker should logged the following messages when the listener node registers itself:
+					<screen><![CDATA[INFO   [Tracker$Auditor]: new registered node /127.0.0.1:1666{}
+INFO   [Tracker$Auditor]: 2 connected nodes]]></screen>
+				</para>
+				<para>
+					The root node should logged the following message when the listener node connects it:
+					<screen><![CDATA[INFO  SocketPeerConnection[/192.168.x.x] [PeerControler$Auditor]: accept connection with null
+INFO  SocketPeerConnection[/192.168.x.x] [PeerControler$Auditor]: 1 peers connected]]></screen>
+				</para>
+			</sect3>		
+		</sect2>
 	</sect1>
+	
 	<sect1 id="install-debian">
 		<title>Debian package distribution</title>
 		<para>
@@ -201,65 +333,117 @@ Need to get 3016kB of archives.
 After unpacking 3618kB of additional disk space will be used.
 Do you want to continue? [Y/n]</screen>
 		</para>
+		<sect2>
+			<title>Content</title>
+			<table tocentry="1">
+				<title>Debian distribution content</title>
+				<tgroup cols='2'>
+				<colspec colname="filename" colwidth="0*"/>
+				<colspec colname="description" colwidth="1*"/>
+				<thead>
+					<row>
+						<entry>Filename</entry>
+						<entry>Description</entry>
+					</row>
+				</thead>
+				<tbody>
+					<row>
+						<entry><filename>/etc/freecast</filename></entry>
+						<entry>contains configuration files, see <xref linkend="node-configuration"/></entry>
+					</row>
+					<row>
+						<entry><filename>/var/log/freecast</filename></entry>
+						<entry>contains log files as by freecast daemons</entry>
+					</row>
+					<row>
+						<entry><filename>/etc/init.d/freecast-tracker</filename></entry>
+						<entry>the init.d script to control the &freecast; tracker daemon</entry>
+					</row>
+					<row>
+						<entry><filename>/etc/init.d/freecast</filename></entry>
+						<entry>the init.d script to control the &freecast; node</entry>
+					</row>
+					<row>
+						<entry><filename>/etc/default/freecast-tracker</filename></entry>
+						<entry>default values for the &freecast; tracker daemon</entry>
+					</row>
+					<row>
+						<entry><filename>/etc/default/freecast</filename></entry>
+						<entry>default values for the &freecast; node</entry>
+					</row>
+					<row>
+						<entry><filename>/usr/share/doc/freecast/userguide</filename></entry>
+						<entry>contains this user guide</entry>
+					</row>
+					<row>
+						<entry><filename>/usr/share/doc/freecast/examples/audio</filename></entry>
+						<entry>contains configuration sample files for an audio stream</entry>
+					</row>
+					<row>
+						<entry><filename>/usr/share/doc/freecast/examples/video</filename></entry>
+						<entry>contains configuration sample files for an video stream</entry>
+					</row>
+					<row>
+						<entry><filename>/usr/share/doc/freecast/examples/tracker</filename></entry>
+						<entry>contains configuration sample files for tracker</entry>
+					</row>
+					<row>
+						<entry><filename>/usr/share/doc/freecast/examples/jws</filename></entry>
+						<entry>
+							<para>
+								contains configuration sample files for a <productname>JavaWebStart</productname> deployment,
+								see <xref linkend="javawebstart"/>
+							</para>
+						</entry>
+					</row>
+				</tbody>
+				</tgroup>
+			</table>			
+			<para>
+				The &freecast; debian package respects the 
+				<ulink url="http://www.debian.org/doc/debian-policy/">Debian policy</ulink>.
+				So &freecast; binaries are available in <filename>/usr/bin</filename> and are available in the default PATH, 
+				see the <xref linkend="refentry"/>.
+			</para>
+		</sect2>		
+		<sect2>
+			<title>Getting started</title>
+			<para>
+				If you want to deploy your own &freecast; network,
+				you just need to provide a root node configuration.
+			</para>
+			<screen>[host:~] sudo cp /usr/share/doc/freecast/examples/audio/freecast-node-root.xml /etc/freecast/
+[host:~] sudo /etc/init.d/freecast-tracker start		
+[host:~] sudo /etc/init.d/freecast start</screen>
+			<para>
+				You can follow the &freecast; daemons activity via the log files into <filename>/var/log/freecast</filename>:
+				<screen>[host:~] tail -f /var/log/freecast/freecast.log /var/log/freecast/freecast-tracker.log</screen>
+			</para>
+			<sect3>
+				<title>Relay node</title>
+				<para>
+					If you just want to deploy a &freecast; relay node, you need to disable the &freecast; tracker
+					daemon (see <filename>/etc/default/freecast-tracker</filename>) and provides a node configuration
+					with the tracker to be used.
+				</para>
+			</sect3>
+		</sect2>
 	</sect1>
 	<!-- TODO
 	<sect1 id="source-install">
 		<title>Source distribution</title>
 	</sect1> -->
 </chapter>
-<chapter id="getting_started">
-	<title>Getting started</title>
-	<para>
-		Once the &freecast; binaries are installed, you can start your first &freecast; network. 
-		This is a small procedure to start a &freecast; tracker, a root node and a first listener.
-	</para>
-	<sect1 id="getting_started-tracker">
-		<title>Start a &freecast; tracker</title>
-		<para>The &freecast; tracker doesn't require specific configuration. Just start the <command>freecast-tracker</command>:
-		<screen>[host:~] freecast-tracker
-INFO   [ConfigurationFactory]: Trying to load configuration defaults-tracker.xml
-INFO   [Main]: start a HttpTracker on port /0.0.0.0:1665</screen>
-		</para>
-	</sect1>
-	<sect1 id="getting_started-root_node">
-		<title>Start a &freecast; root node</title>
-		<para>
-			When the tracker is running, that's the moment to start the root node. In this example, we will use a ogg stream
-			from Internet as source. This stream will be transmit by your &freecast; network.
-		</para>
-		<screen>[host:~] freecast -Dreceiver.class=shoutclient -Dreceiver.url=http://famipow.radio404.org:15000/radio404.ogg
-INFO   [ConfigurationFactory]: Trying to load configuration defaults-node.xml
-INFO   [NodeConfigurator]: set the public reference to /0.0.0.0:1664{}
-INFO   [DefaultNodeService]: received node identifier #3C04DFEFC8611DC4
-INFO   [ShoutClientOggSourceFactory]: ShoutClient successfully connected to http://famipow.radio404.org:15000/radio404.ogg</screen>
-		<para>
-			The default node configuration uses the tracker on the same host (localhost). The used command line specifies
-			the receiver implementation to be used and the URL where the ogg stream is retrieved.
-		</para>
-	</sect1>
-	<sect1 id="getting_started-node">
-		<title>Start a first &freecast; listener node</title>
-		<para>
-			A &freecast; network without listener isn't really a network .. so let's start a first &freecast; listener node.
-		</para>
-		<screen>[host:~] freecast -Dsender.listenaddress.port=1666 -Dplayers.player.class=audio
-INFO   [ConfigurationFactory]: Trying to load configuration defaults-node.xml
-INFO   [NodeConfigurator]: set the public reference to /0.0.0.0:1666{}
-INFO   [DefaultNodeService]: received node identifier #3F53596808940960
-WARN  SocketPeerConnection[/127.0.0.1] [SequenceValidator]: sequence broken: 1111311429233 -> 1111311429474
-WARN   [SequenceValidator]: sequence broken: 1111311429106 -> 1111311429155</screen>
-		<para>
-			The listener node connects to the tracker, receive the references of other peers, try to connect to one of them
-			(the root node in your case). When the first stream data are received, the audio player starts to play sound.
-		</para>
-	</sect1>
-</chapter>
+
 <chapter id="tracker">
 	<title>Tracker usage</title>
+	<indexterm><primary>tracker</primary></indexterm>
 	<sect1 id="tracker-description">
+		<indexterm><primary>tracker</primary></indexterm>
 		<title>Description</title>
 		<para>
-			The only component which can be configured into the tracker is the <systemitem>connector</systemitem>
+			The only component which can be configured into the tracker 
+			is the <systemitem>connector</systemitem>
 			which dialogs with every node of the &freecast; network. The <systemitem>http connector</systemitem>
 			implementation is available (the <acronym>RMI</acronym> implementation is obsolete now).
 		</para>
@@ -278,10 +462,14 @@ WARN   [SequenceValidator]: sequence broken: 1111311429106 -> 1111311429155</scr
 		</para>
 		<caution>
 			<title>Information persistence</title>
-			<para>The information about the &freecast; network managed by the tracker are lost if the tracker reboots.</para>
+			<para>
+				The information about the &freecast; network managed by the tracker are lost if the tracker reboots.
+				The &freecast; network will experience troubles in this case.
+			</para>
 		</caution>
 	</sect1>
 	<sect1 id="tracker-configuration">
+		<indexterm><primary>tracker</primary></indexterm>	
 		<title>Configuration</title>
 		<table tocentry="1">
 			<title>Tracker configuration</title>
@@ -355,8 +543,10 @@ INFO   [Main]: start a HttpTracker on port /0.0.0.0:1665</screen>
 	</sect1>
 </chapter>
 <chapter id="node">
+	<indexterm><primary>node</primary></indexterm>
 	<title>Node usage</title>
 	<sect1 id="node-description">
+		<indexterm><primary>node</primary></indexterm>
 		<title>Description</title>
 		<para>
 			To use and configure the &freecast; node, you need to understand a part of the internal components.
@@ -540,6 +730,7 @@ Take care to the private key file security</screen>
 	</sect1>
 	
 	<sect1 id="node-configuration">
+		<indexterm><primary>node</primary></indexterm>
 		<title>Configuration</title>
 		<table tocentry="1">
 			<title>Node configuration</title>
@@ -1132,7 +1323,7 @@ Take care to the private key file security</screen>
   </head>
   <body>
     ...
-    <a href="javascript:start('acmee-radio.org/freecast/descriptor.xml')">FreeCast stream</a>
+    <a href="javascript:start('acmee-radio.org/freecast/descriptor.xml')">&freecast; stream</a>
     ...
   </body>
 </html>]]></programlisting>
@@ -1166,7 +1357,7 @@ Take care to the private key file security</screen>
   
     <stream>
       <metadata>
-        <name>FreeCast Stream</name>
+        <name>&freecast; Stream</name>
         <genre></genre>
         <description></description>
       </metadata>
@@ -1279,11 +1470,11 @@ Take care to the private key file security</screen>
 		
 		<refsynopsisdiv>
 			<cmdsynopsis>
-				<command>freecast-tracker</command>
+				<command>freecast</command>
 				<arg>-config <replaceable>file/url</replaceable></arg>
 				<arg>-D<replaceable>property</replaceable>=<replaceable>value</replaceable></arg>
 				<arg>-dryrun</arg>
-				<command>freecast</command>
+				<command>freecast-tracker</command>
 				<arg>-config <replaceable>file/url</replaceable></arg>
 				<arg>-D<replaceable>property</replaceable>=<replaceable>value</replaceable></arg>
 				<arg>-dryrun</arg>
@@ -1336,4 +1527,8 @@ Take care to the private key file security</screen>
 	</refentry>
 </reference>
 <xi:include  href="gpl.xml" xmlns:xi="http://www.w3.org/2003/XInclude"/> 
+<!-- TODO
+<glosssary>
+</glossary> -->
+<index/>
 </book>
