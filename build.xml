@@ -371,12 +371,14 @@
 				<include name="samples/**"/>
 			</fileset>
 			<filterchain>
+			  <!--
 				<tokenfilter>
 					<filetokenizer/>
 					<replaceregex pattern="(.*)"
 	                    flags="s"
 	                    replace="&lt;programlisting&gt;&lt;![CDATA[\1]]&gt;&lt;/programlisting&gt;"/>
 				</tokenfilter>
+				-->
 				<tokenfilter>
 					<replaceregex pattern="\t" flags="gs" replace="  "/>
 				</tokenfilter>
@@ -385,7 +387,9 @@
 		<copy todir="build/docs/userguide/images">
 			<fileset dir="${track.docbook.dir}/images">
 				<include name="*.png"/>
+				<present targetdir="source/org/kolaka/freecast/userguide/images" present="srconly"/>
 			</fileset>
+			<fileset dir="source/org/kolaka/freecast/userguide/images"/>
 		</copy>
 		<copy todir="build/docs/userguide/images">
 			<fileset dir="source/org/kolaka/freecast/node/swing/install">
@@ -419,6 +423,10 @@
 				<arg line="-PARAM use.id.as.filename 1"/>
 				<arg line="-PARAM navig.graphics 1"/>
 				<arg line="-PARAM navig.graphics.extension .png"/>
+				<arg line="-PARAM callouts.extension 1"/>
+				<arg line="-PARAM textinsert.extension 1"/>
+				<arg line="-PARAM callout.defaultcolumn 40"/>
+				<arg line="-PARAM callout.graphics 1"/>
 			</arguments>
 		</docbook>
 	</target>

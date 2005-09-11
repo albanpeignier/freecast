@@ -63,6 +63,14 @@ h3 {
 	border-bottom: 1px dashed #260e0c;
 }
 
+h5 {
+    padding-left: 0.4em;    
+}
+
+div.variablelist { 
+	margin-left: 3em;
+}
+
 pre.screen, pre.programlisting {
 	font-size: 11px;
 	margin-left: 3em;
@@ -93,7 +101,6 @@ div.caution {
 
 div.table table {
 	font-size: 13px;
-	border-style: 1px solid black;
 	border-collapse: collapse;
 }
 
