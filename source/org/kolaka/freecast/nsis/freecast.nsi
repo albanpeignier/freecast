@@ -102,8 +102,8 @@ Section -installjre jre
   Strcmp $InstallJRE "yes" InstallJRE JREPathStorage
   DetailPrint "Starting the JRE installation"
 InstallJRE:
-  File /oname=$TEMP\jre_setup.exe j2re-setup.exe
-  MessageBox MB_OK "INstalling JRE"
+  File /oname=$TEMP\jre_setup.exe ${BuildDir}\jre-setup.exe
+;  MessageBox MB_OK "INstalling JRE"
   DetailPrint "Launching JRE setup"
   ExecWait "$TEMP\jre_setup.exe /S" $0
   DetailPrint "Setup finished"
@@ -137,7 +137,7 @@ JREPathStorage:
   
 ExitInstallJRE:
   Pop $1
-  MessageBox MB_OK "The setup is about to be interrupted for the following reason : $1"
+  MessageBox MB_OK|MB_ICONSTOP "The setup is about to be interrupted for the following reason : $1"
   Pop $1 	; Restore $1
   Pop $0 	; Restore $0
   Abort
@@ -150,7 +150,7 @@ Section "Installation of ${AppName}" SecAppFiles
   SectionIn 1 RO	; Full install, cannot be unselected
 			; If you add more sections be sure to add them here as well
   SetOutPath $INSTDIR
-File /r "${DistDir}"
+File /r "${DistDir}\"
 ; If you need the path to JRE, you can either get it here for from $JREPath
 ;  !insertmacro MUI_INSTALLOPTIONS_READ $0 "jre.ini" "UserDefinedSection" "JREPath"
 ;  MessageBox MB_OK "JRE Read: $0"
@@ -214,17 +214,17 @@ Function myPreInstfiles
 FunctionEnd
  
 Function CheckInstalledJRE
-  MessageBox MB_OK "Checking Installed JRE Version"
+;  MessageBox MB_OK "Checking Installed JRE Version"
   Push "${JRE_VERSION}"
   Call DetectJRE
-  Messagebox MB_OK "Done checking JRE version"
+;  Messagebox MB_OK "Done checking JRE version"
   Exch $0	; Get return value from stack
   StrCmp $0 "0" NoFound
   StrCmp $0 "-1" FoundOld
   Goto JREAlreadyInstalled
   
 FoundOld:
-  MessageBox MB_OK "Old JRE found"
+;  MessageBox MB_OK "Old JRE found"
   !insertmacro MUI_INSTALLOPTIONS_WRITE "jre.ini" "Field 1" "Text" "${AppName} requires a more recent version of the Java Runtime Environment than the one found on your computer.\
 The installation of JRE ${JRE_VERSION} will start."
   !insertmacro MUI_HEADER_TEXT "$(TEXT_JRE_TITLE)" "$(TEXT_JRE_SUBTITLE)"
@@ -232,7 +232,7 @@ The installation of JRE ${JRE_VERSION} will start."
   Goto MustInstallJRE
  
 NoFound:
-  MessageBox MB_OK "JRE not found"
+;  MessageBox MB_OK "JRE not found"
   !insertmacro MUI_INSTALLOPTIONS_WRITE "jre.ini" "Field 1" "Text" "No Java Runtime Environment could be found on your computer.\
 The installation of JRE v${JRE_VERSION} will start."
   !insertmacro MUI_HEADER_TEXT "$(TEXT_JRE_TITLE)" "$(TEXT_JRE_SUBTITLE)"
@@ -248,7 +248,7 @@ MustInstallJRE:
   
 JREAlreadyInstalled:
 ;  MessageBox MB_OK "No download: ${TEMP2}"
-  MessageBox MB_OK "JRE already installed"
+;  MessageBox MB_OK "JRE already installed"
   StrCpy $InstallJRE "no"
   !insertmacro MUI_INSTALLOPTIONS_WRITE "jre.ini" "UserDefinedSection" "JREPath" $JREPATH
   Pop $0		; Restore $0
@@ -269,48 +269,48 @@ Function DetectJRE
   Push $2	; $2 = Javahome
   Push $3	; $3 and $4 are used for checking the major/minor version of java
   Push $4
-  MessageBox MB_OK "Detecting JRE"
+;  MessageBox MB_OK "Detecting JRE"
   ReadRegStr $1 HKLM "SOFTWARE\JavaSoft\Java Runtime Environment" "CurrentVersion"
-  MessageBox MB_OK "Read : $1"
+;  MessageBox MB_OK "Read : $1"
   StrCmp $1 "" DetectTry2
   ReadRegStr $2 HKLM "SOFTWARE\JavaSoft\Java Runtime Environment\$1" "JavaHome"
-  MessageBox MB_OK "Read 3: $2"
+;  MessageBox MB_OK "Read 3: $2"
   StrCmp $2 "" DetectTry2
   Goto GetJRE
  
 DetectTry2:
   ReadRegStr $1 HKLM "SOFTWARE\JavaSoft\Java Development Kit" "CurrentVersion"
-  MessageBox MB_OK "Detect Read : $1"
+;  MessageBox MB_OK "Detect Read : $1"
   StrCmp $1 "" NoFound
   ReadRegStr $2 HKLM "SOFTWARE\JavaSoft\Java Runtime Environment\$1" "JavaHome"
-  MessageBox MB_OK "Detect Read 3: $2"
+;  MessageBox MB_OK "Detect Read 3: $2"
   StrCmp $2 "" NoFound
  
 GetJRE:
 ; $0 = version requested. $1 = version found. $2 = javaHome
-  MessageBox MB_OK "Getting JRE"
+;  MessageBox MB_OK "Getting JRE"
   IfFileExists "$2\bin\java.exe" 0 NoFound
   StrCpy $3 $0 1			; Get major version. Example: $1 = 1.5.0, now $3 = 1
   StrCpy $4 $1 1			; $3 = major version requested, $4 = major version found
-  MessageBox MB_OK "Want $3 , found $4"
+;  MessageBox MB_OK "Want $3 , found $4"
   IntCmp $4 $3 0 FoundOld FoundNew
   StrCpy $3 $0 1 2
   StrCpy $4 $1 1 2			; Same as above. $3 is minor version requested, $4 is minor version installed
-  MessageBox MB_OK "Want $3 , found $4" 
+;  MessageBox MB_OK "Want $3 , found $4" 
   IntCmp $4 $3 FoundNew FoundOld FoundNew
  
 NoFound:
-  MessageBox MB_OK "JRE not found"
+;  MessageBox MB_OK "JRE not found"
   Push "0"
   Goto DetectJREEnd
  
 FoundOld:
-  MessageBox MB_OK "JRE too old: $3 is older than $4"
+;  MessageBox MB_OK "JRE too old: $3 is older than $4"
 ;  Push ${TEMP2}
   Push "-1"
   Goto DetectJREEnd  
 FoundNew:
-  MessageBox MB_OK "JRE is new: $3 is newer than $4"
+;  MessageBox MB_OK "JRE is new: $3 is newer than $4"
  
   Push "$2\bin\java.exe"
 ;  Push "OK"
