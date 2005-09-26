@@ -38,6 +38,6 @@ if exist %FREECAST_HOME%\etc set CLASSPATH=%FREECAST_HOME%\etc
 FOR  %%i IN (%LIBDIR%\*.jar) DO call %FREECAST_HOME%\bin\classpath %%i
 FOR  %%i IN (%LIBDIR%\windows\*.jar) DO call %FREECAST_HOME%\bin\classpath %%i
 
-%JAVA_CMD% -classpath %CLASSPATH% -Djava.library.path=$libdir\windows\x86 -Dapp.name=@app.name@ -Dlog.dir=%LOGDIR% -Dlib.dir=%LIBDIR% @app.mainclass@ %*
+%JAVA_CMD% -classpath %CLASSPATH% -Djava.library.path=%LIBDIR%\windows\x86 -Dapp.name=@app.name@ -Dlog.dir=%LOGDIR% -Dlib.dir=%LIBDIR% @app.mainclass@ %*
 
 :end
