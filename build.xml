@@ -349,11 +349,17 @@
 	
 	<target name="build.docs.userguide.prepare" depends="prepare.libraries">
 		<mkdir dir="build/docs/userguide"/>
+		<tstamp>
+		  <format property="build.docs.userguide.pubdate" pattern="EEEE, MMMM d yyyy" locale="en"/>
+		</tstamp>
 		<copy todir="build/docs/userguide" flatten="true">
 			<fileset dir="source">
 				<include name="org/kolaka/freecast/userguide/userguide.xml"/>
 				<include name="org/kolaka/freecast/userguide/gpl.xml"/>
 			</fileset>
+			<filterset>
+				<filter token="pubdate" value="${build.docs.userguide.pubdate}"/>
+			</filterset>
 		</copy>
 		<copy todir="build/docs/userguide" flatten="true">
 			<fileset dir="source">
@@ -393,7 +399,10 @@
 		</copy>
 		<copy todir="build/docs/userguide/images">
 			<fileset dir="source/org/kolaka/freecast/node/swing/install">
-				<include name="screenshot-linux-20050322*.png"/>
+				<include name="screenshot-linux-20050911*.png"/>
+			</fileset>
+			<fileset dir="source/org/kolaka/freecast/manager/gui/install">
+				<include name="manager*-screenshot-linux-20050911*.png"/>
 			</fileset>
 			<mapper type="regexp" from="^(.*)-[0-9]+(.*)" to="\1\2"/>
 		</copy>

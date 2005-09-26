@@ -10,7 +10,7 @@
 	<title>
 		FreeCast User's Guide
 	</title> 
-  <pubdate>Friday, March 31 2005</pubdate>
+  <pubdate>@pubdate@</pubdate>
   <copyright><year>2005</year><holder>Alban Peignier</holder></copyright>
 </bookinfo>
 <preface id="foreword">
@@ -156,11 +156,195 @@
 	</sect1>-->
 </chapter>
 
-<chapter id="getting_started">
+<chapter id="getting-started">
 	<title>Getting started</title>
-	<para>
-		with FreeCast Manager - TODO
-	</para>
+
+	<sect1 id="getting-started-intro">
+	  <title>FreeCast Manager introduction</title>
+
+	  <screenshot>
+		<screeninfo>FreeCast Manager - Main dialog</screeninfo>
+		<mediaobject>
+		  <imageobject>
+			<imagedata fileref="images/manager-screenshot-linux.png" format="PNG"/>
+		  </imageobject>
+		  <textobject>
+			<phrase>FreeCast Manager</phrase>
+		  </textobject>
+		</mediaobject>
+	  </screenshot>
+
+	  <para>
+		<application>FreeCast Manager</application> is a graphical application
+		which allows to start a FreeCast network. It provides:
+		<itemizedlist>
+		  <listitem><para>a FreeCast tracker</para></listitem>
+		  <listitem><para>a FreeCast root node</para></listitem>
+		  <listitem><para>an embedded HTTP server</para></listitem>
+		</itemizedlist>
+		All these components are configured automatically when the FreeCast Manager starts.
+	  </para>
+	  <para>
+		FreeCast Manager can be started via JavaWebStart. 
+		In this case, it will be installed and upgraded automatically via Internet.
+	  </para>
+	</sect1>
+	<sect1 id="first-network">
+	  <title>Your first FreeCast network</title>
+		<procedure>
+			<step>
+			  <para>Install a Java Runtime Environment 1.4 or 1.5, see <ulink url="http://www.java.com"/></para>
+			</step>
+			<step>
+			  <para>
+				<ulink url="http://download.freecast.org/jws/libfreecast/freecast-manager.jnlp">Start</ulink> 
+				<application>FreeCast Manager</application> via JavaWebStart
+			  </para>
+			</step>
+			<step>
+			  <para>
+				After loading, the <application>FreeCast Manager</application> starts, 
+				configures the FreeCast network and displays the GUI
+			  </para>
+			</step>
+		</procedure>
+
+		
+		<sect2>
+		  <title>General GUI layout</title>
+
+		  <screenshot>
+			<screeninfo>FreeCast Manager - Main dialog</screeninfo>
+			<mediaobject>
+			  <imageobject>
+				<imagedata fileref="images/manager-screenshot-linux.png" format="PNG"/>
+			  </imageobject>
+			  <textobject>
+				<phrase>FreeCast Manager</phrase>
+			  </textobject>
+			</mediaobject>
+		  </screenshot>
+
+		  <para>
+			The <application>FreeCast Manager</application> GUI regroups the activity indicators
+			of the embedded tracker and root node. 
+		  </para>
+		  <sect3>
+			<title>Tracker</title>
+			<para>
+			  The node count is displayed in realtime. At startup, a single node 
+			  should counted. It's the embedded root node.
+			</para>
+		  </sect3>
+		  <sect3>
+			<title>Root Node</title>
+			<para>
+			  For the root node, the connected node count is displayed. The first listener nodes
+			  will be displayed in this count, the following nodes will be connected to these 
+			  first nodes.
+			</para>
+		  </sect3>
+		</sect2>
+
+		<sect2>
+		  <title>Actions</title>
+		  <screenshot>
+			<screeninfo>FreeCast Manager - Actions menu</screeninfo>
+			<mediaobject>
+			  <imageobject>
+				<imagedata fileref="images/manager-menu-screenshot-linux.png" format="PNG"/>
+			  </imageobject>
+			  <textobject>
+				<phrase>FreeCast Manager Actions menu</phrase>
+			  </textobject>
+			</mediaobject>
+		  </screenshot>
+		  <para>
+			The action menu can be displayed by right-clicking in the GUI.
+			This menu allows the following actions:
+		  </para>
+		  <sect3>
+			<title>Browse network homepage</title>
+			<para>
+			  Starts your browser to visit the web homepage of the FreeCast network.
+			  This web homepage is hosted by the embedded web server provided by
+			  the <application>FreeCast Manager</application>. This page will be
+			  used by listeners to start easily their nodes.
+			</para>
+			<para>
+			  Don't publish the URL displayed your browser, 
+			  use the <guimenuitem>Email network homepage</guimenuitem> action.
+			</para>
+		  </sect3>
+		  <sect3>
+			<title>Email network homepage</title>
+			<para>
+			  Creates a base email to inform your first listeners. The created email
+			  contains the URL to be used to visit the homepage of your FreeCast network.
+			</para>
+			<programlisting>Subject: My FreeCast Network
+
+Visit the homepage of my FreeCast network: http://84.67.103.24:8080/</programlisting>
+			<para>
+			  Complete and send this email to your first listeners. 
+			  They just have to visit the given URL and click on the start click.
+			</para>
+			<note>
+			  <title>Different URLs and some don't work</title>
+			  <para>
+				According to your network configuration, the FreeCast Manager can use several URLs 
+				to designate the homepage of your FreeCast network. The root cause is that
+				you can have to use a different URL than your listeners to access to your own computer.
+				The FreeCast manager respects this constraint. Take care to use the URL 
+				specified in the email to invite your listeners.
+			  </para>
+			</note>
+		  </sect3>
+		</sect2>
+
+		<sect2>
+		  <title>Default configuration</title>
+		  <para>
+			The <application>FreeCast Manager</application> will configure:
+			<itemizedlist>
+			  <listitem>
+				<para>a tracker on the port 1665</para>
+			  </listitem>
+			  <listitem>
+				<para>
+				  a root node which listens on the first free port between 1664 and 1670, 
+				  the configured receiver uses a default audio playlist provided by the FreeCast server
+				</para>
+			  </listitem>
+			  <listitem>
+				<para>a http server which listens on the port 80 or on the first free port between 8080 and 8100</para>
+			  </listitem>
+			</itemizedlist>
+		  </para>
+		  <note>
+			<title>Broadcast content</title>
+			<para>
+			  For the first release of the FreeCast Manager, the default broadcast content can't be
+			  changed. But the next releases will include the needed dialogs to configure other receivers.
+			</para>
+		  </note>
+		</sect2>
+	</sect1>
+	<sect1 id="getting-started-troubleshooting">
+	  <title>Troubleshooting</title>
+	  <sect2>
+		<title>Network configuration</title>
+		<remark>
+		  symptoms: listeners can access to the embedded HTTP server, the start page fails
+		</remark>
+		<para>
+		  As plug-and-play networks are still more a concept than a reality, you can have
+		  to configurate your network (router, firewall, etc ...) to make the 
+		  FreeCast Manager services visible for your listeners (generally on Internet).
+		  By default, you need to open and/or forward the tcp ports 80, 1664 and 1665.
+		</para>
+	  </sect2>
+	</sect1>
 </chapter>
 
 <chapter id="install">

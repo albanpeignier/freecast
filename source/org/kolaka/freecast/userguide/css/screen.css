@@ -17,11 +17,12 @@ div.refnamediv, div.refsect1, div.refsynopsisdiv, div.reference {
 }
 
 div.navheader {
-	background: #fff url("../images/logo-small.png") no-repeat center top;
+	background: url("../images/logo-small.png") no-repeat center top;
 	padding-top: 35px;
 }
 
-div.navfooter {
+div.navfooter { 
+    clear: both;
 	margin-top: 2em;
 }
 
@@ -33,9 +34,14 @@ img {
 	border: 0px;
 }
 
+span.application { 
+    font-weight: bold;
+}
+
 div.mediaobject {
 	float: left;
 	margin: 0.6em;
+    margin-right: 2em;
 }
 
 a {
@@ -54,6 +60,24 @@ p {
 	margin-right: 1em;	
 }
 
+ul p, ol p { 
+	text-indent: 0;
+    margin-left: 0;
+}
+
+ul { 
+     list-style-type: circle;
+}
+
+p.remark { 
+    background-color: #fdff99;
+}
+
+li { 
+     margin-left: 3em;
+     padding-left: 0;
+}
+
 h1, h2, h3 {
 	margin-top: 1.5em;
 }
@@ -61,6 +85,7 @@ h1, h2, h3 {
 h3 {
 	padding-left: 0.4em;
 	border-bottom: 1px dashed #260e0c;
+    clear: both;
 }
 
 h5 {
