@@ -604,6 +604,17 @@
 		</copy>
 	</target>
 
+	<target name="build.win32">
+	  <mkdir dir="build/win32"/>
+	  <get dest="build/win32/jre-setup.exe" src="${export.win32.jresetup.url}" usetimestamp="true"/>
+	  <copy todir="build/win32">
+		<fileset dir="source/org/kolaka/freecast/nsis"/>
+		<filterset>
+		  <filter token="project.version" value="${project.version}" />
+		</filterset>
+	  </copy>
+	</target>
+
 	<target name="test" depends="build.test" description="Run the unit tests">
 		<property name="build.test.results.dir" value="build/test/results"/>
 		<mkdir dir="${build.test.results.dir}" />
@@ -868,6 +879,21 @@
 			</fileset>
 		</chmod>
 	</target>
+
+	<target name="dist.win32" depends="dist.jar, dist.lib, dist.bin, dist.docs, dist.etc, build.win32">
+		<copy todir="${dist.win32.dir}/" includeemptydirs="false">
+			<fileset dir="dist">
+				<include name="lib/*.jar" />
+				<include name="lib/windows/**" />
+				<include name="bin/*.bat" />
+				<include name="etc/**" />
+				<include name="docs/*"/>
+				<include name="docs/userguide/**"/>
+				<include name="docs/examples/**"/>
+			</fileset>
+		</copy>
+		<copy file="LICENSE" tofile="${dist.win32.dir}/LICENSE.txt"/>
+	</target>
 	
 	<macrodef name="tidy">
 		<attribute name="dest"/>
@@ -965,6 +991,26 @@
 				<include name="*.css" />
 			</fileset>
 		</copy>
+	</target>
+
+	<target name="export.win32" depends="dist.win32">
+	  <pathconvert targetos="windows" property="export.win32.build.dir">
+		<path>
+		  <pathelement location="${basedir}/build/win32"/>
+		</path>
+	  </pathconvert>
+	  <exec executable="makensis">
+		<arg value="-V4"/>
+		<arg value="-NOCD"/>
+		<arg value="-DBuildDir=build\win32"/>
+		<arg value="-DDistDir=dist\win32"/>
+		<arg value="-DExportFile=export\${project.fullname}.exe"/>
+		<arg file="build/win32/freecast.nsi"/>
+	  </exec>
+	</target>
+
+	<target name="export.debian" depends="dist.debian">
+	  
 	</target>
 
 	<target name="ccontrol.loop" depends="clean, clean.track, export"/>
