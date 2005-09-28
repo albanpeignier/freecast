@@ -137,10 +137,12 @@ JREPathStorage:
   
 ExitInstallJRE:
   Pop $1
-  MessageBox MB_OK|MB_ICONSTOP "The setup is about to be interrupted for the following reason : $1"
-  Pop $1 	; Restore $1
-  Pop $0 	; Restore $0
-  Abort
+  MessageBox MB_YESNO \
+             'The setup is about to be interrupted for the following reason:$\n$1$\nDo you want to continue ${AppName} installation?' \
+	 IDYES End
+  	 Pop $1 	; Restore $1
+	 Pop $0 	; Restore $0
+	 Abort
 End:
   Pop $1	; Restore $1
   Pop $0	; Restore $0
@@ -180,10 +182,10 @@ Section "Start menu shortcuts" SecCreateShortcut
 
   CreateDirectory "$SMPROGRAMS\${AppName}\Broadcast"
   CreateShortCut "$SMPROGRAMS\${AppName}\Broadcast\Start Tracker.lnk" "$INSTDIR\bin\freecast-tracker.bat"
-  CreateShortCut "$SMPROGRAMS\${AppName}\Broadcast\Start Root Node - audio example.lnk" "$INSTDIR\bin\freecast.bat -config $INSTDIR\docs\examples\audio\freecast-node-root.xml"
-  CreateShortCut "$SMPROGRAMS\${AppName}\Broadcast\Start Listener Node - audio example.lnk" "$INSTDIR\bin\freecast-swing.bat -config $INSTDIR\docs\examples\audio\freecast-node-listener.xml"
-  CreateShortCut "$SMPROGRAMS\${AppName}\Broadcast\Start Root Node - video example.lnk" "$INSTDIR\bin\freecast.bat -config $INSTDIR\docs\examples\video\freecast-node-root.xml"
-  CreateShortCut "$SMPROGRAMS\${AppName}\Broadcast\Start Listener Node - video example.lnk" "$INSTDIR\bin\freecast-swing.bat -config $INSTDIR\docs\examples\video\freecast-node-listener.xml"
+  CreateShortCut "$SMPROGRAMS\${AppName}\Broadcast\Start Root Node - audio example.lnk" "$INSTDIR\bin\freecast.bat" "-config docs/examples/audio/freecast-node-root.xml"
+  CreateShortCut "$SMPROGRAMS\${AppName}\Broadcast\Start Listener Node - audio example.lnk" "$INSTDIR\bin\freecast-swing.bat" "-config docs/examples/audio/freecast-node-listener.xml"
+  CreateShortCut "$SMPROGRAMS\${AppName}\Broadcast\Start Root Node - video example.lnk" "$INSTDIR\bin\freecast.bat" "-config docs/examples/video/freecast-node-root.xml"
+  CreateShortCut "$SMPROGRAMS\${AppName}\Broadcast\Start Listener Node - video example.lnk" "$INSTDIR\bin\freecast-swing.bat" "-config docs/examples/video/freecast-node-listener.xml"
 
 ; Etc
 SectionEnd
@@ -201,9 +203,13 @@ SectionEnd
 Function .onInit
  
   ;Extract InstallOptions INI Files
-  !insertmacro MUI_INSTALLOPTIONS_EXTRACT "${BuildDir}\jre.ini"
+  !insertmacro MUI_INSTALLOPTIONS_EXTRACT_AS "${BuildDir}\jre.ini" "jre.ini"
   Call SetupSections
  
+FunctionEnd
+
+Function .onInstSuccess
+  ExecShell open "$SMPROGRAMS\${AppName}"
 FunctionEnd
  
 Function myPreInstfiles
@@ -225,16 +231,14 @@ Function CheckInstalledJRE
   
 FoundOld:
 ;  MessageBox MB_OK "Old JRE found"
-  !insertmacro MUI_INSTALLOPTIONS_WRITE "jre.ini" "Field 1" "Text" "${AppName} requires a more recent version of the Java Runtime Environment than the one found on your computer.\
-The installation of JRE ${JRE_VERSION} will start."
+  !insertmacro MUI_INSTALLOPTIONS_WRITE "jre.ini" "Field 1" "Text" "${AppName} requires a more recent version of the Java Runtime Environment than the one found on your computer.$\nThe installation of the last Java Runtime Environment will start."
   !insertmacro MUI_HEADER_TEXT "$(TEXT_JRE_TITLE)" "$(TEXT_JRE_SUBTITLE)"
   !insertmacro MUI_INSTALLOPTIONS_DISPLAY_RETURN "jre.ini"
   Goto MustInstallJRE
  
 NoFound:
 ;  MessageBox MB_OK "JRE not found"
-  !insertmacro MUI_INSTALLOPTIONS_WRITE "jre.ini" "Field 1" "Text" "No Java Runtime Environment could be found on your computer.\
-The installation of JRE v${JRE_VERSION} will start."
+  !insertmacro MUI_INSTALLOPTIONS_WRITE "jre.ini" "Field 1" "Text" "No Java Runtime Environment could be found on your computer.$\nThe installation of the last Java Runtime Environment will start."
   !insertmacro MUI_HEADER_TEXT "$(TEXT_JRE_TITLE)" "$(TEXT_JRE_SUBTITLE)"
   !insertmacro MUI_INSTALLOPTIONS_DISPLAY_RETURN "jre.ini"
   Goto MustInstallJRE
@@ -352,7 +356,7 @@ Section "Uninstall"
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${ShortName}"
   DeleteRegKey HKLM  "SOFTWARE\${Vendor}\${AppName}"
   ; remove shortcuts, if any.
-  Delete "$SMPROGRAMS\${AppName}\*.*"
+  RMDir /r "$SMPROGRAMS\${AppName}"
   ; remove files
   RMDir /r "$INSTDIR"
  
