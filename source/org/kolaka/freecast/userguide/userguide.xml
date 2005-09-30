@@ -20,16 +20,16 @@
 		It should be interesting for everyone who want to know more about FreeCast. 
 	</para>
 	<para>
-		This document is available in the FreeCast website at <ulink url="http://www.freecast.org/userguide"/>.
+		This document is available on the FreeCast website at <ulink url="http://www.freecast.org/userguide"/>.
 		A <ulink url="http://www.freecast.org/userguide/userguide.pdf">PDF version</ulink> is available too.
 		This release is always associated to the current FreeCast release.
 	</para>
 	<para>
-		Your comments are welcome, contact the FreeCast support team: <ulink url="http://www.freecast.org/support"/>.
+		Your comments are welcome, please contact the FreeCast support team: <ulink url="http://www.freecast.org/support"/>.
 	</para>
 	<para>
-		The latest release of this document is published during the writing 
-		into the development project document at <ulink url="http://www.kolaka.org/freecast/docs/userguide"/>.
+		The latest release of this document is available during its writing 
+		into the development project documentation at <ulink url="http://www.kolaka.org/freecast/docs/userguide"/>.
 	</para>
 </preface>
 <chapter id="introduction">
@@ -43,9 +43,9 @@
 		</textobject>
 	</mediaobject>
 	<para>
-		FreeCast allows to stream by using a peer-to-peer network model.
-		It makes possible a stream broadcast to a large number of listeners from a simple DSL connection.
-		FreeCast offers the possibility to broadcast over Internet without a strict limit of listener count. 
+		FreeCast allows to stream data by using a peer-to-peer network model.
+		It allows to broadcast a stream to a large number of listeners from a simple DSL connection.
+		FreeCast offers the possibility to broadcast over the Internet without a strict limit of listener count. 
 		You can share with the largest number without the economic cost of a large bandwidth.
 	</para>
 	<para>
@@ -54,52 +54,50 @@
 	<sect1 id="introduction-architecture">
 		<title>Architecture overview</title>
 		<para>
-			To understand how to use and deploy a FreeCast network, you need to understand few key concepts.
-			A FreeCast network is able to broadcast a stream. This stream can contain audio and/or video contents.
-			The stream will not be modified by the FreeCast broadcasting. The way and tools to create and play 
+			To understand how to use and deploy a FreeCast network, you need to understand a few key concepts.
+			A FreeCast network is able to broadcast a stream, which can contain audio and/or video contents.
+			The stream won't be modified by the FreeCast broadcasting. The way and tools used to create and play 
 			the stream are near the same than in a classic broadcast.
 		</para>
 		<sect2>
 			<title>Classic broadcast</title>
 			<para>
-				Before explaining the peer-to-peer broadcast, what's a classic broadcast ? 
-				In a classic broadcast, there are two roles: server or client.
-				The server has the stream information and send them directly to each client.
-				That makes things simple for the client. With the server URL, that's simple 
-				to connect and retrieve the information. When the 
-				server bandwidth is enough larg, this classic broadcast allows a great result.
-				The quality of service depends mostly of the client Internet access quality.
+				Before explaining the the concept of peer-to-peer broadcast, let's look at what is a classic broadcast. 
+				In a classic broadcast, there are two roles: server and client.
+				The server has the information to be streamed available and sends them directly to each client.
+				That makes things simple for the client, which easily connects and retrieves information with the URL of the server. When the 
+				server bandwidth is wide enough, this classic broadcast performs well.
+				The quality of service depends mostly of the Internet access quality of the client.
 			</para>
 			<para>
-				Things become difficult for the server
-				when the client count grows. It must send the same information to each client. 
-				And all these data are send via the Internet connection of the server. 
-				But the needed infrastructure becomes quickly expansive. If you want to accept
-				up to 50 listeners with a musical stream (typically encoeded at 128kbits), you
+				Things become more difficult for the server
+				as the client count grows. The server must send the same information to each client, 
+				and all these data must be sent with the single Internet connection of the server. 
+				As such, the needed infrastructure becomes quickly expansive. As an example, if you want to accept
+				up to 50 listeners with a musical stream (typically encoded at 128kbits), you
 				need an Internet connection with an upload bandwidth larger than 6.25 Mbits. 
-				To compare, an classic DSL access provides an upload bandwidth of 0.5Mbits ...
+				As a comparison, a classic DSL access provides an upload bandwidth of 0.5Mbits ...
 			</para>
 		</sect2>
 		<sect2>
 			<title>Peer-to-peer broadcast</title>
 			<para>
 				The peer-to-peer broadcast is based on a simple question: 
-				<emphasis>why clients which are retrieving (and listening) the stream 
-				would stay passive ?</emphasis>
-				Nowdays, most of the stream listeners have a DSL access.
-				Instead of concentrating all clients on the server, why clients which 
-				are listening couldn't relay the stream to few other clients ?
-				With a peer-to-peer broadcast, they can.
+				<emphasis>why clients which are retrieving (and listening to) the stream 
+				should stay passive ?</emphasis>
+				Nowadays, most of the stream listeners have a DSL access.
+				Instead of concentrating all clients on the server, it would be better if the clients which 
+				are listening to the stream relay it to a few other clients. This is what is achieved with a peer-to-peer broadcast.
 			</para>
 			<para>
 				This collaborative approach has evident benefits. 
 				From the broadcaster side, the server bandwidth is less loaded and
-				doesn't limit the client count. For instance, a broadcast can be 
+				the client count is not limited. For instance, a broadcast can be 
 				started from a simple DSL access. The streaming infrastructure cost 
-				can be reduced dramatically. From the client side, benefits are may
-				be indirect but not null. Because if the peer-to-peer model makes
-				things simplier for the broadcaster, it allows the clients to find
-				more streams, more choices, more  less advertising. A collaborative
+				can be reduced in a significant manner. From the client side, benefits may
+				be indirect but not null, because if the peer-to-peer model makes
+				things easier for the broadcaster, it allows the clients to find
+				more streams, more choices, less advertising. A collaborative
 				approach can be initiated between broadcaster and clients: clients 
 				can support the broadcaster by relaying the stream between their 
 				listenings.
@@ -107,14 +105,14 @@
 		</sect2>
 		<sect2>
 			<title>Key concepts</title>
-			<para>In a FreeCast network is composed of a 
+			<para>A FreeCast network is composed of a 
 			<firstterm>tracker</firstterm>, a <firstterm>root node</firstterm> and <firstterm>nodes</firstterm>.</para>
 			<mediaobject>
 				<imageobject>
 					<imagedata fileref="images/architecture-network.png" format="PNG"/>
 				</imageobject>
 				<textobject>
-					<phrase>Schema of a FreeCast network</phrase>
+					<phrase>Architecture of a FreeCast network</phrase>
 				</textobject>
 			</mediaobject>
 			<sect3>
@@ -123,7 +121,7 @@
 				<para>
 					In a FreeCast network, the stream transits via one or more nodes. 
 					Each node can receive, use (play) and send stream information (packets). 
-					All the nodes of a same FreeCast network register themself to the 
+					All the nodes of a given FreeCast network register themselves to the 
 					same tracker.
 				</para>
 			</sect3>
@@ -142,10 +140,10 @@
 				<indexterm><primary>tracker</primary></indexterm>
 				<para>
 					The tracker has an overview of the network. 
-					A FreeCast node can only participates to a FreeCast network after being 
-					registered into the tracker of this network. All nodes of the network 
-					send periodically information to the tracker. 
-					Nodes use the tracker to obtain the references of other nodes.
+					A FreeCast node can only participate to a FreeCast network once it is 
+					registered to the tracker of this network. All the nodes of the network 
+					send information to the tracker periodically. 
+					The nodes use the tracker to obtain references to other nodes.
 				</para>
 			</sect3>
 		</sect2>
@@ -193,7 +191,7 @@
 	  <title>Your first FreeCast network</title>
 		<procedure>
 			<step>
-			  <para>Install a Java Runtime Environment 1.4 or 1.5, see <ulink url="http://www.java.com"/></para>
+			  <para>You need to have a Java Runtime Environment 1.4 or 1.5 installed, see <ulink url="http://www.java.com"/></para>
 			</step>
 			<step>
 			  <para>
@@ -203,8 +201,8 @@
 			</step>
 			<step>
 			  <para>
-				After loading, the <application>FreeCast Manager</application> starts, 
-				configures the FreeCast network and displays the GUI
+				When loaded, the <application>FreeCast Manager</application> starts, 
+				configures the FreeCast network and displays the GUI.
 			  </para>
 			</step>
 		</procedure>
@@ -233,7 +231,7 @@
 			<title>Tracker</title>
 			<para>
 			  The node count is displayed in realtime. At startup, a single node 
-			  should counted. It's the embedded root node.
+			  is counted: it's the embedded root node.
 			</para>
 		  </sect3>
 		  <sect3>
@@ -260,7 +258,7 @@
 			</mediaobject>
 		  </screenshot>
 		  <para>
-			The action menu can be displayed by right-clicking in the GUI.
+			The action menu can be displayed by right-clicking on the GUI.
 			This menu allows the following actions:
 		  </para>
 		  <sect3>
@@ -269,11 +267,11 @@
 			  Starts your browser to visit the web homepage of the FreeCast network.
 			  This web homepage is hosted by the embedded web server provided by
 			  the <application>FreeCast Manager</application>. This page will be
-			  used by listeners to start easily their nodes.
+			  used by listeners to easily start their nodes.
 			</para>
 			<para>
-			  Don't publish the URL displayed your browser, 
-			  use the <guimenuitem>Email network homepage</guimenuitem> action.
+			  Don't publish the URL displayed by your browser, 
+			  use the <guimenuitem>Email network homepage</guimenuitem> action instead.
 			</para>
 		  </sect3>
 		  <sect3>
@@ -287,13 +285,13 @@
 Visit the homepage of my FreeCast network: http://84.67.103.24:8080/</programlisting>
 			<para>
 			  Complete and send this email to your first listeners. 
-			  They just have to visit the given URL and click on the start click.
+			  They just have to visit the given URL and click on the start button.
 			</para>
 			<note>
 			  <title>Different URLs and some don't work</title>
 			  <para>
 				According to your network configuration, the FreeCast Manager can use several URLs 
-				to designate the homepage of your FreeCast network. The root cause is that
+				to designate the homepage of your FreeCast network. The main cause is that
 				you can have to use a different URL than your listeners to access to your own computer.
 				The FreeCast manager respects this constraint. Take care to use the URL 
 				specified in the email to invite your listeners.
@@ -312,20 +310,20 @@ Visit the homepage of my FreeCast network: http://84.67.103.24:8080/</programlis
 			  </listitem>
 			  <listitem>
 				<para>
-				  a root node which listens on the first free port between 1664 and 1670, 
+				  a root node which listens on the first free ports between 1664 and 1670, 
 				  the configured receiver uses a default audio playlist provided by the FreeCast server
 				</para>
 			  </listitem>
 			  <listitem>
-				<para>a http server which listens on the port 80 or on the first free port between 8080 and 8100</para>
+				<para>a HTTP server which listens on the port 80 or on the first free ports between 8080 and 8100</para>
 			  </listitem>
 			</itemizedlist>
 		  </para>
 		  <note>
 			<title>Broadcast content</title>
 			<para>
-			  For the first release of the FreeCast Manager, the default broadcast content can't be
-			  changed. But the next releases will include the needed dialogs to configure other receivers.
+			  In the first release of the FreeCast Manager, the default broadcast content can't be
+			  changed. But future releases will include the dialogs needed to configure other receivers.
 			</para>
 		  </note>
 		</sect2>
@@ -335,13 +333,13 @@ Visit the homepage of my FreeCast network: http://84.67.103.24:8080/</programlis
 	  <sect2>
 		<title>Network configuration</title>
 		<remark>
-		  symptoms: listeners can access to the embedded HTTP server, the start page fails
+		  symptoms: listeners can access to the embedded HTTP server, but the start page fails
 		</remark>
 		<para>
 		  As plug-and-play networks are still more a concept than a reality, you can have
-		  to configurate your network (router, firewall, etc ...) to make the 
-		  FreeCast Manager services visible for your listeners (generally on Internet).
-		  By default, you need to open and/or forward the tcp ports 80, 1664 and 1665.
+		  to configurate your network (router, firewall, etc ...) in order to make the 
+		  FreeCast Manager services visible to your listeners (generally on the Internet).
+		  By default, you need to open and/or forward the TCP ports 80, 1664 and 1665.
 		</para>
 	  </sect2>
 	</sect1>
@@ -350,7 +348,7 @@ Visit the homepage of my FreeCast network: http://84.67.103.24:8080/</programlis
 <chapter id="install">
 	<title>Installation</title>
 	<para>
-		You've got several ways to install FreeCast on a system.
+		There are several ways to install FreeCast on a system.
 	</para>
 	<sect1 id="install-binary">
 		<title>Binary distribution</title>
@@ -359,7 +357,7 @@ Visit the homepage of my FreeCast network: http://84.67.103.24:8080/</programlis
 				<para>install a Java Runtime Environment 1.4 or 1.5, see <ulink url="http://www.java.com"/></para>
 			</step>
 			<step>
-				<para>download the last release from <ulink url="http://download.freecast.org"/></para>
+				<para>download the latest release from <ulink url="http://download.freecast.org"/></para>
 			</step>
 			<step>
 				<para>extract the FreeCast files from the downloaded archive</para>
@@ -381,7 +379,7 @@ Visit the homepage of my FreeCast network: http://84.67.103.24:8080/</programlis
 				<tbody>
 					<row>
 						<entry><filename>bin</filename></entry>
-						<entry>contains unix and windows scripts, see <xref linkend="refentry"/></entry>
+						<entry>contains Unix and Windows scripts, see <xref linkend="refentry"/></entry>
 					</row>
 					<row>
 						<entry><filename>etc</filename></entry>
@@ -401,7 +399,7 @@ Visit the homepage of my FreeCast network: http://84.67.103.24:8080/</programlis
 					</row>
 					<row>
 						<entry><filename>docs/examples/video</filename></entry>
-						<entry>contains configuration sample files for an video stream</entry>
+						<entry>contains configuration sample files for a video stream</entry>
 					</row>
 					<row>
 						<entry><filename>docs/examples/tracker</filename></entry>
@@ -444,7 +442,7 @@ INFO   [Main]: start a HttpTracker on port /0.0.0.0:1665]]></screen>
 				<para>
 					When the tracker is running, that's the moment to start the root node. 
 					In this example, we will use a default playlist provided by the FreeCast website as source. 
-					This stream will be transmit by your FreeCast network.
+					This stream will be transmitted by your FreeCast network.
 				</para>
 				<screen><![CDATA[[host:path/to/freecast] bin/freecast -config docs/examples/audio/freecast-node-root.xml
 INFO   [Main]: version 20050907
@@ -454,11 +452,11 @@ WARN   [NodeConfigurator]: the playlist receiver uses a static bandwidth control
 INFO   [DefaultNodeService]: received node identifier #30CC71CD520A5F31
 INFO   [HttpPlayerSource$1]: wait for http player connection at /0.0.0.0:8000]]></screen>
 				<para>
-					The default node configuration uses the tracker on the same host (localhost). The used command line specifies
-					to use a sample configuration file. It will use a default playlist provided by the FreeCast website.
+					The default node configuration uses the tracker on the same host (localhost). The command line specifies
+					the use of a sample configuration file. It will use a default playlist provided by the FreeCast website.
 				</para>
 				<para>
-					The tracker should logged the following messages when the root node registers itself:
+					The tracker should have logged the following messages when the root node registers:
 					<screen><![CDATA[INFO   [Tracker$Auditor]: new registered node [/192.168.x.x:1664{}, /x.x.x.x:1664{}]{}
 INFO   [Tracker$Auditor]: 1 connected nodes]]></screen>
 				</para>
@@ -466,7 +464,7 @@ INFO   [Tracker$Auditor]: 1 connected nodes]]></screen>
 			<sect3>
 				<title>Start a first FreeCast listener node</title>
 				<para>
-					A FreeCast network without listener isn't really a network .. so let's start a first FreeCast listener node.
+					A FreeCast network without a listener isn't really a network .. so let's start a first FreeCast listener node.
 				</para>
 				<screen><![CDATA[[host:path/to/freecast] bin/freecast-swing -config docs/examples/audio/freecast-node-listener.xml
 INFO   [Main]: version 20050907
@@ -477,16 +475,16 @@ INFO   [HttpPlayerSource$1]: wait for http player connection at /0.0.0.0:8001
 INFO   [PeerControler$Auditor]: accept connection with [<host>/192.168.x.x:1664{}, /x.x.x.x:1664{}]{identifier=#30CC71CD520A5F31, order=0}
 INFO   [PeerControler$Auditor]: 1 peers connected]]></screen>
 				<para>
-					The listener node connects to the tracker, receive the references of other peers, try to connect to one of them
-					(the root node in your case). When the first stream data are received, the audio player starts to play sound.
+					The listener node connects to the tracker, receives the references oto other peers, then tries to connect to one of them
+					(the root node in your case). When the first streamed data are received, the audio player starts to play sound.
 				</para>
 				<para>
-					The tracker should logged the following messages when the listener node registers itself:
+					The tracker should have logged the following messages when the listener node registers:
 					<screen><![CDATA[INFO   [Tracker$Auditor]: new registered node /127.0.0.1:1666{}
 INFO   [Tracker$Auditor]: 2 connected nodes]]></screen>
 				</para>
 				<para>
-					The root node should logged the following message when the listener node connects it:
+					The root node should have logged the following message when the listener node connects to it:
 					<screen><![CDATA[INFO  SocketPeerConnection[/192.168.x.x] [PeerControler$Auditor]: accept connection with null
 INFO  SocketPeerConnection[/192.168.x.x] [PeerControler$Auditor]: 1 peers connected]]></screen>
 				</para>
@@ -497,7 +495,7 @@ INFO  SocketPeerConnection[/192.168.x.x] [PeerControler$Auditor]: 1 peers connec
 	<sect1 id="install-debian">
 		<title>Debian package distribution</title>
 		<para>
-			You need to have a Java Runtime Environement 1.4 or 1.5, see 
+			You need to have a Java Runtime Environement 1.4 or 1.5 installed, see 
 			<ulink url="http://wiki.tryphon.org/Java_under_Debian">Java under Debian</ulink>.
 			Other dependencies are available via packages present into the Debian releases.
 		</para>
@@ -565,11 +563,11 @@ Do you want to continue? [Y/n]</screen>
 					</row>
 					<row>
 						<entry><filename>/usr/share/doc/freecast/examples/video</filename></entry>
-						<entry>contains configuration sample files for an video stream</entry>
+						<entry>contains configuration sample files for a video stream</entry>
 					</row>
 					<row>
 						<entry><filename>/usr/share/doc/freecast/examples/tracker</filename></entry>
-						<entry>contains configuration sample files for tracker</entry>
+						<entry>contains configuration sample files for the tracker</entry>
 					</row>
 					<row>
 						<entry><filename>/usr/share/doc/freecast/examples/jws</filename></entry>
@@ -586,7 +584,7 @@ Do you want to continue? [Y/n]</screen>
 			<para>
 				The FreeCast debian package respects the 
 				<ulink url="http://www.debian.org/doc/debian-policy/">Debian policy</ulink>.
-				So FreeCast binaries are available in <filename>/usr/bin</filename> and are available in the default PATH, 
+				So FreeCast binaries are available in <filename>/usr/bin</filename> and in the default PATH, 
 				see the <xref linkend="refentry"/>.
 			</para>
 		</sect2>		
@@ -607,7 +605,7 @@ Do you want to continue? [Y/n]</screen>
 				<title>Relay node</title>
 				<para>
 					If you just want to deploy a FreeCast relay node, you need to disable the FreeCast tracker
-					daemon (see <filename>/etc/default/freecast-tracker</filename>) and provides a node configuration
+					daemon (see <filename>/etc/default/freecast-tracker</filename>) and to provide a node configuration
 					with the tracker to be used.
 				</para>
 			</sect3>
@@ -628,17 +626,17 @@ Do you want to continue? [Y/n]</screen>
 		<para>
 			The only component which can be configured into the tracker 
 			is the <systemitem>connector</systemitem>
-			which dialogs with every node of the FreeCast network. The <systemitem>http connector</systemitem>
+			that dialogs with every node of the FreeCast network. A <systemitem>HTTP connector</systemitem>
 			implementation is available (the <acronym>RMI</acronym> implementation is obsolete now).
 		</para>
 		<para>
-			The tracker must be accessible for all the nodes which want to participate to 
+			The tracker must be accessible for all the nodes that want to participate to 
 			the FreeCast network. The connector configuration must match the network configuration
-			and constraints of the computer where the tracker is hosted. If the tracker connector is
+			and the constraints of the computer where the tracker is hosted. If the tracker on which the connector is
 			listening requests on the listen address <systemitem class="ipaddress">0.0.0.0:1665</systemitem>
 			(the default value) and if the nodes are on Internet, any firewall or router between the
 			tracker host and Internet must be configured to let pass through or forward connections
-			to the connector port. If the nodes "behind" such equipments experiment connection errors,
+			to the connector port. If the nodes "behind" such equipments encounter connection errors,
 			you should verify the network configuration.
 		</para>
 		<para>
@@ -669,7 +667,7 @@ Do you want to continue? [Y/n]</screen>
 		<sect2>
 			<title>Connector</title>
 			<sect3>
-				<title>Http Connector</title>
+				<title>HTTP Connector</title>
 				<programlisting><![CDATA[<connector>
   <class>http</class>
   <listenaddress>
@@ -680,10 +678,10 @@ Do you want to continue? [Y/n]</screen>
 				<formalpara>
 					<title>listenaddress</title>
 					<para>
-						specifies where the connector (and so the tracker) is listening 
+						specifies where the connector (and so the tracker) is listening to 
 						requests sent by the nodes. By default, the connector is listening on
-						every available ip address (<systemitem class="ipaddress">0.0.0.0</systemitem>) 
-						and the tcp port <systemitem>1665</systemitem>.
+						every available IP address (<systemitem class="ipaddress">0.0.0.0</systemitem>) 
+						and the TCP port <systemitem>1665</systemitem>.
 					</para>
 				</formalpara>
 			</sect3>
@@ -702,7 +700,7 @@ Do you want to continue? [Y/n]</screen>
 	<sect1 id="tracker-cli">
 		<title>Command line usage</title>
 		<para>
-			The FreeCast tracker can be started in command-line via the command <command>freecast-tracker</command> (see <xref linkend="freecast"/>).
+			The FreeCast tracker can be started in command line via the command <command>freecast-tracker</command> (see <xref linkend="freecast"/>).
 			<screen><![CDATA[[host:path/to/freecast] bin/freecast-tracker 
 create log dir: host:path/to/freecast/log
 INFO   [Main]: version 20050907
@@ -724,26 +722,26 @@ INFO   [Main]: start a HttpTracker on port /0.0.0.0:1665]]></screen>
 			<title>Peer provider</title>
 			<para>
 				The <systemitem>peerprovider</systemitem> component manages the connection between the node and the tracker.
-				It must be configured with the tracker TCP address.
+				It must be configured with the tracker's TCP address.
 			</para>
 		</sect2>
 		<sect2 id="sender">
 			<title>Sender</title>
 			<para>
-				The <systemitem>sender</systemitem> component listens requests from other nodes (peers), manages the opened connections 
-				and control the data sending. The <systemitem>socket sender</systemitem> implementation
-				uses a TCP socket, it's used by default. The <systemitem>none sender</systemitem> implementation disables
+				The <systemitem>sender</systemitem> component listens to requests from other nodes (peers), manages the opened connections 
+				and controls the sending of data. The <systemitem>socket sender</systemitem> implementation
+				uses a TCP socket by default. The <systemitem>none sender</systemitem> implementation disables
 				the node relaying (.. discouraged).
 			</para>
 			<sect3 id="sender-socket">
 				<title>Socket sender</title>
 				<para>
-					The <systemitem>socket sender</systemitem> implementation waits TCP connections
+					The <systemitem>socket sender</systemitem> implementation waits for TCP connections
 					initiated by other nodes. Once a connection is opened with another node (peer), the sender forwards the
-					received stream data to this peer.
+					received streamed data to this peer.
 				</para>
 				<para>
-					The specified listen address must be visible from other nodes. That means your network configuration
+					The specified listening address must be visible from other nodes. That means that your network configuration
 					must be correct to allow other nodes to accept the root node. When needed, check the configuration of
 					your router and/or your firewall.
 				</para>
@@ -752,25 +750,25 @@ INFO   [Main]: start a HttpTracker on port /0.0.0.0:1665]]></screen>
         <sect2 id="reference">
             <title>Reference</title>
             <para>
-                The node reference are used to localize it over the network. The default reference
-                specifies the ip address and tcp port where the node waits connections from other nodes
-                (see <xref linkend="sender-socket"/>). By default, the ip address of the node is determinated
+                The node reference is used to localize it over the network. The default reference
+                specifies the IP address and TCP port where the node waits for connections from other nodes
+                (see <xref linkend="sender-socket"/>). By default, the IP address of the node is resolved
                 by the tracker.
             </para>
             <para>
                 When a node and the tracker are on the same network, you may need to specify manually the
-                <systemitem>reference</systemitem> which must be used by the node. Indeed, by default the
-                tracker determinates the node <systemitem>reference</systemitem> (the public reference used
+                <systemitem>reference</systemitem> that must be used by the node. Indeed, by default the
+                tracker finds the node <systemitem>reference</systemitem> (the public reference used
                 by other nodes to contact the node). If the tracker and a node are on the same network,
                 the tracker will see the local network address of the node. Other nodes over Internet won't be able to
                 use this reference. In this case, you need to specify manually the <systemitem>reference</systemitem>
-                into the sender configuration.
+                in the sender configuration.
             </para>
             <sect3>
                 <title><systemitem>multiple</systemitem> reference</title>
                 <para>
-                    You can specify several references. It allows to the node to be available from several
-                    ip addresses. For instance, you can specify a reference with the public ip address,
+                    You can specify several references. It allows the node to be available from several
+                    IP addresses. For instance, you can specify a reference with the public IP address,
                     and another with a local network address. Your node will be available both on Internet
                     and on your local network.
                 </para>
@@ -778,7 +776,7 @@ INFO   [Main]: start a HttpTracker on port /0.0.0.0:1665]]></screen>
             <sect3>
                 <title><systemitem>auto</systemitem> reference</title>
                 <para>
-                    To skip a manual configuration of the <systemitem>reference</systemitem>, an automatic
+                    To skip to a manual configuration of the <systemitem>reference</systemitem>, an automatic
                     mechanism is available by using a <systemitem>reference</systemitem> with the class
                     <systemitem>auto</systemitem>.
                 </para>
@@ -788,14 +786,14 @@ INFO   [Main]: start a HttpTracker on port /0.0.0.0:1665]]></screen>
 			<title>Receiver</title>
 			<para>
 				The <systemitem>receiver</systemitem> component manages the stream reception. According to the
-				implementation, the stream can received from other nodes (peers) or created by the node (root node)
+				implementation, the stream can be received from other nodes (peers) or created by the node (root node)
 				from a classic Ogg stream.
 			</para>
 			<sect3 id="receiver-peer">
 				<title>Peer receiver</title>
 				<para>
 					The <systemitem>peer receiver</systemitem> component receives the stream
-					from other nodes (peers). It doesn't require configuration. It will use the tracker
+					from other nodes (peers). It doesn't require any configuration. It will use the tracker
 					to find other nodes.
 				</para>
 			</sect3>
@@ -803,10 +801,10 @@ INFO   [Main]: start a HttpTracker on port /0.0.0.0:1665]]></screen>
 				<title>Shoutclient receiver</title>
 				<para>
 					The <systemitem>shoutclient receiver</systemitem> component opens a connection
-					on a shout server (like icecast or fluemondo) to retreive an audio or video ogg stream.
+					on a shout server (like icecast or fluemondo) to retrieve an audio or video ogg stream.
 				</para>
 				<para>
-					The <systemitem>shoutclient receiver</systemitem> configuration contains the
+					The <systemitem>shoutclient receiver</systemitem> configuration defines the
 					URL where the stream can be received.
 				</para>
 			</sect3>
@@ -818,7 +816,7 @@ INFO   [Main]: start a HttpTracker on port /0.0.0.0:1665]]></screen>
 				</para>
 				<para>
 					The <systemitem>shoutserver receiver</systemitem> configuration defines
-					the listen address used to wait the shout connection.
+					the listen address used to wait for the shout connection.
 				</para>
 			</sect3>
 			<sect3 id="receiver-playlist">
@@ -838,15 +836,15 @@ INFO   [Main]: start a HttpTracker on port /0.0.0.0:1665]]></screen>
 			<para>
 				The <systemitem>checksummer</systemitem> and <systemitem>validator</systemitem> components are used to
 				validate the relayed nodes into each listener node. The <systemitem>checksummer</systemitem> is deployed
-				into the root node to add a verifiable information to each packet (checksum). 
+				into the root node in order to add a verifiable information to each packet (checksum). 
 				The <systemitem>validator</systemitem> is used by each node listener to verify the checksum of each packet.
-				According to the choosed implementation, it allows to verify that:
+				According to the chosen implementation, it allows to verify that:
 				<itemizedlist>
 					<listitem><para>the network transfert doesn't corrupt the packet</para></listitem>
-					<listitem><para>the authentification created by the root node</para></listitem>
+					<listitem><para>the authentification is created by the root node</para></listitem>
 				</itemizedlist>
 			</para>
-			<para>Every packet not validate by the listener node will be skipped. It will not played and not relayed.</para>
+			<para>Every packet that is not validated by the listener node will be skipped. It won't be played and relayed.</para>
 			<important>
 				<title>Root and listener compatibility</title>
 				<para>
@@ -864,7 +862,7 @@ INFO   [Main]: start a HttpTracker on port /0.0.0.0:1665]]></screen>
 				</para>
 				<para>
 				 	Deployed into the listener nodes, the <systemitem>digest</systemitem> <systemitem>validator</systemitem> 
-				 	verifies that the packet data still matchs this checksum.
+				 	verifies that the packet data still matches this checksum.
 				</para>
 				<para>No specific configuration is needed</para>
 			</sect3>
@@ -878,7 +876,7 @@ INFO   [Main]: start a HttpTracker on port /0.0.0.0:1665]]></screen>
 				<para>
 					Deployed into the listener nodes with the associated public key, the 
 					<systemitem>signature</systemitem> <systemitem>validator</systemitem> verifies that the packet data still
-					matchs this digital signature.
+					matches this digital signature.
 				</para>
 				<para>
 					To create a key pair, use the freecast-keygenerator tool:
@@ -927,7 +925,7 @@ Take care to the private key file security</screen>
 			<title>Peer Provider</title>
 			<programlisting><![CDATA[<peerprovider>
   <trackeraddress>
-  	<host>freecast.acmee-radio.org</host>
+  	<host>freecast.acme-radio.org</host>
     <port>1665</port>
   </trackeraddress>
 </peerprovider>]]></programlisting>
@@ -936,7 +934,7 @@ Take care to the private key file security</screen>
 				<term><systemitem>trackeraddress</systemitem></term>
 				<listitem>
 				  <para>
-					the TCP address where the tracker listens node requests. 
+					the TCP address where the tracker listens to node requests. 
 					This configuration must match the tracker configuration.
 					See <xref linkend="target-address"/>.
 				  </para>
@@ -961,7 +959,7 @@ Take care to the private key file security</screen>
 				<term><systemitem>listenaddress</systemitem></term>
 				<listitem>
 				  <para>
-					the TCP address where the node listens requests of other nodes.
+					the TCP address where the node listens to requests of other nodes.
 					See <xref linkend="listen-address"/>.
 				  </para>
 				</listitem>
@@ -1007,7 +1005,7 @@ Take care to the private key file security</screen>
 			<title>ShoutClient Receiver</title>
 			<programlisting><![CDATA[<receiver>
   <class>shoutclient</class>
-  <url>http://stream.acmee-radio.org/relay.ogg</url>
+  <url>http://stream.acme-radio.org/relay.ogg</url>
   Validator
 </receiver>]]></programlisting>
 		  </sect3>
@@ -1026,7 +1024,7 @@ Take care to the private key file security</screen>
 				<term><systemitem>listenaddress</systemitem></term>
 				<listitem>
 				  <para>
-					the TCP address where the shoutcast server listens requests. 
+					the TCP address where the shoutcast server listens to requests. 
 					The listen address will be used into the configuration of the source client.
 					See <xref linkend="listen-address"/>.
 				  </para>
@@ -1047,9 +1045,9 @@ Take care to the private key file security</screen>
 				<term><systemitem>url</systemitem></term>
 				<listitem>
 				  <para>
-					the URL where the playlist can found. This playlist will be loaded and
+					the URL where the playlist can be found. This playlist will be loaded and
 					each specified file will be played. If you use relative file names into
-					the playlist the the base url of the playlist will be used as prefix.
+					the playlist, the base url of the playlist will be used as a prefix.
 					Files specified via HTTP URLs will be cached locally.
 				  </para>
 				</listitem>
@@ -1059,7 +1057,7 @@ Take care to the private key file security</screen>
 				<listitem>
 				  <para>
 					due to a limitation of the playlist receiver, you need to specify the bitrate
-					of read files. Take care to use files with a static bitrate.
+					of read files. You should take care to use files with a static bitrate.
 				  </para>
 				</listitem>
 			  </varlistentry>
@@ -1104,7 +1102,7 @@ Take care to the private key file security</screen>
 			  <title>Signature Validator</title>
 			  <programlisting><![CDATA[<validator>
   <class>signature</class>
-  <publickey>http://stream.acmee-radio.org/public.key</publickey>
+  <publickey>http://stream.acme-radio.org/public.key</publickey>
 </validator>]]></programlisting>
 			  <variablelist>
 				<varlistentry>
@@ -1123,12 +1121,12 @@ Take care to the private key file security</screen>
 		  <title>GUI Configuration</title>
 		  <programlisting><![CDATA[<gui>
   <background>#ffffff</background>
-  <logo>http://stream.acmee-radio.org/freecast/logo.png</logo>
-  <tray>http://stream.acmee-radio.org/freecast/icon-24.png</tray>
+  <logo>http://stream.acme-radio.org/freecast/logo.png</logo>
+  <tray>http://stream.acme-radio.org/freecast/icon-24.png</tray>
 
   <player>
-    <started>http://stream.acmee-radio.org/freecast/player-started.png</started>
-    <stopped>http://stream.acmee-radio.org/freecast/player-stopped.png</stopped>
+    <started>http://stream.acme-radio.org/freecast/player-started.png</started>
+    <stopped>http://stream.acme-radio.org/freecast/player-stopped.png</stopped>
   </player>
 </gui>]]></programlisting>
 		  <variablelist>
@@ -1186,7 +1184,7 @@ Take care to the private key file security</screen>
 			  <varlistentry>
 				<term>audio</term>
 				<listitem>
-				  <para>must be false if the Ogg Theora stream doesn't contain an audio part</para>
+				  <para>must be set to false if the Ogg Theora stream doesn't contain an audio part</para>
 				</listitem>
 			  </varlistentry>
 			  <varlistentry>
@@ -1211,7 +1209,7 @@ Take care to the private key file security</screen>
 				<term><systemitem>listenaddress</systemitem></term>
 				<listitem>
 				  <para>
-					the TCP address where the external players can connect to retrieve the stream. 
+					the TCP address where external players can connect to retrieve the stream. 
 					See <xref linkend="listen-address"/>.
 				  </para>
 				</listitem>
@@ -1272,7 +1270,7 @@ Take care to the private key file security</screen>
 	<sect1 id="node-cli">
 		<title>Command line usage</title>
 		<para>
-			The CLI FreeCast node can be started in command-line via the command <command>freecast</command> (see <xref linkend="freecast"/>).
+			The CLI FreeCast node can be started in command line via the command <command>freecast</command> (see <xref linkend="freecast"/>).
 		</para>
 	</sect1>
 	<sect1 id="node-swing">
@@ -1281,12 +1279,11 @@ Take care to the private key file security</screen>
 			The Swing FreeCast node can be started via the command <command>freecast-swing</command> (see <xref linkend="freecast"/>). 
 		</para>
 		<para>
-			This way to start is reserved to the advanced users. Most of listeners will use the <productname>JavaWebStart</productname> deployment to start FreeCast 
+			This way to start FreeCast is reserved to advanced users. Most of listeners will use the <productname>JavaWebStart</productname> deployment to start FreeCast 
 			(see <xref linkend="javawebstart"/>).
 		</para>
 		<para>
-			The Swing  FreeCast node is a <productname>Java</productname> application (and not an applet). You don't necessary need
-			a browser to start it.
+			The Swing  FreeCast node is a <productname>Java</productname> application (and not an applet). No browser is required to start it.
 		</para>
 		<sect2>
 			<title>Main dialog</title>
@@ -1301,7 +1298,7 @@ Take care to the private key file security</screen>
 						<para>mute the player</para>
 					</listitem>
 				</itemizedlist>
-				That can seem few, but there are the major functionnalities needed for a listener.
+				That can seem few, but these are the major functionnalities needed for a listener.
 			</para>
 
 			<screenshot>
@@ -1325,11 +1322,11 @@ Take care to the private key file security</screen>
 			  <title>Mute and relay</title>
 			  <para>
 				When you press the <guibutton>player button</guibutton>, 
-				the audio or video stream is no longer played by your node. You restart the player by pressing again
+				the audio or video stream is no longer played by your node. You can restart the player by pressing again
 				the <guibutton>player button</guibutton>. The player will not restart at the same position.
 				When it is muted, the player will release your sound card (to use an external
-				player for instance). The FreeCast node stays connected to the FreeCast network and is able to realy other nodes. You minimizes the
-				window and let the FreeCast node alive. It's a way to support the FreeCast network you're listening because other listeners
+				player for instance). The FreeCast node stays connected to the FreeCast network and is able to relay other nodes. You can minimize the
+				window and let the FreeCast node alive. It's a way to support the FreeCast network you are listening to because other listeners
 				can be relayed.
 			  </para>
 			</sect3>
@@ -1353,7 +1350,7 @@ Take care to the private key file security</screen>
 					</mediaobject>
 				</screenshot>
 				<para>The <interface>About dialog</interface> gives you credits information about FreeCast. 
-				The <interface>Log dialog</interface> allows to see the messages logged by FreeCast and save them
+				The <interface>Log dialog</interface> allows you to see the messages logged by FreeCast and to save them
 				to a file (to illustrate a bug report for instance).</para>
 			</sect3>
 		</sect2>
@@ -1364,7 +1361,7 @@ Take care to the private key file security</screen>
   <title>Configuration</title>
   <para>
 	There are some general considerations about the configuration of FreeCast applications. 
-	Every application are configurable via XML files. These XML files follow the same logic.
+	Each application is configurable via XML files. These XML files follow the same logic.
   </para>
   <para>
 	The configuration file only needs to complete and overwrite the default configuration of 
@@ -1384,10 +1381,10 @@ Take care to the private key file security</screen>
 		<example>
 		  <title>Host configurations</title>
 		  <programlisting><![CDATA[<host>82.68.47.19</host>]]></programlisting>
-		  <programlisting><![CDATA[<host>stream.acmee-radio.org</host>]]></programlisting>
+		  <programlisting><![CDATA[<host>stream.acme-radio.org</host>]]></programlisting>
 		</example>
 		<para>
-		  Think this information can be used by FreeCast applications in another context than your 
+		  This information can be used by FreeCast applications in another context than your 
 		  local network. Don't use local host names or local IP addresses in a configuration file 
 		  which must be used over Internet.
 		</para>
@@ -1420,7 +1417,7 @@ Take care to the private key file security</screen>
 				the listen IP address. The default is 0.0.0.0, connections will be listened over all 
 				network interfaces. By choosing a specific address, you can limit the reachability. 
 				For instance, You can use localhost to limit the reachability to your computer. 
-				Don't modify this default parameter if you have a specific need. 
+				Don't modify this default parameter unless you have a specific need. 
 			  </para>
 			</listitem>
 		  </varlistentry>
@@ -1429,7 +1426,7 @@ Take care to the private key file security</screen>
 			<listitem>
 			  <para>
 				the TCP port used to listen and receive requests from other FreeCast applications. 
-				By using a port selection, you can avoid problems with ports already used by another applications. 
+				By using a port selection, you can avoid problems with ports already used by other applications. 
 				In this case, the first free port will be used.
 			  </para>
 			</listitem>
@@ -1437,8 +1434,8 @@ Take care to the private key file security</screen>
 		</variablelist>
 		<para>
 		  The choice of a listen address must be compatible with your network configuration. 
-		  Listening connections on a computer behind a routeur or a firewall can require a manual
-		  configuration step of the related software or hardware.
+		  Listening connections on a computer behind a router or a firewall can require a manual
+		  configuration step about the related software or hardware.
 		</para>
 	  </sect3>
 	  <sect3 id="target-address">
@@ -1460,7 +1457,7 @@ Take care to the private key file security</screen>
 			<term><systemitem>port</systemitem></term>
 			<listitem>
 			  <para>
-				you must specify the port where the requests are listening by the remote host.
+				you must specify the port where the requests are listened to by the remote host.
 				You can't use a port selection.
 			  </para>
 			</listitem>
@@ -1480,11 +1477,11 @@ Take care to the private key file security</screen>
 			<para>
 				<productname>JavaWebStart</productname> is a launcher whih allows users to start <productname>Java</productname>
 				applications by a single click on a website. To sum-up quickly, the user's browser downloads 
-				on a <filename class="extension">jnlp</filename> file on a website. This file contains a technical description of the 
+				a <filename class="extension">jnlp</filename> file on a website. This file contains a technical description of the 
 				application to be started. <productname>JavaWebStart</productname> (which should be associated to this kind of file)
-				starts by read this file. It starts a GUI to make the user following the starting process. 
+				starts by reading this file. It starts a GUI to make the user follow the starting process. 
 				Then, it downloads the necessary files, validates the numeric signature, asks the user to confirm the application 
-				execution and .. starts the application.
+				execution and ... starts the application.
 			</para>
 			<screenshot>
 				<screeninfo><productname>JavaWebStart</productname> FreeCast start</screeninfo>
@@ -1533,11 +1530,11 @@ Take care to the private key file security</screen>
 	</sect1>
 	<sect1 id="descriptor">
 		<title>Stream description file</title>
-		<para>Let's suppose some information about your stream :
+		<para>Let's assume some information about your stream :
 			<itemizedlist>
-				<listitem><para>your webradio is named <literal>Acmee Radio</literal></para></listitem>
-				<listitem><para>your website is <literal>http://acmee-radio.org/</literal></para></listitem>
-				<listitem><para>your tracker is available at <literal>freecast.acmee-radio.org:1665</literal></para></listitem>
+				<listitem><para>your webradio is named <literal>Acme Radio</literal></para></listitem>
+				<listitem><para>your website is <literal>http://acme-radio.org/</literal></para></listitem>
+				<listitem><para>your tracker is available at <literal>freecast.acme-radio.org:1665</literal></para></listitem>
 				<listitem><para>you're running the <literal>freecast-20050323</literal> release</para></listitem>
 			</itemizedlist>
 		</para>
@@ -1545,10 +1542,10 @@ Take care to the private key file security</screen>
 		<example>
 			<title>Minimalist stream description</title>
 			<programlisting><![CDATA[<stream>
- <name>Acmee Radio</name>
- <homepage>http://acmee-radio.org/</homepage>
+ <name>Acme Radio</name>
+ <homepage>http://acme-radio.org/</homepage>
  <tracker>
-  <host>acmee-radio.org</host>
+  <host>acme-radio.org</host>
   <port>1665</port>
  </tracker>
  <jnlp>
@@ -1558,11 +1555,11 @@ Take care to the private key file security</screen>
 		</example>
 		<para>
 			This stream description must be published on your website. In our example, 
-			it's published at <literal>http://acmee-radio.org/freecast/descriptor.xml</literal>.
+			it's published at <literal>http://acme-radio.org/freecast/descriptor.xml</literal>.
 		</para>
 		<sect2>
 			<title>Stream description option list</title>	
-			<para>There are all the options you can use into the stream description file.</para>
+			<para>These are all the options you can use into the stream description file.</para>
 			<table tocentry="1">
 				<title>Stream description</title>
 				<tgroup cols="2">
@@ -1589,7 +1586,7 @@ Take care to the private key file security</screen>
 					</row>
 					<row>
 						<entry>tracker.port</entry>
-						<entry>the port where your tracker is running (optional if the defaukt port <literal>1665</literal> is used)</entry>
+						<entry>the port where your tracker is running (optional if the default port <literal>1665</literal> is used)</entry>
 					</row>
 					<row>
 						<entry>config</entry>
@@ -1597,7 +1594,7 @@ Take care to the private key file security</screen>
 					</row>
 					<row>
 						<entry>jnlp.version</entry>
-						<entry>the FreeCast release you're using for tracker and your root node. Important to make your listeners run a compatible release.</entry>
+						<entry>the FreeCast release you're using for tracker and your root node. Important in order to make your listeners run a compatible release.</entry>
 					</row>
 				</tbody>
 				</tgroup>
@@ -1612,18 +1609,18 @@ Take care to the private key file security</screen>
 		</sect2>
 		<sect2>
 			<title>Advanced examples</title>
-			<para>There are some examples of stream configuration files.</para>
+			<para>There are some examples of streaming configuration files.</para>
 			<sect3>
 				<title>Specify a node configuration file</title>
 				<para>You can specify a node configuration file to override the default one. See <xref linkend="node-configuration"/>.</para>
 				<example>
-					<title>Stream description with a node configuration file</title>
+					<title>Streaming description with a node configuration file</title>
 					<programlisting><![CDATA[<stream>
-   <name>Acmee Radio</name>
-   <homepage>http://acmee-radio.org/</homepage>
+   <name>acme Radio</name>
+   <homepage>http://acme-radio.org/</homepage>
    <jnlp>
     <version>20050323</version>
-    <config>http://acmee-radio.org/freecast/config.xml</config>
+    <config>http://acme-radio.org/freecast/config.xml</config>
    </jnlp>
   </stream>]]></programlisting>
 				</example>
@@ -1645,7 +1642,7 @@ Take care to the private key file security</screen>
  <node>
   <peerprovider>
    <trackeraddress>
-    <host>acmee-radio.org</host>
+    <host>acme-radio.org</host>
    </trackeraddress>
   </peerprovider>
   <receiver>
@@ -1653,7 +1650,7 @@ Take care to the private key file security</screen>
    <validator>
     <class>signature</class>
     <publickey>
-      http://acmee-radio.org/freecast/public.key
+      http://acme-radio.org/freecast/public.key
     </publickey>
    </validator>
   </receiver>
@@ -1675,19 +1672,19 @@ Take care to the private key file security</screen>
 								<para>activate the stream validator by signature and specifies the public key to be used</para>
 							</callout>
 							<callout arearefs="area.httpplayer area.httpplayer.port">
-								<para>activate the http player and specifies the port to be used</para>
+								<para>activate the HTTP player and specifies the port to be used</para>
 							</callout>
 						</calloutlist>
 					</programlistingco>
 				</example>
-				<para>This is only a configuration sample, see see <xref linkend="node-configuration"/> for more information.</para>
+				<para>This is only a configuration sample, see <xref linkend="node-configuration"/> for more information.</para>
 			</sect3>
 		</sect2>
 	</sect1>
 	<sect1 id="startpage">
 		<title>Start page</title>
 		<para>
-			Now you use have a stream descriptor file, you can use it into your web site to give listeners access to your stream.
+			Now that you have a stream descriptor file, you can use it into your web site to give listeners access to your stream.
 			To facilitate the FreeCast node startup from websites, the FreeCast provides a customizable <emphasis>start page</emphasis>.
 			You don't need to try to explain the install process or add links to the installation pages on the FreeCast website.
 			Just use the <emphasis>start page</emphasis> which will be automatically customized with the information provided 
@@ -1696,8 +1693,8 @@ Take care to the private key file security</screen>
 		<para>
 			The FreeCast website provides a small javascript function which allows you to create links to the start page
 			by specifying the <emphasis>hostname and path of your stream descriptor file</emphasis>. For instance, if your descriptor is
-			available at <systemitem>http://acmee-radio.org/freecast/descriptor.xml</systemitem>, you must only specify 
-			<systemitem>acmee-radio.org/freecast/descriptor.xml</systemitem>.
+			available at <systemitem>http://acme-radio.org/freecast/descriptor.xml</systemitem>, you must only specify 
+			<systemitem>acme-radio.org/freecast/descriptor.xml</systemitem>.
 		</para>
 		<example>
 			<title>Use the start page in a web page</title>
@@ -1708,7 +1705,7 @@ Take care to the private key file security</screen>
   </head>
   <body>
     ...
-    <a href="javascript:start('acmee-radio.org/freecast/descriptor.xml')">FreeCast stream</a>
+    <a href="javascript:start('acme-radio.org/freecast/descriptor.xml')">FreeCast stream</a>
     ...
   </body>
 </html>]]></programlisting>
@@ -1724,7 +1721,7 @@ Take care to the private key file security</screen>
 			A source client can be used to create the Ogg stream broadcasted on the FreeCast network.
 			You need to configure your root node with a <systemitem>shoutserver</systemitem> <systemitem>receiver</systemitem>
 			(see <xref linkend="receiver-shoutserver"/>) 
-			and configure the source client to send the stream to the port where the node waits the connection.
+			and configure the source client to send the stream to the port where the node waits for the connection.
 		</para>
 		<sect2>
 			<title>Ices</title>
