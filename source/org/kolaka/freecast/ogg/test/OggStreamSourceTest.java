@@ -25,6 +25,7 @@ package org.kolaka.freecast.ogg.test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 
 import junit.framework.TestCase;
 

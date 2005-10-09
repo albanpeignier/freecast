@@ -23,6 +23,7 @@
 
 package org.kolaka.freecast.transport.receiver;
 
+import java.io.EOFException;
 import java.io.IOException;
 
 import org.apache.commons.logging.LogFactory;
@@ -71,12 +72,23 @@ public class OggSourceFactoryReceiver extends OggSourceReceiver {
                     LogFactory.getLog(getClass()).error(message,e);
                     return DefaultTimer.seconds(30);
                 }
+                
+                LogFactory.getLog(getClass()).debug("change source for " + oggSource);
 
                 try {
                     receive(oggSource);
+                } catch (EOFException e) {
+                	LogFactory.getLog(getClass()).debug("end of source " + oggSource);
                 } catch (IOException e) {
                     LogFactory.getLog(getClass()).error("Stream reception failed with  " + oggSource, e);
                     return DefaultTimer.seconds(3);
+                } finally {
+                	try {
+						oggSource.close();
+					} catch (IOException e) {
+	                    LogFactory.getLog(getClass()).debug("Can't close properly the OggSource " + oggSource, e);
+	                    return DefaultTimer.nodelay();
+					}
                 }
 
                 return DefaultTimer.nodelay();

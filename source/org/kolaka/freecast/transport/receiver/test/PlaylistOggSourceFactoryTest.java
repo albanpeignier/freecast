@@ -25,6 +25,7 @@ package org.kolaka.freecast.transport.receiver.test;
 
 import junit.framework.TestCase;
 import org.kolaka.freecast.transport.receiver.FilePlaylist;
+import org.kolaka.freecast.transport.receiver.Playlist;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -50,7 +51,7 @@ public class PlaylistOggSourceFactoryTest extends TestCase {
         assertEquals(expectedURLs.length, playlist.size());
 
         for (int i=0; i < playlist.size(); i++) {
-            InputStream input = playlist.get(i);
+            Playlist.Entry entry = playlist.get(i);
             // TODO to be continue
         }
     }

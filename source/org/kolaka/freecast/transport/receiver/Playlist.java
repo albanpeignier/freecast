@@ -25,13 +25,32 @@ package org.kolaka.freecast.transport.receiver;
 import java.io.InputStream;
 import java.io.IOException;
 
+import org.apache.commons.lang.Validate;
+
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public interface Playlist {
 
-    public InputStream get(int index) throws IOException;
+    public Entry get(int index) throws IOException;
 
     public int size();
+    
+    public static abstract class Entry {
+    	
+    	private final String description;
+    	
+    	public Entry(String description) {
+    		Validate.notEmpty(description, "No specified description");
+    		this.description = description;
+    	}
+    	
+    	public String getDescription() {
+			return description;
+		}
+    	
+    	public abstract InputStream openStream() throws IOException;
+    	
+    }
 
 }

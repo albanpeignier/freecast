@@ -65,9 +65,14 @@ public class FilePlaylist implements Playlist {
         return baseURL;
     }
 
-    public InputStream get(int index) throws IOException {
-        URL url = (URL) urls.get(index);
-		return url.openStream();
+    public Entry get(int index) throws IOException {
+        final URL url = (URL) urls.get(index);
+        return new Entry(url.toExternalForm()) {
+        	public InputStream openStream() throws IOException {
+        		return url.openStream();
+        	}
+        };
+		
     }
 
     public int size() {

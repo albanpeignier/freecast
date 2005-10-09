@@ -73,9 +73,14 @@ public class ResourcePlaylist implements Playlist {
 		}
 	}
 
-	public InputStream get(int index) throws IOException {
-		URI uri = (URI) uris.get(index);
-		return locator.openResource(uri);
+	public Entry get(int index) throws IOException {
+		final URI uri = (URI) uris.get(index);
+		return new Entry(uri.toString()) {
+				public InputStream openStream() throws IOException {
+					return locator.openResource(uri);
+				}
+		};
+		
 	}
 
 	public int size() {

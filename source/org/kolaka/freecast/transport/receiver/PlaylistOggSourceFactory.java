@@ -25,6 +25,7 @@ package org.kolaka.freecast.transport.receiver;
 
 import org.kolaka.freecast.ogg.OggSource;
 import org.kolaka.freecast.ogg.OggStreamSource;
+import org.kolaka.freecast.transport.receiver.Playlist.Entry;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -51,9 +52,10 @@ public class PlaylistOggSourceFactory implements OggSourceFactory {
     private int nextPlayedIndex;
 
     public OggSource next() throws IOException {
-        InputStream input = playlist.get(nextPlayedIndex);
+        Entry entry = playlist.get(nextPlayedIndex);
+		InputStream input = entry.openStream();
         nextPlayedIndex = (nextPlayedIndex + 1) % playlist.size();
-        return new OggStreamSource(new BufferedInputStream(input));
+        return new OggStreamSource(new BufferedInputStream(input),entry.getDescription());
     }
 
 }

@@ -57,5 +57,8 @@ public class MemoryOggSource implements OggSource {
     public boolean isEmpty() {
         return pages.isEmpty();
     }
+    
+    public void close() throws IOException {
+    }
 
 }

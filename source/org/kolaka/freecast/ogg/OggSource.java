@@ -34,4 +34,6 @@ public interface OggSource {
 
     public OggPage next() throws IOException;
 
+    public void close() throws IOException;
+
 }

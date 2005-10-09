@@ -96,6 +96,7 @@ public class DefaultOggPage implements OggPage, MutableOggPage {
     public String toString() {
         ToStringBuilder builder = new ToStringBuilder(this);
         builder.append("firstpage", firstPage);
+        builder.append("lastpage", lastPage);
         builder.append("streamSerialNumber", getStreamSerialNumberString());
         builder.append("absoluteGranulePosition", absoluteGranulePosition);
         return builder.toString();
