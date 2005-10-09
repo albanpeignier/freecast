@@ -11,20 +11,20 @@
   <navitem>
    <title>
     <i18n>
-     <text lang="en">Usage</text>
-     <text lang="fr">Utilisation</text>
+     <text lang="en">Listen</text>
+     <text lang="fr">Ecouter</text>
     </i18n>
    </title>
-   <link href="usage"/>
+   <link href="listen"/>
   </navitem>	 
   <navitem>
    <title>
     <i18n>
-     <text lang="en">Install</text>
-     <text lang="fr">Installation</text>
+     <text lang="en">Broadcast</text>
+     <text lang="fr">Diffuser</text>
     </i18n>
    </title>
-   <link href="install"/>
+   <link href="broadcast"/>
   </navitem>
   <navitem>
    <title>

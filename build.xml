@@ -411,6 +411,9 @@
 				<include name="jws/jws15*"/>
 			</fileset>
 		</copy>
+	</target>
+
+	<target name="build.docs.userguide.html.validate" depends="build.docs.userguide.html.check" unless="build.docs.userguide.html.notRequired">
 		<xmlvalidate failonerror="yes" lenient="yes" warn="yes" file="build/docs/userguide/userguide.xml"/>
 	</target>
 
@@ -420,7 +423,7 @@
 		</uptodate>		
 	</target>
 	
-	<target name="build.docs.userguide.html" depends="build.docs.userguide.prepare, build.docs.userguide.html.check, build.docs.userguide.html.copy" 
+	<target name="build.docs.userguide.html" depends="build.docs.userguide.prepare, build.docs.userguide.html.check, build.docs.userguide.html.validate, build.docs.userguide.html.copy" 
 		unless="build.docs.userguide.html.notRequired">
 		<docbook in="build/docs/userguide/userguide.xml" 
 			out="build/docs/userguide/index.html" 
@@ -428,6 +431,7 @@
 			<!-- ${track.docbook.dir}/html/chunk.xsl -->
 			<arguments>
 				<arg line="-PARAM hunker.output.encoding UTF-8"/>
+				<arg line="-PARAM chunk.tocs.and.lots 1"/>
 				<arg line="-PARAM html.stylesheet css/screen.css"/>
 				<arg line="-PARAM use.id.as.filename 1"/>
 				<arg line="-PARAM navig.graphics 1"/>
@@ -563,7 +567,7 @@
 		<property name="source.www.dir" location="source/org/kolaka/freecast/www" />
 		<patternset id="build.www.xml.patternset">
 			<include name="*.xml"/>
-			<exclude name="start.xml" />
+			<exclude name="start*.xml" />
 		</patternset>
 		
 		<xmlvalidate lenient="true" failonerror="true" warn="true">
@@ -597,9 +601,10 @@
 				<include name="**/*.jpg" />
 				<include name="**/*.gif" />
 				<include name="**/*.ico" />
-				<include name="**/start.*" />
+				<include name="**/start*.*" />
 				<include name="**/jnlp.*" />
 				<include name="**/reference.php" />
+				<include name="js/*" />
 			</fileset>
 		</copy>
 	</target>
@@ -939,6 +944,7 @@
 		<copy todir="dist/www/userguide">
 			<fileset dir="build/docs/userguide">
 				<include name="**/*.png" />
+				<include name="**/*.css" />
 				<include name="*.pdf" />
 			</fileset>
 		</copy>

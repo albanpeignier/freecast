@@ -9,7 +9,8 @@ table {
 
 div.navheader, div.navfooter, 
 div.book, div.chapter, div.sect1, 
-div.preface, div.appendix, div.index,
+div.preface, div.appendix, div.index, 
+div.toc, div.list-of-examples, div.list-of-tables,
 div.refnamediv, div.refsect1, div.refsynopsisdiv, div.reference {
 	width: 800px;
 	margin-left: auto;
@@ -17,13 +18,24 @@ div.refnamediv, div.refsect1, div.refsynopsisdiv, div.reference {
 }
 
 div.navheader {
-	background: url("../images/logo-small.png") no-repeat center top;
+	background: url("../images/logo-small.png") no-repeat center 0%;
 	padding-top: 35px;
 }
 
 div.navfooter { 
     clear: both;
 	margin-top: 2em;
+}
+
+/*
+div.navheader, div.navfooter { 
+	background-color: #b72f2f;
+}
+*/
+
+div.navheader th, div.navfooter td, div.navfooter a { 
+    font-size: 15px;
+    color: #000000;
 }
 
 hr {

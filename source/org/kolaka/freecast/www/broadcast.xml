@@ -1,0 +1,185 @@
+<page>
+  <title>
+   <i18n>
+    <text lang="en">Broadcast</text>
+    <text lang="fr">Diffuser</text>
+   </i18n>
+  </title>
+
+ <content>
+    <h1>
+     <i18n>
+      <text lang="en">Broadcast with</text>
+      <text lang="fr">Diffuser avec</text>
+     </i18n>
+     FreeCast
+    </h1>
+    <div class="summary">
+	  <p>
+		<strong>Freecast</strong> 
+		<i18n>
+		  <text lang="en">
+			can be easily deployed to broadcast your own audio or video content.
+		  </text>
+		  <text lang="fr">
+			peut être facilement déployer pour diffuser votre contenu audio ou video.
+		  </text>
+		</i18n>
+	  </p>
+	  <p>
+		<i18n>
+		  <text lang="en">
+			There are the various solutions to start your own network FreeCast.
+		  </text>
+		  <text lang="fr">
+			Voici les solutions qui s'offrent à vous pour mettre en place votre propre réseau FreeCast.
+		  </text>
+		</i18n>
+	  </p>
+	</div>
+	
+	<h3 id="manager">
+	  FreeCast Manager
+	</h3>
+	<div>
+	  <img class="screenshot" src="images/screenshots/manager-default.png" alt="FreeCast Manager"/>
+
+	  <p>
+		<i18n>
+		  <text lang="en">
+			The <strong>FreeCast Manager</strong> provides a <em>click &amp; broadcast</em> solution.
+		  </text>
+		  <text lang="fr">
+			Le <strong>FreeCast Manager</strong> fournit a solution <em>clic &amp; diffuse</em>.
+		  </text>
+		</i18n>
+	  </p>
+
+
+	  <p>
+		<i18n>
+		  <text lang="en">
+			With Java installed, you only need to 
+			<a href="http://download.freecast.org/jws/libfreecast/freecast-manager.jnlp">click to broacast</a>.
+			All the needed components of your FreeCast network are started into the FreeCast Manager.
+		  </text>
+		  <text lang="fr">
+			Avec Java installé, vous avez juste besoin de
+			<a href="http://download.freecast.org/jws/libfreecast/freecast-manager.jnlp">cliquer pour diffuser</a>.
+		  </text>
+		</i18n>
+	  </p>
+	  
+	  <h4>
+		<i18n>
+			<text lang="en">			
+			  Key features
+			</text>
+			<text lang="fr">		  
+			  Fonctionnalités principales
+			</text>
+		</i18n>
+	  </h4>
+
+	  <ul>
+		<li>
+		  <i18n>
+			<text lang="en">
+			  Installed, updated and started by a single click. 
+			  The FreeCast network configuration is performed automatically at startup.
+			</text>
+			<text lang="fr">
+			  Installé, mis à jour et démarré en un seul clic.
+			  La configuration du réseau FreeCast est effectuée automatiquement au démarrage.
+			</text>
+		  </i18n>
+		</li>
+		<li>
+		  <i18n>
+			<text lang="en">
+			  A graphical GUI allows you to follow the network activity. 
+			</text>
+			<text lang="fr">
+			  Une interface graphique pour suivre l'activité du réseau.
+			</text>
+		  </i18n>
+		</li>
+		<li>
+		  <i18n>
+			<text lang="en">
+			  Listeners can visit the web homepage available in the embedded HTTP server.
+			</text>
+			<text lang="fr">
+			  Les auditeurs peuvent visiter la page d'accueil mise à disposition
+			  par le serveur HTTP embarqué.
+			</text>
+		  </i18n>
+		</li>
+		<li>
+		  <i18n>
+			<text lang="en">
+			  You can promote your FreeCast network by simply sending by email
+			  all needed information. This email can be created directly from the GUI.
+			</text>
+			<text lang="fr">
+			  Vous pouvez faire connaitre votre réseau FreeCast en envoyant simplement
+			  un mail contenant toutes les informations nécessaires. Ce mail
+			  peut être créé directement depuis l'interface graphique.
+			</text>
+		  </i18n>
+		</li>
+	  </ul>
+
+	  <p>
+		<i18n>
+		  <text lang="en">
+			For a complete tutorial to start your first FreeCast network with FreeCast Manager,
+			follow the <a href="userguide/getting-started">Getting Started</a> section of the FreeCast userguide.
+		  </text>
+		  <text lang="fr">
+			Pour un tutorial complet sur le démarrage de votre premier réseau FreeCast avec FreeCast Manager,
+			suivez la section <a href="userguide/getting-started">Getting Started</a> du guide de l'utilisateur FreeCast.
+		  </text>
+		</i18n>
+	  </p>
+	</div>
+
+	<h3 id="distribution">
+	  Packaged distribution
+	</h3>
+	<div>
+	  <p>
+		<i18n>
+		  <text lang="en">
+			For advanced usages, you should use the packaged distribution. It provides you the complete
+			installation to start a stable FreeCast network.
+		  </text>
+		  <text lang="fr">
+			Pour des utilisations plus avancées, vous devriez utiliser la distribution packagée. 
+			Elle vous fournit l'installation complète permettant de démarrer un réseau FreeCast stable.
+		  </text>
+		</i18n>
+	  </p>
+	  <p>
+		<i18n>
+		  <text lang="en">
+			The distributions can be download from <a href="http://download.freecast.org">http://download.freecast.org</a>. You'll find a Windows installer, the tarball binary and source distributions. The debian package is available on the <a href="http://debian.tryphon.org">Tryphon Debian archiver</a>.
+		  </text>
+		  <text lang="fr">
+			Les distributions peuvent être téléchargées depuis <a href="http://download.freecast.org">http://download.freecast.org</a>. Vous trouverez un installeur Windows et les distributions binaire et source sous forme d'archive. Le paquet debian is disponible sur le <a href="http://debian.tryphon.org">Tryphon Debian archiver</a>.
+		  </text>
+		</i18n>
+	  </p>
+	  <p>
+		<i18n>
+		  <text lang="en">
+			Take a look on the <a href="userguide">FreeCast User Guide</a> to configure the tracker and the root node of your network. If you have other questions, contact the FreeCast <a href="support">support team</a>.
+		  </text>
+		  <text lang="fr">
+			Consultez le <a href="userguide">Guide de l'Utilisateur</a> pour configurer le tracker et le root node votre réseau. Si vous avez d'autres questsions, contactez l'<a href="support">équipe de support</a> de FreeCast.
+		  </text>
+		</i18n>
+	  </p>
+	</div>
+ </content>
+</page>

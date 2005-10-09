@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xalan="http://xml.apache.org/xslt" version="1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 
- <xsl:output method="xhtml" 
+ <xsl:output method="xml" 
   doctype-public="-//W3C//DTD XHTML 1.1//EN" 
   doctype-system="http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"
-  indent="yes" xalan:indent-amount="4"/>
+  indent="yes"/>
  <xsl:param name="lang"/>
  <xsl:param name="descriptor"/>
  <xsl:param name="url"/>
+ <xsl:param name="autostart"/>
 
  <xsl:variable name="description" select="document($descriptor)"/>
  <xsl:variable name="name" select="$description/stream/name"/>
@@ -20,11 +21,13 @@
     <title><xsl:text>Freecast | </xsl:text><xsl:apply-templates select="title"/> <xsl:value-of select="$name"/></title> 
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<meta http-equiv="refresh">
+	<xsl:if test="$autostart = 'true'">
+	  <meta http-equiv="refresh">
 		<xsl:attribute name="content">
-			<xsl:text>3; url=jnlp/descriptor=</xsl:text><xsl:value-of select="$url"/>
+		  <xsl:text>3; url=jnlp/descriptor=</xsl:text><xsl:value-of select="$url"/>
 		</xsl:attribute>
-	</meta>
+	  </meta>
+	</xsl:if>
 
     <link href="css/start.css" rel="stylesheet" type="text/css" media="screen" title="FreeCast"/>
     <link href="css/print.css" rel="stylesheet" type="text/css" media="print"/>
@@ -66,6 +69,9 @@
   <xsl:choose>
    <xsl:when test="@name = 'name'">
     <xsl:value-of select="$name"/>
+   </xsl:when>
+   <xsl:when test="@name = 'url'">
+    <xsl:value-of select="$url"/>
    </xsl:when>
   </xsl:choose>
  </xsl:template>

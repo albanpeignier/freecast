@@ -55,10 +55,10 @@
     <p>
      <i18n>
       <text lang="en">
-       If you don't find Java Web Start, it might because .. Java isn't properly install on your computer. See the <a href="install">install</a> page.
+       If you don't find Java Web Start, it might because .. Java isn't properly install on your computer. See the <a class="external" href="install">install</a> page.
       </text>
       <text lang="fr">
-       Si vous ne trouvez pas Java Web Start, c'est peut-etre parce que Java n'est pas correctement installé sur votre ordinateur. Reportez vous à la page d'<a href="install">installation</a>.
+       Si vous ne trouvez pas Java Web Start, c'est peut-etre parce que Java n'est pas correctement installé sur votre ordinateur. Reportez vous à la page d'<a target="_blank" href="install">installation</a>.
       </text>
      </i18n>
     </p>

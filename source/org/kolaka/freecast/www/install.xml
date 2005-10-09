@@ -28,57 +28,72 @@
      </i18n>
      </p>
     </div>
-   
-    <h3 id="java">
-     <i18n>
-      <text lang="en">Step</text>
-      <text lang="fr">Etape</text>
-     </i18n>
-     1 - Java
-    </h3> 
-    <p>
-     <i18n>
-      <text lang="en">
-       <a href="http://java.sun.com/webapps/getjava/BrowserRedirect?locale=en&amp;host=www.java.com:80" title="Install Java">
-        <img src="images/install/get_java-button.gif" alt="Java"/>
-       </a>
-      </text>
-      <text lang="fr">
-       <a href="http://java.sun.com/webapps/getjava/BrowserRedirect?locale=fr&amp;host=www.java.com:80" title="Installer Java">
-        <img src="images/install/get_java-button.gif" alt="Java"/>
-       </a>
-      </text>
-     </i18n>
-     <i18n>
-      <text lang="en">
-       Follow <a href="http://java.sun.com/webapps/getjava/BrowserRedirect?locale=en&amp;host=www.java.com:80" title="Download Java">this link</a> to download the Java software. Save the file simply on your disk and execute it.
-      </text>
-      <text lang="fr">
-       Utilisez <a href="http://java.sun.com/webapps/getjava/BrowserRedirect?locale=fr&amp;host=www.java.com:80" title="Télécharger Java">ce lien</a> pour télécharger Java. Enregistrez le fichier sur votre disque et executez le.
-      </text>
-     </i18n>
-    </p>
-    
-    <h3 id="freecast">
-     <i18n>
-      <text lang="en">Step</text>
-      <text lang="fr">Etape</text>
-     </i18n>
-     2 - FreeCast
-    </h3>
-    <p>
-     <a href="http://www.freecast.org/start"><img src="images/install/get_freecast-button.gif" alt="FreeCast"/></a>
-     
-     <i18n>
-      <text lang="en">
-       To install <strong>FreeCast</strong>, you only have to click on this <a href="http://www.freecast.org/start">link</a> .
-      </text>
-      <text lang="fr">
-       Pour installer <strong>FreeCast</strong>, il vous suffit de cliquez sur ce <a href="http://www.freecast.org/start">lien</a>.
-      </text>
-     </i18n>
-    </p>
 
+
+	<h3 id="java">
+	  <i18n>
+		<text lang="en">Step</text>
+		<text lang="fr">Etape</text>
+	  </i18n>
+	  1 - Java
+	</h3> 
+
+	<p>
+	  <i18n>
+		<text lang="en">
+		  <a href="http://java.sun.com/webapps/getjava/BrowserRedirect?locale=en&amp;host=www.java.com:80" title="Install Java">
+			<img src="images/install/get_java-button.gif" alt="Java"/>
+		  </a>
+		</text>
+		<text lang="fr">
+		  <a href="http://java.sun.com/webapps/getjava/BrowserRedirect?locale=fr&amp;host=www.java.com:80" title="Installer Java">
+			<img src="images/install/get_java-button.gif" alt="Java"/>
+		  </a>
+		</text>
+	  </i18n>
+
+	  <span class="java">
+		<i18n>
+		  <text lang="en">
+			You can skip this step, Java seems to installed on your computer.
+		  </text>
+		  <text lang="fr">
+			Vous pouvez passer cette étape, Java semble installé sur votre ordinateur.
+		  </text>
+		</i18n>
+	  </span>
+	  <span class="nojava">
+		<i18n>
+		  <text lang="en">
+			Follow <a href="http://java.sun.com/webapps/getjava/BrowserRedirect?locale=en&amp;host=www.java.com:80" title="Download Java">this link</a> to download the Java software. Save the file simply on your disk and execute it.
+		  </text>
+		  <text lang="fr">
+			Utilisez <a href="http://java.sun.com/webapps/getjava/BrowserRedirect?locale=fr&amp;host=www.java.com:80" title="Télécharger Java">ce lien</a> pour télécharger Java. Enregistrez le fichier sur votre disque et executez le.
+		  </text>
+		</i18n>
+	  </span>
+	</p>
+	
+	<h3 id="freecast">
+	  <i18n>
+		<text lang="en">Step</text>
+		<text lang="fr">Etape</text>
+	  </i18n>
+	  2 - FreeCast
+	</h3>
+	<p>
+	  <a href="http://www.freecast.org/start"><img src="images/install/get_freecast-button.gif" alt="FreeCast"/></a>
+	  
+	  <i18n>
+		<text lang="en">
+		  To install <strong>FreeCast</strong>, you only have to click on this <a href="http://www.freecast.org/start">link</a> .
+		</text>
+		<text lang="fr">
+		  Pour installer <strong>FreeCast</strong>, il vous suffit de cliquez sur ce <a href="http://www.freecast.org/start">lien</a>.
+		</text>
+	  </i18n>
+	</p>
+   
     <h4>
      <i18n>
       <text lang="en">Details</text>
@@ -120,18 +135,16 @@
      </ul>
     </div>
         
-    <p>
-     <i18n>
-      <text lang="en">
-       Congratulations, <strong>FreeCast</strong> is now usable on your computer.
-       See the <a href="usage">usage</a> page for more details.
-      </text>
-      <text lang="fr">
-       Félications, <strong>FreeCast</strong> fonctionne maintenant sur votre ordinateur.
-       Reportez-vous à la page d'<a href="usage">utilisation</a> pour plus de détails.
-      </text>
-     </i18n>
-    </p>
+	<p>
+	  <i18n>
+		<text lang="en">
+		  Congratulations, <strong>FreeCast</strong> is now usable on your computer.
+		</text>
+		<text lang="fr">
+		  Félications, <strong>FreeCast</strong> fonctionne maintenant sur votre ordinateur.
+		</text>
+	  </i18n>
+	</p>
 
     <h3 id="troubleshooting">
      <i18n>
