@@ -19,10 +19,11 @@
 		</Features>
 		</Release>
 		-->
-		<Release version="@build.version@" buildDate="@build.date@" builderID="@build.user@">
+		<Release version="20051009" buildDate="2005.10.09" builderID="Alban">
 			<Deliveries>
-				<Delivery href="freecast-@build.version@.tar.bz">freecast-@build.version@ binary</Delivery>
-				<Delivery href="freecast-@build.version@-src.tar.bz">freecast-@build.version@ sources</Delivery>
+				<Delivery href="freecast-20051009.tar.bz">freecast-20051009 binary</Delivery>
+				<Delivery href="freecast-20051009-src.tar.bz">freecast-20051009 sources</Delivery>
+				<Delivery href="freecast-20051009.exe">freecast-20051009 Windows installer</Delivery>
 			</Deliveries>
 			<Summary></Summary>
 			<Features>

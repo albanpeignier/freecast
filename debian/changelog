@@ -1,3 +1,9 @@
+freecast (20051009.1-0) unstable; urgency=low
+
+  * New upstream release
+
+ -- Alban Peignier <alban.peignier@free.fr>  Sun, 09 Oct 2005 22:00:00 +0200
+
 freecast (20050509.1-1) unstable; urgency=low
 
   * Added JDIC libraries
