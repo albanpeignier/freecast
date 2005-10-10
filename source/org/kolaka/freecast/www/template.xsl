@@ -21,6 +21,8 @@
 		<link href="css/screen.css" rel="stylesheet" type="text/css" media="screen" title="FreeCast"/>
 		<link href="css/print.css" rel="stylesheet" type="text/css" media="print"/>
 
+		<link rel="alternate" type="application/rss+xml" title="RSS" href="http://blog.tryphon.org/tryphon/archives/category/freecast/rss2" />
+
 		<link rel="icon" href="favicon.ico" type="image/x-icon"/>
 		<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>    
 
@@ -126,7 +128,7 @@
 	  <xsl:apply-templates mode="copy"/>
 	  <div class="footer">
 		<p class="licenses">
-		  <a href="http://creativecommons.org/licenses/by-nc-sa/2.0/" title="Creative Commons License">CC</a> | <a href="http://validator.w3.org/check/referer" title="XHTML">XHTML</a> | <a href="http://jigsaw.w3.org/css-validator/check/referer?warning=no&amp;profile=css2" title="CSS2">CSS</a>
+		  <a href="http://creativecommons.org/licenses/by-nc-sa/2.0/" title="Creative Commons License">CC</a> | <a href="http://validator.w3.org/check/referer" title="XHTML">XHTML</a> | <a href="http://jigsaw.w3.org/css-validator/check/referer?warning=no&amp;profile=css2" title="CSS2">CSS</a> | <a href="http://blog.tryphon.org/tryphon/archives/category/freecast/rss2">RSS</a>
 		</p>
 	  </div>
 	</div>

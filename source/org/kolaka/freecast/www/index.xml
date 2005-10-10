@@ -141,10 +141,12 @@
 		  <a href="broadcast">FreeCast Manager</a>: 
 		  <i18n>
 			<text lang="en">
-			  this new GUI allows you to start a FreeCast network by a single click.
+			  this new GUI allows you to <strong>start a FreeCast network by a single click</strong>.
+			  Every needed components (even a tiny HTTP server) are embedded into a single and graphical application.
 			</text>
 			<text lang="fr">
 			  la nouvelle interface permet de démarrer un réseau FreeCast par un simple clic.
+			  Tous les composants nécessaires (même un petit serveur HTTP) sont embarqués dans une seule et même application graphique.
 			</text>
 		  </i18n>
 		</li>
