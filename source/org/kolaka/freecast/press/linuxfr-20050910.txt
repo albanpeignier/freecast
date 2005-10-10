@@ -1,0 +1,18 @@
+FreeCast: après le "Click & Listen", le "Click & Broadcast"
+
+Après les festivals de l'été, l'équipe de FreeCast s'est remise au travail et propose cette nouvelle version
+
+FreeCast est une solution de streaming peer-to-peer. Basée sur le format Ogg, elle permet de diffuser un contenu audio (Ogg/Vorbis) ou video (Ogg/Theora).
+
+Le changement majeur de cette nouvelle version est le FreeCast Manager qui offre maintenant la possibilité de démarrer un réseau de diffusion en un clic. Tous les composants nécessaires (même un petit serveur HTTP) sont embarqués dans une seule et même application graphique. La configuration de l'ensemble est effectuée automatiquement au démarrage.
+
+Lien : freecast.org  		 	http://www.freecast.org/fr/
+Lien : Ecouter avec FreeCast	http://www.freecast.org/fr/listen
+Lien : Diffuser avec FreeCast	http://www.freecast.org/fr/broadcast
+
+Une des caractéristiques principales du projet est de proposer aux auditeurs une solution la plus simple possible. Le client se démarre en un clic, se met à jour automatiquement, ne nécessite aucune configuration de la part de l'utilisateur final, intègre un lecteur Ogg pour le son aussi bien que pour la vidéo et peut être mis aux couleurs du diffuseur.
+
+Le projet initié en 2004 avait pour but de répondre aux besoins d'un projet de radios éphémères. Depuis le début, le développement s'accompagne d'une collaboration étroite avec des diffuseurs et des utilisateurs finaux. Une attention particulière est portée à la documentation et au support, car quoi qu'on en dise la mise en place d'un streaming sur Internet nécessite des compétences assez variées que n'ont pas forcément les diffuseurs potentiels. L'ensemble du projet est sous licence GPL.
+
+Un packaging debian permet de déployer son propre réseau en quelques minutes. Les packages RPM attendent la venue de contributeurs.
+
