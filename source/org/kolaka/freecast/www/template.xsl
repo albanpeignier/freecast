@@ -12,7 +12,7 @@
 	  <xsl:attribute name="xml:lang"><xsl:value-of select="$lang"/></xsl:attribute>
 	  
 	  <head>
-		<title><xsl:text>Freecast - peer-to-peer streaming | </xsl:text><xsl:apply-templates select="title"/></title> 
+		<title><xsl:text>Freecast - Peer-to-peer streaming | </xsl:text><xsl:apply-templates select="title"/></title> 
 
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<meta name="keywords" content="freecast p2p peer-to-peer radio broadcast streaming music video ogg vorbis theora java"/>
@@ -23,10 +23,10 @@
 
 		<link rel="alternate" type="application/rss+xml" title="RSS" href="http://blog.tryphon.org/tryphon/archives/category/freecast/rss2" />
 
-		<link rel="icon" href="favicon.ico" type="image/x-icon"/>
-		<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>    
+		<link rel="icon" href="/favicon.ico" type="image/x-icon"/>
+		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>    
 
-		<script src="start.js" type="text/javascript">
+		<script src="/start.js" type="text/javascript">
 		  /* IE doesn't support an atomic script tag ... use Firefox, guys .. */
 		</script>
 		<script language="javascript" type="text/javascript">
@@ -36,10 +36,10 @@
 				   }
 		  ]]>
 		</script>
-		<script src="js/java.vbs" type="text/vbscript">
+		<script src="/js/java.vbs" type="text/vbscript">
 		  /* IE doesn't support an atomic script tag ... use Firefox, guys .. */
 		</script>
-		<script src="js/java.js" type="text/javascript">
+		<script src="/js/java.js" type="text/javascript">
 		  /* IE doesn't support an atomic script tag ... use Firefox, guys .. */
 		</script>
 	  </head>
@@ -149,6 +149,22 @@
 		<xsl:copy-of select="text[@lang='en']/node()" />
 	  </xsl:otherwise>
 	</xsl:choose>
+  </xsl:template>
+  
+  <xsl:template match="screenshot" mode="copy">
+	<div class="screenshot">
+	  <p>
+		<xsl:apply-templates mode="copy"/>
+	  </p>
+
+	  <a>
+		<xsl:attribute name="href"><xsl:text>images/screenshots/</xsl:text><xsl:value-of select="@id"/>.png<xsl:text></xsl:text></xsl:attribute>
+		<img>
+		  <xsl:attribute name="src"><xsl:text>images/screenshots/</xsl:text><xsl:value-of select="@id"/>-thumb.png<xsl:text></xsl:text></xsl:attribute>
+		  <xsl:attribute name="alt"><xsl:value-of select="@caption"/></xsl:attribute>
+		</img>
+	  </a>
+	</div>
   </xsl:template>
 
 </xsl:stylesheet>

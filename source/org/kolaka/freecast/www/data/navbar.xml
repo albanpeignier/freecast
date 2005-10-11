@@ -29,6 +29,15 @@
   <navitem>
    <title>
     <i18n>
+     <text lang="en">Screenshots</text>
+     <text lang="fr">Captures</text>
+    </i18n>
+   </title>
+   <link href="screenshots"/>
+  </navitem>
+  <navitem>
+   <title>
+    <i18n>
      <text lang="en">Support</text>
      <text lang="fr">Support</text>
     </i18n>

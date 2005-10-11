@@ -224,6 +224,7 @@ padding-right: 1em;
 
 /* for /listen page */
 
+/* TODO: was ugly .. replaced by a simple list
 div.network {
 	width: 160px;
 	height: 180px;
@@ -239,6 +240,7 @@ div.networks {
 	max-width: 150px;
     vertical-align: middle;
 }
+*/
 
 /* for /index page */
 
@@ -251,6 +253,27 @@ img.screenshot {
 
 #content p.go {
 	margin-top: 20px;
+}
+
+/* for /screenshot page */
+
+div.screenshots { 
+    width: 700px;
+}
+
+#content div.screenshot { 
+    width: 200px;
+    float: left;
+    margin: 0;
+    margin-left: 20px;
+    text-align: center;
+    padding: 0;
+    padding-bottom: 1.5em;
+}
+
+#content div.screenshot p { 
+    padding: 0;
+    text-align: center;
 }
 
 /* from /install page */

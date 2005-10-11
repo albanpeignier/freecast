@@ -153,11 +153,11 @@
 		<li>
 		  <i18n>
 			<text lang="en">
-			  Refactored <a href="userguide">FreeCast UserGuide</a>: new sections, 
+			  Refactored <a href="/userguide">FreeCast UserGuide</a>: new sections, 
 			  new look&amp;feel and new configuration documentation.
 			</text>
 			<text lang="fr">
-			  <a href="userguide">Guide de l'utilisateur</a> retravaillé: nouvelles sections, 
+			  <a href="/userguide">Guide de l'utilisateur</a> retravaillé: nouvelles sections, 
 			  nouvelle mise en page et nouvelle documentation de la configuration.
 			</text>
 		  </i18n>

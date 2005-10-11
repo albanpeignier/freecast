@@ -560,6 +560,20 @@
 		<touch file="build/docs/coverage/.touch"/>
 	</target>
 
+	<macrodef name="thumbnails">
+	  <attribute name="dest"/>
+	  <element name="filesets"/>
+	  <sequential>
+		<apply executable="convert" dest="@{dest}" failonerror="true" verbose="true">
+		  <arg line="-geometry 200x200"/>
+		  <srcfile/>
+		  <targetfile/>
+		  <filesets/>
+		  <mapper type="regexp" from="^(.*)\.([^.]*)" to="\1-thumb.\2"/>
+		</apply>
+	  </sequential>
+	</macrodef>
+
 	<target name="build.www">
 		<property name="build.www.dir" location="build/www" />
 		<mkdir dir="${build.www.dir}" />
@@ -607,6 +621,14 @@
 				<include name="js/*" />
 			</fileset>
 		</copy>
+
+		<thumbnails dest="${build.www.dir}">
+		  <filesets>
+			<fileset dir="${source.www.dir}">
+			  <include name="images/screenshots/*.png"/>
+			</fileset>
+		  </filesets>
+		</thumbnails>
 	</target>
 
 	<target name="build.win32">

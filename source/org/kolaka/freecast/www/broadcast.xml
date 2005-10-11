@@ -134,11 +134,11 @@
 		<i18n>
 		  <text lang="en">
 			For a complete tutorial to start your first FreeCast network with FreeCast Manager,
-			follow the <a href="userguide/getting-started">Getting Started</a> section of the FreeCast userguide.
+			follow the <a href="/userguide/getting-started">Getting Started</a> section of the FreeCast userguide.
 		  </text>
 		  <text lang="fr">
 			Pour un tutorial complet sur le démarrage de votre premier réseau FreeCast avec FreeCast Manager,
-			suivez la section <a href="userguide/getting-started">Getting Started</a> du guide de l'utilisateur FreeCast.
+			suivez la section <a href="/userguide/getting-started">Getting Started</a> du guide de l'utilisateur FreeCast.
 		  </text>
 		</i18n>
 	  </p>
@@ -173,10 +173,10 @@
 	  <p>
 		<i18n>
 		  <text lang="en">
-			Take a look on the <a href="userguide">FreeCast User Guide</a> to configure the tracker and the root node of your network. If you have other questions, contact the FreeCast <a href="support">support team</a>.
+			Take a look on the <a href="/userguide">FreeCast User Guide</a> to configure the tracker and the root node of your network. If you have other questions, contact the FreeCast <a href="support">support team</a>.
 		  </text>
 		  <text lang="fr">
-			Consultez le <a href="userguide">Guide de l'Utilisateur</a> pour configurer le tracker et le root node votre réseau. Si vous avez d'autres questsions, contactez l'<a href="support">équipe de support</a> de FreeCast.
+			Consultez le <a href="/userguide">Guide de l'Utilisateur</a> pour configurer le tracker et le root node votre réseau. Si vous avez d'autres questsions, contactez l'<a href="support">équipe de support</a> de FreeCast.
 		  </text>
 		</i18n>
 	  </p>
