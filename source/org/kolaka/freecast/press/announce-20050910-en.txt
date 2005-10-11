@@ -1,0 +1,17 @@
+FreeCast :  After "Click and Listen", move to "Click and Broadcast" model 
+
+After the summer's festivals , the FreeCast's team restarts working on the new version which has just been released.
+
+As a "Peer-to-Peer" streaming solution, based on Ogg, FreeCast allows the transmission of audio (Ogg/Vorbis) and video (Ogg/Theora) contents. 
+
+The major upgrade coming with the new release is the "FreeCast Manager". It allows to initiate a stream network through a single mouse clic. All component (including HPPT server) are include inside a unique graphical application. The configuration setup is done automaticaly when it starts.
+
+Link : freecast.org  		 	http://www.freecast.org/
+Link : Listen with FreeCast		http://www.freecast.org/listen
+Link : Broadcast with FreeCast	http://www.freecast.org/broadcast
+
+One of the major specificities  of this project is to be able to propose to listeners an "as easy as possible" solution. The FreeCast client can be started in a single mouse clic, does not require any specific configuaration and comes with an Ogg  reader which support audio and video streams.
+
+Started in 2004, the initial project was willing to fulfill the needs of transitory radios stations. Since the very begining, a tied collaboration has been initiated between the developpment team, the final users and the contents providers. A very specific attention has been done to documentation and support as streaming on internet needs various skills whcih cannot always be found in the providers organizations. The whole project is done under the GPL licence model.
+
+The Debian package allows to deploy your own network in less than a few minutes. The RPM packaging waits for contributors to work on it.
