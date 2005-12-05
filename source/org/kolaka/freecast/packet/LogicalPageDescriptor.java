@@ -34,6 +34,8 @@ public interface LogicalPageDescriptor {
     
     public long getSequenceNumber();
     
+    public long getTimestamp();
+    
     public boolean isFirstPage();
         
     public static interface Element {

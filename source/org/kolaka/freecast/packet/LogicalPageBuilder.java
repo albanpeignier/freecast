@@ -44,8 +44,8 @@ public class LogicalPageBuilder {
         this.packets = new SortedList(Packets.compareElementIndex());
     }
 
-    public LogicalPageBuilder(long sequenceNumber, int packetCount, boolean firstPage) {
-        this(new DefaultLogicalPageDescriptor(sequenceNumber, packetCount, firstPage));
+    public LogicalPageBuilder(long sequenceNumber, long timestamp, int packetCount, boolean firstPage) {
+        this(new DefaultLogicalPageDescriptor(sequenceNumber, timestamp, packetCount, firstPage));
     }
 
     public void add(Packet packet) {

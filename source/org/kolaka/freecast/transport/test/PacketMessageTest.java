@@ -53,7 +53,7 @@ public class PacketMessageTest extends TestCase {
         }
         Checksum checksum = new Checksum(expectedChecksumContent);
         
-        DefaultLogicalPageDescriptor pageDescriptor = new DefaultLogicalPageDescriptor(1, 1, true);
+        DefaultLogicalPageDescriptor pageDescriptor = new DefaultLogicalPageDescriptor(1, 0, 1, true);
         LogicalPageDescriptor.Element elementDescriptor = pageDescriptor.createElementDescriptor(1);
         
         Packet packet = new DefaultPacket(1, System.currentTimeMillis(), new DefaultPacketData(expectedBytes), checksum, elementDescriptor);

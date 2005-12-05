@@ -33,8 +33,6 @@ public interface Packet extends SequenceElement, PacketData {
 
     public static final int DEFAULT_SIZE = 1024;
 
-    public long getTimestamp();
-    
     public Checksum getChecksum();
     
     public LogicalPageDescriptor.Element getElementDescriptor();

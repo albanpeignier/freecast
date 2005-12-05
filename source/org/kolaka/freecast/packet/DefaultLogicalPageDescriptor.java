@@ -31,11 +31,13 @@ package org.kolaka.freecast.packet;
 public class DefaultLogicalPageDescriptor implements LogicalPageDescriptor {
 
     private final long sequenceNumber;
+    private final long timestamp;
     private final int count;
     private final boolean firstPage;
 
-    public DefaultLogicalPageDescriptor(long sequenceNumber, int count, boolean firstPage) {
+    public DefaultLogicalPageDescriptor(long sequenceNumber, long timestamp, int count, boolean firstPage) {
         this.sequenceNumber = sequenceNumber;
+        this.timestamp = timestamp;
         this.count = count;
         this.firstPage = firstPage;
     }
@@ -46,6 +48,10 @@ public class DefaultLogicalPageDescriptor implements LogicalPageDescriptor {
 
     public long getSequenceNumber() {
         return sequenceNumber;
+    }
+    
+    public long getTimestamp() {
+	    	return timestamp;
     }
     
     public boolean isFirstPage() {

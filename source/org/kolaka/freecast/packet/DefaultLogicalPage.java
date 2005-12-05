@@ -112,6 +112,10 @@ public class DefaultLogicalPage implements LogicalPage {
         return descriptor.getSequenceNumber();
     }
     
+    public long getTimestamp() {
+	    	return descriptor.getTimestamp();
+    }
+    
     public boolean equals(Object o) {
         return o instanceof LogicalPage && equals((LogicalPage) o);
     }

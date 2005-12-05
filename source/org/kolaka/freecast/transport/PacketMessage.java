@@ -56,22 +56,28 @@ public class PacketMessage extends BaseMessage {
     }
 
     public void read(DataInputStream input) throws IOException {
-        DefaultLogicalPageDescriptor pageDescriptor = 
-            new DefaultLogicalPageDescriptor(input.readLong(), input.readByte(), input.readBoolean());
-        LogicalPageDescriptor.Element elementDescriptor =
-            pageDescriptor.createElementDescriptor(input.readByte());
-        
-        long sequenceNumber = input.readLong();
-        long timestamp = input.readLong();
+        long pageSequenceNumber = input.readLong();
+		byte pagePacketCount = input.readByte();
+		boolean isFirstPage = input.readBoolean();
+		
+		byte packetIndex = input.readByte();
+		
+        long packetSequenceNumber = input.readLong();
+        long pageTimestamp = input.readLong();
 
-        int length = input.readInt();
-        byte bytes[] = new byte[length];
-        input.readFully(bytes);
+        int packetLength = input.readInt();
+        byte packetBytes[] = new byte[packetLength];
+        input.readFully(packetBytes);
         
         Checksum checksum = Checksum.read(input);
-        
+
+		DefaultLogicalPageDescriptor pageDescriptor = 
+            new DefaultLogicalPageDescriptor(pageSequenceNumber, pageTimestamp, pagePacketCount, isFirstPage);
+        LogicalPageDescriptor.Element elementDescriptor =
+            pageDescriptor.createElementDescriptor(packetIndex);
+
         packet = 
-            new DefaultPacket(sequenceNumber, timestamp, new DefaultPacketData(bytes), checksum, elementDescriptor); 
+            new DefaultPacket(packetSequenceNumber, pageTimestamp, new DefaultPacketData(packetBytes), checksum, elementDescriptor); 
     }
 
     public void write(DataOutputStream output) throws IOException {
@@ -85,7 +91,8 @@ public class PacketMessage extends BaseMessage {
         output.writeByte(elementDescriptor.getIndex());
         
         output.writeLong(packet.getSequenceNumber());
-        output.writeLong(packet.getTimestamp());
+        // TODO to keep protocol unchanged, to be move up
+        output.writeLong(pageDescriptor.getTimestamp());
         output.writeInt(packet.getBytes().length);
         output.write(packet.getBytes());
         packet.getChecksum().write(output);

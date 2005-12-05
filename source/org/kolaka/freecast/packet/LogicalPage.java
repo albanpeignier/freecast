@@ -43,5 +43,7 @@ public interface LogicalPage extends SequenceElement {
     public int getLength();
     
     public boolean isComplete();
+    
+    public long getTimestamp();
         
 }

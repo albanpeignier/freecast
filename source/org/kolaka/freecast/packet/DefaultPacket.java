@@ -36,7 +36,6 @@ public class DefaultPacket implements Packet {
 
     private final long sequenceNumber;
     private final byte[] bytes;
-    private final long timestamp;
     private final Checksum checksum;
     private final LogicalPageDescriptor.Element elementDescriptor;
 
@@ -46,7 +45,6 @@ public class DefaultPacket implements Packet {
         Validate.notNull(elementDescriptor, "No specified LogicalPageDescriptor.Element");
         
         this.sequenceNumber = sequenceNumber;
-        this.timestamp = timestamp;
         this.bytes = packetData.getBytes();
         this.checksum = checksum;
         this.elementDescriptor = elementDescriptor;
@@ -58,10 +56,6 @@ public class DefaultPacket implements Packet {
 
     public byte[] getBytes() {
         return bytes;
-    }
-
-    public long getTimestamp() {
-        return timestamp;
     }
 
     public Checksum getChecksum() {
@@ -83,7 +77,6 @@ public class DefaultPacket implements Packet {
     public String toString() {
         ToStringBuilder builder = new ToStringBuilder(this);
         builder.append("sequenceNumber", sequenceNumber);
-        builder.append("timestamp", timestamp);
         builder.append("bytes.length", bytes.length);
         builder.append("checksum", checksum);
         builder.append("elementDescriptor", elementDescriptor);
