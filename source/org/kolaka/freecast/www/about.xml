@@ -3,6 +3,10 @@
    <i18n>
     <text lang="en">About</text>
     <text lang="fr">A propos</text>
+    <text lang="es">A proposito</text>
+
+
+
    </i18n>
   </title>
 
@@ -10,8 +14,11 @@
     <h1>Freecast : 
      <i18n>
       <text lang="en">A peer-to-peer streaming solution</text>
-      <text lang="fr">une solution "peer-to-peer" de diffusion en direct</text>
-     </i18n>
+      <text lang="fr">Une solution "peer-to-peer" de diffusion en direct</text>
+      <text lang="es">Una solucion "peer to peer" de difusión en directo
+</text>    
+
+ </i18n>
     </h1>
     <div class="summary">
      <p>
@@ -24,7 +31,12 @@
       <text lang="fr">
        est une application qui permet la diffusion audio en peer-to-peer. C'est un logiciel libre développé par l'équipe de <a href="http://www.tryphon.org" title="Tryphon">tryphon.org</a> et les contributeurs.
       </text>
-     </i18n>
+      <text lang="es">
+       Es una aplicación que permite la difusión de audio "peer to peer". Es un programa gratuito creado por el equipo de <a href="http://www.tryphon.org" title="Tryphon Homepage">tryphon.org</a> y sus colaboradores.
+	</text>
+
+
+</i18n>
      </p>
     </div>
 
@@ -32,7 +44,10 @@
      <i18n>
       <text lang="en">Abstract</text>
       <text lang="fr">Présentation</text>
-     </i18n>
+      <text lang="es">Presentación</text>
+
+
+</i18n>
     </h3> 
     <p>
      <i18n>
@@ -42,7 +57,11 @@
       <text lang="fr">
        Le défi relevé par <strong>FreeCast</strong> est d'utiliser la connexion internet de chacun des auditeurs pour fournir aux autres auditeurs le flux audio. Cette approche collaborative permet d'éviter les infrastructures réseaux lourdes et couteuses nécessaires pour les applications conventionnelles de diffusion réseau. 
       </text>
-     </i18n> 
+    
+El objetivo de <strong>FreeCast</strong> es utilizar la conexión a internet de cada oyente para transmitir a otros oyentes el flujo de audio. Esta mecanismo de colaboración evita las infraestructures de red pesadas y costosas, necesarias para las aplicaciones convencionales de difusión en la red.
+
+
+ </i18n> 
     </p>
     <p>
      <strong>Freecast</strong>
@@ -53,7 +72,13 @@
       <text lang="fr">
 		peut fournir un moyen à beaucoup de petites structures de diffuser par Internet un programme radio, des évenements musicaux, etc ... sans une dépendance financière et technique vis-à-vis d'un hébergeur.
       </text>
-     </i18n>
+      <text lang="es">
+		las pequeñas estructuras pueden proveerse de un medio para difundir por Internet programas de radio, eventos musicales, etc... sin depender finaciera y tecnicamente del web hoster
+	</text>
+
+     
+
+</i18n>
     </p>
     <p>
      <i18n>
@@ -65,7 +90,12 @@
        La théorie ne limite pas le nombre d'auditeurs d'un tel réseau mais dans la réalité, Internet est chaotique ... 
  	   Un réseau <strong>FreeCast</strong> a besoin de s'adapter continuellement pour maintenir la qualité du service. C'est un défi technique qui doit rester invisible aux utilisateurs de <strong>FreeCast</strong>. 
       </text>
-     </i18n> 
+     <text lang="es">
+       En teoría, el número de oyentes de una red de este tipo es ilimitado, pero en la vida real Internet es caótico...
+Una red <strong>FreeCast</strong> debe adaptarse continuamente para mantener la calidad del servicio. Este es un gran reto técnico que debe permanecer invisible a los usuarios de <strong>FreeCast</strong>.  
+	</text>
+
+</i18n> 
     </p>
     <p>
      <i18n>
@@ -75,26 +105,43 @@
       <text lang="fr">
 		L'objectif actuel est de distribuer un flux audio à une centaine d'auditeurs grâce à une simple connection ADSL à la base du réseau. Cela implique qu'une grande majorité des utilisateurs disposent eux aussi d'une connexion ADSL.
       </text>
-     </i18n>
+  	<text lang="es">
+		El objetivo actual es distribuir un flujo de audio a un centenar de oyentes, gracias a una simple conexión ADSL de base. Esto implica que la mayoría de usuarios tendran también una conexión ADSL.
+	</text>
+   
+
+</i18n>
     </p>
 
 	<h4>
      <i18n>
       <text lang="en">Listener oriented</text>
       <text lang="fr">Tournés vers les auditeurs</text>
+	<text lang="es">Hacia los que escuchan</text>
+
      </i18n>
 	</h4>
 	<p>
      <i18n>
       <text lang="en">Internet broacasts are deployed to be listen .. not to lost users into a configuration procedure. Providing a program, a content remains the major objective despite of the technical difficulties. From its creation, <strong>FreeCast</strong> has been build around a principle: <em>"Click and listen"</em>. Provide to the end-user the waited content as simply as possible.</text>
       <text lang="fr">Les diffusions sur Internet sont mises en place pour écouter et non pas pour perdre les utilisateurs dans une épreuve de configuration informatique. Le principal objectif reste de fournir un programme, un contenu malgré les difficultés techniques. Dès sa création, <strong>FreeCast</strong> a été développé autour d'un principe : <em>"Cliquer et écouter"</em>. Fournir le plus simplement possible à l'utilisateur final le contenu attendu.</text>
-     </i18n>
+    <text lang="es">La difusión por Internet está hecha para ser escuchada y no para confundir a los usuarios en un procedimiento de cofiguración informática. El objetivo principal es proveer de un programa útil a pesar de las dificultades técnicas. El <strong>FreeCast</strong> ha sido creado con el principio de <em>"Click y escuchar"</em>. Dar al usuario el contenido esperado de la manera más simple posible. 
+</text>
+    
+
+
+ </i18n>
 	</p>    
 	<p>
      <i18n>
       <text lang="en">A graphical interface simple and customizable to the network look&amp;feel, an embedded player, no user configuration needed, automatic install and updates, help pages in several langagues, a lot of things are performed to make the end-user ... an listener.</text>
       <text lang="fr">Une interface graphique simple et personnalisable aux couleurs du réseau, un lecteur intégré, aucune configuration nécessaire, installation et mises à jour automatique, aide à l'installation en plusieurs langues, un maximum est mis en oeuvre pour que les utilisateurs restent simplement ... des auditeurs.</text>
-     </i18n>
+    	<text lang="es">Una interface gráfica simple y personalizable con la apariencia de la red, un lector integral, sin necesidad de una configuración de usuario, instalación y actualizaciones automáticas, ayuda a la instalación en diferentes lenguas, el máximo de facilidades para hacer del usuario simplemente...un oyente.</text>
+    
+
+ 
+
+ </i18n>
 	</p>    
 
 	<h3>Documentation</h3>
@@ -103,13 +150,22 @@
 			<i18n>
 			<text lang="en">Consult the <a href="wiki">FreeCast wiki page</a> to discover more in details the features and the architecture.</text>
 			<text lang="fr">Consultez la page wiki <a href="wiki">FreeCast</a> pour découvrir plus en détails les fonctionnalités et l'architecture.</text>
-			</i18n>
+			<text lang="es">Consulte la página wiki <a href="wiki">FreeCast</a> para descubrir más detalles sobre las funcionalidades y la arquitectura.</text>
+			
+
+
+
+</i18n>
 		</li>
 		<li>
 			<i18n>
 			<text lang="en">To know how create your own <strong>FreeCast</strong> network, read the <a href="http://www.freecast.org/userguide">FreeCast User Guide</a>. You can consult the wiki page <a href="http://wiki.tryphon.org/How_to_deploy_FreeCast">How to Deploy FreeCast</a>.</text>
 			<text lang="fr">Pour créer votre propre réseau FreeCast, reportez-vous au <a href="http://www.freecast.org/userguide">Guide de l'Utilisateur</a>. Vous pouvez aussi visiter la page wiki <a href="http://wiki.tryphon.org/How_to_deploy_FreeCast">Comment déployer FreeCast</a>.</text>
-			</i18n>				
+			<text lang="es">Para crear su propia red Freecast consulte <a href="http://www.freecast.org/userguide">Guía del usuario</a>. También puede consultar la página wiki <a href="http://wiki.tryphon.org/How_to_deploy_FreeCast">Cómo utilizar FreeCast</a>.</text>
+			
+
+
+</i18n>				
 		</li>	
 	</ul>
    
@@ -120,14 +176,22 @@
        <i18n>
         <text lang="en">Developpers:</text>
         <text lang="fr">Développeurs :</text>
-       </i18n>
+       <text lang="es">Creadores:</text>
+
+
+
+</i18n>
       </strong> Alban Peignier, Stéphane Lacoin, Timothée Peignier</li>
      <li>
       <strong>
        <i18n>
         <text lang="en">Website:</text>
         <text lang="fr">Site Web :</text>
-       </i18n>
+       <text lang="es">Página web :</text>
+
+
+
+</i18n>
       </strong> Timothée Peignier</li>
 	</ul>
 	 
@@ -135,13 +199,20 @@
      <i18n>
       <text lang="en">Thanks</text>
       <text lang="fr">Remerciements</text>
-     </i18n>
+    <text lang="es">Agradecimientos</text>
+
+
+
+ </i18n>
     </h3> 
 	<p>
 	 <i18n>
 	  <text lang="en">Many thanks to:</text>
 	  <text lang="fr">Merci beaucoup à :</text>  
-	 </i18n>
+	  <text lang="es">Gracias a :</text>  
+
+
+</i18n>
 	</p>
 	<ul>
      <li> 
@@ -149,14 +220,22 @@
        <i18n>
         <text lang="en">beta users:</text>
         <text lang="fr">testeurs :</text>
-       </i18n>
+       <text lang="es">Probado por :</text>
+
+
+
+</i18n>
       </strong> elisa, solange, vacaloca, noemie, kike, nanthrax, herve, grouillot</li>
      <li>
       <strong>
        <i18n>
         <text lang="en">radio teams:</text>
         <text lang="fr">les équipes des radios :</text>
-       </i18n>
+       <text lang="es">Los equipos de radio :</text>
+
+
+
+</i18n>
       </strong> anso, ju, titus, santi (Radio Sound System), marie (Radio Clapas), flow (Frequence K)</li>
     </ul>
 
@@ -164,14 +243,22 @@
      <i18n>
       <text lang="en">License</text>
       <text lang="fr">Licence</text>
-     </i18n>
+      <text lang="es">Licencia</text>
+
+
+</i18n>
     </h3>
 	<p>
 	 <strong>FreeCast</strong> 
 	 <i18n>
 	  <text lang="en">is a <em>free software</em>. You can redistribute it and/or modify it under the terms of the <strong>GNU General Public License</strong> as published by the Free Software Foundation.</text>
 	  <text lang="fr">est un <em>logiciel libre</em>. Vous pouvez le redistribuer et/ou le modifier selon les termes de la <strong>Licence Publique Générale GNU</strong> publiée par la Free Software Foundation.</text>
-	 </i18n>
+	 <text lang="es">es un <em>programa gratuito</em>. Puede ser redistribuido y/o modificado según los términos de la <strong>Licencia Pública General</strong> publicada por la Free Software Foundation.</text>
+	 
+
+
+
+</i18n>
     </p>
     <p>
 	 Copyright 2004-2005 Alban Peignier
@@ -184,7 +271,12 @@
   	  <text lang="fr">
  	   Consultez les details de la <a href="http://www.gnu.org/copyleft/gpl.html" title="Licence Publique Générale GNU">Licence Publique Générale GNU</a>.
   	  </text>
-  	 </i18n> 
+  	 <text lang="es">
+ 	   Consulte los detalles en <a href="http://www.gnu.org/copyleft/gpl.html" title="Licencia Pública General GNU">Licencia Pública General GNU</a>.
+  	  </text>
+
+
+</i18n> 
     </p>
  </content>
 </page>

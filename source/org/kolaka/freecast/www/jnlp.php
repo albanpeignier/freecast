@@ -56,5 +56,5 @@ if (fwrite($cache_handle, $jnlp) === FALSE) {
   
 fclose($cache_handle);
 	
-header('Location: ' . $cache_file);
+header('Location: /' . $cache_file);
 ?>

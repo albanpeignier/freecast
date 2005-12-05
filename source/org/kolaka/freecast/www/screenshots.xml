@@ -3,6 +3,7 @@
    <i18n>
     <text lang="en">Screenshots</text>
     <text lang="fr">Captures d'écran</text>
+    <text lang="es">Captura de pantalla</text>
    </i18n>
   </title>
 
@@ -11,7 +12,10 @@
      <i18n>
       <text lang="en">FreeCast in action</text>
       <text lang="fr">FreeCast en action</text>
-     </i18n>
+      <text lang="es">FreeCast en acción</text>     
+
+
+</i18n>
     </h1>
 
 	<h3 id="swing">
@@ -27,6 +31,9 @@
 		  <text lang="fr">
 			Interface Swing par défaut
 		  </text>
+		  <text lang="es">
+			Interface Swing por defecto
+		  </text>
 		</i18n>
 	  </screenshot>
 	  <screenshot id="swing-video" caption="FreeCast Swing GUI with video player">
@@ -37,6 +44,9 @@
 		  <text lang="fr">
 			Interface Swing par défaut avec le player video
 		  </text>
+		  <text lang="es">
+			Interface Swing por defecto con el player video
+		  </text>
 		</i18n>
 	  </screenshot>
 	  <screenshot id="swing-customized" caption="Customized FreeCast Swing GUI">
@@ -46,6 +56,9 @@
 		  </text>
 		  <text lang="fr">
 			Interface Swing aux couleurs d'un diffuseur
+		  </text>
+		  <text lang="es">
+			Interface Swing con los colores de un difusor
 		  </text>
 		</i18n>
 	  </screenshot>
@@ -67,7 +80,12 @@
 		  <text lang="fr">
 			Avec le menu d'actions ouvert
 		  </text>
-		</i18n>
+		  <text lang="es">
+			Con el menu de acciones abierto
+		  </text>		
+
+
+</i18n>
 	  </screenshot>
 
 	  <screenshot id="manager-full" caption="FreeCast Manager Complete View">
@@ -78,7 +96,12 @@
 		  <text lang="fr">
 			Avec la page d'acceuil du réseau et un premier node FreeCast 
 		  </text>
-		</i18n>
+		  <text lang="es">
+			Con la página de inicio de la red y un primer nodo FreeCast 
+		  </text>		
+
+
+</i18n>
 	  </screenshot>
 	</div>
  </content>

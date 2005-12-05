@@ -3,7 +3,10 @@
 	<i18n>
 	  <text lang="en">Listen</text>
 	  <text lang="fr">Ecoutez</text>
-	</i18n>
+	  <text lang="es">Escuche</text>
+
+
+</i18n>
   </title>
 
   <content>
@@ -11,7 +14,10 @@
 	  <i18n>
 		<text lang="en">Listen with</text>
 		<text lang="fr">Ecoutez avec</text>
-	  </i18n>
+		<text lang="es">Escuche con</text>	  
+
+
+</i18n>
 	  FreeCast
 	</h1>
 	<div class="summary">
@@ -24,7 +30,13 @@
 		  <text lang="fr">
 			utilise les technologies <a href="http://java.sun.com" title="Java Technology">Java</a> et particulierement <a href="http://java.sun.com/products/javawebstart/" title="Java Web Start">Java Web Start</a> pour fonctionner. Voici en quelques mots comment cela fonctionne et comment utiliser
 		  </text>
-		</i18n>
+		  <text lang="es">
+			Utilice las tecnologías <a href="http://java.sun.com" title="Java Technology">Java</a> y particularmente<a href="http://java.sun.com/products/javawebstart/" title="Java Web Start">Java Web Start</a>. Cómo funciona y cómo utilizarlo
+		  </text>
+		
+
+
+</i18n>
 		<strong>FreeCast</strong>.
 	  </p>
 	  <p>
@@ -36,7 +48,13 @@
 		  <text lang="fr">
 			Si vous n'avez jamais utilisé <strong>FreeCast</strong> auparavant, lisez la petite section installation. Ensuite vous pourrez découvrir FreeCast grâce à l'un des <a href="#networks">réseaux existants</a>.
 		  </text>
-		</i18n>
+		<text lang="es">
+			Si usted no ha utilizado antes <strong>FreeCast</strong>, lea la sección instalación. Usted podrá descubrir FreeCast gracias a una de las <a href="#networks">redes existentes</a>.
+		  </text>
+		
+
+
+</i18n>
 	  </p>
 	</div>
 
@@ -44,8 +62,12 @@
 	  <i18n>
 		<text lang="en">Install</text>
 		<text lang="fr">Installation</text>
+		<text lang="es">Instalación</text>
 	  </i18n>
-	</h3>
+	
+
+
+</h3>
 
 	<p>
 	  <strong>Freecast</strong> 
@@ -56,7 +78,14 @@
 		<text lang="fr">
 		  utilise les technologies <a href="http://java.sun.com" title="Java Technology">Java</a> et particulierement <a href="http://java.sun.com/products/javawebstart/" title="Java Web Start">Java Web Start</a> pour fonctionner. Voici en quelques mots comment obtenir et installer les logiciels Java requis.
 		</text>
-	  </i18n>
+	  
+		<text lang="es">
+		  utiliza las tecnologías <a href="http://java.sun.com" title="Java Technology">Java</a> y particularmente <a href="http://java.sun.com/products/javawebstart/" title="Java Web Start">Java Web Start</a>. Cómo obtener e instalar los programas Java requeridos.
+		</text>
+
+
+
+</i18n>
 	</p>
 	
     <img class="screenshot" src="images/screenshots/swing-default.png" alt="FreeCast Swing node"/>
@@ -65,7 +94,9 @@
 	  <i18n>
 		<text lang="en">Step</text>
 		<text lang="fr">Etape</text>
-	  </i18n>
+		<text lang="es">Etapa</text>
+
+</i18n>
 	  1 - Java
 	</h4> 
 
@@ -81,6 +112,11 @@
 			<img class="step" src="images/install/get_java-button.gif" alt="Java"/>
 		  </a>
 		</text>
+	<text lang="es">
+		  <a class="external" href="http://java.sun.com/webapps/getjava/BrowserRedirect?locale=fr&amp;host=www.java.com:80" title="Installer Java">
+			<img class="step" src="images/install/get_java-button.gif" alt="Java"/>
+		  </a>
+		</text>
 	  </i18n>
 
 	  <span class="java">
@@ -91,7 +127,12 @@
 		  <text lang="fr">
 			Vous pouvez passer cette étape, Java semble installé sur votre ordinateur.
 		  </text>
-		</i18n>
+		  <text lang="es">
+			Usted puede pasar esta etapa, Java parece instalado en su computadora.
+		  </text>		
+
+
+</i18n>
 	  </span>
 	  <span class="nojava">
 		<i18n>
@@ -101,7 +142,12 @@
 		  <text lang="fr">
 			Utilisez <a class="external" href="http://java.sun.com/webapps/getjava/BrowserRedirect?locale=fr&amp;host=www.java.com:80" title="Télécharger Java">ce lien</a> pour télécharger Java. Enregistrez le fichier sur votre disque et executez le.
 		  </text>
-		</i18n>
+		  <text lang="es">
+			Utilice <a class="external" href="http://java.sun.com/webapps/getjava/BrowserRedirect?locale=fr&amp;host=www.java.com:80" title="Télécharger Java">este enlace</a> para cargar Java. 
+Grave el archivo en su disco y ejecútelo.
+		  </text>
+
+</i18n>
 	  </span>
 	</p>
 	
@@ -109,7 +155,8 @@
 	  <i18n>
 		<text lang="en">Step</text>
 		<text lang="fr">Etape</text>
-	  </i18n>
+		<text lang="es">Etapa</text>
+</i18n>
 	  2 - FreeCast
 	</h4>
 	<p>
@@ -127,14 +174,25 @@
 		  <a href="javascript:start('download.freecast.org/jws/stable/descriptor.xml')">lien</a>.
 		  Vous allez vous connecter au réseau FreeCast de test.
 		</text>
-	  </i18n>
+		<text lang="es">
+		  Para instalar <strong>FreeCast</strong> haga click en este <a href="javascript:start('download.freecast.org/jws/stable/descriptor.xml')"> 
+enlace</a>
+Usted va a conectarse a la red FreeCast de test.
+		</text>
+	  
+
+
+</i18n>
 	</p>
 	
 	<h4 id="troubleshooting">
 	  <i18n>
 		<text lang="en">Troubleshooting</text>
 		<text lang="fr">En cas de problème</text>
-	  </i18n>
+		<text lang="es">En caso de problema</text>	  
+
+
+</i18n>
 	</h4>
 	<p>
 	  <i18n>
@@ -144,7 +202,12 @@
 		<text lang="fr">
 		  Si l'installation vous pose probleme, consultez la <a href="listen">page d'installation</a> ou n'hésitez pas à contacter l'équipe de <a href="support">support</a> de <strong>FreeCast</strong> qui se fera un plaisir de vous assister dans cette phase d'installation.
 		</text>
-	  </i18n>
+		<text lang="es">		  
+Si tiene algún problema durante la instalación consulte la <a href="listen">página de instalación</a> Si el problema persiste, no dude en contactar al equipo de <a href="support">soporte</a> quien lo asistirá en esta fase de la instalación.
+		</text>
+	  
+
+</i18n>
 	</p>
 
 	<h3 id="networks">
@@ -155,7 +218,12 @@
 		<text lang="fr">
 		  Réseaux
 		</text>
-	  </i18n>
+		<text lang="es">
+		  Redes
+		</text>
+	 
+
+ </i18n>
 	</h3> 
 
 	<p>
@@ -167,7 +235,12 @@
 		<text lang="fr">
 		  est utilisé par de plus en plus de diffuseurs. Voici une petite liste de réseaux FreeCast actuellement en place.
 		</text>
-	  </i18n>
+		<text lang="es">
+		  es utilizado por cada vez más difusores. Esta s una pequeña lista de la red FreeCast.
+		</text>	  
+
+
+</i18n>
 	  <i18n>
 		<text lang="en">
 		  Visit their web sites to discover that they're providing and to listen their <strong>FreeCast</strong> streams
@@ -175,7 +248,12 @@
 		<text lang="fr">
 		  Visitez leurs sites Internet pour découvrir ce qu'ils proposent et pour écouter leurs flux <strong>FreeCast</strong>
 		</text>
-	  </i18n>
+		<text lang="es">
+		  Visite sus web para descubrir sus propuestas y para escuchar sus flujos<strong>FreeCast</strong>
+		</text>	  
+
+
+</i18n>
 	  :
 	</p>
 
@@ -192,7 +270,11 @@
 			est une radio française basée près de Nice.
 			Découvrez les détails de leur programme sur leur site web et en direct grâce à FreeCast.
 		  </text>
-		</i18n>
+		  <text lang="es">
+			Es una radio francesa basada cerca de Nice. Descubra los detalles de su programa en su web y en directo gracias a FreeCast.
+		  </text>		
+
+</i18n>
 	  </li>
 	  <li>
 		<a class="external" href="http://www.radiosoundsystem.org">Radio Sound System</a>
@@ -206,7 +288,12 @@
 			est un collectif qui réalise des radios éphemères à travers l'Europe
 			et le monde.
 		  </text>
-		</i18n>
+		<text lang="es">
+			Es un colectivo que realiza radios efímeras en Europa y el mundo.
+		  </text>
+		
+
+</i18n>
 	  </li>
 	  <li>
 		<a href="javascript:start('download.freecast.org/jws/stable/descriptor.xml')">FreeCast Test Network</a>
@@ -216,3 +303,4 @@
 
    </content>
 </page>
+

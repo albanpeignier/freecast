@@ -3,14 +3,21 @@
   <i18n> 
    <text lang="en">Start problem</text>
    <text lang="fr">Problème de démarrage</text>
+   <text lang="es">Problema de inicio</text>
   </i18n>
- </title>
+ 
+
+
+</title>
  <content>
     <h1>  
      <i18n>
       <text lang="en">Start problem</text>
       <text lang="fr">Problème de démarrage</text>
-     </i18n>
+      <text lang="es">Problema de inicio</text>    
+
+
+ </i18n>
     </h1>
     <div class="summary">
      <p>
@@ -27,7 +34,12 @@
 		correctement. Contactez l'administrateur de ce réseau FreeCast ou
 		sinon l'<a target="_blank" href="support">équipe de support de FreeCast</a>.
        </text>
-      </i18n>
+       <text lang="es">
+        Usted acaba de hacer click para iniciar  <strong>FreeCast</strong>.
+Desafortunadamente, la red FreeCast seleccionada no está configurada correctamente. Contacte al administrador de esta red o al <a target="_blank" href="support">equipo de soporte de FreeCast</a>.
+       </text>      
+
+</i18n>
      </p>
     </div>
    
@@ -35,7 +47,10 @@
      <i18n>
       <text lang="en">Cause</text>
       <text lang="fr">Raison</text>
-     </i18n>
+      <text lang="es">Causa</text>
+    
+
+ </i18n>
     </h3> 
     <p>
      <i18n>
@@ -45,7 +60,13 @@
 	  <text lang="fr">
 		Le descripteur indiqué n'a pu être trouvé par le serveur web de FreeCast.
 	  </text>
-	 </i18n>
+	  <text lang="es">
+		El descriptor indicado no pudo ser encontrado por el servidor web de FreeCast.
+	  </text>
+	 
+
+
+</i18n>
 	</p>
 	<ul>
 	  <li>
@@ -58,7 +79,14 @@
 			Si le réseau FreeCast est déployé grâce à <strong>FreeCast Manager</strong>, vérifiez 
 			<a target="_blank" href="userguide/getting-started-troubleshooting">la configuration réseau</a> du site hébergeant FreeCast Manager.
 		  </text>
-		</i18n>
+		  <text lang="es">
+			Si la red Freecast es iniciada con <strong>FreeCast Manager</strong>,  verifique la <a target="_blank" href="userguide/getting-started-troubleshooting">configuración de red</a> del FreeCast Manager host.
+		  </text>
+		
+
+ 
+
+</i18n>
 	  </li>
 	  <li>
 		<i18n>
@@ -70,7 +98,13 @@
 			Si vous avez déployez vous-même votre fichier descripteur, vérifiez les informations que vous avez fourni à la 
 			<a target="_blank" href="userguide/startpage">fonction	de la page de démarrage</a>.
 		  </text>
-		</i18n>
+		  <text lang="es">
+			Si usted inicia usted mismo el archivo descriptor, verifique las informaciones que usted ha especificado en <a target="_blank" href="userguide/startpage">la página de inicio</a>.
+		  </text>
+		
+
+
+</i18n>
 	  </li>
 	</ul>
 	<p>
@@ -81,7 +115,12 @@
 	   <text lang="fr">
 		 Le descripteur non trouvé est le suivant: 
 	   </text>
-	 </i18n>
+	   <text lang="es">
+		 El descriptor no encontrado es el siguiente: 
+	   </text>	 
+
+
+</i18n>
 	 <code>
 	   <variable name="url"/>
 	 </code>
@@ -91,7 +130,11 @@
 	  <i18n>
 		<text lang="en">Retry</text>
 		<text lang="fr">Réessayer</text>
-	  </i18n>
+		<text lang="es">Reintentar</text>
+	  
+
+
+</i18n>
 	</h3>
 	<p>
 	  <i18n>
@@ -103,7 +146,13 @@
 		  Si vous pensez que le problème est maintenant corrigé, vous pouvez 
 		  <a href="javascript:history.reload()">recharger cette page</a>.
 		</text>
-	  </i18n>
+		<text lang="es">
+		  Si cree que el problema ha sido resuelto, usted puede  
+		  <a href="javascript:history.reload()">actualizar esta página</a>.
+		</text>	 
+
+
+ </i18n>
 	</p>
  </content>
 </page>
