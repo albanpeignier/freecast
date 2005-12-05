@@ -70,10 +70,12 @@ public class OggLogicalPageFactory {
     public LogicalPage next() throws IOException {
         List nextOggPages = nextOggPages();  
         long sequenceNumber = pageIdentifierGenerator.next();
-        boolean isFirstPage = ((OggPage)nextOggPages.get(0)).isFirstPage();
+        OggPage firstOggPage = (OggPage)nextOggPages.get(0);
+		
         List packetDatas = createPacketDatas(nextOggPages);
 
-        long timestamp = timeBase.currentTimeMillis();
+        long timestamp = getTimestamp(firstOggPage);
+        boolean isFirstPage = firstOggPage.isFirstPage();
         
         LogicalPageBuilder builder = new LogicalPageBuilder(sequenceNumber, timestamp, packetDatas.size(),isFirstPage);
         for (ListIterator iter = packetDatas.listIterator(); iter.hasNext();) {
@@ -93,6 +95,34 @@ public class OggLogicalPageFactory {
         }
         return builder.create();
     }
+
+    private long beginOfStreamTimestamp, lastTimestamp = -1;
+
+	/**
+	 * @param firstOggPage
+	 * @return
+	 */
+	private long getTimestamp(OggPage firstOggPage) {
+        if (!(firstOggPage instanceof TimedOggPage)) {
+	        	return timeBase.currentTimeMillis();
+        }
+        
+    		if (firstOggPage.isFirstPage()) {
+    			if (lastTimestamp == -1) {
+    				// if needed, initialize lastTimeStamp with "current" time 
+    				lastTimestamp = timeBase.currentTimeMillis();
+    			}
+    			/* 
+    			 * when a stream begins the ogg page timestamp is reseted
+    			 * so we use the timestamp of the previous processed OggPage
+    			 */
+    			beginOfStreamTimestamp = lastTimestamp;
+    		} 
+
+    		long timestamp = beginOfStreamTimestamp + ((TimedOggPage)firstOggPage).getTimestamp();
+    		lastTimestamp = timestamp;
+    		return timestamp;
+	}
     
     private int maximumPacketSize = Packet.DEFAULT_SIZE;
     

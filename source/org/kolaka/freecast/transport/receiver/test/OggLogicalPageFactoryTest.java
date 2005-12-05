@@ -32,6 +32,7 @@ import org.kolaka.freecast.ogg.DefaultOggPage;
 import org.kolaka.freecast.ogg.test.MemoryOggSource;
 import org.kolaka.freecast.packet.LogicalPage;
 import org.kolaka.freecast.packet.Packet;
+import org.kolaka.freecast.transport.receiver.DefaultTimedOggPage;
 import org.kolaka.freecast.transport.receiver.OggLogicalPageFactory;
 
 public class OggLogicalPageFactoryTest extends TestCase {
@@ -43,17 +44,19 @@ public class OggLogicalPageFactoryTest extends TestCase {
             expectedContent[i] = (byte) (i % Byte.MAX_VALUE);
         }
         
+        final long expectedTimestampDelta = 1000;
+        
         MemoryOggSource source = new MemoryOggSource();
 
         DefaultOggPage firstOggPage = new DefaultOggPage();
         firstOggPage.setFirstPage(true);
         firstOggPage.setRawBytes(expectedContent);
-        source.add(firstOggPage);
+        source.add(new DefaultTimedOggPage(0, firstOggPage));
         
         DefaultOggPage secondOggPage = new DefaultOggPage();
         secondOggPage.setAbsoluteGranulePosition(1);
         secondOggPage.setRawBytes(expectedContent);
-        source.add(secondOggPage);
+        source.add(new DefaultTimedOggPage(expectedTimestampDelta, secondOggPage));
         
         OggLogicalPageFactory factory = new OggLogicalPageFactory();
         factory.setSource(source);
@@ -67,6 +70,7 @@ public class OggLogicalPageFactoryTest extends TestCase {
         assertFalse(secondLogicalPage.isFirstPage());
         assertEquals(expectedPacketCount, secondLogicalPage.packets().size());
         assertTrue(Arrays.equals(expectedContent, secondLogicalPage.getBytes()));
+        assertEquals(expectedTimestampDelta, secondLogicalPage.getTimestamp() - firstLogicalPage.getTimestamp());
         
         assertTrue(source.isEmpty());
     }
