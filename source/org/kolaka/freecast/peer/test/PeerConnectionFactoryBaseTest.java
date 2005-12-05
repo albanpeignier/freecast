@@ -91,7 +91,7 @@ public abstract class PeerConnectionFactoryBaseTest extends TestCase {
         List receivedMessages = new LinkedList();
         receivedMessages.add(new PeerStatusMessage(new PeerStatus(new DefaultNodeIdentifier(0), Order.ZERO)));
         receivedMessages.add(new PeerConnectionStatusMessage(PeerConnection.Status.OPENED));
-        DefaultLogicalPageDescriptor pageDescriptor = new DefaultLogicalPageDescriptor(1, 1, true);
+        DefaultLogicalPageDescriptor pageDescriptor = new DefaultLogicalPageDescriptor(1, 0, 1, true);
         Message message = PacketMessage.getInstance(new DefaultPacket(0, 0, new DefaultPacketData(new byte[0]), Checksum.EMPTY, pageDescriptor.createElementDescriptor(1)));
         receivedMessages.add(message);
         
