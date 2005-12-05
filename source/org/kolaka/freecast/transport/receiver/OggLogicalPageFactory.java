@@ -72,8 +72,10 @@ public class OggLogicalPageFactory {
         long sequenceNumber = pageIdentifierGenerator.next();
         boolean isFirstPage = ((OggPage)nextOggPages.get(0)).isFirstPage();
         List packetDatas = createPacketDatas(nextOggPages);
+
+        long timestamp = timeBase.currentTimeMillis();
         
-        LogicalPageBuilder builder = new LogicalPageBuilder(sequenceNumber,packetDatas.size(),isFirstPage);
+        LogicalPageBuilder builder = new LogicalPageBuilder(sequenceNumber, timestamp, packetDatas.size(),isFirstPage);
         for (ListIterator iter = packetDatas.listIterator(); iter.hasNext();) {
             int index = iter.nextIndex();
             PacketData packetData = (PacketData) iter.next();
@@ -85,8 +87,8 @@ public class OggLogicalPageFactory {
                 exception.initCause(e);
                 throw exception;
             } 
-            Packet packet = new DefaultPacket(packetIdentifierGenerator.next(), 
-                    timeBase.currentTimeMillis(), packetData, checksum, builder.createElementDescriptor(index));
+			Packet packet = new DefaultPacket(packetIdentifierGenerator.next(), 
+                    timestamp, packetData, checksum, builder.createElementDescriptor(index));
             builder.add(packet);
         }
         return builder.create();
