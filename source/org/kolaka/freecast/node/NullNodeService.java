@@ -24,7 +24,6 @@
 package org.kolaka.freecast.node;
 
 import org.kolaka.freecast.service.ControlException;
-import org.kolaka.freecast.service.Startable.Status;
 
 /**
  * 
@@ -34,31 +33,29 @@ import org.kolaka.freecast.service.Startable.Status;
 
 public class NullNodeService implements NodeService {
 
-    public void setNode(ConfigurableNode node) {
-    }
+	public void setNode(ConfigurableNode node) {
+	}
 
-    public void add(Listener listener) {
-    }
+	public void add(Listener listener) {
+	}
 
-    public void remove(Listener listener) {
-    }
+	public void remove(Listener listener) {
+	}
 
-    public void init() throws ControlException {
-    }
+	public void init() throws ControlException {
+	}
 
-    public void start() throws ControlException {
-    }
+	public void start() throws ControlException {
+	}
 
-    public void stop() throws ControlException {
-    }
+	public void stop() throws ControlException {
+	}
 
-    public void dispose() throws ControlException {
-    }
-    
-    public Status getStatus() {
-        return Status.CREATED;
-    }
+	public void dispose() throws ControlException {
+	}
 
-
+	public Status getStatus() {
+		return Status.CREATED;
+	}
 
 }

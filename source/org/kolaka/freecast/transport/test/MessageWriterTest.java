@@ -41,48 +41,48 @@ import org.kolaka.freecast.transport.StreamMessageWriter;
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public class MessageWriterTest extends TestCase {
-    public void testWrite() throws IOException, InterruptedException {
-        final int messageLength = 1024;
-        StreamMessageWriter writer = new StreamMessageWriter(
-                new NullOutputStream());
+	public void testWrite() throws IOException, InterruptedException {
+		final int messageLength = 1024;
+		StreamMessageWriter writer = new StreamMessageWriter(
+				new NullOutputStream());
 
-        assertEquals("initial bandwith not null", 0, writer.getBandwith());
+		assertEquals("initial bandwith not null", 0, writer.getBandwith());
 
-        Message message = new Message() {
-            private final byte[] buffer = new byte[messageLength];
+		Message message = new Message() {
+			private final byte[] buffer = new byte[messageLength];
 
-            public MessageType getType() {
-                return MessageType.PACKET;
-            }
+			public MessageType getType() {
+				return MessageType.PACKET;
+			}
 
-            public void write(DataOutputStream output) throws IOException {
-                output.write(buffer);
-            }
+			public void write(DataOutputStream output) throws IOException {
+				output.write(buffer);
+			}
 
-            public void read(DataInputStream input) throws IOException {
-                throw new NotImplementedException(getClass());
-            }
-        };
-        writer.write(message);
+			public void read(DataInputStream input) throws IOException {
+				throw new NotImplementedException(getClass());
+			}
+		};
+		writer.write(message);
 
-        final int writeLength = (messageLength + 4);
-        final int expectedBandwidth = writeLength * 8;
-        assertEquals("first bandwith wrong", expectedBandwidth, writer
-                .getBandwith());
+		final int writeLength = (messageLength + 4);
+		final int expectedBandwidth = writeLength * 8;
+		assertEquals("first bandwith wrong", expectedBandwidth, writer
+				.getBandwith());
 
-        Thread.sleep(1000);
+		Thread.sleep(1000);
 
-        for (int messageCount = 0; messageCount < 40; messageCount++) {
-            writer.write(message);
-            Thread.sleep(1000);
+		for (int messageCount = 0; messageCount < 40; messageCount++) {
+			writer.write(message);
+			Thread.sleep(1000);
 
-            int bandwidth = writer.getBandwith();
-            long bandwidthError = expectedBandwidth - bandwidth;
-            assertTrue("bandwith wrong (" + bandwidth + "/" + expectedBandwidth
-                    + ")", bandwidthError < (expectedBandwidth * 0.05));
-        }
+			int bandwidth = writer.getBandwith();
+			long bandwidthError = expectedBandwidth - bandwidth;
+			assertTrue("bandwith wrong (" + bandwidth + "/" + expectedBandwidth
+					+ ")", bandwidthError < (expectedBandwidth * 0.05));
+		}
 
-        assertEquals("wrong average length", writeLength, writer
-                .getAverageLength());
-    }
+		assertEquals("wrong average length", writeLength, writer
+				.getAverageLength());
+	}
 }

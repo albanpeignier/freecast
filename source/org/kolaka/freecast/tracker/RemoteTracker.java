@@ -38,16 +38,16 @@ import org.kolaka.freecast.peer.PeerReference;
  */
 public interface RemoteTracker extends Remote {
 
-    public NodeIdentifier register(PeerReference reference)
-            throws RemoteException, TrackerException;
+	public NodeIdentifier register(PeerReference reference)
+			throws RemoteException, TrackerException;
 
-    public void unregister(NodeIdentifier identifier) throws RemoteException,
-            TrackerException;
+	public void unregister(NodeIdentifier identifier) throws RemoteException,
+			TrackerException;
 
-    public void refresh(NodeStatus status) throws RemoteException,
-            TrackerException;
+	public void refresh(NodeStatus status) throws RemoteException,
+			TrackerException;
 
-    public Set getPeerReferences(NodeIdentifier node) throws RemoteException,
-            TrackerException;
+	public Set getPeerReferences(NodeIdentifier node) throws RemoteException,
+			TrackerException;
 
 }

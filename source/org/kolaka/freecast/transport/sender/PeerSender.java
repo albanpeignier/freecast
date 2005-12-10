@@ -47,7 +47,7 @@ import org.kolaka.freecast.transport.MessageWriter;
 import org.kolaka.freecast.transport.PacketMessage;
 
 /**
- *
+ * 
  * @navassoc - - - org.kolaka.freecast.peer.PeerConnection
  * @navassoc - - - org.kolaka.freecast.transport.MessageWriter
  * 
@@ -55,84 +55,84 @@ import org.kolaka.freecast.transport.PacketMessage;
  */
 public class PeerSender extends BaseService implements Sender, TimerUser {
 
-    private Consumer consumer;
+	private Consumer consumer;
 
-    public void setConsumer(Consumer consumer) {
-        Validate.notNull(consumer, "No specified Consumer");
-        this.consumer = consumer;
-    }
+	public void setConsumer(Consumer consumer) {
+		Validate.notNull(consumer, "No specified Consumer");
+		this.consumer = consumer;
+	}
 
-    private final PeerConnection connection;
+	private final PeerConnection connection;
 
-    public PeerSender(PeerConnection connection) {
-        Validate.isTrue(connection.getType().equals(PeerConnection.Type.RELAY),
-                "connection type must be " + PeerConnection.Type.RELAY,
-                connection);
-        this.connection = connection;
-    }
+	public PeerSender(PeerConnection connection) {
+		Validate.isTrue(connection.getType().equals(PeerConnection.Type.RELAY),
+				"connection type must be " + PeerConnection.Type.RELAY,
+				connection);
+		this.connection = connection;
+	}
 
-    private final PeerConnectionStatusListener listener = new PeerConnectionStatusListener() {
-        public void peerConnectionStatusChanged(PeerConnectionStatusEvent event) {
-            if (event.getStatus().equals(PeerConnection.Status.CLOSED)) {
-                LogFactory.getLog(getClass()).debug(
-                        "connection closed, stop the sender");
-                Controlables.stopQuietly(PeerSender.this);
-            }
-        }
-    };
+	private final PeerConnectionStatusListener listener = new PeerConnectionStatusListener() {
+		public void peerConnectionStatusChanged(PeerConnectionStatusEvent event) {
+			if (event.getStatus().equals(PeerConnection.Status.CLOSED)) {
+				LogFactory.getLog(getClass()).debug(
+						"connection closed, stop the sender");
+				Controlables.stopQuietly(PeerSender.this);
+			}
+		}
+	};
 
-    private Loop sendLoop = new Loop() {
+	private Loop sendLoop = new Loop() {
 
-        private MessageWriter writer;
+		private MessageWriter writer;
 
-        protected long loop() throws LoopInterruptedException {
-            if (writer == null) {
-                writer = connection.getWriter();
-            }
+		protected long loop() throws LoopInterruptedException {
+			if (writer == null) {
+				writer = connection.getWriter();
+			}
 
-            LogicalPage page;
+			LogicalPage page;
 
-            try {
-                page = consumer.consume();
-            } catch (EmptyPipeException e) {
-                return DefaultTimer.seconds(1);
-            }
+			try {
+				page = consumer.consume();
+			} catch (EmptyPipeException e) {
+				return DefaultTimer.seconds(1);
+			}
 
-            try {
-                for (Iterator iter=page.packets().iterator(); iter.hasNext(); ) {
-                    Packet packet = (Packet) iter.next();
-                    writer.write(PacketMessage.getInstance(packet));
-                }
-            } catch (IOException e) {
-                throw new LoopInterruptedException(
-                        "failed to send a packet via " + connection, e);
-            }
+			try {
+				for (Iterator iter = page.packets().iterator(); iter.hasNext();) {
+					Packet packet = (Packet) iter.next();
+					writer.write(PacketMessage.getInstance(packet));
+				}
+			} catch (IOException e) {
+				throw new LoopInterruptedException(
+						"failed to send a packet via " + connection, e);
+			}
 
-            return DefaultTimer.nodelay();
-       }
+			return DefaultTimer.nodelay();
+		}
 
-    };
+	};
 
-    public void start() throws ControlException {
-        super.start();
+	public void start() throws ControlException {
+		super.start();
 
-        connection.add(listener);
-        timer.execute(sendLoop);
-    }
+		connection.add(listener);
+		timer.execute(sendLoop);
+	}
 
-    public void stop() throws ControlException {
-        consumer.close();
+	public void stop() throws ControlException {
+		consumer.close();
 
-        connection.remove(listener);
-        sendLoop.cancel();
+		connection.remove(listener);
+		sendLoop.cancel();
 
-        super.stop();
-    }
+		super.stop();
+	}
 
-    private Timer timer = DefaultTimer.getInstance();
+	private Timer timer = DefaultTimer.getInstance();
 
-    public void setTimer(Timer timer) {
-        Validate.notNull(timer, "No specified Timer");
-        this.timer = timer;
-    }
+	public void setTimer(Timer timer) {
+		Validate.notNull(timer, "No specified Timer");
+		this.timer = timer;
+	}
 }

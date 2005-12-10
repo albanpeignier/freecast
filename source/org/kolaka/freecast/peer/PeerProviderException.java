@@ -31,21 +31,21 @@ package org.kolaka.freecast.peer;
 
 public class PeerProviderException extends Exception {
 
-    private static final long serialVersionUID = 3257849878762567733L;
+	private static final long serialVersionUID = 3257849878762567733L;
 
-    /**
-     * @param message
-     */
-    public PeerProviderException(String message) {
-        super(message);
-    }
+	/**
+	 * @param message
+	 */
+	public PeerProviderException(String message) {
+		super(message);
+	}
 
-    /**
-     * @param message
-     * @param cause
-     */
-    public PeerProviderException(String message, Throwable cause) {
-        super(message, cause);
-    }
+	/**
+	 * @param message
+	 * @param cause
+	 */
+	public PeerProviderException(String message, Throwable cause) {
+		super(message, cause);
+	}
 
 }

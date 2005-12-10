@@ -30,8 +30,8 @@ package org.kolaka.freecast.pipe;
  */
 public interface Pipe {
 
-    public Consumer createConsumer(String name);
+	public Consumer createConsumer(String name);
 
-    public Producer createProducer();
+	public Producer createProducer();
 
 }

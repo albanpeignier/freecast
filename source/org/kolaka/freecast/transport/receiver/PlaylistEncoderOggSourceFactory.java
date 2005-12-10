@@ -54,7 +54,7 @@ public class PlaylistEncoderOggSourceFactory implements OggSourceFactory {
 			EncoderFormat format) {
 		Validate.notNull(playlist);
 		Validate.notNull(format);
-		
+
 		this.playlist = playlist;
 		this.format = format;
 		this.readFormat = new AudioFormat(format.getSampleRate(), 16, format
@@ -73,19 +73,25 @@ public class PlaylistEncoderOggSourceFactory implements OggSourceFactory {
 
 		AudioInputStream audioInput;
 		try {
-			AudioInputStream originalAudioInput = AudioSystem.getAudioInputStream(entry.openStream());
-			audioInput = AudioSystem.getAudioInputStream(readFormat,originalAudioInput);
+			AudioInputStream originalAudioInput = AudioSystem
+					.getAudioInputStream(entry.openStream());
+			audioInput = AudioSystem.getAudioInputStream(readFormat,
+					originalAudioInput);
 		} catch (UnsupportedAudioFileException e) {
 			IOException exception = new IOException("Can't read "
 					+ entry.getDescription());
 			exception.initCause(e);
 			throw exception;
 		}
-		
-		LogFactory.getLog(getClass()).info("play " + entry.getDescription() + " [" + nextPlayedIndex + "]");
+
+		LogFactory.getLog(getClass())
+				.info(
+						"play " + entry.getDescription() + " ["
+								+ nextPlayedIndex + "]");
 
 		nextPlayedIndex = (nextPlayedIndex + 1) % playlist.size();
-		return new TimedOggSource(new EncoderOggSource(audioInput, format.getQuality()), format.getSampleRate());
+		return new TimedOggSource(new EncoderOggSource(audioInput, format
+				.getQuality()), format.getSampleRate());
 	}
 
 }

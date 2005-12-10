@@ -22,30 +22,32 @@
  */
 package org.kolaka.freecast.peer.test;
 
-import org.kolaka.freecast.peer.AutomaticPeerReferenceFactory;
-import org.kolaka.freecast.peer.PeerReferenceFactoryException;
-import org.kolaka.freecast.peer.MultiplePeerReference;
 import junit.framework.TestCase;
+
+import org.kolaka.freecast.peer.AutomaticPeerReferenceFactory;
+import org.kolaka.freecast.peer.MultiplePeerReference;
+import org.kolaka.freecast.peer.PeerReferenceFactoryException;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public class AutomaticPeerReferenceFactoryTest extends TestCase {
 
-    public void testCreate() throws PeerReferenceFactoryException {
-        AutomaticPeerReferenceFactory factory = new AutomaticPeerReferenceFactory();
+	public void testCreate() throws PeerReferenceFactoryException {
+		AutomaticPeerReferenceFactory factory = new AutomaticPeerReferenceFactory();
 
-        try {
-            factory.create();
-            fail();
-        } catch (IllegalStateException e) {
-            // expected exception
-        }
+		try {
+			factory.create();
+			fail();
+		} catch (IllegalStateException e) {
+			// expected exception
+		}
 
-        factory.setDefaultPort(1000);
+		factory.setDefaultPort(1000);
 
-        MultiplePeerReference reference = (MultiplePeerReference) factory.create();
-        System.out.println(reference);
-    }
+		MultiplePeerReference reference = (MultiplePeerReference) factory
+				.create();
+		System.out.println(reference);
+	}
 
 }

@@ -23,26 +23,26 @@
 
 package org.kolaka.freecast.config;
 
+import java.net.URI;
+
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.kolaka.freecast.resource.ResourceLocator;
 
-import java.net.URI;
-
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public interface ConfigurationLoader {
 
-    void load() throws ConfigurationException;
-    
-    Configuration getRootConfiguration();
-    
-    void setUserURI(URI userURI);
-    
-    void addUserProperty(String property, String value);
+	void load() throws ConfigurationException;
+
+	Configuration getRootConfiguration();
+
+	void setUserURI(URI userURI);
+
+	void addUserProperty(String property, String value);
 
 	void setResourceLocator(ResourceLocator locator);
 }

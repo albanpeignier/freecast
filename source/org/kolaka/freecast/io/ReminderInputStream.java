@@ -30,52 +30,52 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class ReminderInputStream extends FilterInputStream {
-    private final ByteArrayOutputStream buffer;
+	private final ByteArrayOutputStream buffer;
 
-    public ReminderInputStream(InputStream in) {
-        super(in);
-        this.buffer = new ByteArrayOutputStream();
-    }
+	public ReminderInputStream(InputStream in) {
+		super(in);
+		this.buffer = new ByteArrayOutputStream();
+	}
 
-    public int read() throws IOException {
-        int read = super.read();
-        if (read > -1) {
-            buffer.write(read);
-        }
-        return read;
-    }
+	public int read() throws IOException {
+		int read = super.read();
+		if (read > -1) {
+			buffer.write(read);
+		}
+		return read;
+	}
 
-    public int read(byte buffer[], int offset, int length) throws IOException {
-        int read = super.read(buffer, offset, length);
-        if (read > 0) {
-            this.buffer.write(buffer, offset, read);
-        }
+	public int read(byte buffer[], int offset, int length) throws IOException {
+		int read = super.read(buffer, offset, length);
+		if (read > 0) {
+			this.buffer.write(buffer, offset, read);
+		}
 
-        return length;
-    }
+		return length;
+	}
 
-    public long skip(long length) throws IOException {
-        for (long i = 0; i < length; i++) {
-            int read = read();
-            if (read == -1) {
-                return i;
-            }
-        }
+	public long skip(long length) throws IOException {
+		for (long i = 0; i < length; i++) {
+			int read = read();
+			if (read == -1) {
+				return i;
+			}
+		}
 
-        return length;
-    }
+		return length;
+	}
 
-    public void resetByteArray() {
-        buffer.reset();
-    }
+	public void resetByteArray() {
+		buffer.reset();
+	}
 
-    public byte[] toByteArray() {
-        return buffer.toByteArray();
-    }
+	public byte[] toByteArray() {
+		return buffer.toByteArray();
+	}
 
-    public void close() throws IOException {
-        super.close();
-        buffer.close();
-    }
+	public void close() throws IOException {
+		super.close();
+		buffer.close();
+	}
 
 }

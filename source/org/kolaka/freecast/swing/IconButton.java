@@ -24,110 +24,116 @@
 
 package org.kolaka.freecast.swing;
 
-import org.apache.commons.lang.Validate;
-import org.apache.commons.logging.LogFactory;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import javax.swing.Action;
+import javax.swing.Icon;
+import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
+
+import org.apache.commons.lang.Validate;
+import org.apache.commons.logging.LogFactory;
+
 public class IconButton extends JLabel {
 
-    private static final long serialVersionUID = 3257286915873846841L;
+	private static final long serialVersionUID = 3257286915873846841L;
 
-    public IconButton(Icon icon) {
-        super(icon);
-        init();
-    }
+	public IconButton(Icon icon) {
+		super(icon);
+		init();
+	}
 
-    public IconButton(Action action) {
-        setIcon(getActionIcon(action));
-        setAction(action);
-        init();
-    }
+	public IconButton(Action action) {
+		setIcon(getActionIcon(action));
+		setAction(action);
+		init();
+	}
 
-    private void init() {
+	private void init() {
 		setOpaque(false);
-        addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent event) {
-                if (action == null) {
-                    return;
-                }
+		addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent event) {
+				if (action == null) {
+					return;
+				}
 				if (SwingUtilities.isLeftMouseButton(event)) {
 					action.actionPerformed(new ActionEvent(IconButton.this,
 							ActionEvent.ACTION_PERFORMED, "default"));
 					event.consume();
 				}
-            }
-        });
-    }
+			}
+		});
+	}
 
 	private Action action;
+
 	private String iconName = Actions.LARG_ICON;
 
-    private final PropertyChangeListener listener = new PropertyChangeListener() {
-        public void propertyChange(PropertyChangeEvent event) {
-            if (event.getPropertyName().equals(iconName)) {
-                Icon icon = (Icon) action.getValue(iconName);
-                if (icon != null) {
-                    setIcon(icon);
-                    invalidate();
-                }
-            } else if (event.getPropertyName().equals(Action.SHORT_DESCRIPTION)) {
-				setToolTipText((String) action.getValue(Action.SHORT_DESCRIPTION));
+	private final PropertyChangeListener listener = new PropertyChangeListener() {
+		public void propertyChange(PropertyChangeEvent event) {
+			if (event.getPropertyName().equals(iconName)) {
+				Icon icon = (Icon) action.getValue(iconName);
+				if (icon != null) {
+					setIcon(icon);
+					invalidate();
+				}
+			} else if (event.getPropertyName().equals(Action.SHORT_DESCRIPTION)) {
+				setToolTipText((String) action
+						.getValue(Action.SHORT_DESCRIPTION));
 			}
-        }
-    };
+		}
+	};
 
-    public void setAction(final Action action) {
-        Validate.notNull(action, "No specified action");
+	public void setAction(final Action action) {
+		Validate.notNull(action, "No specified action");
 
-        if (this.action != null) {
-            this.action.removePropertyChangeListener(listener);
-        }
+		if (this.action != null) {
+			this.action.removePropertyChangeListener(listener);
+		}
 
 		setToolTipText((String) action.getValue(Action.SHORT_DESCRIPTION));
-        setIcon(getActionIcon(action));
-        invalidate();
+		setIcon(getActionIcon(action));
+		invalidate();
 
-        action.addPropertyChangeListener(listener);
-        this.action = action;
-    }
+		action.addPropertyChangeListener(listener);
+		this.action = action;
+	}
 
-    public void setIcon(Icon icon) {
-        if (icon == null) {
-            LogFactory.getLog(getClass())
-                    .debug("no specified icon for " + this);
-            return;
-        }
+	public void setIcon(Icon icon) {
+		if (icon == null) {
+			LogFactory.getLog(getClass())
+					.debug("no specified icon for " + this);
+			return;
+		}
 
-        super.setIcon(icon);
-        invalidate();
-        preferredSize = new Dimension(icon.getIconWidth(), icon.getIconHeight());
-    }
+		super.setIcon(icon);
+		invalidate();
+		preferredSize = new Dimension(icon.getIconWidth(), icon.getIconHeight());
+	}
 
-    private Icon getActionIcon(Action action) {
+	private Icon getActionIcon(Action action) {
 		Icon largIcon = Actions.getLargIcon(action);
 		if (largIcon != null) {
 			iconName = Actions.LARG_ICON;
-            return largIcon;
+			return largIcon;
 		}
 		iconName = Action.SMALL_ICON;
 		return Actions.getSmallIcon(action);
-    }
+	}
 
-    private Dimension preferredSize;
+	private Dimension preferredSize;
 
-    public Dimension getPreferredSize() {
-        if (preferredSize != null) {
-            return preferredSize;
-        }
+	public Dimension getPreferredSize() {
+		if (preferredSize != null) {
+			return preferredSize;
+		}
 
-        return super.getPreferredSize();
-    }
+		return super.getPreferredSize();
+	}
 
 }

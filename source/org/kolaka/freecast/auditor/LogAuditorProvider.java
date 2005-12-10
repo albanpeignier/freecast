@@ -22,11 +22,6 @@
  */
 package org.kolaka.freecast.auditor;
 
-import org.apache.commons.lang.ClassUtils;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
@@ -34,6 +29,11 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.ClassUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
@@ -49,12 +49,13 @@ public class LogAuditorProvider extends ProxyAuditorProvider {
 		try {
 			logFormats = loadResourceBundle(auditorInterface);
 		} catch (MissingResourceException e) {
-			LogFactory.getLog(getClass()).trace("No log message formats found for " + auditorInterface);
+			LogFactory.getLog(getClass()).trace(
+					"No log message formats found for " + auditorInterface);
 			return new NullAuditorProvider(auditorInterface).getAuditor();
 		}
 		Log log = getLog(auditorInterface);
 		InvocationHandler handler = new LogInvocationHandler(logFormats, log);
-        return createAuditor(auditorInterface,handler);
+		return createAuditor(auditorInterface, handler);
 	}
 
 	private Log getLog(Class auditorInterface) {
@@ -63,7 +64,10 @@ public class LogAuditorProvider extends ProxyAuditorProvider {
 	}
 
 	private ResourceBundle loadResourceBundle(Class auditorInterface) {
-		String resourceName = ClassUtils.getPackageName(auditorInterface) + "/resources/" + ClassUtils.getShortClassName(auditorInterface).replace('.','$');
+		String resourceName = ClassUtils.getPackageName(auditorInterface)
+				+ "/resources/"
+				+ ClassUtils.getShortClassName(auditorInterface).replace('.',
+						'$');
 		LogFactory.getLog(getClass()).trace("try to load " + resourceName);
 		return ResourceBundle.getBundle(resourceName);
 	}
@@ -71,6 +75,7 @@ public class LogAuditorProvider extends ProxyAuditorProvider {
 	static abstract class LogLevel {
 
 		private static Map levels = new TreeMap();
+
 		private final String name;
 
 		LogLevel(String name) {
@@ -122,7 +127,6 @@ public class LogAuditorProvider extends ProxyAuditorProvider {
 			}
 		};
 
-
 		public static final LogLevel ERROR = new LogLevel("error") {
 			public boolean isEnabled(Log log) {
 				return log.isErrorEnabled();
@@ -143,7 +147,7 @@ public class LogAuditorProvider extends ProxyAuditorProvider {
 			}
 		};
 
-        public static LogLevel getInstance(String name) {
+		public static LogLevel getInstance(String name) {
 			LogLevel level = (LogLevel) levels.get(name);
 			if (level == null) {
 				return DEBUG;
@@ -155,12 +159,12 @@ public class LogAuditorProvider extends ProxyAuditorProvider {
 			return name;
 		}
 
-
 	}
 
 	static class LogInvocationHandler extends AuditInvocationHandler {
 
 		private final ResourceBundle bundle;
+
 		private final Log log;
 
 		public LogInvocationHandler(ResourceBundle bundle, Log log) {
@@ -176,11 +180,13 @@ public class LogAuditorProvider extends ProxyAuditorProvider {
 		}
 
 		protected void invokeAuditMethod(Method method, Object[] args) {
-			LogFactory.getLog(getClass()).trace("log audit " + method + ArrayUtils.toString(args));
+			LogFactory.getLog(getClass()).trace(
+					"log audit " + method + ArrayUtils.toString(args));
 
 			LogLevel level;
 			try {
-				String levelName = bundle.getString(method.getName() + ".level");
+				String levelName = bundle
+						.getString(method.getName() + ".level");
 				level = LogLevel.getInstance(levelName);
 			} catch (Exception e) {
 				level = LogLevel.DEBUG;

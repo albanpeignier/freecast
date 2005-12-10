@@ -35,14 +35,16 @@ public class Version {
 
 	private Version() {
 		Properties properties = new Properties();
-		InputStream resource = getClass().getResourceAsStream("resources/version.properties");
+		InputStream resource = getClass().getResourceAsStream(
+				"resources/version.properties");
 		try {
 			if (resource == null) {
-			    throw new IOException("can't find the version resources");
+				throw new IOException("can't find the version resources");
 			}
 			properties.load(resource);
 		} catch (IOException e) {
-			IllegalStateException exception = new IllegalStateException("can't load version information");
+			IllegalStateException exception = new IllegalStateException(
+					"can't load version information");
 			exception.initCause(e);
 			throw exception;
 		}

@@ -23,18 +23,15 @@
 
 package org.kolaka.freecast.ogg;
 
-import org.apache.commons.io.input.SwappedDataInputStream;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.Validate;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.logging.LogFactory;
-import org.kolaka.freecast.io.ReminderInputStream;
-
 import java.io.DataInputStream;
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+
+import org.apache.commons.io.input.SwappedDataInputStream;
+import org.apache.commons.lang.Validate;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.kolaka.freecast.io.ReminderInputStream;
 
 /**
  * 
@@ -42,74 +39,77 @@ import java.util.Arrays;
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public class OggStreamSource implements OggSource {
-    
+
 	private final String description;
+
 	private final ReminderInputStream reminderInput;
 
-    private final SwappedDataInputStream dataInput;
+	private final SwappedDataInputStream dataInput;
 
-    public OggStreamSource(InputStream input) {
-    	this(input, String.valueOf(input));
-    }
-    
-    public OggStreamSource(InputStream input, String description) {
-    	Validate.notEmpty(description,"No specified description");
-    	this.description = description;
-        reminderInput = new ReminderInputStream(input);
-        dataInput = new SwappedDataInputStream(new DataInputStream(reminderInput));
-    }
-    
-    public String toString() {
-    	ToStringBuilder builder = new ToStringBuilder(this);
-    	builder.append("description", description);
-    	return builder.toString();
-    }
+	public OggStreamSource(InputStream input) {
+		this(input, String.valueOf(input));
+	}
 
-    private final byte[] capturePatternBuffer = new byte[4];
+	public OggStreamSource(InputStream input, String description) {
+		Validate.notEmpty(description, "No specified description");
+		this.description = description;
+		reminderInput = new ReminderInputStream(input);
+		dataInput = new SwappedDataInputStream(new DataInputStream(
+				reminderInput));
+	}
 
-    public OggPage next() throws IOException {
-        dataInput.readFully(capturePatternBuffer, 0, 4);
+	public String toString() {
+		ToStringBuilder builder = new ToStringBuilder(this);
+		builder.append("description", description);
+		return builder.toString();
+	}
 
-        if (!Arrays.equals(OggPage.CAPTURE_PATTERN, capturePatternBuffer)) {
-            throw new IOException("Missing capture pattern");
-        }
+	private final byte[] capturePatternBuffer = new byte[4];
 
-        int streamStructureVersion = dataInput.readUnsignedByte();
-        if (streamStructureVersion != 0 && streamStructureVersion != -1) {
-        	// [Bug 52] the last page can use a streamStructureVersion at -1  
-            throw new IOException("Bad stream structure version: " + streamStructureVersion);
-        }
+	public OggPage next() throws IOException {
+		dataInput.readFully(capturePatternBuffer, 0, 4);
 
-        MutableOggPage page = new DefaultOggPage();
+		if (!Arrays.equals(OggPage.CAPTURE_PATTERN, capturePatternBuffer)) {
+			throw new IOException("Missing capture pattern");
+		}
 
-        int headerTypeFlag = dataInput.readUnsignedByte();
-        page.setFirstPage((headerTypeFlag & 0x02) != 0);
-        page.setLastPage((headerTypeFlag & 0x04) != 0);
+		int streamStructureVersion = dataInput.readUnsignedByte();
+		if (streamStructureVersion != 0 && streamStructureVersion != -1) {
+			// [Bug 52] the last page can use a streamStructureVersion at -1
+			throw new IOException("Bad stream structure version: "
+					+ streamStructureVersion);
+		}
 
-        page.setAbsoluteGranulePosition(dataInput.readLong());
-        page.setStreamSerialNumber(dataInput.readInt());
-        
-        dataInput.skip(8);
+		MutableOggPage page = new DefaultOggPage();
 
-        int pageSegments = dataInput.readUnsignedByte();
-        int pageSize = 0;
+		int headerTypeFlag = dataInput.readUnsignedByte();
+		page.setFirstPage((headerTypeFlag & 0x02) != 0);
+		page.setLastPage((headerTypeFlag & 0x04) != 0);
 
-        for (int segmentIndex = 0; segmentIndex < pageSegments; segmentIndex++) {
-            pageSize += dataInput.readUnsignedByte();
-        }
+		page.setAbsoluteGranulePosition(dataInput.readLong());
+		page.setStreamSerialNumber(dataInput.readInt());
 
-        dataInput.skip(pageSize);
+		dataInput.skip(8);
 
-        page.setRawBytes(reminderInput.toByteArray());
-        reminderInput.resetByteArray();
-        
-        // LogFactory.getLog(getClass()).trace("returns " + page);
+		int pageSegments = dataInput.readUnsignedByte();
+		int pageSize = 0;
 
-        return page;
-    }
+		for (int segmentIndex = 0; segmentIndex < pageSegments; segmentIndex++) {
+			pageSize += dataInput.readUnsignedByte();
+		}
 
-    public void close() throws IOException {
-        dataInput.close();
-    }
+		dataInput.skip(pageSize);
+
+		page.setRawBytes(reminderInput.toByteArray());
+		reminderInput.resetByteArray();
+
+		// LogFactory.getLog(getClass()).trace("returns " + page);
+
+		return page;
+	}
+
+	public void close() throws IOException {
+		dataInput.close();
+	}
 
 }

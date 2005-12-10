@@ -10,23 +10,23 @@ import java.net.URL;
 
 public class URLTextFile extends TextFile {
 
-    private final URL url;
+	private final URL url;
 
 	public URLTextFile(File file) throws MalformedURLException {
-        this(file.toURL());
-    }
+		this(file.toURL());
+	}
 
-    public URLTextFile(URL url) {
-        this.url = url;
-    }
+	public URLTextFile(URL url) {
+		this.url = url;
+	}
 
 	public URLTextFile(URI uri) throws MalformedURLException {
 		this(uri.toURL());
 	}
 
-    public void load() throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(url
-                .openStream()));
+	public void load() throws IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(url
+				.openStream()));
 		load(reader);
 	}
 

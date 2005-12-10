@@ -32,10 +32,13 @@ import org.kolaka.freecast.ogg.OggSource;
 public class TimedOggSource implements OggSource {
 
 	private static final int UNDEFINED = -1;
+
 	private long initialAbsoluteGranulePosition = UNDEFINED;
+
 	private final OggSource source;
+
 	private final int frameRate;
-	
+
 	public TimedOggSource(OggSource source, int frameRate) {
 		this.source = source;
 		this.frameRate = frameRate;
@@ -46,16 +49,17 @@ public class TimedOggSource implements OggSource {
 		long timestamp = getTimestamp(sourcePage);
 		return new DefaultTimedOggPage(timestamp, sourcePage);
 	}
-	
+
 	private long getTimestamp(OggPage sourcePage) {
 		long absoluteGranulePosition = sourcePage.getAbsoluteGranulePosition();
-		
+
 		if (initialAbsoluteGranulePosition == UNDEFINED) {
 			initialAbsoluteGranulePosition = absoluteGranulePosition;
 			return 0;
 		}
-		
-		long relativePosition = absoluteGranulePosition - initialAbsoluteGranulePosition;
+
+		long relativePosition = absoluteGranulePosition
+				- initialAbsoluteGranulePosition;
 		return ((relativePosition * DateUtils.MILLIS_PER_SECOND) / frameRate);
 	}
 

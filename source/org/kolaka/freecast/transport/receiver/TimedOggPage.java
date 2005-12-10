@@ -26,7 +26,7 @@ package org.kolaka.freecast.transport.receiver;
 import org.kolaka.freecast.ogg.OggPage;
 
 public interface TimedOggPage extends OggPage {
-	
+
 	public long getTimestamp();
 
 }

@@ -23,14 +23,12 @@
 
 package org.kolaka.freecast.peer.test;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.apache.log4j.xml.DOMConfigurator;
 import org.easymock.MockControl;
 import org.kolaka.freecast.node.DefaultNodeIdentifier;
 import org.kolaka.freecast.node.NodeStatus;
@@ -54,147 +52,150 @@ import org.kolaka.freecast.transport.PeerStatusMessage;
  */
 public class PeerConnectionSourceTest extends TestCase {
 
-    public void testAccept() throws Exception {
-        NodeStatus status = new NodeStatus(new DefaultNodeIdentifier(1),
-                Order.ZERO);
-        PeerStatus peerStatus = new PeerStatus(new DefaultNodeIdentifier(2),
-                Order.ZERO.lower());
+	public void testAccept() throws Exception {
+		NodeStatus status = new NodeStatus(new DefaultNodeIdentifier(1),
+				Order.ZERO);
+		PeerStatus peerStatus = new PeerStatus(new DefaultNodeIdentifier(2),
+				Order.ZERO.lower());
 
-        // NodeStatusProvider
-        MockControl statusProviderControl = MockControl
-                .createControl(NodeStatusProvider.class);
-        NodeStatusProvider statusProvider = (NodeStatusProvider) statusProviderControl
-                .getMock();
-        statusProvider.getNodeStatus();
-        statusProviderControl.setReturnValue(status);
-        statusProviderControl.replay();
+		// NodeStatusProvider
+		MockControl statusProviderControl = MockControl
+				.createControl(NodeStatusProvider.class);
+		NodeStatusProvider statusProvider = (NodeStatusProvider) statusProviderControl
+				.getMock();
+		statusProvider.getNodeStatus();
+		statusProviderControl.setReturnValue(status);
+		statusProviderControl.replay();
 
-        // PeerConnection
-        MockPeerConnection connection = new MockPeerConnection(
-                PeerConnection.Type.RELAY);
+		// PeerConnection
+		MockPeerConnection connection = new MockPeerConnection(
+				PeerConnection.Type.RELAY);
 
-        MockControl writerControl = MockControl
-                .createControl(MessageWriter.class);
-        writerControl.setDefaultMatcher(new MessageMatcher());
-        MessageWriter writer = (MessageWriter) writerControl.getMock();
-        writer.write(new PeerStatusMessage(status.createPeerStatus()));
-        writerControl.setReturnValue(1);
-        
-        PeerConnectionStatusMessage connectionStatusMessage = new PeerConnectionStatusMessage(PeerConnection.Status.OPENED);
-        writer.write(connectionStatusMessage);
-        writerControl.setReturnValue(1);
-        
-        writerControl.replay();
-        
-        connection.setupCreateWriter(writer);
+		MockControl writerControl = MockControl
+				.createControl(MessageWriter.class);
+		writerControl.setDefaultMatcher(new MessageMatcher());
+		MessageWriter writer = (MessageWriter) writerControl.getMock();
+		writer.write(new PeerStatusMessage(status.createPeerStatus()));
+		writerControl.setReturnValue(1);
 
-        // TODO the mock read throws a exception after the second message
-        MockMessageReader reader = new MockMessageReader();
-        reader.add(new PeerStatusMessage(peerStatus));
-        reader.add(connectionStatusMessage);
+		PeerConnectionStatusMessage connectionStatusMessage = new PeerConnectionStatusMessage(
+				PeerConnection.Status.OPENED);
+		writer.write(connectionStatusMessage);
+		writerControl.setReturnValue(1);
 
-        connection.setupCreateReader(reader);
+		writerControl.replay();
 
-        // Listeners
-        MockControl listenerControl = MockControl
-                .createControl(PeerConnectionOpeningListener.class);
-        PeerConnectionOpeningListener listener = (PeerConnectionOpeningListener) listenerControl
-                .getMock();
+		connection.setupCreateWriter(writer);
 
-        listener.connectionOpening(connection);
-        listenerControl.replay();
+		// TODO the mock read throws a exception after the second message
+		MockMessageReader reader = new MockMessageReader();
+		reader.add(new PeerStatusMessage(peerStatus));
+		reader.add(connectionStatusMessage);
 
-        MockControl vetoableListenerControl = MockControl
-                .createControl(VetoablePeerConnectionOpeningListener.class);
-        VetoablePeerConnectionOpeningListener vetoableListener = (VetoablePeerConnectionOpeningListener) vetoableListenerControl
-                .getMock();
+		connection.setupCreateReader(reader);
 
-        vetoableListener.vetoableConnectionOpening(connection);
-        vetoableListenerControl.replay();
+		// Listeners
+		MockControl listenerControl = MockControl
+				.createControl(PeerConnectionOpeningListener.class);
+		PeerConnectionOpeningListener listener = (PeerConnectionOpeningListener) listenerControl
+				.getMock();
 
-        // Registry
-        MockControl registryControl = MockControl
-                .createControl(PeerConnectionSource.Registry.class);
-        PeerConnectionSource.Registry registry = (PeerConnectionSource.Registry) registryControl
-                .getMock();
+		listener.connectionOpening(connection);
+		listenerControl.replay();
 
-        registry.registry(connection);
-        registryControl.replay();
+		MockControl vetoableListenerControl = MockControl
+				.createControl(VetoablePeerConnectionOpeningListener.class);
+		VetoablePeerConnectionOpeningListener vetoableListener = (VetoablePeerConnectionOpeningListener) vetoableListenerControl
+				.getMock();
 
-        TestPeerConnectionSource source = new TestPeerConnectionSource();
-        source.setStatusProvider(statusProvider);
-        source.add(listener);
-        source.add(vetoableListener);
-        source.setRegistry(registry);
+		vetoableListener.vetoableConnectionOpening(connection);
+		vetoableListenerControl.replay();
 
-        assertEquals("wrong intial connection Status",
-                PeerConnection.Status.OPENING, connection.getStatus());
+		// Registry
+		MockControl registryControl = MockControl
+				.createControl(PeerConnectionSource.Registry.class);
+		PeerConnectionSource.Registry registry = (PeerConnectionSource.Registry) registryControl
+				.getMock();
 
-        source.accept(connection);
-        
-        Thread.sleep(100);
+		registry.registry(connection);
+		registryControl.replay();
 
-        assertEquals("wrong connection PeerStatus", peerStatus, connection
-                .getLastPeerStatus());
-        assertEquals("wrong final connection Status",
-                PeerConnection.Status.OPENED, connection.getStatus());
+		TestPeerConnectionSource source = new TestPeerConnectionSource();
+		source.setStatusProvider(statusProvider);
+		source.add(listener);
+		source.add(vetoableListener);
+		source.setRegistry(registry);
 
-        statusProviderControl.verify();
-        assertTrue(reader.isEmpty());
-        writerControl.verify();
+		assertEquals("wrong intial connection Status",
+				PeerConnection.Status.OPENING, connection.getStatus());
 
-        listenerControl.verify();
-        vetoableListenerControl.verify();
+		source.accept(connection);
 
-        // shutdown the PeerConnection
-        reader.add(new PeerConnectionStatusMessage(PeerConnection.Status.CLOSED));
-    }
+		Thread.sleep(100);
 
-    class TestPeerConnectionSource extends PeerConnectionSource {
+		assertEquals("wrong connection PeerStatus", peerStatus, connection
+				.getLastPeerStatus());
+		assertEquals("wrong final connection Status",
+				PeerConnection.Status.OPENED, connection.getStatus());
 
-        public void accept(PeerConnection connection) {
-            super.accept(connection);
-        }
+		statusProviderControl.verify();
+		assertTrue(reader.isEmpty());
+		writerControl.verify();
 
-        public void start() {
+		listenerControl.verify();
+		vetoableListenerControl.verify();
 
-        }
+		// shutdown the PeerConnection
+		reader
+				.add(new PeerConnectionStatusMessage(
+						PeerConnection.Status.CLOSED));
+	}
 
-        public void stop() {
+	class TestPeerConnectionSource extends PeerConnectionSource {
 
-        }
+		public void accept(PeerConnection connection) {
+			super.accept(connection);
+		}
 
-    }
-    
-    class MockMessageReader implements MessageReader {
-        
-        private List messages = new LinkedList();
-        
-        public Message read() throws IOException {
-            synchronized (messages) {
-                while (messages.isEmpty()) {
-                    try {
-                        messages.wait();
-                    } catch (InterruptedException e) {
-                        throw new IOException("Can't wait the next message");
-                    }
-                }
-            }
-            
-            return (Message) messages.remove(0);
-        }
-        
-        public void add(Message message) {
-            synchronized (messages) {
-                messages.add(message);
-                messages.notifyAll();
-            }
-        }
-        
-        public boolean isEmpty() {
-            return messages.isEmpty();
-        }
-        
-    }
+		public void start() {
+
+		}
+
+		public void stop() {
+
+		}
+
+	}
+
+	class MockMessageReader implements MessageReader {
+
+		private List messages = new LinkedList();
+
+		public Message read() throws IOException {
+			synchronized (messages) {
+				while (messages.isEmpty()) {
+					try {
+						messages.wait();
+					} catch (InterruptedException e) {
+						throw new IOException("Can't wait the next message");
+					}
+				}
+			}
+
+			return (Message) messages.remove(0);
+		}
+
+		public void add(Message message) {
+			synchronized (messages) {
+				messages.add(message);
+				messages.notifyAll();
+			}
+		}
+
+		public boolean isEmpty() {
+			return messages.isEmpty();
+		}
+
+	}
 
 }

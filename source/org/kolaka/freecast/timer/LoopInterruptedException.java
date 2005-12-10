@@ -26,14 +26,14 @@ package org.kolaka.freecast.timer;
 
 public class LoopInterruptedException extends Exception {
 
-    private static final long serialVersionUID = 3257005449537467955L;
+	private static final long serialVersionUID = 3257005449537467955L;
 
-    public LoopInterruptedException(String message) {
-        super(message);
-    }
+	public LoopInterruptedException(String message) {
+		super(message);
+	}
 
-    public LoopInterruptedException(String message, Throwable cause) {
-        super(message, cause);
-    }
+	public LoopInterruptedException(String message, Throwable cause) {
+		super(message, cause);
+	}
 
 }

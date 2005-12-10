@@ -36,12 +36,12 @@ public class URLResourceLocator implements ResourceLocator {
 		if (!uri.isAbsolute()) {
 			throw new NoSuchResourceException(uri);
 		}
-			  
+
 		try {
 			URL url = uri.toURL();
 			return url.openStream();
 		} catch (IOException e) {
-			throw new UnavailableResourceException(uri,e);
+			throw new UnavailableResourceException(uri, e);
 		}
 	}
 

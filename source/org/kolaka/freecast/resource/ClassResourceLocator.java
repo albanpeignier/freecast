@@ -22,10 +22,10 @@
  */
 package org.kolaka.freecast.resource;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.io.InputStream;
 import java.net.URI;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>

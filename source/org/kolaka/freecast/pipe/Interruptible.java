@@ -30,18 +30,18 @@ package org.kolaka.freecast.pipe;
  */
 public interface Interruptible {
 
-    public boolean isClosed();
+	public boolean isClosed();
 
-    public void close();
+	public void close();
 
-    public void add(Listener listener);
+	public void add(Listener listener);
 
-    public void remove(Listener listener);
+	public void remove(Listener listener);
 
-    public static interface Listener {
+	public static interface Listener {
 
-        public void closed();
+		public void closed();
 
-    }
+	}
 
 }

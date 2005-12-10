@@ -36,22 +36,22 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  */
 public abstract class BaseMessage implements Message {
 
-    public abstract MessageType getType();
+	public abstract MessageType getType();
 
-    public abstract void write(DataOutputStream output) throws IOException;
+	public abstract void write(DataOutputStream output) throws IOException;
 
-    public abstract void read(DataInputStream input) throws IOException;
+	public abstract void read(DataInputStream input) throws IOException;
 
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
 
-    public boolean equals(Object o) {
-        return o instanceof Message && equals((Message) o);
-    }
+	public boolean equals(Object o) {
+		return o instanceof Message && equals((Message) o);
+	}
 
-    public abstract boolean equals(Message other);
+	public abstract boolean equals(Message other);
 
-    public abstract int hashCode();
+	public abstract int hashCode();
 
 }

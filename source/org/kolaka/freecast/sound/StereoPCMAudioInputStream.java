@@ -30,127 +30,129 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 
 /**
- * Transforms a mono <code>AudioInputStream</code> into a stereo one. 
- * Freely inspired from 
- * <a href="http://www.jsresources.org/examples/SingleChannelStereoAudioInputStream.java.html">SingleChannelStereoAudioInputStream.java</a>.
+ * Transforms a mono <code>AudioInputStream</code> into a stereo one. Freely
+ * inspired from <a
+ * href="http://www.jsresources.org/examples/SingleChannelStereoAudioInputStream.java.html">SingleChannelStereoAudioInputStream.java</a>.
  * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class StereoPCMAudioInputStream extends AudioInputStream {
 
-    private AudioInputStream inputStream;
-    private final int frameSize;
-    private final int sourceFrameSize;
+	private AudioInputStream inputStream;
 
-    public StereoPCMAudioInputStream(AudioInputStream sourceStream) {
-        super(new ByteArrayInputStream(new byte[0]), new AudioFormat(
-                sourceStream.getFormat().getSampleRate(), sourceStream
-                        .getFormat().getSampleSizeInBits(), 2,
-                sourceStream.getFormat().getEncoding().equals(
-                        AudioFormat.Encoding.PCM_SIGNED), sourceStream
-                        .getFormat().isBigEndian()), sourceStream
-                .getFrameLength());
+	private final int frameSize;
 
-        AudioFormat sourceFormat = sourceStream.getFormat();
-        if (!isPcm(sourceFormat.getEncoding())) {
-            throw new IllegalArgumentException("source stream has to be PCM");
-        }
+	private final int sourceFrameSize;
 
-        if (sourceFormat.getChannels() != 1) {
-            throw new IllegalArgumentException("source stream has to mono");
-        }
+	public StereoPCMAudioInputStream(AudioInputStream sourceStream) {
+		super(new ByteArrayInputStream(new byte[0]), new AudioFormat(
+				sourceStream.getFormat().getSampleRate(), sourceStream
+						.getFormat().getSampleSizeInBits(), 2, sourceStream
+						.getFormat().getEncoding().equals(
+								AudioFormat.Encoding.PCM_SIGNED), sourceStream
+						.getFormat().isBigEndian()), sourceStream
+				.getFrameLength());
 
-        inputStream = sourceStream;
-        frameSize = getFormat().getFrameSize();
-        sourceFrameSize = inputStream.getFormat().getFrameSize();
-    }
+		AudioFormat sourceFormat = sourceStream.getFormat();
+		if (!isPcm(sourceFormat.getEncoding())) {
+			throw new IllegalArgumentException("source stream has to be PCM");
+		}
 
-    public static boolean isPcm(AudioFormat.Encoding encoding) {
-        return encoding.equals(AudioFormat.Encoding.PCM_SIGNED)
-                || encoding.equals(AudioFormat.Encoding.PCM_UNSIGNED);
-    }
+		if (sourceFormat.getChannels() != 1) {
+			throw new IllegalArgumentException("source stream has to mono");
+		}
 
-    public int read() throws IOException {
-        throw new IOException("cannot read fraction of a frame");
-    }
+		inputStream = sourceStream;
+		frameSize = getFormat().getFrameSize();
+		sourceFrameSize = inputStream.getFormat().getFrameSize();
+	}
 
-    public int read(byte[] buffer, int offset, int length) throws IOException {
-        int sampleSizeInBytes = frameSize / 2;
-        if ((length % frameSize) != 0) {
-            throw new IOException("cannot read fraction of a frame");
-        }
+	public static boolean isPcm(AudioFormat.Encoding encoding) {
+		return encoding.equals(AudioFormat.Encoding.PCM_SIGNED)
+				|| encoding.equals(AudioFormat.Encoding.PCM_UNSIGNED);
+	}
 
-        int frames = length / frameSize;
-        int lengthToRead = frames * sourceFrameSize;
-        byte[] readBuffer = new byte[lengthToRead];
+	public int read() throws IOException {
+		throw new IOException("cannot read fraction of a frame");
+	}
 
-        int readLength = inputStream.read(readBuffer, 0, lengthToRead);
+	public int read(byte[] buffer, int offset, int length) throws IOException {
+		int sampleSizeInBytes = frameSize / 2;
+		if ((length % frameSize) != 0) {
+			throw new IOException("cannot read fraction of a frame");
+		}
 
-        if (readLength == -1) {
-            return -1;
-        }
+		int frames = length / frameSize;
+		int lengthToRead = frames * sourceFrameSize;
+		byte[] readBuffer = new byte[lengthToRead];
 
-        frames = readLength / sourceFrameSize;
-        int writeIndex = offset;
-        int readIndex = 0;
-        int n;
-        if (sampleSizeInBytes == 2) {
-            for (int i = 0; i < frames; i++) {
-                int leftIndex = writeIndex;
-                int rightIndex = writeIndex + sampleSizeInBytes;
+		int readLength = inputStream.read(readBuffer, 0, lengthToRead);
 
-                buffer[leftIndex] = buffer[rightIndex] = readBuffer[readIndex];
-                buffer[leftIndex + 1] = buffer[rightIndex + 1] = readBuffer[readIndex + 1];
+		if (readLength == -1) {
+			return -1;
+		}
 
-                writeIndex += frameSize;
-                readIndex += sourceFrameSize;
-            }
-        } else {
-            for (int i = 0; i < frames; i++) {
-                int leftIndex = writeIndex;
-                int rightIndex = writeIndex + sampleSizeInBytes;
+		frames = readLength / sourceFrameSize;
+		int writeIndex = offset;
+		int readIndex = 0;
+		int n;
+		if (sampleSizeInBytes == 2) {
+			for (int i = 0; i < frames; i++) {
+				int leftIndex = writeIndex;
+				int rightIndex = writeIndex + sampleSizeInBytes;
 
-                n = 0;
-                while (n < sampleSizeInBytes) {
-                    buffer[leftIndex + n] = buffer[rightIndex + n] = readBuffer[readIndex
-                            + n];
-                    n++;
-                }
+				buffer[leftIndex] = buffer[rightIndex] = readBuffer[readIndex];
+				buffer[leftIndex + 1] = buffer[rightIndex + 1] = readBuffer[readIndex + 1];
 
-                writeIndex += frameSize;
-                readIndex += sourceFrameSize;
-            }
-        }
+				writeIndex += frameSize;
+				readIndex += sourceFrameSize;
+			}
+		} else {
+			for (int i = 0; i < frames; i++) {
+				int leftIndex = writeIndex;
+				int rightIndex = writeIndex + sampleSizeInBytes;
 
-        return frames * frameSize;
-    }
+				n = 0;
+				while (n < sampleSizeInBytes) {
+					buffer[leftIndex + n] = buffer[rightIndex + n] = readBuffer[readIndex
+							+ n];
+					n++;
+				}
 
-    public long skip(long length) throws IOException {
-        long bytesInSource = (length / frameSize) * sourceFrameSize;
-        long bytesSkippedInSource = inputStream.skip(bytesInSource);
-        return (bytesSkippedInSource / sourceFrameSize) * frameSize;
-    }
+				writeIndex += frameSize;
+				readIndex += sourceFrameSize;
+			}
+		}
 
-    public int available() throws IOException {
-        int availableInSource = inputStream.available();
-        return (availableInSource / sourceFrameSize) * frameSize;
-    }
+		return frames * frameSize;
+	}
 
-    public void close() throws IOException {
-        inputStream.close();
-    }
+	public long skip(long length) throws IOException {
+		long bytesInSource = (length / frameSize) * sourceFrameSize;
+		long bytesSkippedInSource = inputStream.skip(bytesInSource);
+		return (bytesSkippedInSource / sourceFrameSize) * frameSize;
+	}
 
-    public void mark(int readLimit) {
-        int sourceReadLimit = (readLimit / frameSize) * sourceFrameSize;
-        inputStream.mark(sourceReadLimit);
-    }
+	public int available() throws IOException {
+		int availableInSource = inputStream.available();
+		return (availableInSource / sourceFrameSize) * frameSize;
+	}
 
-    public void reset() throws IOException {
-        inputStream.reset();
-    }
+	public void close() throws IOException {
+		inputStream.close();
+	}
 
-    public boolean markSupported() {
-        return inputStream.markSupported();
-    }
+	public void mark(int readLimit) {
+		int sourceReadLimit = (readLimit / frameSize) * sourceFrameSize;
+		inputStream.mark(sourceReadLimit);
+	}
+
+	public void reset() throws IOException {
+		inputStream.reset();
+	}
+
+	public boolean markSupported() {
+		return inputStream.markSupported();
+	}
 
 }

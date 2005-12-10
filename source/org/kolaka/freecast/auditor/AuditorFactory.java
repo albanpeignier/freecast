@@ -22,11 +22,11 @@
  */
 package org.kolaka.freecast.auditor;
 
-import org.apache.commons.lang.Validate;
-import org.apache.commons.logging.LogFactory;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.commons.lang.Validate;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
@@ -48,12 +48,15 @@ public class AuditorFactory {
 		AuditorProvider auditorProvider = getAuditorProvider(auditorInterface);
 
 		Auditor auditor = auditorProvider.getAuditor();
-		LogFactory.getLog(getClass()).debug("use auditor implementation " + auditor + " for " + auditorInterface);
+		LogFactory.getLog(getClass()).debug(
+				"use auditor implementation " + auditor + " for "
+						+ auditorInterface);
 		return auditor;
 	}
 
 	protected AuditorProvider getAuditorProvider(Class auditorInterface) {
-		AuditorProvider auditorProvider = (AuditorProvider) auditorProviders.get(auditorInterface);
+		AuditorProvider auditorProvider = (AuditorProvider) auditorProviders
+				.get(auditorInterface);
 		if (auditorProvider == null) {
 			auditorProvider = createAuditorProvider(auditorInterface);
 			auditorProviders.put(auditorInterface, auditorProvider);
@@ -62,20 +65,26 @@ public class AuditorFactory {
 	}
 
 	protected AuditorProvider createAuditorProvider(Class auditorInterface) {
-		LogFactory.getLog(getClass()).debug("create empty composite auditor implementation for " + auditorInterface);
-		CompositeAuditorProvider auditorProvider = new CompositeAuditorProvider(auditorInterface);
-		auditorProvider.register(new LogAuditorProvider(auditorInterface).getAuditor());
+		LogFactory.getLog(getClass()).debug(
+				"create empty composite auditor implementation for "
+						+ auditorInterface);
+		CompositeAuditorProvider auditorProvider = new CompositeAuditorProvider(
+				auditorInterface);
+		auditorProvider.register(new LogAuditorProvider(auditorInterface)
+				.getAuditor());
 		return auditorProvider;
 	}
 
 	public void register(Class auditorInterface, Auditor auditor) {
-		LogFactory.getLog(getClass()).debug("register auditor implementation for " + auditorInterface);
+		LogFactory.getLog(getClass()).debug(
+				"register auditor implementation for " + auditorInterface);
 		CompositeAuditorProvider auditorProvider = (CompositeAuditorProvider) getAuditorProvider(auditorInterface);
 		auditorProvider.register(auditor);
 	}
 
 	public void unregister(Class auditorInterface, Auditor auditor) {
-		LogFactory.getLog(getClass()).debug("unregister auditor implementation for " + auditorInterface);
+		LogFactory.getLog(getClass()).debug(
+				"unregister auditor implementation for " + auditorInterface);
 		CompositeAuditorProvider auditorProvider = (CompositeAuditorProvider) getAuditorProvider(auditorInterface);
 		auditorProvider.unregister(auditor);
 	}

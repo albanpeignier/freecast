@@ -32,6 +32,6 @@ import org.kolaka.freecast.pipe.Consumer;
  */
 public interface ConsumerService extends Service {
 
-    public void setConsumer(Consumer consumer);
+	public void setConsumer(Consumer consumer);
 
 }

@@ -29,11 +29,11 @@ import org.kolaka.freecast.ogg.OggSource;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public interface OggSourceFactory {
 
-    public OggSource next() throws IOException;
-    
+	public OggSource next() throws IOException;
+
 }

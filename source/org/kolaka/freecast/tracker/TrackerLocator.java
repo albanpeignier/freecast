@@ -32,6 +32,6 @@ import java.net.InetSocketAddress;
  */
 public interface TrackerLocator {
 
-    public Tracker resolve(InetSocketAddress address) throws TrackerException;
+	public Tracker resolve(InetSocketAddress address) throws TrackerException;
 
 }

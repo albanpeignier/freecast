@@ -35,33 +35,33 @@ import org.apache.commons.lang.time.DateFormatUtils;
  */
 public class PlayerStatus implements Serializable {
 
-    private static final long serialVersionUID = 3688502199378785336L;
+	private static final long serialVersionUID = 3688502199378785336L;
 
-    public static final PlayerStatus INACTIVE = new PlayerStatus(0, 0);
+	public static final PlayerStatus INACTIVE = new PlayerStatus(0, 0);
 
-    private long playTimeLength;
+	private long playTimeLength;
 
-    private double missingDataRate;
+	private double missingDataRate;
 
-    public PlayerStatus(final long playTimeLength, final double missingDataRate) {
-        this.playTimeLength = playTimeLength;
-        this.missingDataRate = missingDataRate;
-    }
+	public PlayerStatus(final long playTimeLength, final double missingDataRate) {
+		this.playTimeLength = playTimeLength;
+		this.missingDataRate = missingDataRate;
+	}
 
-    public double getMissingDataRate() {
-        return missingDataRate;
-    }
+	public double getMissingDataRate() {
+		return missingDataRate;
+	}
 
-    public long getPlayTimeLength() {
-        return playTimeLength;
-    }
+	public long getPlayTimeLength() {
+		return playTimeLength;
+	}
 
-    public String toString() {
-        ToStringBuilder builder = new ToStringBuilder(this);
-        builder.append("playTimeLength", DateFormatUtils.formatUTC(
-                playTimeLength, "HH:mm:ss"));
-        builder.append("missingDataRate", missingDataRate);
-        return builder.toString();
-    }
+	public String toString() {
+		ToStringBuilder builder = new ToStringBuilder(this);
+		builder.append("playTimeLength", DateFormatUtils.formatUTC(
+				playTimeLength, "HH:mm:ss"));
+		builder.append("missingDataRate", missingDataRate);
+		return builder.toString();
+	}
 
 }

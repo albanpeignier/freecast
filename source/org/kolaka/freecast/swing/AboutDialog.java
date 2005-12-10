@@ -23,10 +23,17 @@
 
 package org.kolaka.freecast.swing;
 
-import org.kolaka.freecast.Version;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+
+import org.kolaka.freecast.Version;
 
 /**
  * @author alban
@@ -36,38 +43,39 @@ import java.awt.*;
  */
 public class AboutDialog extends JDialog {
 
-    private static final long serialVersionUID = 3257002168149094451L;
+	private static final long serialVersionUID = 3257002168149094451L;
 
-    public AboutDialog(Resources resources, JFrame parent) throws ResourcesException {
-        super(parent, parent.getTitle() + " - About");
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+	public AboutDialog(Resources resources, JFrame parent)
+			throws ResourcesException {
+		super(parent, parent.getTitle() + " - About");
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-        Container contentPane = getContentPane();
-        contentPane.setLayout(new GridBagLayout());
+		Container contentPane = getContentPane();
+		contentPane.setLayout(new GridBagLayout());
 
-        contentPane.setBackground(resources.getColor("background"));
+		contentPane.setBackground(resources.getColor("background"));
 
-        JLabel logoLabel = new JLabel(resources.getIcon("logo"));
+		JLabel logoLabel = new JLabel(resources.getIcon("logo"));
 
-        GridBagConstraints logoConstraints = new GridBagConstraints();
-        logoConstraints.insets = new Insets(10, 10, 10, 10);
-        logoConstraints.gridwidth = GridBagConstraints.REMAINDER;
-        contentPane.add(logoLabel, logoConstraints);
+		GridBagConstraints logoConstraints = new GridBagConstraints();
+		logoConstraints.insets = new Insets(10, 10, 10, 10);
+		logoConstraints.gridwidth = GridBagConstraints.REMAINDER;
+		contentPane.add(logoLabel, logoConstraints);
 
-		String urlText = "<html><center><p>Visit the website<br><b>http://www.freecast.org</b></p>&nbsp;" +
-		        "<p>Free software under the GNU GPL<br>version " + Version.getInstance().getName() +
-		        "<br>Copyright 2004 - Alban Peignier</p></center>";
-		JLabel urlLabel = new JLabel(
-		                urlText);
-        GridBagConstraints urlConstraints = new GridBagConstraints();
-        urlConstraints.gridwidth = GridBagConstraints.REMAINDER;
-        urlConstraints.insets = new Insets(0, 5, 10, 5);
-        contentPane.add(urlLabel, urlConstraints);
+		String urlText = "<html><center><p>Visit the website<br><b>http://www.freecast.org</b></p>&nbsp;"
+				+ "<p>Free software under the GNU GPL<br>version "
+				+ Version.getInstance().getName()
+				+ "<br>Copyright 2004 - Alban Peignier</p></center>";
+		JLabel urlLabel = new JLabel(urlText);
+		GridBagConstraints urlConstraints = new GridBagConstraints();
+		urlConstraints.gridwidth = GridBagConstraints.REMAINDER;
+		urlConstraints.insets = new Insets(0, 5, 10, 5);
+		contentPane.add(urlLabel, urlConstraints);
 
-        urlLabel.setForeground(Color.WHITE);
+		urlLabel.setForeground(Color.WHITE);
 
 		setLocationRelativeTo(parent);
 		pack();
-    }
+	}
 
 }

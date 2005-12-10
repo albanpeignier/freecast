@@ -26,8 +26,6 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.Application;
 import org.kolaka.freecast.NodeConfigurator;
-import org.kolaka.freecast.config.ConfigurationLoader;
-import org.kolaka.freecast.config.DefaultConfigurationLoader;
 import org.kolaka.freecast.node.ConfigurableNode;
 import org.kolaka.freecast.node.DefaultNode;
 import org.kolaka.freecast.node.Node;
@@ -63,7 +61,8 @@ public class Main extends Application {
 					node.stop();
 					node.dispose();
 				} catch (ControlException e) {
-					LogFactory.getLog(getClass()).error("Can't stop properly the Node", e);
+					LogFactory.getLog(getClass()).error(
+							"Can't stop properly the Node", e);
 				}
 			}
 		});

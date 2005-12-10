@@ -33,34 +33,34 @@ import org.kolaka.freecast.service.ControlException;
  */
 public class StaticReceiverControler implements ReceiverControler {
 
-    private Receiver receiver;
+	private Receiver receiver;
 
-    public StaticReceiverControler(Receiver receiver) {
-        this.receiver = receiver;
-    }
+	public StaticReceiverControler(Receiver receiver) {
+		this.receiver = receiver;
+	}
 
-    public void setPipe(Pipe pipe) {
-        receiver.setProducer(pipe.createProducer());
-    }
+	public void setPipe(Pipe pipe) {
+		receiver.setProducer(pipe.createProducer());
+	}
 
-    public void init() throws ControlException {
-        receiver.init();
-    }
+	public void init() throws ControlException {
+		receiver.init();
+	}
 
-    public void start() throws ControlException {
-        receiver.start();
-    }
+	public void start() throws ControlException {
+		receiver.start();
+	}
 
-    public void stop() throws ControlException {
-        receiver.stop();
-    }
+	public void stop() throws ControlException {
+		receiver.stop();
+	}
 
-    public void dispose() throws ControlException {
-        receiver.dispose();
-    }
-    
-    protected Receiver getReceiver() {
-        return receiver;
-    }
+	public void dispose() throws ControlException {
+		receiver.dispose();
+	}
+
+	protected Receiver getReceiver() {
+		return receiver;
+	}
 
 }

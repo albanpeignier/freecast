@@ -25,11 +25,11 @@ package org.kolaka.freecast.packet.signer;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public interface PacketValidatorUser {
 
-    public void setPacketValidator(PacketValidator validator);
-    
+	public void setPacketValidator(PacketValidator validator);
+
 }

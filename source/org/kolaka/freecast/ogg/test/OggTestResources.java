@@ -37,7 +37,8 @@ public class OggTestResources {
 	}
 
 	public static InputStream getResourceAsStream(String name) {
-		InputStream input = OggTestResources.class.getResourceAsStream("resources/" + name);
+		InputStream input = OggTestResources.class
+				.getResourceAsStream("resources/" + name);
 		Validate.notNull(input, "unknown test resource: " + name);
 		return input;
 	}

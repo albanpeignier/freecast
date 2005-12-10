@@ -23,7 +23,6 @@
 
 package org.kolaka.freecast.packet;
 
-
 /**
  * 
  * 
@@ -31,10 +30,10 @@ package org.kolaka.freecast.packet;
  */
 public interface Packet extends SequenceElement, PacketData {
 
-    public static final int DEFAULT_SIZE = 1024;
+	public static final int DEFAULT_SIZE = 1024;
 
-    public Checksum getChecksum();
-    
-    public LogicalPageDescriptor.Element getElementDescriptor();
-    
+	public Checksum getChecksum();
+
+	public LogicalPageDescriptor.Element getElementDescriptor();
+
 }

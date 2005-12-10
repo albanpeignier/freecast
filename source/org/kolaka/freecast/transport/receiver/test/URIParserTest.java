@@ -23,7 +23,6 @@
 
 package org.kolaka.freecast.transport.receiver.test;
 
-
 import java.net.URI;
 
 import junit.framework.TestCase;
@@ -33,23 +32,29 @@ import org.kolaka.freecast.resource.URIParser;
 public class URIParserTest extends TestCase {
 
 	public void testPathURIParsing() throws Exception {
-		testPathURIParsing("/directory/file with spaces.ogg", "/directory/file with spaces.ogg");
-		testPathURIParsing("/directory/filewithquote'.ogg","/directory/filewithquote'.ogg");
-		testPathURIParsing("file:\\c\\directory\\file.ogg", "/c/directory/file.ogg");
+		testPathURIParsing("/directory/file with spaces.ogg",
+				"/directory/file with spaces.ogg");
+		testPathURIParsing("/directory/filewithquote'.ogg",
+				"/directory/filewithquote'.ogg");
+		testPathURIParsing("file:\\c\\directory\\file.ogg",
+				"/c/directory/file.ogg");
 	}
 
-	private void testPathURIParsing(String string, String expectedPath) throws Exception {
+	private void testPathURIParsing(String string, String expectedPath)
+			throws Exception {
 		URI uri = new URIParser().parse(string);
 		assertEquals("wrong path into " + uri, expectedPath, uri.getPath());
 	}
 
 	public void testURIParsing() throws Exception {
-		testURIParsing("http://host/path",new URI("http","host","/path",null));
+		testURIParsing("http://host/path", new URI("http", "host", "/path",
+				null));
 	}
-	
-	private void testURIParsing(String string, URI expectedURI) throws Exception {
+
+	private void testURIParsing(String string, URI expectedURI)
+			throws Exception {
 		URI uri = new URIParser().parse(string);
 		assertEquals(expectedURI, uri);
 	}
-	
+
 }

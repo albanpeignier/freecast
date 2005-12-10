@@ -22,72 +22,80 @@
  */
 package org.kolaka.freecast.peer.test;
 
-import junit.framework.TestCase;
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.XMLConfiguration;
-import org.apache.commons.configuration.ConfigurationException;
-import org.kolaka.freecast.peer.PeerReferenceLoader;
-import org.kolaka.freecast.peer.PeerReference;
-import org.kolaka.freecast.peer.InetPeerReference;
-import org.kolaka.freecast.peer.MultiplePeerReference;
-
 import java.io.StringReader;
 import java.net.InetSocketAddress;
-import java.util.Iterator;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
+
+import junit.framework.TestCase;
+
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.XMLConfiguration;
+import org.kolaka.freecast.peer.InetPeerReference;
+import org.kolaka.freecast.peer.MultiplePeerReference;
+import org.kolaka.freecast.peer.PeerReference;
+import org.kolaka.freecast.peer.PeerReferenceLoader;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public class PeerReferenceLoaderTest extends TestCase {
-    private static final int PORT = 1000;
+	private static final int PORT = 1000;
 
-    public void testLoadInetPeerReference() throws ConfigurationException {
-        final String host = "host";
-        final int port = 4444;
+	public void testLoadInetPeerReference() throws ConfigurationException {
+		final String host = "host";
+		final int port = 4444;
 
-        InetPeerReference referenceWithDefaultPort = (InetPeerReference) loadPeerReference("<host>" + host + "</host>");
-        assertEquals(host, referenceWithDefaultPort.getSocketAddress().getHostName());
+		InetPeerReference referenceWithDefaultPort = (InetPeerReference) loadPeerReference("<host>"
+				+ host + "</host>");
+		assertEquals(host, referenceWithDefaultPort.getSocketAddress()
+				.getHostName());
 
-        InetPeerReference reference = (InetPeerReference) loadPeerReference("<host>" + host + "</host><port>" + port + "</port>");
-        assertEquals("host", reference.getSocketAddress().getHostName());
-        assertEquals(port, reference.getSocketAddress().getPort());
-    }
+		InetPeerReference reference = (InetPeerReference) loadPeerReference("<host>"
+				+ host + "</host><port>" + port + "</port>");
+		assertEquals("host", reference.getSocketAddress().getHostName());
+		assertEquals(port, reference.getSocketAddress().getPort());
+	}
 
-    public void testMultiplePeerReference() throws ConfigurationException {
-        StringBuffer definition = new StringBuffer();
-        definition.append("<class>multiple</class>");
-        Set expectedReferences = new HashSet();
-        final int referenceCount = 5;
-        for (int i=0; i < referenceCount; i++) {
-            String hostName = "host" + i;
-            definition.append("<reference><host>");
-            definition.append(hostName);
-            definition.append("</host></reference>");
-            expectedReferences.add(InetPeerReference.getInstance(hostName, PORT, true));
-        }
+	public void testMultiplePeerReference() throws ConfigurationException {
+		StringBuffer definition = new StringBuffer();
+		definition.append("<class>multiple</class>");
+		Set expectedReferences = new HashSet();
+		final int referenceCount = 5;
+		for (int i = 0; i < referenceCount; i++) {
+			String hostName = "host" + i;
+			definition.append("<reference><host>");
+			definition.append(hostName);
+			definition.append("</host></reference>");
+			expectedReferences.add(InetPeerReference.getInstance(hostName,
+					PORT, true));
+		}
 
-        MultiplePeerReference reference = (MultiplePeerReference) loadPeerReference(definition.toString());
-        assertEquals(referenceCount, reference.references().size());
+		MultiplePeerReference reference = (MultiplePeerReference) loadPeerReference(definition
+				.toString());
+		assertEquals(referenceCount, reference.references().size());
 
-        assertEquals(new MultiplePeerReference(expectedReferences), reference);
-    }
+		assertEquals(new MultiplePeerReference(expectedReferences), reference);
+	}
 
-    protected PeerReference loadPeerReference(String xmlConfiguration) throws ConfigurationException {
-        Configuration configuration = createConfiguration("<reference>" + xmlConfiguration + "</reference>");
+	protected PeerReference loadPeerReference(String xmlConfiguration)
+			throws ConfigurationException {
+		Configuration configuration = createConfiguration("<reference>"
+				+ xmlConfiguration + "</reference>");
 
-        PeerReferenceLoader loader = new PeerReferenceLoader();
-        loader.setListenAddress(new InetSocketAddress(PORT));
+		PeerReferenceLoader loader = new PeerReferenceLoader();
+		loader.setListenAddress(new InetSocketAddress(PORT));
 
-        return loader.load(configuration);
-    }
+		return loader.load(configuration);
+	}
 
-    protected Configuration createConfiguration(String xmlContent) throws ConfigurationException {
-        XMLConfiguration configuration = new XMLConfiguration();
-        configuration.setThrowExceptionOnMissing(true);
-        configuration.load(new StringReader(xmlContent));
-        return configuration;
-    }
+	protected Configuration createConfiguration(String xmlContent)
+			throws ConfigurationException {
+		XMLConfiguration configuration = new XMLConfiguration();
+		configuration.setThrowExceptionOnMissing(true);
+		configuration.load(new StringReader(xmlContent));
+		return configuration;
+	}
 
 }

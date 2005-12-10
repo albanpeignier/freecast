@@ -23,6 +23,8 @@
 
 package org.kolaka.freecast.peer;
 
+import java.io.IOException;
+
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.node.NodeStatusProvider;
 import org.kolaka.freecast.peer.event.PeerConnectionOpeningListener;
@@ -32,8 +34,6 @@ import org.kolaka.freecast.peer.event.VetoablePeerConnectionOpeningListener;
 import org.kolaka.freecast.service.Startable;
 import org.kolaka.freecast.transport.PeerStatusMessage;
 
-import java.io.IOException;
-
 /**
  * 
  * 
@@ -41,110 +41,110 @@ import java.io.IOException;
  */
 public abstract class PeerConnectionSource implements Startable {
 
-    private final PeerConnectionOpeningSupport support = new PeerConnectionOpeningSupport();
+	private final PeerConnectionOpeningSupport support = new PeerConnectionOpeningSupport();
 
-    private NodeStatusProvider statusProvider;
+	private NodeStatusProvider statusProvider;
 
-    protected void accept(PeerConnection connection) {
-        LogFactory.getLog(getClass()).trace("connection acceptation begins");
+	protected void accept(PeerConnection connection) {
+		LogFactory.getLog(getClass()).trace("connection acceptation begins");
 
-        try {
-            acceptImpl(connection);
-        } finally {
-            if (!connection.getStatus().equals(PeerConnection.Status.OPENED)) {
-                LogFactory.getLog(getClass()).debug(
-                        "connection closed " + connection);
-                connection.close();
-            }
-        }
-    }
+		try {
+			acceptImpl(connection);
+		} finally {
+			if (!connection.getStatus().equals(PeerConnection.Status.OPENED)) {
+				LogFactory.getLog(getClass()).debug(
+						"connection closed " + connection);
+				connection.close();
+			}
+		}
+	}
 
-    private void acceptImpl(PeerConnection connection) {
-        if (statusProvider == null) {
-            throw new IllegalStateException("No defined NodeStatusProvider");
-        }
-        if (registry == null) {
-            throw new IllegalStateException("No defined Registry");
-        }
+	private void acceptImpl(PeerConnection connection) {
+		if (statusProvider == null) {
+			throw new IllegalStateException("No defined NodeStatusProvider");
+		}
+		if (registry == null) {
+			throw new IllegalStateException("No defined Registry");
+		}
 
-        PeerStatus status = statusProvider.getNodeStatus().createPeerStatus();
+		PeerStatus status = statusProvider.getNodeStatus().createPeerStatus();
 
-        LogFactory.getLog(getClass()).trace("send local status " + status);
+		LogFactory.getLog(getClass()).trace("send local status " + status);
 
-        try {
-            connection.getWriter().write(new PeerStatusMessage(status));
+		try {
+			connection.getWriter().write(new PeerStatusMessage(status));
 
-            LogFactory.getLog(getClass()).trace("read remoted status");
-            // the PeerConnection process the receiver PeerStatusMessage
-            connection.getReader().read();
-        } catch (IOException e) {
-            LogFactory.getLog(getClass()).error(
-                    "Connection initialization failed", e);
-            return;
-        }
+			LogFactory.getLog(getClass()).trace("read remoted status");
+			// the PeerConnection process the receiver PeerStatusMessage
+			connection.getReader().read();
+		} catch (IOException e) {
+			LogFactory.getLog(getClass()).error(
+					"Connection initialization failed", e);
+			return;
+		}
 
-        if (!connection.getStatus().equals(PeerConnection.Status.OPENING)) {
-            // occurs when the connection is closed by the remote peer
-            LogFactory.getLog(getClass()).error(
-                    "invalid connection status: " + connection);
-            return;
-        }
+		if (!connection.getStatus().equals(PeerConnection.Status.OPENING)) {
+			// occurs when the connection is closed by the remote peer
+			LogFactory.getLog(getClass()).error(
+					"invalid connection status: " + connection);
+			return;
+		}
 
-        registry.registry(connection);
+		registry.registry(connection);
 
-        LogFactory.getLog(getClass()).trace(
-                "fire the connection opening to the veto listeners");
-        try {
-            support.fireVetoableConnectionOpening(connection);
-        } catch (VetoPeerConnectionOpeningException e) {
-            LogFactory.getLog(getClass()).debug(
-                    "veto on connection opening " + connection, e);
-            return;
-        }
+		LogFactory.getLog(getClass()).trace(
+				"fire the connection opening to the veto listeners");
+		try {
+			support.fireVetoableConnectionOpening(connection);
+		} catch (VetoPeerConnectionOpeningException e) {
+			LogFactory.getLog(getClass()).debug(
+					"veto on connection opening " + connection, e);
+			return;
+		}
 
-        LogFactory.getLog(getClass()).trace("opens connection");
-        connection.open();
+		LogFactory.getLog(getClass()).trace("opens connection");
+		connection.open();
 
-        LogFactory.getLog(getClass()).trace(
-                "fire the connection opening to the classic listeners");
-        support.fireConnectionOpening(connection);
-    }
+		LogFactory.getLog(getClass()).trace(
+				"fire the connection opening to the classic listeners");
+		support.fireConnectionOpening(connection);
+	}
 
-    public void add(PeerConnectionOpeningListener listener) {
-        support.add(listener);
-    }
+	public void add(PeerConnectionOpeningListener listener) {
+		support.add(listener);
+	}
 
-    public void remove(PeerConnectionOpeningListener listener) {
-        support.remove(listener);
-    }
+	public void remove(PeerConnectionOpeningListener listener) {
+		support.remove(listener);
+	}
 
-    public void add(VetoablePeerConnectionOpeningListener listener) {
-        support.add(listener);
-    }
+	public void add(VetoablePeerConnectionOpeningListener listener) {
+		support.add(listener);
+	}
 
-    public void remove(VetoablePeerConnectionOpeningListener listener) {
-        support.remove(listener);
-    }
+	public void remove(VetoablePeerConnectionOpeningListener listener) {
+		support.remove(listener);
+	}
 
-    public void setStatusProvider(NodeStatusProvider statusProvider) {
-        this.statusProvider = statusProvider;
-    }
+	public void setStatusProvider(NodeStatusProvider statusProvider) {
+		this.statusProvider = statusProvider;
+	}
 
-    private Registry registry;
+	private Registry registry;
 
-    public void setRegistry(Registry registry) {
-        this.registry = registry;
-    }
+	public void setRegistry(Registry registry) {
+		this.registry = registry;
+	}
 
-    /**
-     * Invokes to register connections into the <code>PeerControler</code>.
-     * 
-     * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
-     */
-    public static interface Registry {
+	/**
+	 * Invokes to register connections into the <code>PeerControler</code>.
+	 * 
+	 * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
+	 */
+	public static interface Registry {
 
-        public void registry(PeerConnection connection);
+		public void registry(PeerConnection connection);
 
-    }
+	}
 
 }

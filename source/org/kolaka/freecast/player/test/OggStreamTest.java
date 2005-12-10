@@ -40,32 +40,32 @@ import junit.framework.TestCase;
  */
 public class OggStreamTest extends TestCase {
 
-    /**
-     * TODO use a resource provided by a common package
-     */
-    private static final String OGG_FILE = "/org/kolaka/freecast/ogg/test/resources/sample.ogg";
+	/**
+	 * TODO use a resource provided by a common package
+	 */
+	private static final String OGG_FILE = "/org/kolaka/freecast/ogg/test/resources/sample.ogg";
 
-    public void testStream() throws Exception {
-        InputStream stream = getClass().getResourceAsStream(OGG_FILE);
-        assertNotNull("no input stream", stream);
+	public void testStream() throws Exception {
+		InputStream stream = getClass().getResourceAsStream(OGG_FILE);
+		assertNotNull("no input stream", stream);
 
-        testStream(stream);
-    }
+		testStream(stream);
+	}
 
-    private void testStream(InputStream stream)
-            throws UnsupportedAudioFileException, IOException {
-        AudioFormat format = new AudioFormat(44100, 16, 1, true, false);
-        AudioInputStream audioStream = AudioSystem.getAudioInputStream(format,
-                AudioSystem.getAudioInputStream(stream));
+	private void testStream(InputStream stream)
+			throws UnsupportedAudioFileException, IOException {
+		AudioFormat format = new AudioFormat(44100, 16, 1, true, false);
+		AudioInputStream audioStream = AudioSystem.getAudioInputStream(format,
+				AudioSystem.getAudioInputStream(stream));
 
-        final byte buffer[] = new byte[1024 * 1024 * 2];
+		final byte buffer[] = new byte[1024 * 1024 * 2];
 
-        while (true) {
-            int read = audioStream.read(buffer);
-            if (read == -1) {
-                break;
-            }
-        }
-    }
+		while (true) {
+			int read = audioStream.read(buffer);
+			if (read == -1) {
+				break;
+			}
+		}
+	}
 
 }

@@ -43,258 +43,258 @@ import org.kolaka.freecast.peer.event.PeerConnectionStatusListener;
  */
 public class DefaultPeer implements Peer {
 
-    /**
-     * Identifies of the <code>Node</code> designed by this <code>Peer</code>.
-     * Can be null if unknown.
-     */
-    private NodeIdentifier identifier;
+	/**
+	 * Identifies of the <code>Node</code> designed by this <code>Peer</code>.
+	 * Can be null if unknown.
+	 */
+	private NodeIdentifier identifier;
 
-    private PeerReference reference;
+	private PeerReference reference;
 
-    private Order order;
+	private Order order;
 
-    private ConnectivityScoring connectivityScoring;
+	private ConnectivityScoring connectivityScoring;
 
-    private DefaultPeer() {
-        connectivityScoring = ConnectivityScoring.UNKNOWN;
-        order = Order.UNKNOWN;
-    }
+	private DefaultPeer() {
+		connectivityScoring = ConnectivityScoring.UNKNOWN;
+		order = Order.UNKNOWN;
+	}
 
-    public DefaultPeer(PeerReference reference) {
-        this();
-        update(reference);
-    }
+	public DefaultPeer(PeerReference reference) {
+		this();
+		update(reference);
+	}
 
-    public DefaultPeer(PeerStatus status) {
-        this();
-        update(status);
-    }
+	public DefaultPeer(PeerStatus status) {
+		this();
+		update(status);
+	}
 
-    public PeerReference getReference() {
-        return reference;
-    }
+	public PeerReference getReference() {
+		return reference;
+	}
 
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
 
-    public boolean equals(Object o) {
-        return o instanceof Peer && equals((DefaultPeer) o);
-    }
+	public boolean equals(Object o) {
+		return o instanceof Peer && equals((DefaultPeer) o);
+	}
 
-    public boolean equals(DefaultPeer other) {
-        if (identifier != null) {
-            return ObjectUtils.equals(identifier, other.identifier);
-        } 
+	public boolean equals(DefaultPeer other) {
+		if (identifier != null) {
+			return ObjectUtils.equals(identifier, other.identifier);
+		}
 
-        return ObjectUtils.equals(reference, other.reference);
-    }
+		return ObjectUtils.equals(reference, other.reference);
+	}
 
-    public int hashCode() {
-        HashCodeBuilder builder = new HashCodeBuilder();
-        if (identifier != null) {
-            builder.append(identifier);
-        } else {
-            builder.append(reference);
-        }
-        return builder.toHashCode();
-    }
+	public int hashCode() {
+		HashCodeBuilder builder = new HashCodeBuilder();
+		if (identifier != null) {
+			builder.append(identifier);
+		} else {
+			builder.append(reference);
+		}
+		return builder.toHashCode();
+	}
 
-    /**
-     * @return Returns the identifier.
-     */
-    public NodeIdentifier getIdentifier() {
-        return identifier;
-    }
+	/**
+	 * @return Returns the identifier.
+	 */
+	public NodeIdentifier getIdentifier() {
+		return identifier;
+	}
 
-    /**
-     * @param identifier
-     *            The identifier to set.
-     */
-    protected void setIdentifier(NodeIdentifier identifier) {
-        if (this.identifier != null && !this.identifier.equals(identifier)) {
-            throw new IllegalStateException("Identifier already defined: "
-                    + this.identifier + " and mismatchs " + identifier);
-        }
-        this.identifier = identifier;
-    }
+	/**
+	 * @param identifier
+	 *            The identifier to set.
+	 */
+	protected void setIdentifier(NodeIdentifier identifier) {
+		if (this.identifier != null && !this.identifier.equals(identifier)) {
+			throw new IllegalStateException("Identifier already defined: "
+					+ this.identifier + " and mismatchs " + identifier);
+		}
+		this.identifier = identifier;
+	}
 
-    public Order getOrder() {
-        return order;
-    }
+	public Order getOrder() {
+		return order;
+	}
 
-    protected void setOrder(Order order) {
-        Object old = this.order;
-        this.order = order;
-        if (!ObjectUtils.equals(old, order)) {
-            LogFactory.getLog(getClass()).trace("fire order change: " + order);
-            changeSupport.firePropertyChange(ORDER_PROPERTYNAME, old, order);
-        }
-    }
+	protected void setOrder(Order order) {
+		Object old = this.order;
+		this.order = order;
+		if (!ObjectUtils.equals(old, order)) {
+			LogFactory.getLog(getClass()).trace("fire order change: " + order);
+			changeSupport.firePropertyChange(ORDER_PROPERTYNAME, old, order);
+		}
+	}
 
-    protected void setReference(PeerReference reference) {
-        this.reference = reference;
-    }
+	protected void setReference(PeerReference reference) {
+		this.reference = reference;
+	}
 
-    public ConnectivityScoring getConnectivityScoring() {
-        return connectivityScoring;
-    }
+	public ConnectivityScoring getConnectivityScoring() {
+		return connectivityScoring;
+	}
 
-    protected void changeConnectivityScoring(ConnectivityScoring.Change change) {
-        ConnectivityScoring previous = connectivityScoring;
-        connectivityScoring = change.change(connectivityScoring);
+	protected void changeConnectivityScoring(ConnectivityScoring.Change change) {
+		ConnectivityScoring previous = connectivityScoring;
+		connectivityScoring = change.change(connectivityScoring);
 
-        LogFactory.getLog(getClass()).debug(
-                "change connectivity scoring " + change + ": " + previous
-                        + " -> " + connectivityScoring);
-    }
+		LogFactory.getLog(getClass()).debug(
+				"change connectivity scoring " + change + ": " + previous
+						+ " -> " + connectivityScoring);
+	}
 
-    public void updateScoring() {
-        ConnectivityScoring.Change change = isConnected() ? ConnectivityScoring.BONUS_CONNECTIONTRAFFIC
-                : ConnectivityScoring.IDLE;
-        changeConnectivityScoring(change);
-    }
+	public void updateScoring() {
+		ConnectivityScoring.Change change = isConnected() ? ConnectivityScoring.BONUS_CONNECTIONTRAFFIC
+				: ConnectivityScoring.IDLE;
+		changeConnectivityScoring(change);
+	}
 
-    public PeerStatus getStatus() {
-        return new PeerStatus(identifier, order);
-    }
+	public PeerStatus getStatus() {
+		return new PeerStatus(identifier, order);
+	}
 
-    private PeerConnectionFactory connectionFactory;
+	private PeerConnectionFactory connectionFactory;
 
-    private PeerConnection connection;
+	private PeerConnection connection;
 
-    private PeerConnectionStatusListener connectionListener = new PeerConnectionStatusListener() {
-        public void peerConnectionStatusChanged(PeerConnectionStatusEvent event) {
-            LogFactory.getLog(getClass()).trace("receive " + event);
-            if (event.getStatus().equals(PeerConnection.Status.CLOSED)) {
-                disconnect();
-            }
-        }
-    };
+	private PeerConnectionStatusListener connectionListener = new PeerConnectionStatusListener() {
+		public void peerConnectionStatusChanged(PeerConnectionStatusEvent event) {
+			LogFactory.getLog(getClass()).trace("receive " + event);
+			if (event.getStatus().equals(PeerConnection.Status.CLOSED)) {
+				disconnect();
+			}
+		}
+	};
 
-    public PeerConnection connect() throws PeerConnectionFactoryException {
-        if (connection == null) {
-            PeerConnection old = connection;
+	public PeerConnection connect() throws PeerConnectionFactoryException {
+		if (connection == null) {
+			PeerConnection old = connection;
 
-            LogFactory.getLog(getClass()).debug("create connection");
-            try {
-                connection = createConnection();
-            } catch (PeerConnectionFactoryException e) {
-                changeConnectivityScoring(ConnectivityScoring.MALUS_CONNECTIONERROR);
-                throw e;
-            }
+			LogFactory.getLog(getClass()).debug("create connection");
+			try {
+				connection = createConnection();
+			} catch (PeerConnectionFactoryException e) {
+				changeConnectivityScoring(ConnectivityScoring.MALUS_CONNECTIONERROR);
+				throw e;
+			}
 
-            LogFactory.getLog(getClass()).trace(
-                    "fire new connection: " + connection);
-            changeSupport.firePropertyChange(CONNECTION_PROPERTYNAME, old,
-                    connection);
+			LogFactory.getLog(getClass()).trace(
+					"fire new connection: " + connection);
+			changeSupport.firePropertyChange(CONNECTION_PROPERTYNAME, old,
+					connection);
 
-            connection.add(connectionListener);
-        }
+			connection.add(connectionListener);
+		}
 
-        changeConnectivityScoring(ConnectivityScoring.BONUS_CONNECTIONOPENED);
+		changeConnectivityScoring(ConnectivityScoring.BONUS_CONNECTIONOPENED);
 
-        return connection;
-    }
+		return connection;
+	}
 
-    protected PeerConnection createConnection()
-            throws PeerConnectionFactoryException {
-        if (connectionFactory == null) {
-            throw new IllegalStateException("No defined PeerConnectionFactory");
-        }
+	protected PeerConnection createConnection()
+			throws PeerConnectionFactoryException {
+		if (connectionFactory == null) {
+			throw new IllegalStateException("No defined PeerConnectionFactory");
+		}
 
-        return connectionFactory.create(this, reference);
-    }
+		return connectionFactory.create(this, reference);
+	}
 
-    public PeerConnection getConnection() {
-        if (connection == null) {
-            throw new IllegalStateException("No available connection");
-        }
-        return connection;
-    }
+	public PeerConnection getConnection() {
+		if (connection == null) {
+			throw new IllegalStateException("No available connection");
+		}
+		return connection;
+	}
 
-    /**
-     * @deprecated find a better way to associated opened PeerConnection and
-     *             Peer
-     * @param connection
-     */
-    public void registerConnection(PeerConnection connection) {
-        LogFactory.getLog(getClass())
-                .debug("register connection " + connection);
+	/**
+	 * @deprecated find a better way to associated opened PeerConnection and
+	 *             Peer
+	 * @param connection
+	 */
+	public void registerConnection(PeerConnection connection) {
+		LogFactory.getLog(getClass())
+				.debug("register connection " + connection);
 
-        if (isConnected()) {
-            throw new IllegalStateException("Peer already connected: " + this);
-        }
+		if (isConnected()) {
+			throw new IllegalStateException("Peer already connected: " + this);
+		}
 
-        Validate.isTrue(connection.getStatus().equals(
-                PeerConnection.Status.OPENING), "connection shoud be opening",
-                connection);
-        Validate
-                .isTrue(ObjectUtils.equals(connection.getPeer(), this),
-                        "connection shoud associated to this Peer: " + this,
-                        connection);
+		Validate.isTrue(connection.getStatus().equals(
+				PeerConnection.Status.OPENING), "connection shoud be opening",
+				connection);
+		Validate
+				.isTrue(ObjectUtils.equals(connection.getPeer(), this),
+						"connection shoud associated to this Peer: " + this,
+						connection);
 
-        connection.add(connectionListener);
-        this.connection = connection;
-    }
+		connection.add(connectionListener);
+		this.connection = connection;
+	}
 
-    public void disconnect() {
-        if (connection != null) {
-            boolean isClosing = connection.getStatus().equals(
-                    PeerConnection.Status.CLOSING);
-            ConnectivityScoring.Change change = isClosing ? ConnectivityScoring.MALUS_CONNECTIONCLOSED
-                    : ConnectivityScoring.MALUS_CONNECTIONERROR;
-            changeConnectivityScoring(change);
+	public void disconnect() {
+		if (connection != null) {
+			boolean isClosing = connection.getStatus().equals(
+					PeerConnection.Status.CLOSING);
+			ConnectivityScoring.Change change = isClosing ? ConnectivityScoring.MALUS_CONNECTIONCLOSED
+					: ConnectivityScoring.MALUS_CONNECTIONERROR;
+			changeConnectivityScoring(change);
 
-            connection.remove(connectionListener);
-            connection = null;
-        }
-    }
+			connection.remove(connectionListener);
+			connection = null;
+		}
+	}
 
-    /**
-     * @todo should be transformed into a state
-     * @return
-     */
-    public boolean isConnected() {
-        return connection != null;
-    }
+	/**
+	 * @todo should be transformed into a state
+	 * @return
+	 */
+	public boolean isConnected() {
+		return connection != null;
+	}
 
-    private PropertyChangeSupport changeSupport = new PropertyChangeSupport(
-            this);
+	private PropertyChangeSupport changeSupport = new PropertyChangeSupport(
+			this);
 
-    public void add(PropertyChangeListener listener) {
-        changeSupport.addPropertyChangeListener(listener);
-    }
+	public void add(PropertyChangeListener listener) {
+		changeSupport.addPropertyChangeListener(listener);
+	}
 
-    public void remove(PropertyChangeListener listener) {
-        changeSupport.removePropertyChangeListener(listener);
-    }
+	public void remove(PropertyChangeListener listener) {
+		changeSupport.removePropertyChangeListener(listener);
+	}
 
-    public void update(PeerStatus peerStatus) {
-        LogFactory.getLog(getClass()).debug("update " + peerStatus);
+	public void update(PeerStatus peerStatus) {
+		LogFactory.getLog(getClass()).debug("update " + peerStatus);
 
-        setIdentifier(peerStatus.getIdentifier());
-        setOrder(peerStatus.getOrder());
-    }
+		setIdentifier(peerStatus.getIdentifier());
+		setOrder(peerStatus.getOrder());
+	}
 
-    public void update(PeerReference reference) {
-        setReference(reference);
+	public void update(PeerReference reference) {
+		setReference(reference);
 
-        NodeIdentifier identifier = (NodeIdentifier) reference
-                .getAttribute(PeerReference.IDENTIFIER_ATTRIBUTE);
-        if (identifier != null) {
-            setIdentifier(identifier);
-        }
+		NodeIdentifier identifier = (NodeIdentifier) reference
+				.getAttribute(PeerReference.IDENTIFIER_ATTRIBUTE);
+		if (identifier != null) {
+			setIdentifier(identifier);
+		}
 
-        Order order = (Order) reference
-                .getAttribute(PeerReference.ORDER_ATTRIBUTE);
-        if (order != null) {
-            setOrder(order);
-        }
-    }
+		Order order = (Order) reference
+				.getAttribute(PeerReference.ORDER_ATTRIBUTE);
+		if (order != null) {
+			setOrder(order);
+		}
+	}
 
-    public void setConnectionFactory(PeerConnectionFactory connectionFactory) {
-        this.connectionFactory = connectionFactory;
-    }
+	public void setConnectionFactory(PeerConnectionFactory connectionFactory) {
+		this.connectionFactory = connectionFactory;
+	}
 
 }

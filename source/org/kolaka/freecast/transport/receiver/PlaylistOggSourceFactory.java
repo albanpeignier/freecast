@@ -23,39 +23,40 @@
 
 package org.kolaka.freecast.transport.receiver;
 
-import org.kolaka.freecast.ogg.OggSource;
-import org.kolaka.freecast.ogg.OggStreamSource;
-import org.kolaka.freecast.transport.receiver.Playlist.Entry;
-
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import org.kolaka.freecast.ogg.OggSource;
+import org.kolaka.freecast.ogg.OggStreamSource;
+import org.kolaka.freecast.transport.receiver.Playlist.Entry;
+
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class PlaylistOggSourceFactory implements OggSourceFactory {
 
-    private final Playlist playlist;
-    
-    public PlaylistOggSourceFactory(Playlist playlist) {
-        this.playlist = playlist;
-    }
+	private final Playlist playlist;
 
-    public PlaylistOggSourceFactory(URL url) throws IOException {
-        this(new FilePlaylist(url));
-    }
+	public PlaylistOggSourceFactory(Playlist playlist) {
+		this.playlist = playlist;
+	}
 
-    private int nextPlayedIndex;
+	public PlaylistOggSourceFactory(URL url) throws IOException {
+		this(new FilePlaylist(url));
+	}
 
-    public OggSource next() throws IOException {
-        Entry entry = playlist.get(nextPlayedIndex);
+	private int nextPlayedIndex;
+
+	public OggSource next() throws IOException {
+		Entry entry = playlist.get(nextPlayedIndex);
 		InputStream input = entry.openStream();
-        nextPlayedIndex = (nextPlayedIndex + 1) % playlist.size();
-        return new OggStreamSource(new BufferedInputStream(input),entry.getDescription());
-    }
+		nextPlayedIndex = (nextPlayedIndex + 1) % playlist.size();
+		return new OggStreamSource(new BufferedInputStream(input), entry
+				.getDescription());
+	}
 
 }

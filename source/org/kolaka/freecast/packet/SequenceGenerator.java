@@ -30,10 +30,10 @@ package org.kolaka.freecast.packet;
  */
 public class SequenceGenerator {
 
-    private long sequenceNumber = System.currentTimeMillis();
+	private long sequenceNumber = System.currentTimeMillis();
 
-    public long next() {
-        return sequenceNumber++;
-    }
+	public long next() {
+		return sequenceNumber++;
+	}
 
 }

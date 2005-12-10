@@ -35,30 +35,30 @@ import org.apache.commons.collections.comparators.TransformingComparator;
  */
 public class Peers {
 
-    private static final Transformer ORDER_TRANSFORMER = new Transformer() {
-        public Object transform(Object input) {
-            return ((Peer) input).getOrder();
-        }
-    };
+	private static final Transformer ORDER_TRANSFORMER = new Transformer() {
+		public Object transform(Object input) {
+			return ((Peer) input).getOrder();
+		}
+	};
 
-    private static final Comparator ORDER_COMPARATOR = new TransformingComparator(
-            ORDER_TRANSFORMER);
+	private static final Comparator ORDER_COMPARATOR = new TransformingComparator(
+			ORDER_TRANSFORMER);
 
-    public static Comparator compareOrder() {
-        return ORDER_COMPARATOR;
-    }
+	public static Comparator compareOrder() {
+		return ORDER_COMPARATOR;
+	}
 
-    private static final Transformer CONNECTIVITYSCORING_TRANSFORMER = new Transformer() {
-        public Object transform(Object input) {
-            return ((Peer) input).getConnectivityScoring();
-        }
-    };
+	private static final Transformer CONNECTIVITYSCORING_TRANSFORMER = new Transformer() {
+		public Object transform(Object input) {
+			return ((Peer) input).getConnectivityScoring();
+		}
+	};
 
-    private static final Comparator CONNECTIVITYSCORING_COMPARATOR = new TransformingComparator(
-            CONNECTIVITYSCORING_TRANSFORMER);
+	private static final Comparator CONNECTIVITYSCORING_COMPARATOR = new TransformingComparator(
+			CONNECTIVITYSCORING_TRANSFORMER);
 
-    public static Comparator compareConnectivityScoring() {
-        return CONNECTIVITYSCORING_COMPARATOR;
-    }
+	public static Comparator compareConnectivityScoring() {
+		return CONNECTIVITYSCORING_COMPARATOR;
+	}
 
 }

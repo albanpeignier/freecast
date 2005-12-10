@@ -22,13 +22,20 @@
  */
 package org.kolaka.freecast.swing;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public final class NullAction extends AbstractAction {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8180830003951057554L;
 
 	private static Action instance = new NullAction();
 

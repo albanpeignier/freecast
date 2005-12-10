@@ -32,6 +32,6 @@ import java.util.EventListener;
  */
 public interface PeerConnectionStatusListener extends EventListener {
 
-    public void peerConnectionStatusChanged(PeerConnectionStatusEvent event);
+	public void peerConnectionStatusChanged(PeerConnectionStatusEvent event);
 
 }

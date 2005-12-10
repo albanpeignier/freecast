@@ -35,19 +35,19 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  */
 public class ProxyMessageReader implements MessageReader {
 
-    private final MessageReader reader;
+	private final MessageReader reader;
 
-    public Message read() throws IOException {
-        return reader.read();
-    }
+	public Message read() throws IOException {
+		return reader.read();
+	}
 
-    public ProxyMessageReader(final MessageReader reader) {
-        Validate.notNull(reader, "No specified MessageReader");
-        this.reader = reader;
-    }
+	public ProxyMessageReader(final MessageReader reader) {
+		Validate.notNull(reader, "No specified MessageReader");
+		this.reader = reader;
+	}
 
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
 
 }

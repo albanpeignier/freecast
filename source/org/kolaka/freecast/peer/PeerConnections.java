@@ -31,26 +31,26 @@ import org.apache.commons.collections.Predicate;
  */
 public class PeerConnections {
 
-    public static Predicate acceptStatus(final PeerConnection.Status status) {
-        return new Predicate() {
+	public static Predicate acceptStatus(final PeerConnection.Status status) {
+		return new Predicate() {
 
-            public boolean evaluate(Object input) {
-                PeerConnection connection = (PeerConnection) input;
-                return connection.getStatus().equals(status);
-            }
+			public boolean evaluate(Object input) {
+				PeerConnection connection = (PeerConnection) input;
+				return connection.getStatus().equals(status);
+			}
 
-        };
-    }
+		};
+	}
 
-    public static Predicate acceptType(final PeerConnection.Type type) {
-        return new Predicate() {
+	public static Predicate acceptType(final PeerConnection.Type type) {
+		return new Predicate() {
 
-            public boolean evaluate(Object input) {
-                PeerConnection connection = (PeerConnection) input;
-                return connection.getType().equals(type);
-            }
+			public boolean evaluate(Object input) {
+				PeerConnection connection = (PeerConnection) input;
+				return connection.getType().equals(type);
+			}
 
-        };
-    }
+		};
+	}
 
 }

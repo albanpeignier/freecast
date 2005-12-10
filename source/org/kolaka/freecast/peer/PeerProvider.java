@@ -32,6 +32,6 @@ import java.util.Set;
  */
 public interface PeerProvider {
 
-    public Set getPeerReferences() throws PeerProviderException;
+	public Set getPeerReferences() throws PeerProviderException;
 
 }

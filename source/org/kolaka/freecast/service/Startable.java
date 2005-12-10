@@ -32,22 +32,24 @@ import org.apache.commons.lang.enums.Enum;
  */
 public interface Startable {
 
-    public void start() throws ControlException;
+	public void start() throws ControlException;
 
-    public void stop() throws ControlException;
-    
-    public static class Status extends Enum {
-        
-        private static final long serialVersionUID = 4121699885201240112L;
-        
-        public static final Status CREATED = new Status("created");
-        public static final Status STARTED = new Status("started");
-        public static final Status STOPPED = new Status("stopped");
-        
-        private Status(String name) {
-            super(name);
-        }
-        
-    }
+	public void stop() throws ControlException;
+
+	public static class Status extends Enum {
+
+		private static final long serialVersionUID = 4121699885201240112L;
+
+		public static final Status CREATED = new Status("created");
+
+		public static final Status STARTED = new Status("started");
+
+		public static final Status STOPPED = new Status("stopped");
+
+		private Status(String name) {
+			super(name);
+		}
+
+	}
 
 }

@@ -32,46 +32,46 @@ import org.apache.commons.logging.LogFactory;
  */
 public class Controlables {
 
-    public static void start(Controlable controlable) throws ControlException {
-        try {
-            controlable.init();
-        } catch (ControlException e) {
-            disposeQuietly(controlable);
+	public static void start(Controlable controlable) throws ControlException {
+		try {
+			controlable.init();
+		} catch (ControlException e) {
+			disposeQuietly(controlable);
 
-            throw e;
-        }
+			throw e;
+		}
 
-        try {
-            controlable.start();
-        } catch (ControlException e) {
-            stopQuietly(controlable);
-            disposeQuietly(controlable);
+		try {
+			controlable.start();
+		} catch (ControlException e) {
+			stopQuietly(controlable);
+			disposeQuietly(controlable);
 
-            throw e;
-        }
-    }
+			throw e;
+		}
+	}
 
-    public static void shutdownQuietly(Controlable controlable) {
-        stopQuietly(controlable);
-        disposeQuietly(controlable);
-    }
+	public static void shutdownQuietly(Controlable controlable) {
+		stopQuietly(controlable);
+		disposeQuietly(controlable);
+	}
 
-    public static void disposeQuietly(Controlable controlable) {
-        try {
-            controlable.dispose();
-        } catch (ControlException e) {
-            LogFactory.getLog(Controlables.class).warn(
-                    "Can't dispose cleanly " + controlable, e);
-        }
-    }
+	public static void disposeQuietly(Controlable controlable) {
+		try {
+			controlable.dispose();
+		} catch (ControlException e) {
+			LogFactory.getLog(Controlables.class).warn(
+					"Can't dispose cleanly " + controlable, e);
+		}
+	}
 
-    public static void stopQuietly(Controlable controlable) {
-        try {
-            controlable.stop();
-        } catch (ControlException e) {
-            LogFactory.getLog(Controlables.class).warn(
-                    "Can't stop cleanly " + controlable, e);
-        }
-    }
+	public static void stopQuietly(Controlable controlable) {
+		try {
+			controlable.stop();
+		} catch (ControlException e) {
+			LogFactory.getLog(Controlables.class).warn(
+					"Can't stop cleanly " + controlable, e);
+		}
+	}
 
 }

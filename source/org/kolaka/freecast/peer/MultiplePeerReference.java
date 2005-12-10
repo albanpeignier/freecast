@@ -22,49 +22,55 @@
  */
 package org.kolaka.freecast.peer;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.commons.lang.Validate;
 
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Collections;
-import java.util.List;
-
 /**
- * <code>PeerReference</code> implementation which uses several PeerReference instances.
- *
+ * <code>PeerReference</code> implementation which uses several PeerReference
+ * instances.
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public class MultiplePeerReference extends PeerReference {
 
-    private Set references;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 216276991721262538L;
 
-    private MultiplePeerReference() {
+	private Set references;
 
-    }
+	private MultiplePeerReference() {
 
-    public MultiplePeerReference(Set references) {
-        Validate.notEmpty(references,"No specified PeerReferences");
-        Validate.allElementsOfType(references, PeerReference.class);
-        this.references = new HashSet(references);
-    }
+	}
 
-    public Set references() {
-        return Collections.unmodifiableSet(references);
-    }
+	public MultiplePeerReference(Set references) {
+		Validate.notEmpty(references, "No specified PeerReferences");
+		Validate.allElementsOfType(references, PeerReference.class);
+		this.references = new HashSet(references);
+	}
 
-    protected String getReferenceString() {
-        return references.toString();
-    }
+	public Set references() {
+		return Collections.unmodifiableSet(references);
+	}
 
-    public boolean equals(PeerReference other) {
-        return other instanceof MultiplePeerReference && equals((MultiplePeerReference) other);
-    }
+	protected String getReferenceString() {
+		return references.toString();
+	}
 
-    public boolean equals(MultiplePeerReference other) {
-        return other != null && references.equals(other.references);
-    }
+	public boolean equals(PeerReference other) {
+		return other instanceof MultiplePeerReference
+				&& equals((MultiplePeerReference) other);
+	}
 
-    public int hashCode() {
-        return references.hashCode();
-    }
+	public boolean equals(MultiplePeerReference other) {
+		return other != null && references.equals(other.references);
+	}
+
+	public int hashCode() {
+		return references.hashCode();
+	}
 }

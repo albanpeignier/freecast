@@ -27,19 +27,19 @@ import org.kolaka.freecast.service.Startable;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public interface PlayerSource extends Startable {
 
-    public void addListener(Listener listener);
-    
-    public void removeListener(Listener listener);
-    
-    public static interface Listener {
-        
-        public void playerCreated(Player player);
-        
-    }
-    
+	public void addListener(Listener listener);
+
+	public void removeListener(Listener listener);
+
+	public static interface Listener {
+
+		public void playerCreated(Player player);
+
+	}
+
 }

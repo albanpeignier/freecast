@@ -48,131 +48,131 @@ import org.kolaka.freecast.timer.TimerUser;
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public class SocketPeerConnectionSource extends PeerConnectionSource implements
-        TimerUser {
+		TimerUser {
 
-    private final InetSocketAddress address;
+	private final InetSocketAddress address;
 
-    private ServerSocket serverSocket;
+	private ServerSocket serverSocket;
 
-    private Loop clientAcceptationTask;
+	private Loop clientAcceptationTask;
 
-    private ServerSocketFactory factory = ServerSocketFactory.getDefault();
+	private ServerSocketFactory factory = ServerSocketFactory.getDefault();
 
-    public SocketPeerConnectionSource(InetSocketAddress address) {
-        this.address = address;
-    }
+	public SocketPeerConnectionSource(InetSocketAddress address) {
+		this.address = address;
+	}
 
-    public void start() throws ControlException {
-        stopped = false;
-        try {
-            serverSocket = factory.createServerSocket();
-            serverSocket.bind(address);
-        } catch (IOException e) {
-            throw new ControlException("Can't initialize the ServerSocket on "
-                    + address, e);
-        }
+	public void start() throws ControlException {
+		stopped = false;
+		try {
+			serverSocket = factory.createServerSocket();
+			serverSocket.bind(address);
+		} catch (IOException e) {
+			throw new ControlException("Can't initialize the ServerSocket on "
+					+ address, e);
+		}
 
-        LogFactory.getLog(getClass()).debug("wait connections on " + address);
+		LogFactory.getLog(getClass()).debug("wait connections on " + address);
 
-        clientAcceptationTask = new ClientAcceptationTask();
-        timer.execute(clientAcceptationTask);
-    }
+		clientAcceptationTask = new ClientAcceptationTask();
+		timer.execute(clientAcceptationTask);
+	}
 
-    private boolean stopped;
+	private boolean stopped;
 
-    public void stop() throws ControlException {
-        stopped = true;
+	public void stop() throws ControlException {
+		stopped = true;
 
-        if (clientAcceptationTask != null) {
-            clientAcceptationTask.cancel();
-            clientAcceptationTask = null;
-        }
+		if (clientAcceptationTask != null) {
+			clientAcceptationTask.cancel();
+			clientAcceptationTask = null;
+		}
 
-        if (serverSocket != null) {
-            try {
-                serverSocket.close();
-            } catch (IOException e) {
-                throw new ControlException("Can't close the ServerSocket", e);
-            }
-        }
-    }
+		if (serverSocket != null) {
+			try {
+				serverSocket.close();
+			} catch (IOException e) {
+				throw new ControlException("Can't close the ServerSocket", e);
+			}
+		}
+	}
 
-    public void setServerSocketFactory(ServerSocketFactory factory) {
-        Validate.notNull(factory, "No specified ServerSocketFactory");
-        this.factory = factory;
-    }
+	public void setServerSocketFactory(ServerSocketFactory factory) {
+		Validate.notNull(factory, "No specified ServerSocketFactory");
+		this.factory = factory;
+	}
 
-    class ClientAcceptationTask extends Loop {
+	class ClientAcceptationTask extends Loop {
 
-        protected long loop() {
-            Socket socket;
+		protected long loop() {
+			Socket socket;
 
-            try {
-                socket = serverSocket.accept();
-            } catch (IOException e) {
-                if (stopped) {
-                    LogFactory.getLog(getClass()).debug(
-                            "socket acceptation stopped", e);
-                    return DefaultTimer.nodelay();
-                }
+			try {
+				socket = serverSocket.accept();
+			} catch (IOException e) {
+				if (stopped) {
+					LogFactory.getLog(getClass()).debug(
+							"socket acceptation stopped", e);
+					return DefaultTimer.nodelay();
+				}
 
-                LogFactory.getLog(getClass()).error(
-                        "socket acceptation failed", e);
-                return DefaultTimer.seconds(5);
-            }
+				LogFactory.getLog(getClass()).error(
+						"socket acceptation failed", e);
+				return DefaultTimer.seconds(5);
+			}
 
-            LogFactory.getLog(getClass()).trace(
-                    "new client socket connection: " + socket.getInetAddress());
+			LogFactory.getLog(getClass()).trace(
+					"new client socket connection: " + socket.getInetAddress());
 
-            SocketPeerConnection connection;
+			SocketPeerConnection connection;
 
-            try {
+			try {
 				socket.setSendBufferSize(1024);
-                connection = new SocketPeerConnection(
-                        PeerConnection.Type.RELAY, socket);
-            } catch (IOException e) {
-                LogFactory.getLog(getClass()).error(
-                        "socket acceptation failed", e);
-                return DefaultTimer.nodelay();
-            }
+				connection = new SocketPeerConnection(
+						PeerConnection.Type.RELAY, socket);
+			} catch (IOException e) {
+				LogFactory.getLog(getClass()).error(
+						"socket acceptation failed", e);
+				return DefaultTimer.nodelay();
+			}
 
-            timer.executeLater(new ConnectionAcceptation(connection));
+			timer.executeLater(new ConnectionAcceptation(connection));
 
-            return DefaultTimer.nodelay();
-        }
+			return DefaultTimer.nodelay();
+		}
 
-    }
+	}
 
-    /**
-     * @todo move toan upper class
-     * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
-     */
-    class ConnectionAcceptation extends Task {
+	/**
+	 * @todo move toan upper class
+	 * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
+	 */
+	class ConnectionAcceptation extends Task {
 
-        private final PeerConnection connection;
+		private final PeerConnection connection;
 
-        public ConnectionAcceptation(PeerConnection connection) {
-            this.connection = connection;
-        }
+		public ConnectionAcceptation(PeerConnection connection) {
+			this.connection = connection;
+		}
 
-        public void run() {
-            NDC.push(connection.toString());
-            try {
-                accept(connection);
-            } finally {
-                NDC.pop();
-            }
-        }
+		public void run() {
+			NDC.push(connection.toString());
+			try {
+				accept(connection);
+			} finally {
+				NDC.pop();
+			}
+		}
 
-    }
+	}
 
-    /**
-     * @todo move toan upper class
-     */
-    private Timer timer = DefaultTimer.getInstance();
+	/**
+	 * @todo move toan upper class
+	 */
+	private Timer timer = DefaultTimer.getInstance();
 
-    public void setTimer(Timer timer) {
-        Validate.notNull(timer, "No specified Timer");
-        this.timer = timer;
-    }
+	public void setTimer(Timer timer) {
+		Validate.notNull(timer, "No specified Timer");
+		this.timer = timer;
+	}
 }

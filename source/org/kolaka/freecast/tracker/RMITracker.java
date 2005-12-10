@@ -46,89 +46,90 @@ import org.kolaka.freecast.peer.PeerReference;
  */
 public class RMITracker extends UnicastRemoteObject implements RemoteTracker {
 
-    private static final long serialVersionUID = 3763097470581814324L;
-    private final Tracker tracker;
+	private static final long serialVersionUID = 3763097470581814324L;
 
-    /**
-     * @throws java.rmi.RemoteException
-     */
-    public RMITracker(int port) throws RemoteException {
-        super(port);
+	private final Tracker tracker;
 
-        DefaultTracker.ClientInfoProvider clientInfoProvider = new DefaultTracker.ClientInfoProvider() {
-            public String getClientHost() throws TrackerException {
-                try {
-                    return UnicastRemoteObject.getClientHost();
-                } catch (ServerNotActiveException e) {
-                    throw new TrackerException("Unexpected RMI exception", e);
-                }
-            }
-        };
+	/**
+	 * @throws java.rmi.RemoteException
+	 */
+	public RMITracker(int port) throws RemoteException {
+		super(port);
 
-        tracker = new DefaultTracker(clientInfoProvider);
-    }
+		DefaultTracker.ClientInfoProvider clientInfoProvider = new DefaultTracker.ClientInfoProvider() {
+			public String getClientHost() throws TrackerException {
+				try {
+					return UnicastRemoteObject.getClientHost();
+				} catch (ServerNotActiveException e) {
+					throw new TrackerException("Unexpected RMI exception", e);
+				}
+			}
+		};
 
-    private static final String DEFAULT_NAME = "RMITracker";
+		tracker = new DefaultTracker(clientInfoProvider);
+	}
 
-    public void bind(InetSocketAddress address) throws IOException {
-        LogFactory.getLog(getClass()).debug(
-                "create registry on " + address.getPort());
-        Registry registry = LocateRegistry.createRegistry(address.getPort());
+	private static final String DEFAULT_NAME = "RMITracker";
 
-        String bindName = getBindName();
+	public void bind(InetSocketAddress address) throws IOException {
+		LogFactory.getLog(getClass()).debug(
+				"create registry on " + address.getPort());
+		Registry registry = LocateRegistry.createRegistry(address.getPort());
 
-        LogFactory.getLog(getClass()).debug("bind tracker as " + bindName);
-        try {
-            registry.bind(bindName, this);
-        } catch (AlreadyBoundException e) {
-            throw new IOException("RMITracker already bound at " + address);
-        }
-    }
+		String bindName = getBindName();
 
-    private static String getBindName() {
-        return DEFAULT_NAME;
-    }
+		LogFactory.getLog(getClass()).debug("bind tracker as " + bindName);
+		try {
+			registry.bind(bindName, this);
+		} catch (AlreadyBoundException e) {
+			throw new IOException("RMITracker already bound at " + address);
+		}
+	}
 
-    public static RemoteTracker connect(InetSocketAddress address)
-            throws IOException {
-        LogFactory.getLog(RMITracker.class).debug(
-                "retrieve registry at " + address.getHostName() + ":"
-                        + address.getPort());
-        Registry registry = LocateRegistry.getRegistry(address.getHostName(),
-                address.getPort());
+	private static String getBindName() {
+		return DEFAULT_NAME;
+	}
 
-        String bindName = getBindName();
-        LogFactory.getLog(RMITracker.class).debug(
-                "lookup tracker at " + bindName);
-        try {
-            RemoteTracker tracker = (RemoteTracker) registry.lookup(bindName);
-            LogFactory.getLog(RMITracker.class).debug(
-                    "retrieved RemoteTracker " + tracker);
-            return tracker;
-        } catch (NotBoundException e) {
-            IOException exception = new IOException("No RMITracker bound at "
-                    + address);
-            exception.initCause(e);
-            throw exception;
-        }
-    }
+	public static RemoteTracker connect(InetSocketAddress address)
+			throws IOException {
+		LogFactory.getLog(RMITracker.class).debug(
+				"retrieve registry at " + address.getHostName() + ":"
+						+ address.getPort());
+		Registry registry = LocateRegistry.getRegistry(address.getHostName(),
+				address.getPort());
 
-    public Set getPeerReferences(NodeIdentifier identifier)
-            throws TrackerException {
-        return tracker.getPeerReferences(identifier);
-    }
+		String bindName = getBindName();
+		LogFactory.getLog(RMITracker.class).debug(
+				"lookup tracker at " + bindName);
+		try {
+			RemoteTracker tracker = (RemoteTracker) registry.lookup(bindName);
+			LogFactory.getLog(RMITracker.class).debug(
+					"retrieved RemoteTracker " + tracker);
+			return tracker;
+		} catch (NotBoundException e) {
+			IOException exception = new IOException("No RMITracker bound at "
+					+ address);
+			exception.initCause(e);
+			throw exception;
+		}
+	}
 
-    public NodeIdentifier register(PeerReference reference)
-            throws TrackerException {
-        return tracker.register(reference);
-    }
+	public Set getPeerReferences(NodeIdentifier identifier)
+			throws TrackerException {
+		return tracker.getPeerReferences(identifier);
+	}
 
-    public void unregister(NodeIdentifier identifier) throws TrackerException {
-        tracker.unregister(identifier);
-    }
+	public NodeIdentifier register(PeerReference reference)
+			throws TrackerException {
+		return tracker.register(reference);
+	}
 
-    public void refresh(NodeStatus status) throws TrackerException {
-        tracker.refresh(status);
-    }
+	public void unregister(NodeIdentifier identifier) throws TrackerException {
+		tracker.unregister(identifier);
+	}
+
+	public void refresh(NodeStatus status) throws TrackerException {
+		tracker.refresh(status);
+	}
 
 }

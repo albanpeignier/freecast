@@ -23,31 +23,33 @@
 
 package org.kolaka.freecast.net.test;
 
-import junit.framework.TestCase;
-import org.kolaka.freecast.net.URLUtils;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import junit.framework.TestCase;
+
+import org.kolaka.freecast.net.URLUtils;
+
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class URLUtilsTest extends TestCase {
 
-    public void testGetBaseURL() throws MalformedURLException {
-        testGetBaseURL("http://somehost/directory/","child");
-        testGetBaseURL("http://somehost/","child");
-        testGetBaseURL("file:","relativefile");
-        testGetBaseURL("file://home/directory/","file");
+	public void testGetBaseURL() throws MalformedURLException {
+		testGetBaseURL("http://somehost/directory/", "child");
+		testGetBaseURL("http://somehost/", "child");
+		testGetBaseURL("file:", "relativefile");
+		testGetBaseURL("file://home/directory/", "file");
 
-        testGetBaseURL("http://user:password@somehost/","child");
-    }
-    
-    protected void testGetBaseURL(String baseURL, String suffix) throws MalformedURLException {
-        URL childURL = new URL(baseURL + suffix);
-        assertEquals(new URL(baseURL), URLUtils.getBaseURL(childURL));
-    }
+		testGetBaseURL("http://user:password@somehost/", "child");
+	}
+
+	protected void testGetBaseURL(String baseURL, String suffix)
+			throws MalformedURLException {
+		URL childURL = new URL(baseURL + suffix);
+		assertEquals(new URL(baseURL), URLUtils.getBaseURL(childURL));
+	}
 
 }

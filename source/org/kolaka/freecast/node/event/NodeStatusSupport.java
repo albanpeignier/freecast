@@ -36,21 +36,21 @@ import org.kolaka.freecast.node.NodeStatus;
  */
 public class NodeStatusSupport {
 
-    private Set listeners = new HashSet();
+	private Set listeners = new HashSet();
 
-    public void add(NodeStatusListener listener) {
-        listeners.add(listener);
-    }
+	public void add(NodeStatusListener listener) {
+		listeners.add(listener);
+	}
 
-    public void remove(NodeStatusListener listener) {
-        listeners.remove(listener);
-    }
+	public void remove(NodeStatusListener listener) {
+		listeners.remove(listener);
+	}
 
-    public void fireNodeStatusChange(NodeStatus nodeStatus) {
-        for (Iterator iter = listeners.iterator(); iter.hasNext();) {
-            NodeStatusListener listener = (NodeStatusListener) iter.next();
-            listener.nodeStatusChanged(nodeStatus);
-        }
-    }
+	public void fireNodeStatusChange(NodeStatus nodeStatus) {
+		for (Iterator iter = listeners.iterator(); iter.hasNext();) {
+			NodeStatusListener listener = (NodeStatusListener) iter.next();
+			listener.nodeStatusChanged(nodeStatus);
+		}
+	}
 
 }

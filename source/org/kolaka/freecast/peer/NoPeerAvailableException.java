@@ -30,9 +30,9 @@ package org.kolaka.freecast.peer;
  */
 public class NoPeerAvailableException extends Exception {
 
-    private static final long serialVersionUID = 3617571604842689078L;
+	private static final long serialVersionUID = 3617571604842689078L;
 
-    public NoPeerAvailableException() {
-        super("No peer available");
-    }
+	public NoPeerAvailableException() {
+		super("No peer available");
+	}
 }

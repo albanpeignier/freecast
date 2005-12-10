@@ -23,20 +23,25 @@
 
 package org.kolaka.freecast.tracker;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.logging.LogFactory;
+import org.kolaka.freecast.auditor.AuditorFactory;
 import org.kolaka.freecast.node.NodeIdentifier;
 import org.kolaka.freecast.node.NodeStatus;
 import org.kolaka.freecast.node.Order;
 import org.kolaka.freecast.peer.InetPeerReference;
 import org.kolaka.freecast.peer.PeerReference;
 import org.kolaka.freecast.service.ControlException;
-import org.kolaka.freecast.auditor.AuditorFactory;
-
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.*;
 
 /**
  * 
@@ -45,245 +50,247 @@ import java.util.*;
  */
 public class DefaultTracker implements Tracker {
 
-    private Map entries = new HashMap();
+	private Map entries = new HashMap();
 
 	private final Auditor auditor;
-    private final ClientInfoProvider clientInfoProvider;
 
-    public DefaultTracker(ClientInfoProvider clientInfoProvider) {
-        this.clientInfoProvider = clientInfoProvider;
-		this.auditor = (Auditor) AuditorFactory.getInstance().get(Auditor.class, this);
-    }
+	private final ClientInfoProvider clientInfoProvider;
 
-    public Set getPeerReferences(NodeIdentifier identifier) {
-        cleanEntries();
+	public DefaultTracker(ClientInfoProvider clientInfoProvider) {
+		this.clientInfoProvider = clientInfoProvider;
+		this.auditor = (Auditor) AuditorFactory.getInstance().get(
+				Auditor.class, this);
+	}
 
-        Set references = new HashSet();
-        for (Iterator iter = entries.values().iterator(); iter.hasNext();) {
-            NodeEntry entry = (NodeEntry) iter.next();
-            if (!entry.hasReference()) {
-                continue;
-            }
-            if (!entry.hasKnownOrder()) {
-                continue;
-            }
+	public Set getPeerReferences(NodeIdentifier identifier) {
+		cleanEntries();
 
-            if (!identifier.equals(entry.getIdentifier())) {
-                references.add(entry.getReference());
-            }
-        }
+		Set references = new HashSet();
+		for (Iterator iter = entries.values().iterator(); iter.hasNext();) {
+			NodeEntry entry = (NodeEntry) iter.next();
+			if (!entry.hasReference()) {
+				continue;
+			}
+			if (!entry.hasKnownOrder()) {
+				continue;
+			}
 
-        LogFactory.getLog(getClass()).trace(
-                "provides " + references + " to " + identifier);
-        return references;
-    }
+			if (!identifier.equals(entry.getIdentifier())) {
+				references.add(entry.getReference());
+			}
+		}
 
-    /**
-     *  
-     */
-    public NodeIdentifier register(PeerReference reference) {
-        LogFactory.getLog(getClass()).debug(
-                "receive registration request for " + reference);
+		LogFactory.getLog(getClass()).trace(
+				"provides " + references + " to " + identifier);
+		return references;
+	}
 
-        PeerReference validatedReference = null;
-        try {
-            validatedReference = validateReference(reference);
-        } catch (TrackerException e) {
-            LogFactory.getLog(getClass()).error("reference validation failed",
-                    e);
-        }
-        LogFactory.getLog(getClass()).debug(
-                "validated reference " + validatedReference);
+	/**
+	 * 
+	 */
+	public NodeIdentifier register(PeerReference reference) {
+		LogFactory.getLog(getClass()).debug(
+				"receive registration request for " + reference);
 
-        if (validatedReference != null) {
-            for (Iterator iter = entries.values().iterator(); iter.hasNext();) {
-                NodeEntry entry = (NodeEntry) iter.next();
-                if (!entry.hasReference()) {
-                    continue;
-                }
+		PeerReference validatedReference = null;
+		try {
+			validatedReference = validateReference(reference);
+		} catch (TrackerException e) {
+			LogFactory.getLog(getClass()).error("reference validation failed",
+					e);
+		}
+		LogFactory.getLog(getClass()).debug(
+				"validated reference " + validatedReference);
 
-                if (validatedReference.equals(entry.getReference())) {
-                    LogFactory.getLog(getClass()).debug(
-                            "new registration remplaces " + entry);
-                    iter.remove();
-                }
-            }
-        }
+		if (validatedReference != null) {
+			for (Iterator iter = entries.values().iterator(); iter.hasNext();) {
+				NodeEntry entry = (NodeEntry) iter.next();
+				if (!entry.hasReference()) {
+					continue;
+				}
 
-        NodeIdentifier identifier = createIdentifier();
-        entries.put(identifier, new NodeEntry(identifier, validatedReference));
+				if (validatedReference.equals(entry.getReference())) {
+					LogFactory.getLog(getClass()).debug(
+							"new registration remplaces " + entry);
+					iter.remove();
+				}
+			}
+		}
 
-        LogFactory.getLog(getClass()).debug(
-                "registration performed with id " + identifier);
+		NodeIdentifier identifier = createIdentifier();
+		entries.put(identifier, new NodeEntry(identifier, validatedReference));
 
-        auditor.register(validatedReference);
+		LogFactory.getLog(getClass()).debug(
+				"registration performed with id " + identifier);
+
+		auditor.register(validatedReference);
 		auditor.connectedNodes(entries.size());
-        
-        return identifier;
-    }
 
-    public void unregister(NodeIdentifier identifier) {
-        NodeEntry entry = (NodeEntry) entries.remove(identifier);
-        if (entry != null) {
-            LogFactory.getLog(getClass()).debug("unregister " + entry);
-        } else {
-            String clientHost = "unknown";
-            try {
-                clientHost = clientInfoProvider.getClientHost();
-            } catch (TrackerException e) {
-                LogFactory.getLog(getClass()).error(
-                        "Can't retrieve the client host", e);
-            }
-            String msg = "unregister for an unknown identifier " + identifier
-                    + " from " + clientHost;
-            LogFactory.getLog(getClass()).warn(msg);
-        }
-        auditor.unregister(entry.getReference());
+		return identifier;
+	}
+
+	public void unregister(NodeIdentifier identifier) {
+		NodeEntry entry = (NodeEntry) entries.remove(identifier);
+		if (entry != null) {
+			LogFactory.getLog(getClass()).debug("unregister " + entry);
+		} else {
+			String clientHost = "unknown";
+			try {
+				clientHost = clientInfoProvider.getClientHost();
+			} catch (TrackerException e) {
+				LogFactory.getLog(getClass()).error(
+						"Can't retrieve the client host", e);
+			}
+			String msg = "unregister for an unknown identifier " + identifier
+					+ " from " + clientHost;
+			LogFactory.getLog(getClass()).warn(msg);
+		}
+		auditor.unregister(entry.getReference());
 		auditor.connectedNodes(entries.size());
-    }
+	}
 
-    private PeerReference validateReference(PeerReference reference)
-            throws TrackerException {
-        if (!(reference instanceof InetPeerReference)) {
-            return reference;
-        }
+	private PeerReference validateReference(PeerReference reference)
+			throws TrackerException {
+		if (!(reference instanceof InetPeerReference)) {
+			return reference;
+		}
 
-        InetPeerReference inetReference = (InetPeerReference) reference;
-        InetAddress address = inetReference.getSocketAddress().getAddress();
+		InetPeerReference inetReference = (InetPeerReference) reference;
+		InetAddress address = inetReference.getSocketAddress().getAddress();
 
-        if (address == null || address.isAnyLocalAddress()) {
-            String clientHost = clientInfoProvider.getClientHost();
+		if (address == null || address.isAnyLocalAddress()) {
+			String clientHost = clientInfoProvider.getClientHost();
 
-            InetAddress clientAddress;
+			InetAddress clientAddress;
 
-            try {
-                clientAddress = InetAddress.getByName(clientHost);
-            } catch (UnknownHostException e) {
-                throw new TrackerException("Can't resolve " + clientHost, e);
-            }
+			try {
+				clientAddress = InetAddress.getByName(clientHost);
+			} catch (UnknownHostException e) {
+				throw new TrackerException("Can't resolve " + clientHost, e);
+			}
 
-            return inetReference.specifyAddress(clientAddress);
-        }
+			return inetReference.specifyAddress(clientAddress);
+		}
 
-        return inetReference;
-    }
+		return inetReference;
+	}
 
-    public void refresh(NodeStatus status) {
-        NodeEntry entry = (NodeEntry) entries.get(status.getIdentifier());
+	public void refresh(NodeStatus status) {
+		NodeEntry entry = (NodeEntry) entries.get(status.getIdentifier());
 
-        if (entry == null) {
-            throw new NotImplementedException("Unknown node " + status);
-        }
+		if (entry == null) {
+			throw new NotImplementedException("Unknown node " + status);
+		}
 
-        LogFactory.getLog(getClass()).trace("refresh " + status);
-        entry.refresh(status);
-        LogFactory.getLog(getClass()).trace("refreshed " + entry);
-    }
+		LogFactory.getLog(getClass()).trace("refresh " + status);
+		entry.refresh(status);
+		LogFactory.getLog(getClass()).trace("refreshed " + entry);
+	}
 
-    private final NodeIdentifierGenerator generator = new NodeIdentifierGenerator();
+	private final NodeIdentifierGenerator generator = new NodeIdentifierGenerator();
 
-    protected NodeIdentifier createIdentifier() {
-        return generator.next();
-    }
+	protected NodeIdentifier createIdentifier() {
+		return generator.next();
+	}
 
-    protected void cleanEntries() {
-        Date oldestEntry = new Date(System.currentTimeMillis() - 60 * 1000 * 3);
+	protected void cleanEntries() {
+		Date oldestEntry = new Date(System.currentTimeMillis() - 60 * 1000 * 3);
 
-        for (Iterator iter = entries.values().iterator(); iter.hasNext();) {
-            NodeEntry entry = (NodeEntry) iter.next();
+		for (Iterator iter = entries.values().iterator(); iter.hasNext();) {
+			NodeEntry entry = (NodeEntry) iter.next();
 
-            if (oldestEntry.after(entry.getLastRefreshDate())) {
-                LogFactory.getLog(getClass()).debug("remove " + entry);
-                iter.remove();
+			if (oldestEntry.after(entry.getLastRefreshDate())) {
+				LogFactory.getLog(getClass()).debug("remove " + entry);
+				iter.remove();
 				auditor.unregister(entry.getReference());
-            }
-        }
+			}
+		}
 		auditor.connectedNodes(entries.size());
-    }
-    
-    public void start() throws ControlException {
-        entries.clear();
-    }
-    
-    public void stop() throws ControlException {
-        
-    }
+	}
 
-    class NodeEntry {
+	public void start() throws ControlException {
+		entries.clear();
+	}
 
-        private NodeIdentifier identifier;
+	public void stop() throws ControlException {
 
-        private PeerReference reference;
+	}
 
-        private Date lastRefreshDate;
+	class NodeEntry {
 
-        private Order order;
+		private NodeIdentifier identifier;
 
-        public NodeEntry(NodeIdentifier identifier, PeerReference reference) {
-            this.identifier = identifier;
-            this.reference = reference;
-            this.lastRefreshDate = new Date();
-        }
+		private PeerReference reference;
 
-        public boolean equals(Object o) {
-            return o instanceof NodeEntry && equals((NodeEntry) o);
-        }
+		private Date lastRefreshDate;
 
-        public boolean equals(NodeEntry entry) {
-            return entry != null && identifier.equals(entry.identifier);
-        }
+		private Order order;
 
-        public int hashCode() {
-            return identifier.hashCode();
-        }
+		public NodeEntry(NodeIdentifier identifier, PeerReference reference) {
+			this.identifier = identifier;
+			this.reference = reference;
+			this.lastRefreshDate = new Date();
+		}
 
-        public String toString() {
-            return ToStringBuilder.reflectionToString(this);
-        }
+		public boolean equals(Object o) {
+			return o instanceof NodeEntry && equals((NodeEntry) o);
+		}
 
-        /**
-         * @return Returns the identifier.
-         */
-        public NodeIdentifier getIdentifier() {
-            return identifier;
-        }
+		public boolean equals(NodeEntry entry) {
+			return entry != null && identifier.equals(entry.identifier);
+		}
 
-        /**
-         * @return Returns the reference.
-         */
-        public PeerReference getReference() {
-            if (reference == null) {
-                return null;
-            }
+		public int hashCode() {
+			return identifier.hashCode();
+		}
 
-            reference.setAttribute(PeerReference.IDENTIFIER_ATTRIBUTE,
-                    identifier);
-            reference.setAttribute(PeerReference.ORDER_ATTRIBUTE, order);
-            return reference;
-        }
+		public String toString() {
+			return ToStringBuilder.reflectionToString(this);
+		}
 
-        public boolean hasReference() {
-            return reference != null;
-        }
+		/**
+		 * @return Returns the identifier.
+		 */
+		public NodeIdentifier getIdentifier() {
+			return identifier;
+		}
 
-        public boolean hasKnownOrder() {
-            return order != null && !order.equals(Order.UNKNOWN);
-        }
+		/**
+		 * @return Returns the reference.
+		 */
+		public PeerReference getReference() {
+			if (reference == null) {
+				return null;
+			}
 
-        public void refresh(NodeStatus status) {
-            lastRefreshDate = new Date();
-            order = status.getOrder();
-        }
+			reference.setAttribute(PeerReference.IDENTIFIER_ATTRIBUTE,
+					identifier);
+			reference.setAttribute(PeerReference.ORDER_ATTRIBUTE, order);
+			return reference;
+		}
 
-        public Date getLastRefreshDate() {
-            return lastRefreshDate;
-        }
-    }
+		public boolean hasReference() {
+			return reference != null;
+		}
 
-    interface ClientInfoProvider {
+		public boolean hasKnownOrder() {
+			return order != null && !order.equals(Order.UNKNOWN);
+		}
 
-        public String getClientHost() throws TrackerException;
+		public void refresh(NodeStatus status) {
+			lastRefreshDate = new Date();
+			order = status.getOrder();
+		}
 
-    }
+		public Date getLastRefreshDate() {
+			return lastRefreshDate;
+		}
+	}
+
+	interface ClientInfoProvider {
+
+		public String getClientHost() throws TrackerException;
+
+	}
 
 }

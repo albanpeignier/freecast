@@ -29,6 +29,6 @@ package org.kolaka.freecast.pipe;
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public abstract class BaseConsumer extends BaseInterruptible implements
-        Consumer {
+		Consumer {
 
 }

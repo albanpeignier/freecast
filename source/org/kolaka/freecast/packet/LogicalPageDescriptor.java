@@ -25,25 +25,25 @@ package org.kolaka.freecast.packet;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public interface LogicalPageDescriptor {
-    
-    public int getCount();
-    
-    public long getSequenceNumber();
-    
-    public long getTimestamp();
-    
-    public boolean isFirstPage();
-        
-    public static interface Element {
 
-        public LogicalPageDescriptor getPageDescriptor();
-        
-        public int getIndex();
-        
-    }
+	public int getCount();
+
+	public long getSequenceNumber();
+
+	public long getTimestamp();
+
+	public boolean isFirstPage();
+
+	public static interface Element {
+
+		public LogicalPageDescriptor getPageDescriptor();
+
+		public int getIndex();
+
+	}
 
 }

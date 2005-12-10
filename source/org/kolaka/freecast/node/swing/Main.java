@@ -37,19 +37,20 @@ import org.kolaka.freecast.swing.SwingApplication;
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public class Main extends SwingApplication {
-    
-    private MainFrame frame;
+
+	private MainFrame frame;
+
 	private Node node;
 
-    public Main() {
-        super("node-swing");
-    }
-    
-	public static void main(String args[]) {
-        new Main().run(args);
-    }
+	public Main() {
+		super("node-swing");
+	}
 
-    protected void postInit(Configuration configuration) throws Exception {
+	public static void main(String args[]) {
+		new Main().run(args);
+	}
+
+	protected void postInit(Configuration configuration) throws Exception {
 		super.postInit(configuration);
 
 		ConfigurableNode node = new DefaultNode();
@@ -58,31 +59,32 @@ public class Main extends SwingApplication {
 		nodeConfigurator.configure(node, configuration.subset("node"));
 		this.node = node;
 
-		ConfigurableResources resources = new ConfigurableResources(configuration.subset("gui"));
+		ConfigurableResources resources = new ConfigurableResources(
+				configuration.subset("gui"));
 		resources.setResourceLocator(getResourceLocator());
 
 		frame = new MainFrame(resources, node);
 		frame.setQuitAction(createQuitAction(resources));
 		frame.init();
-    }
+	}
 
 	protected void exitImpl() throws Exception {
 		node.stop();
 		node.dispose();
 	}
 
-    protected void run() throws Exception {
+	protected void run() throws Exception {
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 
 		node.init();
 		node.start();
-        
-        Object lock = new Object();
 
-        synchronized (lock) {
-            lock.wait();
-        }
-    }
+		Object lock = new Object();
+
+		synchronized (lock) {
+			lock.wait();
+		}
+	}
 
 }

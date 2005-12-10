@@ -35,42 +35,42 @@ import java.util.Arrays;
  */
 public class StreamMessageReader implements MessageReader {
 
-    private final DataInputStream input;
+	private final DataInputStream input;
 
-    public StreamMessageReader(final InputStream input) {
-        this.input = new DataInputStream(input);
-    }
+	public StreamMessageReader(final InputStream input) {
+		this.input = new DataInputStream(input);
+	}
 
-    private byte capturePatternBuffer[] = new byte[Message.CAPTURE_PATTERN.length];
+	private byte capturePatternBuffer[] = new byte[Message.CAPTURE_PATTERN.length];
 
-    public Message read() throws IOException {
-        input.readFully(capturePatternBuffer);
-        if (!Arrays.equals(Message.CAPTURE_PATTERN, capturePatternBuffer)) {
-            throw new IOException("Invalid capture pattern");
-        }
+	public Message read() throws IOException {
+		input.readFully(capturePatternBuffer);
+		if (!Arrays.equals(Message.CAPTURE_PATTERN, capturePatternBuffer)) {
+			throw new IOException("Invalid capture pattern");
+		}
 
-        int typeId = input.readUnsignedByte();
-        MessageType type = MessageType.get(typeId);
-        if (type == null) {
-            throw new IOException("Invalid type identifier " + typeId);
-        }
+		int typeId = input.readUnsignedByte();
+		MessageType type = MessageType.get(typeId);
+		if (type == null) {
+			throw new IOException("Invalid type identifier " + typeId);
+		}
 
-        Message message = createMessage(type);
-        message.read(input);
-        return message;
-    }
+		Message message = createMessage(type);
+		message.read(input);
+		return message;
+	}
 
-    protected Message createMessage(MessageType type) throws IOException {
-        Class messageClass = type.getMessageClass();
-        try {
-            return (Message) messageClass.newInstance();
-        } catch (Exception e) {
-            String msg = "Can't create a new Message (" + type + ","
-                    + messageClass.getName() + ")";
-            IOException exception = new IOException(msg);
-            exception.initCause(e);
-            throw exception;
-        }
-    }
+	protected Message createMessage(MessageType type) throws IOException {
+		Class messageClass = type.getMessageClass();
+		try {
+			return (Message) messageClass.newInstance();
+		} catch (Exception e) {
+			String msg = "Can't create a new Message (" + type + ","
+					+ messageClass.getName() + ")";
+			IOException exception = new IOException(msg);
+			exception.initCause(e);
+			throw exception;
+		}
+	}
 
 }

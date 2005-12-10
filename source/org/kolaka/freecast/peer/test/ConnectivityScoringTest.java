@@ -34,34 +34,34 @@ import org.kolaka.freecast.peer.ConnectivityScoring;
  */
 public class ConnectivityScoringTest extends TestCase {
 
-    public void testEquals() {
-        assertEquals(ConnectivityScoring.UNKNOWN, ConnectivityScoring.UNKNOWN);
-    }
+	public void testEquals() {
+		assertEquals(ConnectivityScoring.UNKNOWN, ConnectivityScoring.UNKNOWN);
+	}
 
-    public void testCompareTo() {
-        assertLower(ConnectivityScoring.UNKNOWN, ConnectivityScoring.MAXIMUM);
-        assertLower(ConnectivityScoring.MINIMUM, ConnectivityScoring.UNKNOWN);
-        assertLower(ConnectivityScoring.MINIMUM, ConnectivityScoring.MAXIMUM);
-    }
+	public void testCompareTo() {
+		assertLower(ConnectivityScoring.UNKNOWN, ConnectivityScoring.MAXIMUM);
+		assertLower(ConnectivityScoring.MINIMUM, ConnectivityScoring.UNKNOWN);
+		assertLower(ConnectivityScoring.MINIMUM, ConnectivityScoring.MAXIMUM);
+	}
 
-    protected void assertLower(ConnectivityScoring scoring1,
-            ConnectivityScoring scoring2) {
-        assertTrue(scoring1 + "should be lower than " + scoring2, scoring1
-                .compareTo(scoring2) < 0);
-    }
+	protected void assertLower(ConnectivityScoring scoring1,
+			ConnectivityScoring scoring2) {
+		assertTrue(scoring1 + "should be lower than " + scoring2, scoring1
+				.compareTo(scoring2) < 0);
+	}
 
-    public void testBonus() {
-        ConnectivityScoring scoring = ConnectivityScoring.UNKNOWN;
-        ConnectivityScoring bonusScoring = ConnectivityScoring.BONUS_CONNECTIONOPENED
-                .change(scoring);
-        assertLower(scoring, bonusScoring);
-    }
+	public void testBonus() {
+		ConnectivityScoring scoring = ConnectivityScoring.UNKNOWN;
+		ConnectivityScoring bonusScoring = ConnectivityScoring.BONUS_CONNECTIONOPENED
+				.change(scoring);
+		assertLower(scoring, bonusScoring);
+	}
 
-    public void testMalus() {
-        ConnectivityScoring scoring = ConnectivityScoring.UNKNOWN;
-        ConnectivityScoring malusScoring = ConnectivityScoring.MALUS_CONNECTIONERROR
-                .change(scoring);
-        assertLower(malusScoring, scoring);
-    }
+	public void testMalus() {
+		ConnectivityScoring scoring = ConnectivityScoring.UNKNOWN;
+		ConnectivityScoring malusScoring = ConnectivityScoring.MALUS_CONNECTIONERROR
+				.change(scoring);
+		assertLower(malusScoring, scoring);
+	}
 
 }

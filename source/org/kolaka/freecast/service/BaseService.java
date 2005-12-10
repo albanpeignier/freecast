@@ -33,57 +33,57 @@ import org.apache.commons.logging.LogFactory;
  */
 public class BaseService implements Service {
 
-    private Status status = Status.CREATED;
-    
-    public BaseService() {
+	private Status status = Status.CREATED;
 
-    }
+	public BaseService() {
 
-    private ServiceListenerSupport support = new ServiceListenerSupport(this);
+	}
 
-    public void add(Listener listener) {
-        support.add(listener);
-    }
+	private ServiceListenerSupport support = new ServiceListenerSupport(this);
 
-    public void remove(Listener listener) {
-        support.remove(listener);
-    }
+	public void add(Listener listener) {
+		support.add(listener);
+	}
 
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
+	public void remove(Listener listener) {
+		support.remove(listener);
+	}
 
-    public void init() throws ControlException {
-        LogFactory.getLog(getClass()).debug("init");
-        support.fireInitialized();
-    }
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
 
-    public void start() throws ControlException {
-        LogFactory.getLog(getClass()).debug("started");
-        status = Status.STARTED;
-        support.fireStarted();
-    }
+	public void init() throws ControlException {
+		LogFactory.getLog(getClass()).debug("init");
+		support.fireInitialized();
+	}
 
-    public Status getStatus() {
-        return status;
-    }
+	public void start() throws ControlException {
+		LogFactory.getLog(getClass()).debug("started");
+		status = Status.STARTED;
+		support.fireStarted();
+	}
 
-    protected boolean isStopped() {
-        return status.equals(Status.STOPPED);
-    }
+	public Status getStatus() {
+		return status;
+	}
 
-    public void stop() throws ControlException {
-        LogFactory.getLog(getClass()).debug("stopped");
-        status = Status.STOPPED;
-        support.fireStopped();
-    }
+	protected boolean isStopped() {
+		return status.equals(Status.STOPPED);
+	}
 
-    protected void stopQuietly() {
-        Controlables.stopQuietly(this);
-    }
+	public void stop() throws ControlException {
+		LogFactory.getLog(getClass()).debug("stopped");
+		status = Status.STOPPED;
+		support.fireStopped();
+	}
 
-    public void dispose() throws ControlException {
-        LogFactory.getLog(getClass()).debug("dispose");
-        support.fireDisposed();
-    }
+	protected void stopQuietly() {
+		Controlables.stopQuietly(this);
+	}
+
+	public void dispose() throws ControlException {
+		LogFactory.getLog(getClass()).debug("dispose");
+		support.fireDisposed();
+	}
 }

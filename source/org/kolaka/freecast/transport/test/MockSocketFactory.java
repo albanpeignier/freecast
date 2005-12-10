@@ -42,37 +42,37 @@ import com.mockobjects.util.Verifier;
  */
 public class MockSocketFactory extends SocketFactory {
 
-    public Socket createSocket(String arg0, int arg1) throws IOException,
-            UnknownHostException {
-        throw new NotImplementedException(getClass());
-    }
+	public Socket createSocket(String arg0, int arg1) throws IOException,
+			UnknownHostException {
+		throw new NotImplementedException(getClass());
+	}
 
-    public Socket createSocket(String arg0, int arg1, InetAddress arg2, int arg3)
-            throws IOException, UnknownHostException {
-        throw new NotImplementedException(getClass());
-    }
+	public Socket createSocket(String arg0, int arg1, InetAddress arg2, int arg3)
+			throws IOException, UnknownHostException {
+		throw new NotImplementedException(getClass());
+	}
 
-    public Socket createSocket(InetAddress arg0, int arg1) throws IOException {
-        throw new NotImplementedException(getClass());
-    }
+	public Socket createSocket(InetAddress arg0, int arg1) throws IOException {
+		throw new NotImplementedException(getClass());
+	}
 
-    public Socket createSocket(InetAddress arg0, int arg1, InetAddress arg2,
-            int arg3) throws IOException {
-        throw new NotImplementedException(getClass());
-    }
+	public Socket createSocket(InetAddress arg0, int arg1, InetAddress arg2,
+			int arg3) throws IOException {
+		throw new NotImplementedException(getClass());
+	}
 
-    private ReturnValue returnSocket = new ReturnValue("socket");
+	private ReturnValue returnSocket = new ReturnValue("socket");
 
-    public Socket createSocket() throws IOException {
-        return (Socket) returnSocket.getValue();
-    }
+	public Socket createSocket() throws IOException {
+		return (Socket) returnSocket.getValue();
+	}
 
-    public void setupCreateSocket(Socket socket) {
-        returnSocket.setValue(socket);
-    }
+	public void setupCreateSocket(Socket socket) {
+		returnSocket.setValue(socket);
+	}
 
-    public void verify() {
-        Verifier.verifyObject(this);
-    }
+	public void verify() {
+		Verifier.verifyObject(this);
+	}
 
 }

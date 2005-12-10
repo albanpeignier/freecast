@@ -41,11 +41,16 @@ import org.kolaka.freecast.resource.URLResourceLocator;
 public class ResourceLocatorTest extends TestCase {
 
 	private static final String RESOURCE_PREFIX = "org/kolaka/freecast/resource/test/resources/";
+
 	private static final String RESOURCE_RELATIVENAME = "ClassLoaderResourceLocator.properties";
-	private static final String RESOURCE_NAME = RESOURCE_PREFIX + RESOURCE_RELATIVENAME;
+
+	private static final String RESOURCE_NAME = RESOURCE_PREFIX
+			+ RESOURCE_RELATIVENAME;
+
 	private static final String HTTP_URL = "http://download.freecast.org/jws/stable/config.xml";
 
 	private URI httpURI, fileURI, resourceURI, prefixURI, relativeURI;
+
 	private File file;
 
 	protected void setUp() throws Exception {
@@ -93,8 +98,9 @@ public class ResourceLocatorTest extends TestCase {
 	public void testPrefixedResource() throws Exception {
 		ClassLoader classLoader = getClass().getClassLoader();
 
-		ResourceLocator locator = new PrefixResourceLocator(prefixURI, new ClassLoaderResourceLocator(classLoader));
-        locator.openResource(relativeURI);
+		ResourceLocator locator = new PrefixResourceLocator(prefixURI,
+				new ClassLoaderResourceLocator(classLoader));
+		locator.openResource(relativeURI);
 	}
 
 	public void testURLResource() throws Exception {

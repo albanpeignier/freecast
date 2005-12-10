@@ -57,76 +57,87 @@ import com.mockobjects.util.Verifier;
  */
 public abstract class PeerConnectionFactoryBaseTest extends TestCase {
 
-    private MockControl nodeStatusProviderControl;
-    private NodeStatusProvider nodeStatusProvider;
-    private MockControl peerControl;
-    private Peer peer;
+	private MockControl nodeStatusProviderControl;
 
-    private PeerReference reference;
+	private NodeStatusProvider nodeStatusProvider;
 
-    protected void setUp() throws Exception {
-        reference = createReference();
+	private MockControl peerControl;
 
-        nodeStatusProviderControl = MockControl
-                .createControl(NodeStatusProvider.class);
-        nodeStatusProvider = (NodeStatusProvider) nodeStatusProviderControl
-                .getMock();
+	private Peer peer;
 
-        peerControl = MockControl.createControl(Peer.class);
-        peer = (Peer) peerControl.getMock();
-    }
+	private PeerReference reference;
 
-    public final void testCreate() throws Exception {
-        // Prepare mock MessageWriter
-        NodeStatus localNodeStatus = new NodeStatus(
-                new DefaultNodeIdentifier(1), Order.ZERO.lower());
+	protected void setUp() throws Exception {
+		reference = createReference();
 
-        // Prepare mock MessageReader
-        PeerStatus remoteNodeStatus = new PeerStatus(new DefaultNodeIdentifier(
-                0), Order.ZERO);
+		nodeStatusProviderControl = MockControl
+				.createControl(NodeStatusProvider.class);
+		nodeStatusProvider = (NodeStatusProvider) nodeStatusProviderControl
+				.getMock();
 
-        List sendMessages = new LinkedList();
-        sendMessages.add(new PeerStatusMessage(localNodeStatus.createPeerStatus()));
-        
-        List receivedMessages = new LinkedList();
-        receivedMessages.add(new PeerStatusMessage(new PeerStatus(new DefaultNodeIdentifier(0), Order.ZERO)));
-        receivedMessages.add(new PeerConnectionStatusMessage(PeerConnection.Status.OPENED));
-        DefaultLogicalPageDescriptor pageDescriptor = new DefaultLogicalPageDescriptor(1, 0, 1, true);
-        Message message = PacketMessage.getInstance(new DefaultPacket(0, 0, new DefaultPacketData(new byte[0]), Checksum.EMPTY, pageDescriptor.createElementDescriptor(1)));
-        receivedMessages.add(message);
-        
-        setUpTestCreate(sendMessages, receivedMessages);
+		peerControl = MockControl.createControl(Peer.class);
+		peer = (Peer) peerControl.getMock();
+	}
 
-        // Prepare NodeStatusProvider
-        nodeStatusProvider.getNodeStatus();
-        nodeStatusProviderControl.setReturnValue(localNodeStatus);
+	public final void testCreate() throws Exception {
+		// Prepare mock MessageWriter
+		NodeStatus localNodeStatus = new NodeStatus(
+				new DefaultNodeIdentifier(1), Order.ZERO.lower());
 
-        nodeStatusProviderControl.replay();
+		// Prepare mock MessageReader
+		PeerStatus remoteNodeStatus = new PeerStatus(new DefaultNodeIdentifier(
+				0), Order.ZERO);
 
-        // Prepare Peer
-        peer.update(remoteNodeStatus);
-        peerControl.setMatcher(new PeerStatusMatcher());
-        peerControl.replay();
+		List sendMessages = new LinkedList();
+		sendMessages.add(new PeerStatusMessage(localNodeStatus
+				.createPeerStatus()));
 
-        PeerConnectionFactory factory = createFactory();
-        factory.setStatusProvider(nodeStatusProvider);
+		List receivedMessages = new LinkedList();
+		receivedMessages.add(new PeerStatusMessage(new PeerStatus(
+				new DefaultNodeIdentifier(0), Order.ZERO)));
+		receivedMessages.add(new PeerConnectionStatusMessage(
+				PeerConnection.Status.OPENED));
+		DefaultLogicalPageDescriptor pageDescriptor = new DefaultLogicalPageDescriptor(
+				1, 0, 1, true);
+		Message message = PacketMessage.getInstance(new DefaultPacket(0, 0,
+				new DefaultPacketData(new byte[0]), Checksum.EMPTY,
+				pageDescriptor.createElementDescriptor(1)));
+		receivedMessages.add(message);
 
-        PeerConnection connection = factory.create(peer, reference);
-        assertEquals("wrong read message", message, connection.getReader()
-                .read());
+		setUpTestCreate(sendMessages, receivedMessages);
 
-        Verifier.verifyObject(this);
-        nodeStatusProviderControl.verify();
-        peerControl.verify();
-        
-        verifyTestCreate();
-    }
+		// Prepare NodeStatusProvider
+		nodeStatusProvider.getNodeStatus();
+		nodeStatusProviderControl.setReturnValue(localNodeStatus);
 
-    protected abstract void setUpTestCreate(List sendMessages, List receivedMessages) throws IOException;
-    protected abstract void verifyTestCreate();
+		nodeStatusProviderControl.replay();
 
-    protected abstract PeerReference createReference();
+		// Prepare Peer
+		peer.update(remoteNodeStatus);
+		peerControl.setMatcher(new PeerStatusMatcher());
+		peerControl.replay();
 
-    protected abstract PeerConnectionFactory createFactory();
-    
+		PeerConnectionFactory factory = createFactory();
+		factory.setStatusProvider(nodeStatusProvider);
+
+		PeerConnection connection = factory.create(peer, reference);
+		assertEquals("wrong read message", message, connection.getReader()
+				.read());
+
+		Verifier.verifyObject(this);
+		nodeStatusProviderControl.verify();
+		peerControl.verify();
+
+		verifyTestCreate();
+	}
+
+	protected abstract void setUpTestCreate(List sendMessages,
+			List receivedMessages) throws IOException;
+
+	protected abstract void verifyTestCreate();
+
+	protected abstract PeerReference createReference();
+
+	protected abstract PeerConnectionFactory createFactory();
+
 }

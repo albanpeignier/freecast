@@ -33,39 +33,39 @@ import org.kolaka.freecast.service.ControlException;
  */
 public class NullPlayer implements Player {
 
-    public void setConsumer(Consumer consumer) {
-        consumer.close();
-    }
+	public void setConsumer(Consumer consumer) {
+		consumer.close();
+	}
 
-    public void add(Listener listener) {
+	public void add(Listener listener) {
 
-    }
+	}
 
-    public void remove(Listener listener) {
+	public void remove(Listener listener) {
 
-    }
+	}
 
-    public void init() throws ControlException {
+	public void init() throws ControlException {
 
-    }
+	}
 
-    public void start() throws ControlException {
+	public void start() throws ControlException {
 
-    }
+	}
 
-    public void stop() throws ControlException {
+	public void stop() throws ControlException {
 
-    }
+	}
 
-    public void dispose() throws ControlException {
+	public void dispose() throws ControlException {
 
-    }
-    
-    public Status getStatus() {
-        return Status.CREATED;
-    }
+	}
 
-    public PlayerStatus getPlayerStatus() {
-        return PlayerStatus.INACTIVE;
-    }
+	public Status getStatus() {
+		return Status.CREATED;
+	}
+
+	public PlayerStatus getPlayerStatus() {
+		return PlayerStatus.INACTIVE;
+	}
 }

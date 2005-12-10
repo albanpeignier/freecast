@@ -22,16 +22,17 @@
  */
 package org.kolaka.freecast.net;
 
-import org.apache.commons.collections.iterators.IteratorChain;
-
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.HashSet;
+
+import org.apache.commons.collections.iterators.IteratorChain;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
-public class InetSocketAddressSpecificationChain implements InetSocketAddressSpecification {
+public class InetSocketAddressSpecificationChain implements
+		InetSocketAddressSpecification {
 
 	private Set specifications = new HashSet();
 
@@ -42,7 +43,8 @@ public class InetSocketAddressSpecificationChain implements InetSocketAddressSpe
 	public Iterator iterator() {
 		IteratorChain chain = new IteratorChain();
 		for (Iterator iterator = specifications.iterator(); iterator.hasNext();) {
-			InetSocketAddressSpecification specification = (InetSocketAddressSpecification) iterator.next();
+			InetSocketAddressSpecification specification = (InetSocketAddressSpecification) iterator
+					.next();
 			chain.addIterator(specification.iterator());
 		}
 		return chain;

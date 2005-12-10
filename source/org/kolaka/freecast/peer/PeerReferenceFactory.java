@@ -27,6 +27,6 @@ package org.kolaka.freecast.peer;
  */
 public interface PeerReferenceFactory {
 
-    PeerReference create() throws PeerReferenceFactoryException;
+	PeerReference create() throws PeerReferenceFactoryException;
 
 }

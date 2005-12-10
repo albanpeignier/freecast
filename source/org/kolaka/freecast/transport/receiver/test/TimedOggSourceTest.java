@@ -27,7 +27,6 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.httpclient.util.DateUtil;
 import org.apache.commons.lang.time.DateUtils;
 import org.easymock.MockControl;
 import org.kolaka.freecast.ogg.OggPage;
@@ -45,8 +44,7 @@ public class TimedOggSourceTest extends TestCase {
 	private TimedOggSource timedSource;
 
 	private int frameRate = 44100;
-	private int channels = 2;
-	
+
 	protected void setUp() throws Exception {
 		sourceControl = MockControl.createControl(OggSource.class);
 		source = (OggSource) sourceControl.getMock();
@@ -79,7 +77,8 @@ public class TimedOggSourceTest extends TestCase {
 		assertEquals(secondSourcePage, secondResultPage);
 
 		long expectedTimestamp = (secondResultPage.getAbsoluteGranulePosition() - firstResultPage
-				.getAbsoluteGranulePosition()) / frameRate * DateUtils.MILLIS_PER_SECOND;
+				.getAbsoluteGranulePosition())
+				/ frameRate * DateUtils.MILLIS_PER_SECOND;
 		assertEquals(expectedTimestamp, secondResultPage.getTimestamp());
 
 		sourceControl.verify();

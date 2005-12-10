@@ -22,12 +22,12 @@
  */
 package org.kolaka.freecast.net;
 
-import org.apache.commons.logging.LogFactory;
-
-import java.net.ServerSocket;
-import java.net.InetSocketAddress;
-import java.util.Iterator;
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.util.Iterator;
+
+import org.apache.commons.logging.LogFactory;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
@@ -36,7 +36,8 @@ public class SpecificationServerSocketBinder implements ServerSocketBinder {
 
 	private InetSocketAddressSpecification specification;
 
-	public SpecificationServerSocketBinder(InetSocketAddressSpecification specification) {
+	public SpecificationServerSocketBinder(
+			InetSocketAddressSpecification specification) {
 		this.specification = specification;
 	}
 
@@ -50,22 +51,26 @@ public class SpecificationServerSocketBinder implements ServerSocketBinder {
 				socket.bind(address);
 				return;
 			} catch (IOException e) {
-				LogFactory.getLog(getClass()).debug("binding to " + address + " failed", e);
+				LogFactory.getLog(getClass()).debug(
+						"binding to " + address + " failed", e);
 				lastException = e;
 			}
 		}
 
 		if (lastException == null) {
-			throw new IOException("No specified InetSocketAddress into " + specification);
+			throw new IOException("No specified InetSocketAddress into "
+					+ specification);
 		}
 
-        throw lastException;
+		throw lastException;
 	}
 
-	public static InetSocketAddress select(InetSocketAddressSpecification specification) throws IOException {
+	public static InetSocketAddress select(
+			InetSocketAddressSpecification specification) throws IOException {
 		ServerSocket socket = new ServerSocket();
 		new SpecificationServerSocketBinder(specification).bind(socket);
-		InetSocketAddress address = (InetSocketAddress) socket.getLocalSocketAddress();
+		InetSocketAddress address = (InetSocketAddress) socket
+				.getLocalSocketAddress();
 		socket.close();
 		return address;
 	}

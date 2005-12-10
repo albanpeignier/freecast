@@ -28,20 +28,20 @@ import org.kolaka.freecast.packet.LogicalPage;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class StaticBandwidthControler implements BandwidthControler {
 
-    private int bandwidth;
-    
-    public StaticBandwidthControler(int bandwidth) {
-        Validate.isTrue(bandwidth > 0, "Invalid bandwidth: " + bandwidth);
-        this.bandwidth = bandwidth;
-    }
-    
-    public long getTimeDelay(LogicalPage page) {
-        return (long) (1000 / (bandwidth / 8.0 / page.getLength()));
-    }
+	private int bandwidth;
+
+	public StaticBandwidthControler(int bandwidth) {
+		Validate.isTrue(bandwidth > 0, "Invalid bandwidth: " + bandwidth);
+		this.bandwidth = bandwidth;
+	}
+
+	public long getTimeDelay(LogicalPage page) {
+		return (long) (1000 / (bandwidth / 8.0 / page.getLength()));
+	}
 
 }

@@ -22,19 +22,29 @@
  */
 package org.kolaka.freecast.swing;
 
-import org.apache.commons.lang.Validate;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.LogFactory;
-import org.jdesktop.jdic.tray.SystemTray;
-import org.jdesktop.jdic.tray.TrayIcon;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
+
+import javax.swing.Action;
+import javax.swing.Icon;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.Validate;
+import org.apache.commons.logging.LogFactory;
+import org.jdesktop.jdic.tray.SystemTray;
+import org.jdesktop.jdic.tray.TrayIcon;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
@@ -42,7 +52,10 @@ import java.util.Iterator;
 public abstract class BaseFrame extends JFrame {
 
 	private final Resources resources;
-	private Action aboutAction, logAction, quitAction, showHideMainAction, showHideToolbarAction;
+
+	private Action aboutAction, logAction, quitAction, showHideMainAction,
+			showHideToolbarAction;
+
 	private static final int GAP = 10;
 
 	public BaseFrame(Resources resources) {
@@ -84,7 +97,8 @@ public abstract class BaseFrame extends JFrame {
 		}
 		aboutAction = new AboutAction(new AboutDialog(resources, this));
 		logAction = new DisplayLogAction(logDialog);
-		showHideMainAction = new ShowHideAction(resources, this, "Main dialog", "main");
+		showHideMainAction = new ShowHideAction(resources, this, "Main dialog",
+				"main");
 
 		getContentPane().setLayout(new GridBagLayout());
 		GridBagConstraints constraints = new GridBagConstraints();
@@ -104,19 +118,21 @@ public abstract class BaseFrame extends JFrame {
 		Icon logo = resources.getIcon("logo");
 		Actions.setLargIcon(showHideToolbarAction, logo);
 
-		GridBagConstraints logoConstraints = (GridBagConstraints) constraints.clone();
+		GridBagConstraints logoConstraints = (GridBagConstraints) constraints
+				.clone();
 		IconButton logoButton = new IconButton(showHideToolbarAction);
-        getContentPane().add(logoButton, logoConstraints);
+		getContentPane().add(logoButton, logoConstraints);
 
-
-		GridBagConstraints mainButtonConstraints = (GridBagConstraints) constraints.clone();
+		GridBagConstraints mainButtonConstraints = (GridBagConstraints) constraints
+				.clone();
 		mainButtonConstraints.gridwidth = GridBagConstraints.REMAINDER;
 		IconButton mainButton = new IconButton(getButtonAction());
 		getContentPane().add(mainButton, mainButtonConstraints);
 
 		JComponent contentPane = createContentPane();
 		if (contentPane != null) {
-			GridBagConstraints contentConstraints = (GridBagConstraints) constraints.clone();
+			GridBagConstraints contentConstraints = (GridBagConstraints) constraints
+					.clone();
 			contentConstraints.insets.left += GAP;
 			contentConstraints.insets.right += GAP;
 			contentConstraints.fill = GridBagConstraints.BOTH;
@@ -124,13 +140,13 @@ public abstract class BaseFrame extends JFrame {
 			getContentPane().add(contentPane, contentConstraints);
 		}
 
-		GridBagConstraints toolbarConstraints = (GridBagConstraints) constraints.clone();
+		GridBagConstraints toolbarConstraints = (GridBagConstraints) constraints
+				.clone();
 		toolbarConstraints.gridwidth = GridBagConstraints.REMAINDER;
 		toolbarConstraints.fill = GridBagConstraints.HORIZONTAL;
 		toolbarConstraints.weightx = 1.0;
 		toolbarConstraints.insets.top = 0;
 		getContentPane().add(toolbar, toolbarConstraints);
-
 
 		PopupListener popupListener = new PopupListener(createPopupMenu());
 		PopupListener.addMouseListener(getContentPane(), popupListener);
@@ -141,7 +157,8 @@ public abstract class BaseFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent event) {
-				ActionEvent actionEvent = new ActionEvent(BaseFrame.this, ActionEvent.ACTION_PERFORMED, "quit");
+				ActionEvent actionEvent = new ActionEvent(BaseFrame.this,
+						ActionEvent.ACTION_PERFORMED, "quit");
 				quitAction.actionPerformed(actionEvent);
 			}
 		});
@@ -149,8 +166,11 @@ public abstract class BaseFrame extends JFrame {
 		try {
 			installSystemTray();
 		} catch (Throwable e) {
-			LogFactory.getLog(getClass()).error("Can't initialize the tray toolbarIcon", e);
-			showHideMainAction.setEnabled(false); // disable hide action if the tray menu isn't available
+			LogFactory.getLog(getClass()).error(
+					"Can't initialize the tray toolbarIcon", e);
+			showHideMainAction.setEnabled(false); // disable hide action if
+													// the tray menu isn't
+													// available
 		}
 	}
 
@@ -181,7 +201,8 @@ public abstract class BaseFrame extends JFrame {
 		popMenu.add(showHideToolbarAction);
 		popMenu.addSeparator();
 		List additionalActions = createAdditionalActions();
-		for (Iterator iterator = additionalActions.iterator(); iterator.hasNext();) {
+		for (Iterator iterator = additionalActions.iterator(); iterator
+				.hasNext();) {
 			Action action = (Action) iterator.next();
 			popMenu.add(action);
 		}

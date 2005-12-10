@@ -22,11 +22,11 @@
  */
 package org.kolaka.freecast.auditor;
 
-import org.apache.commons.lang.UnhandledException;
-
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+
+import org.apache.commons.lang.UnhandledException;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
@@ -45,44 +45,51 @@ public abstract class ProxyAuditorProvider implements AuditorProvider {
 
 	protected abstract Auditor createAuditor(Class auditorInterface);
 
-	protected Auditor createAuditor(Class auditorInterface, InvocationHandler handler) {
-		return (Auditor)
-			Proxy.newProxyInstance(auditorInterface.getClassLoader(), new Class[]{auditorInterface}, handler);
+	protected Auditor createAuditor(Class auditorInterface,
+			InvocationHandler handler) {
+		return (Auditor) Proxy.newProxyInstance(auditorInterface
+				.getClassLoader(), new Class[] { auditorInterface }, handler);
 	}
 
-	protected abstract static class AuditInvocationHandler implements InvocationHandler {
+	protected abstract static class AuditInvocationHandler implements
+			InvocationHandler {
 
 		private static Method equalsMethod;
+
 		private static Method toStringMethod;
+
 		private static Method hashCodeMethod;
 
 		static {
 			try {
-				equalsMethod = Object.class.getMethod("equals", new Class[] { Object.class });
-				toStringMethod = Object.class.getMethod("toString", new Class[0]);
-				hashCodeMethod = Object.class.getMethod("hashCode", new Class[0]);
+				equalsMethod = Object.class.getMethod("equals",
+						new Class[] { Object.class });
+				toStringMethod = Object.class.getMethod("toString",
+						new Class[0]);
+				hashCodeMethod = Object.class.getMethod("hashCode",
+						new Class[0]);
 			} catch (NoSuchMethodException e) {
 				throw new UnhandledException("Can't find Object methods", e);
 			}
 		}
 
 		public Object invoke(Object proxy, Method method, Object[] args)
-		        throws Throwable {
+				throws Throwable {
 			if (equalsMethod.equals(method)) {
-				return Boolean.valueOf(equals(Proxy.getInvocationHandler(proxy)));
+				return Boolean
+						.valueOf(equals(Proxy.getInvocationHandler(proxy)));
 			} else if (toStringMethod.equals(method)) {
 				return toString();
 			} else if (hashCodeMethod.equals(method)) {
 				return new Integer(hashCode());
 			}
 
-            invokeAuditMethod(method, args);
+			invokeAuditMethod(method, args);
 			return null;
 		}
 
 		protected abstract void invokeAuditMethod(Method method, Object[] args);
 
 	}
-
 
 }

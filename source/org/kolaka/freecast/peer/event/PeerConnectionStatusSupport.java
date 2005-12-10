@@ -37,33 +37,33 @@ import org.kolaka.freecast.peer.PeerConnection;
  */
 public class PeerConnectionStatusSupport {
 
-    private final PeerConnection source;
+	private final PeerConnection source;
 
-    public PeerConnectionStatusSupport(PeerConnection source) {
-        this.source = source;
-    }
+	public PeerConnectionStatusSupport(PeerConnection source) {
+		this.source = source;
+	}
 
-    private final Set listeners = new HashSet();
+	private final Set listeners = new HashSet();
 
-    public void add(PeerConnectionStatusListener listener) {
-        listeners.add(listener);
-    }
+	public void add(PeerConnectionStatusListener listener) {
+		listeners.add(listener);
+	}
 
-    public void remove(PeerConnectionStatusListener listener) {
-        listeners.remove(listener);
-    }
+	public void remove(PeerConnectionStatusListener listener) {
+		listeners.remove(listener);
+	}
 
-    public void fireStatus(PeerConnection.Status status) {
-        fire(new PeerConnectionStatusEvent(source, status));
-    }
+	public void fireStatus(PeerConnection.Status status) {
+		fire(new PeerConnectionStatusEvent(source, status));
+	}
 
-    public void fire(PeerConnectionStatusEvent event) {
-        for (Iterator iter = new ArrayList(listeners).iterator(); iter
-                .hasNext();) {
-            PeerConnectionStatusListener listener = (PeerConnectionStatusListener) iter
-                    .next();
-            listener.peerConnectionStatusChanged(event);
-        }
-    }
+	public void fire(PeerConnectionStatusEvent event) {
+		for (Iterator iter = new ArrayList(listeners).iterator(); iter
+				.hasNext();) {
+			PeerConnectionStatusListener listener = (PeerConnectionStatusListener) iter
+					.next();
+			listener.peerConnectionStatusChanged(event);
+		}
+	}
 
 }

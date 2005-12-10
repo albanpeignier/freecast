@@ -28,11 +28,12 @@ import org.kolaka.freecast.packet.PacketData;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public interface PacketChecksummer {
 
-    public Checksum checksum(PacketData packetData) throws PacketChecksummerException;
-    
+	public Checksum checksum(PacketData packetData)
+			throws PacketChecksummerException;
+
 }

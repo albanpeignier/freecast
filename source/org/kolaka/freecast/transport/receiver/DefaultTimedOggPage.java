@@ -27,8 +27,9 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.kolaka.freecast.ogg.OggPage;
 
 public class DefaultTimedOggPage implements TimedOggPage {
-	
+
 	private final long timestamp;
+
 	private final OggPage page;
 
 	public DefaultTimedOggPage(long timestamp, OggPage page) {
@@ -67,7 +68,7 @@ public class DefaultTimedOggPage implements TimedOggPage {
 	public int getLength() {
 		return page.getLength();
 	}
-	
+
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}

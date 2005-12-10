@@ -34,31 +34,31 @@ import org.kolaka.freecast.ogg.OggSource;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class MemoryOggSource implements OggSource {
 
-    private List pages = new LinkedList();
-    
-    public OggPage next() throws IOException {
-        if (isEmpty()) {
-            throw new EOFException();
-        }
-        
-        return (OggPage) pages.remove(0);
-    }
-    
-    public void add(OggPage page) {
-        Validate.notNull(page);
-        pages.add(page);
-    }
-    
-    public boolean isEmpty() {
-        return pages.isEmpty();
-    }
-    
-    public void close() throws IOException {
-    }
+	private List pages = new LinkedList();
+
+	public OggPage next() throws IOException {
+		if (isEmpty()) {
+			throw new EOFException();
+		}
+
+		return (OggPage) pages.remove(0);
+	}
+
+	public void add(OggPage page) {
+		Validate.notNull(page);
+		pages.add(page);
+	}
+
+	public boolean isEmpty() {
+		return pages.isEmpty();
+	}
+
+	public void close() throws IOException {
+	}
 
 }

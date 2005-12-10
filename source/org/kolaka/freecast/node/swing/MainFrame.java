@@ -22,32 +22,42 @@
  */
 package org.kolaka.freecast.node.swing;
 
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
+
 import org.kolaka.freecast.node.Node;
 import org.kolaka.freecast.player.GraphicalPlayerSource;
 import org.kolaka.freecast.player.InteractivePlayerSource;
 import org.kolaka.freecast.player.PlayerSource;
 import org.kolaka.freecast.swing.BaseFrame;
+import org.kolaka.freecast.swing.ProxyAction;
 import org.kolaka.freecast.swing.Resources;
 import org.kolaka.freecast.swing.ResourcesException;
-import org.kolaka.freecast.swing.ProxyAction;
-
-import javax.swing.*;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public class MainFrame extends BaseFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2511903707382989163L;
+
 	private InteractivePlayerSource playerSource;
+
 	private Action playerAction;
 
 	public MainFrame(Resources resources, Node node) throws ResourcesException {
 		super(resources);
 
-		for (Iterator iter = node.getPlayerControler().playerSources().iterator(); iter.hasNext();) {
+		for (Iterator iter = node.getPlayerControler().playerSources()
+				.iterator(); iter.hasNext();) {
 			PlayerSource source = (PlayerSource) iter.next();
 			if (source instanceof InteractivePlayerSource) {
 				playerSource = (InteractivePlayerSource) source;
@@ -59,7 +69,8 @@ public class MainFrame extends BaseFrame {
 
 	protected JComponent createContentPane() {
 		if (playerSource instanceof GraphicalPlayerSource) {
-			JComponent playerComponent = ((GraphicalPlayerSource) playerSource).getJComponent();
+			JComponent playerComponent = ((GraphicalPlayerSource) playerSource)
+					.getJComponent();
 			playerComponent.setBorder(BorderFactory.createLoweredBevelBorder());
 			return playerComponent;
 		}
@@ -71,7 +82,7 @@ public class MainFrame extends BaseFrame {
 		ProxyAction proxyPlayerAction = new ProxyAction(playerAction);
 		proxyPlayerAction.putValue(Action.SMALL_ICON, null, true);
 
-        return Collections.singletonList(proxyPlayerAction);
+		return Collections.singletonList(proxyPlayerAction);
 	}
 
 	protected Action getButtonAction() {

@@ -22,82 +22,103 @@
  */
 package org.kolaka.freecast.resource;
 
-import org.apache.commons.lang.Validate;
-
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
+
+import org.apache.commons.lang.Validate;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public interface ResourceLocator {
 
-    public InputStream openResource(URI uri) throws Exception;
+	public InputStream openResource(URI uri) throws Exception;
 
-    abstract class Exception extends IOException {
+	abstract class Exception extends IOException {
 
-        /**
-         * Constructs a new exception with the specified detail message.  The
-         * cause is not initialized, and may subsequently be initialized by
-         * a call to {@link #initCause}.
-         *
-         * @param   message   the detail message. The detail message is saved for
-         *          later retrieval by the {@link #getMessage()} method.
-         */
-        protected Exception(String message) {
-            super(message);
-        }
+		/**
+		 * Constructs a new exception with the specified detail message. The
+		 * cause is not initialized, and may subsequently be initialized by a
+		 * call to {@link #initCause}.
+		 * 
+		 * @param message
+		 *            the detail message. The detail message is saved for later
+		 *            retrieval by the {@link #getMessage()} method.
+		 */
+		protected Exception(String message) {
+			super(message);
+		}
 
-        /**
-         * Constructs a new exception with the specified detail message and
-         * cause.  <p>Note that the detail message associated with
-         * <code>cause</code> is <i>not</i> automatically incorporated in
-         * this exception's detail message.
-         *
-         * @param  message the detail message (which is saved for later retrieval
-         *         by the {@link #getMessage()} method).
-         * @param  cause the cause (which is saved for later retrieval by the
-         *         {@link #getCause()} method).  (A <tt>null</tt> value is
-         *         permitted, and indicates that the cause is nonexistent or
-         *         unknown.)
-         * @since  1.4
-         */
-        protected Exception(String message, Throwable cause) {
-            this(message);
+		/**
+		 * Constructs a new exception with the specified detail message and
+		 * cause.
+		 * <p>
+		 * Note that the detail message associated with <code>cause</code> is
+		 * <i>not</i> automatically incorporated in this exception's detail
+		 * message.
+		 * 
+		 * @param message
+		 *            the detail message (which is saved for later retrieval by
+		 *            the {@link #getMessage()} method).
+		 * @param cause
+		 *            the cause (which is saved for later retrieval by the
+		 *            {@link #getCause()} method). (A <tt>null</tt> value is
+		 *            permitted, and indicates that the cause is nonexistent or
+		 *            unknown.)
+		 * @since 1.4
+		 */
+		protected Exception(String message, Throwable cause) {
+			this(message);
 			initCause(cause);
-        }
+		}
 
-    }
+	}
 
-    class MalformedURIException extends Exception {
+	class MalformedURIException extends Exception {
 
-        public MalformedURIException(URI uri) {
-             super("Malformed URI '" + uri + "'");
-        }
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 6203217167580308204L;
 
-		public static void checkScheme(URI uri, String scheme) throws MalformedURIException {
-			Validate.notNull(uri,"No specified URI");
+		public MalformedURIException(URI uri) {
+			super("Malformed URI '" + uri + "'");
+		}
+
+		public static void checkScheme(URI uri, String scheme)
+				throws MalformedURIException {
+			Validate.notNull(uri, "No specified URI");
 			if (uri.getScheme() == null || !uri.getScheme().equals(scheme)) {
 				throw new MalformedURIException(uri);
 			}
 		}
 
-    }
+	}
 
-    class NoSuchResourceException extends Exception {
+	class NoSuchResourceException extends Exception {
 
-        public NoSuchResourceException(URI uri) {
-             super("Can't find the resource '" + uri + "'");
-        }
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 766959787867245637L;
 
-    }
+		public NoSuchResourceException(URI uri) {
+			super("Can't find the resource '" + uri + "'");
+		}
 
-    class UnavailableResourceException extends Exception {
+	}
 
-        public UnavailableResourceException(URI uri, Throwable cause) {
-             super("Can't load the resource '" + uri + "'", cause);
-        }
+	class UnavailableResourceException extends Exception {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 8402933312805346105L;
+
+		public UnavailableResourceException(URI uri, Throwable cause) {
+			super("Can't load the resource '" + uri + "'", cause);
+		}
 
 		public UnavailableResourceException(URI uri) {
 			super("Can't load the resource '" + uri + "'");

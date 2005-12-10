@@ -27,11 +27,11 @@ import javax.swing.JComponent;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public interface GraphicalPlayerSource extends PlayerSource {
 
-    public JComponent getJComponent();
-    
+	public JComponent getJComponent();
+
 }

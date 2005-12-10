@@ -33,34 +33,35 @@ import org.kolaka.freecast.packet.PacketData;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class DigestPacketChecksummer implements PacketChecksummer {
 
-    private final MessageDigest digest;
+	private final MessageDigest digest;
 
-    public DigestPacketChecksummer(MessageDigest digest) {
-        Validate.notNull(digest);
-        this.digest = digest;
-    }
-    
-    public Checksum checksum(PacketData packetData) {
-        digest.reset();
-        digest.update(packetData.getBytes());
-        return new Checksum(digest.digest());
-    }
-    
-    public static DigestPacketChecksummer getInstance(String algorithm) throws NoSuchAlgorithmException {
-        return new DigestPacketChecksummer(MessageDigest.getInstance(algorithm));
-    }
-    
-    public static DigestPacketChecksummer getInstance() {
-        try {
-            return getInstance("SHA");
-        } catch (NoSuchAlgorithmException e) {
-            throw new UnexpectedException("No SHA Algorithm", e);
-        }
-    }
+	public DigestPacketChecksummer(MessageDigest digest) {
+		Validate.notNull(digest);
+		this.digest = digest;
+	}
+
+	public Checksum checksum(PacketData packetData) {
+		digest.reset();
+		digest.update(packetData.getBytes());
+		return new Checksum(digest.digest());
+	}
+
+	public static DigestPacketChecksummer getInstance(String algorithm)
+			throws NoSuchAlgorithmException {
+		return new DigestPacketChecksummer(MessageDigest.getInstance(algorithm));
+	}
+
+	public static DigestPacketChecksummer getInstance() {
+		try {
+			return getInstance("SHA");
+		} catch (NoSuchAlgorithmException e) {
+			throw new UnexpectedException("No SHA Algorithm", e);
+		}
+	}
 
 }

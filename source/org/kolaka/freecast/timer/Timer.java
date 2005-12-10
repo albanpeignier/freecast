@@ -30,9 +30,9 @@ package org.kolaka.freecast.timer;
  */
 public interface Timer extends LoopExecutor {
 
-    void executeLater(Runnable runnable);
+	void executeLater(Runnable runnable);
 
-    void executeAfterDelay(long delay, Runnable runnable);
+	void executeAfterDelay(long delay, Runnable runnable);
 
-    void executePeriodically(long delay, Runnable runnable, boolean startsNow);
+	void executePeriodically(long delay, Runnable runnable, boolean startsNow);
 }

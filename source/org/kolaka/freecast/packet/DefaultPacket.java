@@ -29,58 +29,63 @@ import org.kolaka.freecast.packet.LogicalPageDescriptor.Element;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class DefaultPacket implements Packet {
 
-    private final long sequenceNumber;
-    private final byte[] bytes;
-    private final Checksum checksum;
-    private final LogicalPageDescriptor.Element elementDescriptor;
+	private final long sequenceNumber;
 
-    public DefaultPacket(long sequenceNumber, long timestamp, PacketData packetData, Checksum checksum, Element elementDescriptor) {
-        Validate.notNull(packetData, "No specified PacketData");
-        Validate.notNull(checksum, "No specified Checksum");
-        Validate.notNull(elementDescriptor, "No specified LogicalPageDescriptor.Element");
-        
-        this.sequenceNumber = sequenceNumber;
-        this.bytes = packetData.getBytes();
-        this.checksum = checksum;
-        this.elementDescriptor = elementDescriptor;
-    }
+	private final byte[] bytes;
 
-    public long getSequenceNumber() {
-        return sequenceNumber;
-    }
+	private final Checksum checksum;
 
-    public byte[] getBytes() {
-        return bytes;
-    }
+	private final LogicalPageDescriptor.Element elementDescriptor;
 
-    public Checksum getChecksum() {
-        return checksum;
-    }
+	public DefaultPacket(long sequenceNumber, long timestamp,
+			PacketData packetData, Checksum checksum, Element elementDescriptor) {
+		Validate.notNull(packetData, "No specified PacketData");
+		Validate.notNull(checksum, "No specified Checksum");
+		Validate.notNull(elementDescriptor,
+				"No specified LogicalPageDescriptor.Element");
 
-    public Element getElementDescriptor() {
-        return elementDescriptor;
-    }
+		this.sequenceNumber = sequenceNumber;
+		this.bytes = packetData.getBytes();
+		this.checksum = checksum;
+		this.elementDescriptor = elementDescriptor;
+	}
 
-    public boolean equals(Object o) {
-        return o instanceof DefaultPacket && equals((DefaultPacket) o);
-    }
-    
-    public boolean equals(DefaultPacket other) {
-        return other != null && sequenceNumber == other.sequenceNumber;
-    }
-    
-    public String toString() {
-        ToStringBuilder builder = new ToStringBuilder(this);
-        builder.append("sequenceNumber", sequenceNumber);
-        builder.append("bytes.length", bytes.length);
-        builder.append("checksum", checksum);
-        builder.append("elementDescriptor", elementDescriptor);
-        return builder.toString();
-    }
+	public long getSequenceNumber() {
+		return sequenceNumber;
+	}
+
+	public byte[] getBytes() {
+		return bytes;
+	}
+
+	public Checksum getChecksum() {
+		return checksum;
+	}
+
+	public Element getElementDescriptor() {
+		return elementDescriptor;
+	}
+
+	public boolean equals(Object o) {
+		return o instanceof DefaultPacket && equals((DefaultPacket) o);
+	}
+
+	public boolean equals(DefaultPacket other) {
+		return other != null && sequenceNumber == other.sequenceNumber;
+	}
+
+	public String toString() {
+		ToStringBuilder builder = new ToStringBuilder(this);
+		builder.append("sequenceNumber", sequenceNumber);
+		builder.append("bytes.length", bytes.length);
+		builder.append("checksum", checksum);
+		builder.append("elementDescriptor", elementDescriptor);
+		return builder.toString();
+	}
 
 }

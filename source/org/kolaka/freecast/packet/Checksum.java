@@ -33,61 +33,62 @@ import org.apache.commons.lang.Validate;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class Checksum {
-    
-    public static final Checksum EMPTY = new Checksum(new byte[0]);
 
-    private byte[] data;
-    
-    public Checksum(byte[] data) {
-        Validate.notNull(data);
-        this.data = data;
-    }
-    
-    public byte[] getData() {
-        return data;
-    }
-    
-    public static Checksum read(DataInputStream input) throws IOException {
-        int length = input.readInt();
-        
-        byte bytes[] = new byte[length];
-        if (length > 0) {
-            input.readFully(bytes);
-        }
-        
-        return new Checksum(bytes);
-    }
+	public static final Checksum EMPTY = new Checksum(new byte[0]);
 
-    public void write(DataOutputStream output) throws IOException {
-        output.writeInt(data.length);
-        if (data.length > 0) {
-            output.write(data);
-        }
-    }
-    
-    private String toString;
-    
-    public String toString() {
-        if (toString == null) {
-            toString = new String(Hex.encodeHex(data));
-        }
-        return toString;
-    }
-    
-    public boolean equals(Object o) {
-        return this == o || (o instanceof Checksum && equals((Checksum) o));
-    }
-    
-    public boolean equals(Checksum other) {
-        return this == other || (other != null && Arrays.equals(data, other.data));
-    }
-    
-    public int hashCode() {
-        return data.hashCode();
-    }
+	private byte[] data;
+
+	public Checksum(byte[] data) {
+		Validate.notNull(data);
+		this.data = data;
+	}
+
+	public byte[] getData() {
+		return data;
+	}
+
+	public static Checksum read(DataInputStream input) throws IOException {
+		int length = input.readInt();
+
+		byte bytes[] = new byte[length];
+		if (length > 0) {
+			input.readFully(bytes);
+		}
+
+		return new Checksum(bytes);
+	}
+
+	public void write(DataOutputStream output) throws IOException {
+		output.writeInt(data.length);
+		if (data.length > 0) {
+			output.write(data);
+		}
+	}
+
+	private String toString;
+
+	public String toString() {
+		if (toString == null) {
+			toString = new String(Hex.encodeHex(data));
+		}
+		return toString;
+	}
+
+	public boolean equals(Object o) {
+		return this == o || (o instanceof Checksum && equals((Checksum) o));
+	}
+
+	public boolean equals(Checksum other) {
+		return this == other
+				|| (other != null && Arrays.equals(data, other.data));
+	}
+
+	public int hashCode() {
+		return data.hashCode();
+	}
 
 }

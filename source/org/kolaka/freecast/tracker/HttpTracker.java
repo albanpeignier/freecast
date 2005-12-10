@@ -22,8 +22,9 @@
  */
 package org.kolaka.freecast.tracker;
 
-import com.caucho.hessian.server.HessianServlet;
-import com.caucho.services.server.ServiceContext;
+import java.net.InetSocketAddress;
+import java.util.Set;
+
 import org.kolaka.freecast.node.NodeIdentifier;
 import org.kolaka.freecast.node.NodeStatus;
 import org.kolaka.freecast.peer.PeerReference;
@@ -32,17 +33,19 @@ import org.mortbay.http.SocketListener;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.ServletHttpContext;
 
-import java.net.InetSocketAddress;
-import java.util.Set;
+import com.caucho.hessian.server.HessianServlet;
+import com.caucho.services.server.ServiceContext;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public class HttpTracker extends HessianServlet implements Tracker {
 	private static final long serialVersionUID = 3546076977887720249L;
+
 	private final Tracker tracker;
 
 	private InetSocketAddress listenAddress;
+
 	private Server server;
 
 	public InetSocketAddress getListenAddress() {
@@ -60,10 +63,12 @@ public class HttpTracker extends HessianServlet implements Tracker {
 		listener.setPort(listenAddress.getPort());
 		server.addListener(listener);
 
-		ServletHttpContext context = (ServletHttpContext) server.getContext("/");
+		ServletHttpContext context = (ServletHttpContext) server
+				.getContext("/");
 
 		try {
-			context.addServlet("Tracker", "/tracker", HttpTracker.class.getName());
+			context.addServlet("Tracker", "/tracker", HttpTracker.class
+					.getName());
 		} catch (Exception e) {
 			throw new ControlException("Can't install the tracker servlet", e);
 		}
@@ -93,12 +98,12 @@ public class HttpTracker extends HessianServlet implements Tracker {
 	}
 
 	public Set getPeerReferences(NodeIdentifier identifier)
-	        throws TrackerException {
+			throws TrackerException {
 		return tracker.getPeerReferences(identifier);
 	}
 
 	public NodeIdentifier register(PeerReference reference)
-	        throws TrackerException {
+			throws TrackerException {
 		return tracker.register(reference);
 	}
 

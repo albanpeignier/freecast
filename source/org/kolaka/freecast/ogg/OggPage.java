@@ -30,21 +30,21 @@ package org.kolaka.freecast.ogg;
  */
 public interface OggPage {
 
-    public static final byte[] CAPTURE_PATTERN = new byte[] { 'O', 'g', 'g',
-            'S' };
+	public static final byte[] CAPTURE_PATTERN = new byte[] { 'O', 'g', 'g',
+			'S' };
 
-    public abstract byte[] getRawBytes();
+	public abstract byte[] getRawBytes();
 
-    public abstract boolean isFirstPage();
+	public abstract boolean isFirstPage();
 
-    public abstract boolean isLastPage();
-    
-    public long getAbsoluteGranulePosition();
-    
-    public int getStreamSerialNumber();
-    
-    public String getStreamSerialNumberString();
+	public abstract boolean isLastPage();
 
-    public abstract int getLength();
+	public long getAbsoluteGranulePosition();
+
+	public int getStreamSerialNumber();
+
+	public String getStreamSerialNumberString();
+
+	public abstract int getLength();
 
 }

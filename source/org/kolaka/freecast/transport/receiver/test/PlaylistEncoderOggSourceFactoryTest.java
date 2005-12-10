@@ -42,27 +42,30 @@ public class PlaylistEncoderOggSourceFactoryTest extends TestCase {
 	public void testPlay() throws Exception {
 		// experienced many problems with javazoom and sample.ogg ?!
 		URI resource = OggTestResources.getResource("sample.wav").toURI();
-		
-		ResourcePlaylist playlist = new ResourcePlaylist(ResourceLocators.getDefaultInstance(), Collections.singletonList(resource));
+
+		ResourcePlaylist playlist = new ResourcePlaylist(ResourceLocators
+				.getDefaultInstance(), Collections.singletonList(resource));
 		EncoderFormat format = new EncoderFormat(1, 44100, 0);
-		PlaylistEncoderOggSourceFactory factory = new PlaylistEncoderOggSourceFactory(playlist, format);
-		
+		PlaylistEncoderOggSourceFactory factory = new PlaylistEncoderOggSourceFactory(
+				playlist, format);
+
 		OggSource source = factory.next();
 		TimedOggPage last = null;
 		try {
-			
+
 			while (true) {
 				TimedOggPage page = (TimedOggPage) source.next();
 				if (last != null && !last.isFirstPage()) {
-					assertTrue(page + " timestamp must be greather than " + last, page.getTimestamp() > last.getTimestamp());
+					assertTrue(page + " timestamp must be greather than "
+							+ last, page.getTimestamp() > last.getTimestamp());
 				}
 				last = page;
 			}
-			
+
 		} catch (EOFException e) {
-			
-		} 
+
+		}
 		assertTrue(last.isLastPage());
 	}
-	
+
 }

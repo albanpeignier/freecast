@@ -38,25 +38,25 @@ import org.kolaka.freecast.transport.MessageWriter;
  */
 public class MockMessageWriter implements MessageWriter {
 
-    private List messages = new LinkedList();
+	private List messages = new LinkedList();
 
-    private IOException throwable;
+	private IOException throwable;
 
-    public int write(Message message) throws IOException {
-        if (throwable != null) {
-            throw throwable;
-        }
+	public int write(Message message) throws IOException {
+		if (throwable != null) {
+			throw throwable;
+		}
 
-        messages.add(message);
-        return 1000;
-    }
+		messages.add(message);
+		return 1000;
+	}
 
-    public List getWritedMessages() {
-        return Collections.unmodifiableList(messages);
-    }
+	public List getWritedMessages() {
+		return Collections.unmodifiableList(messages);
+	}
 
-    public void setThrowable(IOException throwable) {
-        this.throwable = throwable;
-    }
+	public void setThrowable(IOException throwable) {
+		this.throwable = throwable;
+	}
 
 }

@@ -30,17 +30,17 @@ import org.kolaka.freecast.service.Controler;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public interface PlayerControler extends Controler {
-    
-    public void add(PlayerSource source);
-    
-    public void setPipe(Pipe pipe);
-    
-    public Set playerStatusSet();
-    
-    public Set playerSources();
+
+	public void add(PlayerSource source);
+
+	public void setPipe(Pipe pipe);
+
+	public Set playerStatusSet();
+
+	public Set playerSources();
 
 }

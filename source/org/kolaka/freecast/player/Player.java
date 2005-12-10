@@ -32,6 +32,6 @@ import org.kolaka.freecast.service.ConsumerService;
  */
 public interface Player extends ConsumerService {
 
-    public PlayerStatus getPlayerStatus();
-    
+	public PlayerStatus getPlayerStatus();
+
 }

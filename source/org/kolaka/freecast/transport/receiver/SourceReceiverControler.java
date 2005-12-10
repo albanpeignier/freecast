@@ -28,17 +28,18 @@ import org.kolaka.freecast.packet.signer.PacketChecksummerUser;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
-public class SourceReceiverControler extends StaticReceiverControler implements PacketChecksummerUser {
+public class SourceReceiverControler extends StaticReceiverControler implements
+		PacketChecksummerUser {
 
-    public SourceReceiverControler(SourceReceiver receiver) {
-        super(receiver);
-    }
+	public SourceReceiverControler(SourceReceiver receiver) {
+		super(receiver);
+	}
 
-    public void setPacketChecksummer(PacketChecksummer checksummer) {
-        ((SourceReceiver) getReceiver()).setPacketChecksummer(checksummer);
-    }
+	public void setPacketChecksummer(PacketChecksummer checksummer) {
+		((SourceReceiver) getReceiver()).setPacketChecksummer(checksummer);
+	}
 
 }

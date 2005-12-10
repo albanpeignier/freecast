@@ -35,100 +35,103 @@ import org.kolaka.freecast.service.Service;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class DefaultPlayerControler implements PlayerControler {
 
-    private Pipe pipe;
-    
-    private final Set sources = new HashSet();
-    private final Set players = new HashSet();
-    
-    public void setPipe(Pipe pipe) {
-        Validate.notNull(pipe, "No specified Pipe");
-        this.pipe = pipe;
-    }
+	private Pipe pipe;
 
-    public void init() throws ControlException {
+	private final Set sources = new HashSet();
 
-    }
+	private final Set players = new HashSet();
 
-    public void dispose() throws ControlException {
+	public void setPipe(Pipe pipe) {
+		Validate.notNull(pipe, "No specified Pipe");
+		this.pipe = pipe;
+	}
 
-    }
-    
-    public Set playerSources() {
-        return sources;
-    }
-    
-    public void add(PlayerSource source) {
-        sources.add(source);
-        source.addListener(sourceListener);
-    }
-    
-    private final PlayerSource.Listener sourceListener = new PlayerSource.Listener() {
+	public void init() throws ControlException {
 
-        public void playerCreated(Player player) {
-            startPlayer(player);
-        }
-        
-    };
-    
-    private final Service.Listener playerListener = new Service.Adapter() {
+	}
 
-        public void serviceStopped(Service service) {
-            players.remove(service);
-        }
-        
-    };
+	public void dispose() throws ControlException {
 
-    private int playerIdentifier = 1;
-    
-    protected void startPlayer(Player player) {
-        LogFactory.getLog(getClass()).debug("start new player " + player);
-        player.setConsumer(pipe.createConsumer("player-" + playerIdentifier++));
-        
-        try {
-            player.init();
-            player.start();
-        } catch (ControlException e) {
-            LogFactory.getLog(getClass()).error("Can't start the new player " + player,e);
-        }
-        player.add(playerListener);
-        players.add(player);
-    }
+	}
 
-    public void start() throws ControlException {
-        for (Iterator iter=sources.iterator(); iter.hasNext(); ) {
-            PlayerSource source = (PlayerSource) iter.next();
-            source.start();
-        }
-    }
+	public Set playerSources() {
+		return sources;
+	}
 
-    public void stop() throws ControlException {
-        for (Iterator iter=sources.iterator(); iter.hasNext(); ) {
-            PlayerSource source = (PlayerSource) iter.next();
-            source.stop();
-        }
-        for (Iterator iter = new HashSet(players).iterator(); iter.hasNext();) {
-            Player player = (Player) iter.next();
-            try {
-                player.dispose();
-                player.stop();
-            } catch (ControlException e) {
-                LogFactory.getLog(getClass()).error("Can't stop the player " + player,e);
-            }
-        }
-    }
-    
-    public Set playerStatusSet() {
-        Set statusSet = new HashSet();
-        for (Iterator iter = players.iterator(); iter.hasNext();) {
-            Player player = (Player) iter.next();
-            statusSet.add(player.getPlayerStatus());
-        }
-        return statusSet;
-    }
-    
+	public void add(PlayerSource source) {
+		sources.add(source);
+		source.addListener(sourceListener);
+	}
+
+	private final PlayerSource.Listener sourceListener = new PlayerSource.Listener() {
+
+		public void playerCreated(Player player) {
+			startPlayer(player);
+		}
+
+	};
+
+	private final Service.Listener playerListener = new Service.Adapter() {
+
+		public void serviceStopped(Service service) {
+			players.remove(service);
+		}
+
+	};
+
+	private int playerIdentifier = 1;
+
+	protected void startPlayer(Player player) {
+		LogFactory.getLog(getClass()).debug("start new player " + player);
+		player.setConsumer(pipe.createConsumer("player-" + playerIdentifier++));
+
+		try {
+			player.init();
+			player.start();
+		} catch (ControlException e) {
+			LogFactory.getLog(getClass()).error(
+					"Can't start the new player " + player, e);
+		}
+		player.add(playerListener);
+		players.add(player);
+	}
+
+	public void start() throws ControlException {
+		for (Iterator iter = sources.iterator(); iter.hasNext();) {
+			PlayerSource source = (PlayerSource) iter.next();
+			source.start();
+		}
+	}
+
+	public void stop() throws ControlException {
+		for (Iterator iter = sources.iterator(); iter.hasNext();) {
+			PlayerSource source = (PlayerSource) iter.next();
+			source.stop();
+		}
+		for (Iterator iter = new HashSet(players).iterator(); iter.hasNext();) {
+			Player player = (Player) iter.next();
+			try {
+				player.dispose();
+				player.stop();
+			} catch (ControlException e) {
+				LogFactory.getLog(getClass()).error(
+						"Can't stop the player " + player, e);
+			}
+		}
+	}
+
+	public Set playerStatusSet() {
+		Set statusSet = new HashSet();
+		for (Iterator iter = players.iterator(); iter.hasNext();) {
+			Player player = (Player) iter.next();
+			statusSet.add(player.getPlayerStatus());
+		}
+		return statusSet;
+	}
+
 }

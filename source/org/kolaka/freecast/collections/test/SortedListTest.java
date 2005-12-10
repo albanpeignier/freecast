@@ -39,17 +39,17 @@ import org.kolaka.freecast.collections.SortedList;
  */
 public class SortedListTest extends TestCase {
 
-    public void testAdd() {
-        SortedList list = new SortedList();
+	public void testAdd() {
+		SortedList list = new SortedList();
 
-        List orderedElements = Arrays.asList(new String[] { "a", "a", "b",
-                "ba", "c", "e" });
+		List orderedElements = Arrays.asList(new String[] { "a", "a", "b",
+				"ba", "c", "e" });
 
-        List shuffleElements = new ArrayList(orderedElements);
-        Collections.shuffle(shuffleElements);
+		List shuffleElements = new ArrayList(orderedElements);
+		Collections.shuffle(shuffleElements);
 
-        list.addAll(shuffleElements);
-        assertEquals(list, orderedElements);
-    }
+		list.addAll(shuffleElements);
+		assertEquals(list, orderedElements);
+	}
 
 }

@@ -30,14 +30,14 @@ package org.kolaka.freecast.service;
  */
 public class ControlException extends Exception {
 
-    private static final long serialVersionUID = 3256441400038863926L;
+	private static final long serialVersionUID = 3256441400038863926L;
 
-    public ControlException(String message) {
-        super(message);
-    }
+	public ControlException(String message) {
+		super(message);
+	}
 
-    public ControlException(String message, Throwable cause) {
-        super(message, cause);
-    }
+	public ControlException(String message, Throwable cause) {
+		super(message, cause);
+	}
 
 }

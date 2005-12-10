@@ -36,55 +36,57 @@ import org.kolaka.freecast.service.ControlException;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class VideoPlayer extends BaseService implements InteractivePlayer {
-    
-    private final CortadoPanel panel;
-    private Consumer consumer;
-    private ConsumerInputStreamFactory consumerInputStreamFactory;
-    private InputStream inputStream;
-    
-    public VideoPlayer(CortadoPanel panel) {
-        this.panel = panel;
-    }
 
-    public PlayerStatus getPlayerStatus() {
-        return PlayerStatus.INACTIVE;
-    }
+	private final CortadoPanel panel;
 
-    
-    public void setConsumer(Consumer consumer) {
-        this.consumer = consumer;
-    }
-    
-    public void start() throws ControlException {
-        super.start();
-        
-        consumerInputStreamFactory = new ConsumerInputStreamFactory(consumer);
-        Iterator iterator = new Iterator() {
-            public Object next() {
-                return consumerInputStreamFactory.next();
-            }
-            public boolean hasNext() {
-                return true;
-            }
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
-        };
-        inputStream = new BufferedInputStream(new SequenceInputStream(iterator));
-        panel.setStream(inputStream);
-        panel.start();
-    }
-    
-    public void stop() throws ControlException {
-        consumerInputStreamFactory.close();
-        panel.stop();
-        super.stop();
-    }
-    
-    
+	private Consumer consumer;
+
+	private ConsumerInputStreamFactory consumerInputStreamFactory;
+
+	private InputStream inputStream;
+
+	public VideoPlayer(CortadoPanel panel) {
+		this.panel = panel;
+	}
+
+	public PlayerStatus getPlayerStatus() {
+		return PlayerStatus.INACTIVE;
+	}
+
+	public void setConsumer(Consumer consumer) {
+		this.consumer = consumer;
+	}
+
+	public void start() throws ControlException {
+		super.start();
+
+		consumerInputStreamFactory = new ConsumerInputStreamFactory(consumer);
+		Iterator iterator = new Iterator() {
+			public Object next() {
+				return consumerInputStreamFactory.next();
+			}
+
+			public boolean hasNext() {
+				return true;
+			}
+
+			public void remove() {
+				throw new UnsupportedOperationException();
+			}
+		};
+		inputStream = new BufferedInputStream(new SequenceInputStream(iterator));
+		panel.setStream(inputStream);
+		panel.start();
+	}
+
+	public void stop() throws ControlException {
+		consumerInputStreamFactory.close();
+		panel.stop();
+		super.stop();
+	}
 
 }

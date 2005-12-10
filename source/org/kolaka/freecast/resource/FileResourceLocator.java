@@ -22,7 +22,6 @@
  */
 package org.kolaka.freecast.resource;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -71,7 +70,7 @@ public class FileResourceLocator implements ResourceLocator {
 		File resolve(URI uri);
 
 	}
-	
+
 	public static class DefautFileResolver implements FileResolver {
 
 		/**
@@ -88,10 +87,10 @@ public class FileResourceLocator implements ResourceLocator {
 		protected void listPossibleFiles(List candidates, String path) {
 
 		}
-		
+
 		protected String getPath(URI uri) {
 			String path = uri.getPath();
-			
+
 			return path;
 		}
 

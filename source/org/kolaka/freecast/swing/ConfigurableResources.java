@@ -22,23 +22,26 @@
  */
 package org.kolaka.freecast.swing;
 
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.DataConfiguration;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.Validate;
-import org.apache.commons.logging.LogFactory;
-import org.kolaka.freecast.resource.ResourceLocator;
-import org.kolaka.freecast.resource.ResourceLocators;
-import org.kolaka.freecast.resource.CompositeResourceLocator;
-import org.kolaka.freecast.resource.ClassResourceLocator;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Image;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.NoSuchElementException;
+
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.DataConfiguration;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.Validate;
+import org.apache.commons.logging.LogFactory;
+import org.kolaka.freecast.resource.ClassResourceLocator;
+import org.kolaka.freecast.resource.CompositeResourceLocator;
+import org.kolaka.freecast.resource.ResourceLocator;
+import org.kolaka.freecast.resource.ResourceLocators;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
@@ -46,10 +49,13 @@ import java.util.NoSuchElementException;
 public class ConfigurableResources implements Resources {
 
 	private final DataConfiguration configuration;
-	private ResourceLocator resourceLocator = ResourceLocators.getDefaultInstance();
+
+	private ResourceLocator resourceLocator = ResourceLocators
+			.getDefaultInstance();
 
 	public ConfigurableResources(Configuration configuration) {
-		DataConfiguration dataConfiguration = new DataConfiguration(configuration);
+		DataConfiguration dataConfiguration = new DataConfiguration(
+				configuration);
 		dataConfiguration.setThrowExceptionOnMissing(true);
 		this.configuration = dataConfiguration;
 
@@ -69,7 +75,8 @@ public class ConfigurableResources implements Resources {
 		try {
 			return configuration.getString(name);
 		} catch (NoSuchElementException e) {
-			throw new ResourcesException("Can't find the configuration value for '" + name + "'", e);
+			throw new ResourcesException(
+					"Can't find the configuration value for '" + name + "'", e);
 		}
 	}
 
@@ -78,16 +85,19 @@ public class ConfigurableResources implements Resources {
 	}
 
 	private ImageIcon getImageIcon(String name) throws ResourcesException {
-		LogFactory.getLog(getClass()).debug("load ImageIcon designated by '" + name + "'");
+		LogFactory.getLog(getClass()).debug(
+				"load ImageIcon designated by '" + name + "'");
 		String resourceName = getString(name);
 		URI resourceURI;
 		try {
 			resourceURI = new URI(resourceName);
 		} catch (URISyntaxException e) {
-			throw new ResourcesException("Invalid configuration URI " + name + "=" + resourceName, e);
+			throw new ResourcesException("Invalid configuration URI " + name
+					+ "=" + resourceName, e);
 		}
 
-		LogFactory.getLog(getClass()).debug("load ImageIcon at '" + resourceURI + "'");
+		LogFactory.getLog(getClass()).debug(
+				"load ImageIcon at '" + resourceURI + "'");
 
 		try {
 			InputStream inputStream = resourceLocator.openResource(resourceURI);
@@ -110,7 +120,7 @@ public class ConfigurableResources implements Resources {
 		try {
 			return configuration.getColor(name);
 		} catch (NoSuchElementException e) {
-			throw new ResourcesException("Can't find the color " + name,e);
+			throw new ResourcesException("Can't find the color " + name, e);
 		}
 	}
 

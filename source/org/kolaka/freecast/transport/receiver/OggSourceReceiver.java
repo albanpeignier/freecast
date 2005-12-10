@@ -37,58 +37,62 @@ import org.kolaka.freecast.service.LoopService;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
-public abstract class OggSourceReceiver extends LoopService implements SourceReceiver {
+public abstract class OggSourceReceiver extends LoopService implements
+		SourceReceiver {
 
-    private Producer producer;
-    
-    public void setProducer(Producer producer) {
-        this.producer = producer;
-    }
-    
-    private OggLogicalPageFactory pageFactory = new OggLogicalPageFactory();
-    private BandwidthControler bandwidthControler = new TimestampBandwidthControler();
-    
-    public void setPacketChecksummer(PacketChecksummer checksummer) {
-        pageFactory.setPacketChecksummer(checksummer);
-    }
-    
-    public void setBandwidthControler(BandwidthControler bandwidthControler) {
-        Validate.notNull(bandwidthControler);
-        this.bandwidthControler = bandwidthControler;
-    }
-    
-    public void stop() throws ControlException {
-        producer.close();
-        super.stop();
-    }
-    
-    protected void receive(OggSource source) throws IOException {
-        LogFactory.getLog(getClass()).debug("start to receive Ogg stream");        
-        pageFactory.setSource(source);
-        
-        while (true) {
-            LogicalPage logicalPage = pageFactory.next();
-            
-            if (logicalPage.isFirstPage()) {
-                LogFactory.getLog(getClass()).debug("new stream header created: " + logicalPage);        
-            }
-            
-            long delay = bandwidthControler.getTimeDelay(logicalPage);
-            if (delay > 10) {
-                try {
-                    Thread.sleep(delay);
-                } catch (InterruptedException e) {
-                    IOException exception = new IOException("Can't make sleep the thread");
-                    exception.initCause(e);
-                    throw exception;
-                }
-            }
+	private Producer producer;
 
-            Producers.pushAll(producer, logicalPage);
-        }
-    }
-    
+	public void setProducer(Producer producer) {
+		this.producer = producer;
+	}
+
+	private OggLogicalPageFactory pageFactory = new OggLogicalPageFactory();
+
+	private BandwidthControler bandwidthControler = new TimestampBandwidthControler();
+
+	public void setPacketChecksummer(PacketChecksummer checksummer) {
+		pageFactory.setPacketChecksummer(checksummer);
+	}
+
+	public void setBandwidthControler(BandwidthControler bandwidthControler) {
+		Validate.notNull(bandwidthControler);
+		this.bandwidthControler = bandwidthControler;
+	}
+
+	public void stop() throws ControlException {
+		producer.close();
+		super.stop();
+	}
+
+	protected void receive(OggSource source) throws IOException {
+		LogFactory.getLog(getClass()).debug("start to receive Ogg stream");
+		pageFactory.setSource(source);
+
+		while (true) {
+			LogicalPage logicalPage = pageFactory.next();
+
+			if (logicalPage.isFirstPage()) {
+				LogFactory.getLog(getClass()).debug(
+						"new stream header created: " + logicalPage);
+			}
+
+			long delay = bandwidthControler.getTimeDelay(logicalPage);
+			if (delay > 10) {
+				try {
+					Thread.sleep(delay);
+				} catch (InterruptedException e) {
+					IOException exception = new IOException(
+							"Can't make sleep the thread");
+					exception.initCause(e);
+					throw exception;
+				}
+			}
+
+			Producers.pushAll(producer, logicalPage);
+		}
+	}
+
 }

@@ -41,62 +41,62 @@ import org.apache.commons.lang.NotImplementedException;
  */
 public class SortedList extends AbstractListDecorator {
 
-    private final Comparator comparator;
+	private final Comparator comparator;
 
-    public SortedList() {
-        this(new ArrayList(), ComparableComparator.getInstance());
-    }
+	public SortedList() {
+		this(new ArrayList(), ComparableComparator.getInstance());
+	}
 
-    public SortedList(Comparator comparator) {
-        this(new ArrayList(), comparator);
-    }
+	public SortedList(Comparator comparator) {
+		this(new ArrayList(), comparator);
+	}
 
-    public SortedList(List list, Comparator comparator) {
-        super(sortInitialList(list, comparator));
-        this.comparator = comparator;
-    }
+	public SortedList(List list, Comparator comparator) {
+		super(sortInitialList(list, comparator));
+		this.comparator = comparator;
+	}
 
-    private static List sortInitialList(List list, Comparator comparator) {
-        Collections.sort(list, comparator);
-        return list;
-    }
+	private static List sortInitialList(List list, Comparator comparator) {
+		Collections.sort(list, comparator);
+		return list;
+	}
 
-    public void add(int arg0, Object arg1) {
-        throw new NotImplementedException(getClass());
-    }
+	public void add(int arg0, Object arg1) {
+		throw new NotImplementedException(getClass());
+	}
 
-    public boolean addAll(int arg0, Collection arg1) {
-        throw new NotImplementedException(getClass());
-    }
+	public boolean addAll(int arg0, Collection arg1) {
+		throw new NotImplementedException(getClass());
+	}
 
-    public Object set(int arg0, Object arg1) {
-        throw new NotImplementedException(getClass());
-    }
+	public Object set(int arg0, Object arg1) {
+		throw new NotImplementedException(getClass());
+	}
 
-    public int findIndexOf(Object element) {
-        int binarySearchIndex = Collections.binarySearch(getList(), element,
-                comparator);
+	public int findIndexOf(Object element) {
+		int binarySearchIndex = Collections.binarySearch(getList(), element,
+				comparator);
 
-        int index;
-        if (binarySearchIndex >= 0) {
-            index = binarySearchIndex;
-        } else {
-            index = -(binarySearchIndex + 1);
-        }
+		int index;
+		if (binarySearchIndex >= 0) {
+			index = binarySearchIndex;
+		} else {
+			index = -(binarySearchIndex + 1);
+		}
 
-        return index;
-    }
+		return index;
+	}
 
-    public boolean add(Object element) {
-        super.add(findIndexOf(element), element);
-        return true;
-    }
+	public boolean add(Object element) {
+		super.add(findIndexOf(element), element);
+		return true;
+	}
 
-    public boolean addAll(Collection elements) {
-        for (Iterator iter = elements.iterator(); iter.hasNext();) {
-            add(iter.next());
-        }
-        return !elements.isEmpty();
-    }
+	public boolean addAll(Collection elements) {
+		for (Iterator iter = elements.iterator(); iter.hasNext();) {
+			add(iter.next());
+		}
+		return !elements.isEmpty();
+	}
 
 }

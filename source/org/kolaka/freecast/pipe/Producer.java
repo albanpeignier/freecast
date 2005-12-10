@@ -32,6 +32,6 @@ import org.kolaka.freecast.packet.Packet;
  */
 public interface Producer extends Interruptible {
 
-    public void push(Packet packet);
+	public void push(Packet packet);
 
 }

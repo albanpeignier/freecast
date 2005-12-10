@@ -33,27 +33,26 @@ import org.kolaka.freecast.transport.receiver.Playlist;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class PlaylistOggSourceFactoryTest extends TestCase {
-    
-    public void testFilePlaylist() throws IOException {
-        URL resource = getClass().getResource("resources/playlist.m3u");
-        assertNotNull("Can't find the playlist test file", resource);
-        
-        FilePlaylist playlist = new FilePlaylist(resource);
-        URL baseURL = playlist.getBaseURL();
-        
-        URL expectedURLs[] = new URL[] {
-           new URL(baseURL, "relative file"), new URL("file:///absolute file")     
-        };
-        assertEquals(expectedURLs.length, playlist.size());
 
-        for (int i=0; i < playlist.size(); i++) {
-            Playlist.Entry entry = playlist.get(i);
-            // TODO to be continue
-        }
-    }
+	public void testFilePlaylist() throws IOException {
+		URL resource = getClass().getResource("resources/playlist.m3u");
+		assertNotNull("Can't find the playlist test file", resource);
+
+		FilePlaylist playlist = new FilePlaylist(resource);
+		URL baseURL = playlist.getBaseURL();
+
+		URL expectedURLs[] = new URL[] { new URL(baseURL, "relative file"),
+				new URL("file:///absolute file") };
+		assertEquals(expectedURLs.length, playlist.size());
+
+		for (int i = 0; i < playlist.size(); i++) {
+			Playlist.Entry entry = playlist.get(i);
+			// TODO to be continue
+		}
+	}
 
 }

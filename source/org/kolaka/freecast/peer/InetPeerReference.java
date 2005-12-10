@@ -22,151 +22,152 @@
  */
 package org.kolaka.freecast.peer;
 
-import org.apache.commons.lang.Validate;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+
+import org.apache.commons.lang.Validate;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public abstract class InetPeerReference extends PeerReference {
-    static final long serialVersionUID = 6228018933702558617L;
+	static final long serialVersionUID = 6228018933702558617L;
 
-    public abstract InetSocketAddress getSocketAddress();
+	public abstract InetSocketAddress getSocketAddress();
 
-    int getPort() {
-        return getSocketAddress().getPort();
-    }
+	int getPort() {
+		return getSocketAddress().getPort();
+	}
 
-    public static boolean validatePort(int port) {
-        return port > 0 && port < Math.pow(2,16);
-    }
+	public static boolean validatePort(int port) {
+		return port > 0 && port < Math.pow(2, 16);
+	}
 
-    static class Address extends InetPeerReference {
-        static final long serialVersionUID = -764731688638760248L;
+	static class Address extends InetPeerReference {
+		static final long serialVersionUID = -764731688638760248L;
 
-        /**
-         * <strong>Note: </strong> final fields are supported by the Hessian
-         * serialization
-         */
-        private InetSocketAddress socketAddress;
+		/**
+		 * <strong>Note: </strong> final fields are supported by the Hessian
+		 * serialization
+		 */
+		private InetSocketAddress socketAddress;
 
-        public InetSocketAddress getSocketAddress() {
-            return socketAddress;
-        }
+		public InetSocketAddress getSocketAddress() {
+			return socketAddress;
+		}
 
-        private Address() {
+		private Address() {
 
-        }
+		}
 
-        Address(InetSocketAddress address) {
-            this.socketAddress = address;
-        }
+		Address(InetSocketAddress address) {
+			this.socketAddress = address;
+		}
 
-        public boolean equals(PeerReference other) {
-            return other instanceof InetPeerReference
-                            && equals((InetPeerReference) other);
-        }
+		public boolean equals(PeerReference other) {
+			return other instanceof InetPeerReference
+					&& equals((InetPeerReference) other);
+		}
 
-        public boolean equals(InetPeerReference other) {
-            return socketAddress.equals(other.getSocketAddress());
-        }
+		public boolean equals(InetPeerReference other) {
+			return socketAddress.equals(other.getSocketAddress());
+		}
 
-        public int hashCode() {
-            return socketAddress.hashCode();
-        }
+		public int hashCode() {
+			return socketAddress.hashCode();
+		}
 
-    }
+	}
 
-    static class Host extends InetPeerReference {
-        static final long serialVersionUID = 7973394067540991731L;
+	static class Host extends InetPeerReference {
+		static final long serialVersionUID = 7973394067540991731L;
 
-        /**
-         * <strong>Note: </strong> final fields are supported by the Hessian
-         * serialization
-         */
-        private String host;
+		/**
+		 * <strong>Note: </strong> final fields are supported by the Hessian
+		 * serialization
+		 */
+		private String host;
 
-        private int port;
+		private int port;
 
-        public InetSocketAddress getSocketAddress() {
-            return new InetSocketAddress(host, port);
-        }
+		public InetSocketAddress getSocketAddress() {
+			return new InetSocketAddress(host, port);
+		}
 
-        public boolean equals(PeerReference other) {
-            return other instanceof InetPeerReference
-                            && equals((InetPeerReference) other);
-        }
+		public boolean equals(PeerReference other) {
+			return other instanceof InetPeerReference
+					&& equals((InetPeerReference) other);
+		}
 
-        public boolean equals(InetPeerReference other) {
-            if (other instanceof InetPeerReference.Host) {
-                return equals((InetPeerReference.Host) other);
-            }
+		public boolean equals(InetPeerReference other) {
+			if (other instanceof InetPeerReference.Host) {
+				return equals((InetPeerReference.Host) other);
+			}
 
-            InetSocketAddress otherAddress = other.getSocketAddress();
-            return host.equals(otherAddress.getHostName())
-                           && port == otherAddress.getPort();
-        }
+			InetSocketAddress otherAddress = other.getSocketAddress();
+			return host.equals(otherAddress.getHostName())
+					&& port == otherAddress.getPort();
+		}
 
-        public boolean equals(InetPeerReference.Host other) {
-            return other != null && host.equals(other.host) && port == other.port;
-        }
+		public boolean equals(InetPeerReference.Host other) {
+			return other != null && host.equals(other.host)
+					&& port == other.port;
+		}
 
-        public int hashCode() {
-            HashCodeBuilder builder = new HashCodeBuilder();
-            builder.append(host);
-            builder.append(port);
-            return builder.toHashCode();
-        }
+		public int hashCode() {
+			HashCodeBuilder builder = new HashCodeBuilder();
+			builder.append(host);
+			builder.append(port);
+			return builder.toHashCode();
+		}
 
-        private Host() {
+		private Host() {
 
-        }
+		}
 
-        public Host(final String host, final int port) {
-            Validate.notNull(host, "No specified host");
+		public Host(final String host, final int port) {
+			Validate.notNull(host, "No specified host");
 
-            this.host = host;
-            this.port = port;
-        }
+			this.host = host;
+			this.port = port;
+		}
 
-        int getPort() {
-            return port;
-        }
+		int getPort() {
+			return port;
+		}
 
-    }
+	}
 
-    public static InetPeerReference getInstance(InetSocketAddress socketAddress) {
-        return getInstance(socketAddress, false);
-    }
+	public static InetPeerReference getInstance(InetSocketAddress socketAddress) {
+		return getInstance(socketAddress, false);
+	}
 
-    public static InetPeerReference getInstance(
-            InetSocketAddress socketAddress, boolean conserveHostName) {
-        if (conserveHostName) {
-            return new Host(socketAddress.getHostName(), socketAddress
-                    .getPort());
-        }
+	public static InetPeerReference getInstance(
+			InetSocketAddress socketAddress, boolean conserveHostName) {
+		if (conserveHostName) {
+			return new Host(socketAddress.getHostName(), socketAddress
+					.getPort());
+		}
 
-        return new Address(socketAddress);
-    }
+		return new Address(socketAddress);
+	}
 
-    public static InetPeerReference getInstance(String host, int port,
-                                                boolean conserveHostName) {
-        if (conserveHostName) {
-            return new Host(host, port);
-        }
+	public static InetPeerReference getInstance(String host, int port,
+			boolean conserveHostName) {
+		if (conserveHostName) {
+			return new Host(host, port);
+		}
 
-        return new Address(new InetSocketAddress(host, port));
-    }
+		return new Address(new InetSocketAddress(host, port));
+	}
 
-    public InetPeerReference specifyAddress(InetAddress address) {
-        return getInstance(new InetSocketAddress(address, getPort()), false);
-    }
+	public InetPeerReference specifyAddress(InetAddress address) {
+		return getInstance(new InetSocketAddress(address, getPort()), false);
+	}
 
-    protected String getReferenceString() {
-        return getSocketAddress().toString();
-    }
+	protected String getReferenceString() {
+		return getSocketAddress().toString();
+	}
 
 }

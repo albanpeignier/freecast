@@ -44,133 +44,128 @@ import com.mockobjects.util.Verifier;
  */
 public class PeerConnectionTest extends TestCase {
 
-    private MockPeerConnection connection;
+	private MockPeerConnection connection;
 
-    protected void setUp() {
-        connection = new MockPeerConnection(PeerConnection.Type.SOURCE);
-    }
+	protected void setUp() {
+		connection = new MockPeerConnection(PeerConnection.Type.SOURCE);
+	}
 
-    public void testOpen() throws InterruptedException {
-        MockMessageWriter writer = new MockMessageWriter();
-        connection.setupCreateWriter(writer);
+	public void testOpen() throws InterruptedException {
+		MockMessageWriter writer = new MockMessageWriter();
+		connection.setupCreateWriter(writer);
 
-        assertEquals("status should be OPENING", PeerConnection.Status.OPENING,
-                connection.getStatus());
-        connection.open();
-        assertEquals("status should be OPENED", PeerConnection.Status.OPENED,
-                connection.getStatus());
+		assertEquals("status should be OPENING", PeerConnection.Status.OPENING,
+				connection.getStatus());
+		connection.open();
+		assertEquals("status should be OPENED", PeerConnection.Status.OPENED,
+				connection.getStatus());
 
-        Thread.sleep(100);
+		Thread.sleep(100);
 
-        List messages = writer.getWritedMessages();
+		List messages = writer.getWritedMessages();
 
-        assertEquals("one message should be writed", 1, messages.size());
-        assertTrue("message should be a PeerStatusMessage",
-                messages.get(0) instanceof PeerConnectionStatusMessage);
-        PeerConnection.Status sendStatus = ((PeerConnectionStatusMessage) messages
-                .get(0)).getStatus();
-        assertEquals("PeerConnection.Status should OPENED",
-                PeerConnection.Status.OPENED, sendStatus);
+		assertEquals("one message should be writed", 1, messages.size());
+		assertTrue("message should be a PeerStatusMessage",
+				messages.get(0) instanceof PeerConnectionStatusMessage);
+		PeerConnection.Status sendStatus = ((PeerConnectionStatusMessage) messages
+				.get(0)).getStatus();
+		assertEquals("PeerConnection.Status should OPENED",
+				PeerConnection.Status.OPENED, sendStatus);
 
-        Verifier.verifyObject(this);
-    }
+		Verifier.verifyObject(this);
+	}
 
-    public void testClose() throws InterruptedException {
-        MockMessageWriter writer = new MockMessageWriter();
-        connection.setupCreateWriter(writer);
+	public void testClose() throws InterruptedException {
+		MockMessageWriter writer = new MockMessageWriter();
+		connection.setupCreateWriter(writer);
 
-        connection.open();
+		connection.open();
 
-        connection.close();
-        assertEquals("status should be CLOSED", PeerConnection.Status.CLOSED,
-                connection.getStatus());
+		connection.close();
+		assertEquals("status should be CLOSED", PeerConnection.Status.CLOSED,
+				connection.getStatus());
 
-        Thread.sleep(200);
+		Thread.sleep(200);
 
-        List messages = writer.getWritedMessages();
-        PeerConnectionStatusMessage statusMessage = (PeerConnectionStatusMessage) messages
-                .get(messages.size() - 1);
+		List messages = writer.getWritedMessages();
+		PeerConnectionStatusMessage statusMessage = (PeerConnectionStatusMessage) messages
+				.get(messages.size() - 1);
 
-        assertEquals("status should be CLOSED", PeerConnection.Status.CLOSED,
-                statusMessage.getStatus());
+		assertEquals("status should be CLOSED", PeerConnection.Status.CLOSED,
+				statusMessage.getStatus());
 
-        Verifier.verifyObject(this);
-    }
+		Verifier.verifyObject(this);
+	}
 
-    public void testErrorWhenClosed() throws IOException {
-        MockMessageWriter writer = new MockMessageWriter();
-        connection.setupCreateWriter(writer);
+	public void testErrorWhenClosed() throws IOException {
+		MockMessageWriter writer = new MockMessageWriter();
+		connection.setupCreateWriter(writer);
 
-        MockControl readerControl = MockControl
-                .createControl(MessageReader.class);
-        MessageReader reader = (MessageReader) readerControl.getMock();
+		MockControl readerControl = MockControl
+				.createControl(MessageReader.class);
+		MessageReader reader = (MessageReader) readerControl.getMock();
 
-        connection.setupCreateReader(reader);
-        connection.setupCreateWriter(writer);
+		connection.setupCreateReader(reader);
+		connection.setupCreateWriter(writer);
 
-        connection.close();
+		connection.close();
 
-        try {
-            connection.getReader().read();
-            fail("should raise an EOFException");
-        } catch (EOFException e) {
+		try {
+			connection.getReader().read();
+			fail("should raise an EOFException");
+		} catch (EOFException e) {
 
-        }
+		}
 
-        Verifier.verifyObject(this);
-    }
+		Verifier.verifyObject(this);
+	}
 
-    public void testErrorInReader() throws IOException {
-        MockMessageWriter writer = new MockMessageWriter();
-        connection.setupCreateWriter(writer);
+	public void testErrorInReader() throws IOException {
+		MockMessageWriter writer = new MockMessageWriter();
+		connection.setupCreateWriter(writer);
 
-        MockControl readerControl = MockControl
-                .createControl(MessageReader.class);
-        MessageReader reader = (MessageReader) readerControl.getMock();
+		MockControl readerControl = MockControl
+				.createControl(MessageReader.class);
+		MessageReader reader = (MessageReader) readerControl.getMock();
 
-        reader.read();
-        readerControl.setThrowable(new IOException());
+		reader.read();
+		readerControl.setThrowable(new IOException());
 
-        readerControl.replay();
+		readerControl.replay();
 
-        connection.setupCreateReader(reader);
-        connection.setupCreateWriter(writer);
+		connection.setupCreateReader(reader);
+		connection.setupCreateWriter(writer);
 
-        connection.open();
+		connection.open();
 
-        try {
-            connection.getReader().read();
-            fail("should raise an IOException");
-        } catch (IOException e) {
+		try {
+			connection.getReader().read();
+			fail("should raise an IOException");
+		} catch (IOException e) {
 
-        }
+		}
 
-        assertEquals("status should be CLOSED", PeerConnection.Status.CLOSED,
-                connection.getStatus());
+		assertEquals("status should be CLOSED", PeerConnection.Status.CLOSED,
+				connection.getStatus());
 
-        Verifier.verifyObject(this);
-    }
+		Verifier.verifyObject(this);
+	}
 
-    /*
-    public void testErrorInWriter() {
-        MockMessageWriter writer = new MockMessageWriter();
-        connection.setupCreateWriter(writer);
+	/*
+	 * public void testErrorInWriter() { MockMessageWriter writer = new
+	 * MockMessageWriter(); connection.setupCreateWriter(writer);
+	 * 
+	 * connection.open();
+	 * 
+	 * writer.setThrowable(new IOException()); try {
+	 * connection.getWriter().write(FakeMessages.createMessage()); fail("should
+	 * raise an IOException"); } catch (IOException e) {
+	 *  }
+	 * 
+	 * assertEquals("status should be CLOSED", PeerConnection.Status.CLOSED,
+	 * connection.getStatus());
+	 * 
+	 * Verifier.verifyObject(this); }
+	 */
 
-        connection.open();
-
-        writer.setThrowable(new IOException());
-        try {
-            connection.getWriter().write(FakeMessages.createMessage());
-            fail("should raise an IOException");
-        } catch (IOException e) {
-
-        }
-
-        assertEquals("status should be CLOSED", PeerConnection.Status.CLOSED,
-                connection.getStatus());
-
-        Verifier.verifyObject(this);
-    }
-    */
-    
 }

@@ -34,11 +34,11 @@ import org.kolaka.freecast.tracker.NodeIdentifierGenerator;
  */
 public class NodeIdentifierGeneratorTest extends TestCase {
 
-    public void testNext() {
-        NodeIdentifierGenerator generator = new NodeIdentifierGenerator();
-        for (int i = 0; i < 100; i++) {
-            generator.next();
-        }
-    }
+	public void testNext() {
+		NodeIdentifierGenerator generator = new NodeIdentifierGenerator();
+		for (int i = 0; i < 100; i++) {
+			generator.next();
+		}
+	}
 
 }

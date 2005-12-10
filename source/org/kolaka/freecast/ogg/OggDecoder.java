@@ -115,12 +115,14 @@ public abstract class OggDecoder {
 	protected abstract AudioInputStream createOggStream(InputStream inputStream)
 			throws UnsupportedAudioFileException, IOException;
 
-	private AudioInputStream createDecodedStream(
-			AudioFormat pcmFormat, AudioInputStream oggStream) throws UnsupportedAudioFileException {
+	private AudioInputStream createDecodedStream(AudioFormat pcmFormat,
+			AudioInputStream oggStream) throws UnsupportedAudioFileException {
 		try {
 			return createDecodedStreamImpl(pcmFormat, oggStream);
 		} catch (Throwable t) {
-			UnsupportedAudioFileException exception = new UnsupportedAudioFileException("can't decode " + oggStream.getFormat() + " to " + pcmFormat);
+			UnsupportedAudioFileException exception = new UnsupportedAudioFileException(
+					"can't decode " + oggStream.getFormat() + " to "
+							+ pcmFormat);
 			exception.initCause(t);
 			throw exception;
 		}
@@ -134,13 +136,15 @@ public abstract class OggDecoder {
 			IOException {
 		AudioInputStream oggStream = createOggStream(inputStream);
 
-		// TODO only decode oggStream.getFormat().getChannels() and create other channels
+		// TODO only decode oggStream.getFormat().getChannels() and create other
+		// channels
 		AudioFormat decodedFormat = pcmFormat;
 		boolean monoToStereo = oggStream.getFormat().getChannels() == 1
 				&& pcmFormat.getChannels() == 2;
 		if (monoToStereo) {
-			decodedFormat = new AudioFormat(oggStream.getFormat().getSampleRate(),
-					pcmFormat.getSampleSizeInBits(), 1, true, false);
+			decodedFormat = new AudioFormat(oggStream.getFormat()
+					.getSampleRate(), pcmFormat.getSampleSizeInBits(), 1, true,
+					false);
 		}
 
 		AudioInputStream decodedStream = createDecodedStream(decodedFormat,
@@ -181,8 +185,8 @@ public abstract class OggDecoder {
 		 * @param originalAudioInput
 		 * @return
 		 */
-		protected AudioInputStream createDecodedStreamImpl(AudioFormat pcmFormat,
-				AudioInputStream originalAudioInput) {
+		protected AudioInputStream createDecodedStreamImpl(
+				AudioFormat pcmFormat, AudioInputStream originalAudioInput) {
 			return AudioSystem.getAudioInputStream(pcmFormat,
 					originalAudioInput);
 		}
@@ -210,8 +214,8 @@ public abstract class OggDecoder {
 			return fileReader.getAudioInputStream(inputStream);
 		}
 
-		protected AudioInputStream createDecodedStreamImpl(AudioFormat pcmFormat,
-				AudioInputStream originalAudioInput) {
+		protected AudioInputStream createDecodedStreamImpl(
+				AudioFormat pcmFormat, AudioInputStream originalAudioInput) {
 			return conversionProvider.getAudioInputStream(pcmFormat,
 					originalAudioInput);
 		}

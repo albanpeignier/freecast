@@ -32,56 +32,56 @@ import java.io.Serializable;
  */
 public class Order implements Serializable, Comparable {
 
-    static final long serialVersionUID = -6150355750999858993L;
+	static final long serialVersionUID = -6150355750999858993L;
 
-    public static final Order UNKNOWN = new Order(100);
+	public static final Order UNKNOWN = new Order(100);
 
-    public static final Order ZERO = new Order(0);
+	public static final Order ZERO = new Order(0);
 
-    /**
-     * <strong>Note: </strong> final fields are supported by the Hessian
-     * serialization
-     */
-    private int value;
+	/**
+	 * <strong>Note: </strong> final fields are supported by the Hessian
+	 * serialization
+	 */
+	private int value;
 
-    private Order(int value) {
-        this.value = value;
-    }
+	private Order(int value) {
+		this.value = value;
+	}
 
-    public String toString() {
-        if (equals(UNKNOWN)) {
-            return "unknown";
-        }
+	public String toString() {
+		if (equals(UNKNOWN)) {
+			return "unknown";
+		}
 
-        return String.valueOf(value);
-    }
+		return String.valueOf(value);
+	}
 
-    public boolean equals(Object o) {
-        return o instanceof Order && equals((Order) o);
-    }
+	public boolean equals(Object o) {
+		return o instanceof Order && equals((Order) o);
+	}
 
-    public boolean equals(Order other) {
-        return value == other.value;
-    }
+	public boolean equals(Order other) {
+		return value == other.value;
+	}
 
-    public int hashCode() {
-        return value;
-    }
+	public int hashCode() {
+		return value;
+	}
 
-    public int compareTo(Object o) {
-        return value - ((Order) o).value;
-    }
+	public int compareTo(Object o) {
+		return value - ((Order) o).value;
+	}
 
-    public Order lower() {
-        if (equals(UNKNOWN)) {
-            return this;
-        }
+	public Order lower() {
+		if (equals(UNKNOWN)) {
+			return this;
+		}
 
-        return new Order(value + 1);
-    }
+		return new Order(value + 1);
+	}
 
-    public static Order getInstance(int value) {
-        return new Order(Math.max(0, Math.min(Order.UNKNOWN.value, value)));
-    }
+	public static Order getInstance(int value) {
+		return new Order(Math.max(0, Math.min(Order.UNKNOWN.value, value)));
+	}
 
 }

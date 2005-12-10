@@ -32,5 +32,5 @@ import java.io.IOException;
  */
 public interface MessageReader {
 
-    Message read() throws IOException;
+	Message read() throws IOException;
 }

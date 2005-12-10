@@ -22,9 +22,9 @@
  */
 package org.kolaka.freecast.lang.math;
 
-import org.apache.commons.lang.math.Range;
-
 import java.util.Iterator;
+
+import org.apache.commons.lang.math.Range;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
@@ -32,19 +32,20 @@ import java.util.Iterator;
 public abstract class RangeIterator implements Iterator {
 
 	private final Range range;
+
 	private Number next;
 
-    protected RangeIterator(Range range) {
+	protected RangeIterator(Range range) {
 		this.range = range;
 		this.next = range.getMinimumNumber();
 	}
 
 	public boolean hasNext() {
-        return range.containsNumber(next);
+		return range.containsNumber(next);
 	}
 
 	public Object next() {
-        Number current = next;
+		Number current = next;
 		next = increment(next);
 		return current;
 	}

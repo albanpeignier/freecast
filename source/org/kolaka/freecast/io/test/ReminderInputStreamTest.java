@@ -37,59 +37,59 @@ import org.kolaka.freecast.io.ReminderInputStream;
  */
 public class ReminderInputStreamTest extends TestCase {
 
-    public void testRead() throws IOException {
-        final int length = 1000;
-        for (int i = 0; i < length; i++) {
-            assertEquals("wrong read byte at " + i, originalBytes[i], input
-                    .read());
-        }
+	public void testRead() throws IOException {
+		final int length = 1000;
+		for (int i = 0; i < length; i++) {
+			assertEquals("wrong read byte at " + i, originalBytes[i], input
+					.read());
+		}
 
-        testReminderBytes(length);
-    }
+		testReminderBytes(length);
+	}
 
-    public void testReadByteArray() throws IOException {
-        final int length = 1000;
-        final byte[] buffer = new byte[length];
+	public void testReadByteArray() throws IOException {
+		final int length = 1000;
+		final byte[] buffer = new byte[length];
 
-        int read = input.read(buffer);
-        assertEquals("wrong read byte count", length, read);
+		int read = input.read(buffer);
+		assertEquals("wrong read byte count", length, read);
 
-        for (int i = 0; i < read; i++) {
-            assertEquals("wrong read byte at " + i, originalBytes[i], buffer[i]);
-        }
+		for (int i = 0; i < read; i++) {
+			assertEquals("wrong read byte at " + i, originalBytes[i], buffer[i]);
+		}
 
-        testReminderBytes(length);
-    }
+		testReminderBytes(length);
+	}
 
-    public void testSkip() throws IOException {
-        final int length = 1000;
+	public void testSkip() throws IOException {
+		final int length = 1000;
 
-        long skipped = input.skip(length);
-        assertEquals("wrong skip byte count", length, skipped);
+		long skipped = input.skip(length);
+		assertEquals("wrong skip byte count", length, skipped);
 
-        testReminderBytes(length);
-    }
+		testReminderBytes(length);
+	}
 
-    protected void testReminderBytes(int length) {
-        byte bytes[] = input.toByteArray();
+	protected void testReminderBytes(int length) {
+		byte bytes[] = input.toByteArray();
 
-        assertEquals("wrong reminder byte count", length, bytes.length);
-        for (int i = 0; i < length; i++) {
-            assertEquals("wrong byte at " + i, originalBytes[i], bytes[i]);
-        }
-    }
+		assertEquals("wrong reminder byte count", length, bytes.length);
+		for (int i = 0; i < length; i++) {
+			assertEquals("wrong byte at " + i, originalBytes[i], bytes[i]);
+		}
+	}
 
-    private ReminderInputStream input;
+	private ReminderInputStream input;
 
-    private byte originalBytes[];
+	private byte originalBytes[];
 
-    protected void setUp() throws Exception {
-        originalBytes = new byte[1024];
-        for (int i = 0; i < originalBytes.length; i++) {
-            originalBytes[i] = (byte) (i % Byte.MAX_VALUE);
-        }
+	protected void setUp() throws Exception {
+		originalBytes = new byte[1024];
+		for (int i = 0; i < originalBytes.length; i++) {
+			originalBytes[i] = (byte) (i % Byte.MAX_VALUE);
+		}
 
-        input = new ReminderInputStream(new ByteArrayInputStream(originalBytes));
-    }
+		input = new ReminderInputStream(new ByteArrayInputStream(originalBytes));
+	}
 
 }

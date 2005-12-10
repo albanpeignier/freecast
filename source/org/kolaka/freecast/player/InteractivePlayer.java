@@ -25,7 +25,7 @@ package org.kolaka.freecast.player;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public interface InteractivePlayer extends Player {

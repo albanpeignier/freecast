@@ -29,14 +29,14 @@ package org.kolaka.freecast.ogg;
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public interface MutableOggPage extends OggPage {
-    public abstract void setRawBytes(byte[] bytes);
+	public abstract void setRawBytes(byte[] bytes);
 
-    public abstract void setFirstPage(boolean firstPage);
+	public abstract void setFirstPage(boolean firstPage);
 
-    public abstract void setLastPage(boolean lastPage);
-    
-    public void setAbsoluteGranulePosition(long absoluteGranulePosition);
-    
-    public void setStreamSerialNumber(int streamSerialNumber);
-    
+	public abstract void setLastPage(boolean lastPage);
+
+	public void setAbsoluteGranulePosition(long absoluteGranulePosition);
+
+	public void setStreamSerialNumber(int streamSerialNumber);
+
 }

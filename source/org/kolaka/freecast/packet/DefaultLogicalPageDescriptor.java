@@ -27,64 +27,70 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class DefaultLogicalPageDescriptor implements LogicalPageDescriptor {
 
-    private final long sequenceNumber;
-    private final long timestamp;
-    private final int count;
-    private final boolean firstPage;
+	private final long sequenceNumber;
 
-    public DefaultLogicalPageDescriptor(long sequenceNumber, long timestamp, int count, boolean firstPage) {
-        this.sequenceNumber = sequenceNumber;
-        this.timestamp = timestamp;
-        this.count = count;
-        this.firstPage = firstPage;
-    }
+	private final long timestamp;
 
-    public int getCount() {
-        return count;
-    }
+	private final int count;
 
-    public long getSequenceNumber() {
-        return sequenceNumber;
-    }
-    
-    public long getTimestamp() {
-	    	return timestamp;
-    }
-    
-    public boolean isFirstPage() {
-        return firstPage;
-    }
+	private final boolean firstPage;
 
-    public LogicalPageDescriptor.Element createElementDescriptor(final int index) {
-        return new LogicalPageDescriptor.Element() {
-            public LogicalPageDescriptor getPageDescriptor() {
-                return DefaultLogicalPageDescriptor.this;
-            }
-            public int getIndex() {
-                return index;
-            }
-        };
-    }
-    
-    public boolean equals(Object o) {
-        return o instanceof LogicalPageDescriptor && equals((LogicalPageDescriptor) o);
-    }
-    
-    public boolean equals(LogicalPageDescriptor other) {
-        return other != null && sequenceNumber == other.getSequenceNumber();
-    }
-    
-    public int hashCode() {
-        return (int) sequenceNumber;
-    }
-    
-    public String toString() {
-    		return ToStringBuilder.reflectionToString(this); 
-    }
-    
+	public DefaultLogicalPageDescriptor(long sequenceNumber, long timestamp,
+			int count, boolean firstPage) {
+		this.sequenceNumber = sequenceNumber;
+		this.timestamp = timestamp;
+		this.count = count;
+		this.firstPage = firstPage;
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public long getSequenceNumber() {
+		return sequenceNumber;
+	}
+
+	public long getTimestamp() {
+		return timestamp;
+	}
+
+	public boolean isFirstPage() {
+		return firstPage;
+	}
+
+	public LogicalPageDescriptor.Element createElementDescriptor(final int index) {
+		return new LogicalPageDescriptor.Element() {
+			public LogicalPageDescriptor getPageDescriptor() {
+				return DefaultLogicalPageDescriptor.this;
+			}
+
+			public int getIndex() {
+				return index;
+			}
+		};
+	}
+
+	public boolean equals(Object o) {
+		return o instanceof LogicalPageDescriptor
+				&& equals((LogicalPageDescriptor) o);
+	}
+
+	public boolean equals(LogicalPageDescriptor other) {
+		return other != null && sequenceNumber == other.getSequenceNumber();
+	}
+
+	public int hashCode() {
+		return (int) sequenceNumber;
+	}
+
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
+
 }

@@ -22,24 +22,30 @@
  */
 package org.kolaka.freecast.manager.gui;
 
+import java.awt.event.ActionEvent;
+import java.net.InetSocketAddress;
+import java.net.URL;
+
 import org.apache.commons.logging.LogFactory;
 import org.jdesktop.jdic.desktop.Desktop;
 import org.kolaka.freecast.swing.BaseAction;
 import org.kolaka.freecast.swing.Resources;
 import org.kolaka.freecast.swing.ResourcesException;
 
-import java.awt.event.ActionEvent;
-import java.net.InetSocketAddress;
-import java.net.URL;
-
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public class BrowseHomepageAction extends BaseAction {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1014721912985395264L;
+
 	private final InetSocketAddress publicHttpServer;
 
-	public BrowseHomepageAction(Resources resources, InetSocketAddress publicHttpServer) throws ResourcesException {
+	public BrowseHomepageAction(Resources resources,
+			InetSocketAddress publicHttpServer) throws ResourcesException {
 		super("Browse network homepage");
 		this.publicHttpServer = publicHttpServer;
 		loadIcons(resources, "visit.browse");
@@ -47,11 +53,13 @@ public class BrowseHomepageAction extends BaseAction {
 
 	public void actionPerformed(ActionEvent event) {
 		try {
-			URL url = new URL("http", "localhost", publicHttpServer.getPort(), "/");
+			URL url = new URL("http", "localhost", publicHttpServer.getPort(),
+					"/");
 			LogFactory.getLog(getClass()).debug("browse " + url);
 			Desktop.browse(url);
 		} catch (Exception e) {
-			LogFactory.getLog(getClass()).error("can't start a browser to visit " + publicHttpServer, e);
+			LogFactory.getLog(getClass()).error(
+					"can't start a browser to visit " + publicHttpServer, e);
 		}
 	}
 

@@ -32,7 +32,7 @@ public class IntRangeIterator extends RangeIterator {
 	public IntRangeIterator(IntRange range) {
 		super(range);
 	}
-	
+
 	protected Number increment(Number next) {
 		return new Integer(next.intValue() + 1);
 	}

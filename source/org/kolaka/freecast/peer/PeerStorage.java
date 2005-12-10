@@ -41,135 +41,135 @@ import org.kolaka.freecast.timer.TimeBase;
 
 public class PeerStorage {
 
-    private final Map peers;
+	private final Map peers;
 
-    private final Comparator comparator;
+	private final Comparator comparator;
 
-    private long peerTimeout = 5 * DateUtils.MILLIS_PER_MINUTE;
+	private long peerTimeout = 5 * DateUtils.MILLIS_PER_MINUTE;
 
-    public PeerStorage(Comparator comparator) {
-        this.comparator = comparator;
-        this.peers = new TreeMap();
-    }
+	public PeerStorage(Comparator comparator) {
+		this.comparator = comparator;
+		this.peers = new TreeMap();
+	}
 
-    public Peer first(Predicate filter) {
-        Peer first = null;
-        for (Iterator iter = entries(); iter.hasNext();) {
-            Peer peer = ((Entry) iter.next()).getPeer();
+	public Peer first(Predicate filter) {
+		Peer first = null;
+		for (Iterator iter = entries(); iter.hasNext();) {
+			Peer peer = ((Entry) iter.next()).getPeer();
 
-            if (!filter.evaluate(peer)) {
-                continue;
-            }
+			if (!filter.evaluate(peer)) {
+				continue;
+			}
 
-            if (first == null || comparator.compare(first, peer) > 0) {
-                first = peer;
-            }
-        }
-        return first;
-    }
+			if (first == null || comparator.compare(first, peer) > 0) {
+				first = peer;
+			}
+		}
+		return first;
+	}
 
-    public void add(Peer peer) {
-        peers.put(peer.getIdentifier(), new Entry(peer));
-    }
+	public void add(Peer peer) {
+		peers.put(peer.getIdentifier(), new Entry(peer));
+	}
 
-    public Peer get(NodeIdentifier identifier) {
-        Entry entry = (Entry) peers.get(identifier);
+	public Peer get(NodeIdentifier identifier) {
+		Entry entry = (Entry) peers.get(identifier);
 
-        if (entry == null) {
-            return null;
-        }
+		if (entry == null) {
+			return null;
+		}
 
-        entry.touch();
-        return entry.getPeer();
-    }
+		entry.touch();
+		return entry.getPeer();
+	}
 
-    public boolean isEmpty() {
-        return peers.isEmpty();
-    }
+	public boolean isEmpty() {
+		return peers.isEmpty();
+	}
 
-    public int size() {
-        return peers.size();
-    }
+	public int size() {
+		return peers.size();
+	}
 
-    private Iterator entries() {
-        return peers.values().iterator();
-    }
+	private Iterator entries() {
+		return peers.values().iterator();
+	}
 
-    public Iterator peers() {
-        Collection peers = new ArrayList();
+	public Iterator peers() {
+		Collection peers = new ArrayList();
 
-        for (Iterator iter = entries(); iter.hasNext();) {
-            Peer peer = ((Entry) iter.next()).getPeer();
-            peers.add(peer);
-        }
+		for (Iterator iter = entries(); iter.hasNext();) {
+			Peer peer = ((Entry) iter.next()).getPeer();
+			peers.add(peer);
+		}
 
-        return peers.iterator();
-    }
+		return peers.iterator();
+	}
 
-    public void trim() {
-        long now = timeBase.currentTimeMillis();
+	public void trim() {
+		long now = timeBase.currentTimeMillis();
 
-        for (Iterator iter = entries(); iter.hasNext();) {
-            Entry entry = (Entry) iter.next();
+		for (Iterator iter = entries(); iter.hasNext();) {
+			Entry entry = (Entry) iter.next();
 
-            if (entry.getPeer().isConnected()) {
-                continue;
-            }
+			if (entry.getPeer().isConnected()) {
+				continue;
+			}
 
-            long age = entry.getAge(now);
-            if (age > peerTimeout) {
-                LogFactory.getLog(getClass()).debug("delete peer " + entry);
-                iter.remove();
-            }
-        }
-    }
+			long age = entry.getAge(now);
+			if (age > peerTimeout) {
+				LogFactory.getLog(getClass()).debug("delete peer " + entry);
+				iter.remove();
+			}
+		}
+	}
 
-    public long getPeerTimeout() {
-        return peerTimeout;
-    }
+	public long getPeerTimeout() {
+		return peerTimeout;
+	}
 
-    public void setPeerTimeout(long peerTimeout) {
-        Validate.isTrue(peerTimeout > DateUtils.MILLIS_PER_MINUTE,
-                "Peer timeout can't be lower than one minute", peerTimeout);
-        this.peerTimeout = peerTimeout;
-    }
+	public void setPeerTimeout(long peerTimeout) {
+		Validate.isTrue(peerTimeout > DateUtils.MILLIS_PER_MINUTE,
+				"Peer timeout can't be lower than one minute", peerTimeout);
+		this.peerTimeout = peerTimeout;
+	}
 
-    private TimeBase timeBase = TimeBase.DEFAULT;
+	private TimeBase timeBase = TimeBase.DEFAULT;
 
-    public void setTimeBase(TimeBase timeBase) {
-        Validate.notNull(timeBase, "No specified TimeBase");
-        this.timeBase = timeBase;
-    }
+	public void setTimeBase(TimeBase timeBase) {
+		Validate.notNull(timeBase, "No specified TimeBase");
+		this.timeBase = timeBase;
+	}
 
-    class Entry {
+	class Entry {
 
-        private long timestamp;
+		private long timestamp;
 
-        private final Peer peer;
+		private final Peer peer;
 
-        public Entry(Peer peer) {
-            Validate.notNull(peer, "No specified Peer");
-            this.peer = peer;
+		public Entry(Peer peer) {
+			Validate.notNull(peer, "No specified Peer");
+			this.peer = peer;
 
-            touch();
-        }
+			touch();
+		}
 
-        public Peer getPeer() {
-            return peer;
-        }
+		public Peer getPeer() {
+			return peer;
+		}
 
-        public void touch() {
-            timestamp = timeBase.currentTimeMillis();
-        }
+		public void touch() {
+			timestamp = timeBase.currentTimeMillis();
+		}
 
-        public long getAge(long now) {
-            return now - timestamp;
-        }
+		public long getAge(long now) {
+			return now - timestamp;
+		}
 
-        public String toString() {
-            return ToStringBuilder.reflectionToString(this);
-        }
+		public String toString() {
+			return ToStringBuilder.reflectionToString(this);
+		}
 
-    }
+	}
 
 }

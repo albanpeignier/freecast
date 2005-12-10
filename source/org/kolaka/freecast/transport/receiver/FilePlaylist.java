@@ -22,61 +22,62 @@
  */
 package org.kolaka.freecast.transport.receiver;
 
-import org.kolaka.freecast.io.URLTextFile;
-import org.kolaka.freecast.net.URLUtils;
-
-import java.util.List;
-import java.util.LinkedList;
-import java.util.Iterator;
-import java.net.URL;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.kolaka.freecast.io.URLTextFile;
+import org.kolaka.freecast.net.URLUtils;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public class FilePlaylist implements Playlist {
 
-    private List urls = new LinkedList();
+	private List urls = new LinkedList();
 
-    public FilePlaylist(URL playlist) throws IOException {
-        URLTextFile textFile = new URLTextFile(playlist);
-        textFile.load();
+	public FilePlaylist(URL playlist) throws IOException {
+		URLTextFile textFile = new URLTextFile(playlist);
+		textFile.load();
 
-        baseURL = URLUtils.getBaseURL(playlist);
+		baseURL = URLUtils.getBaseURL(playlist);
 
-        for (Iterator iter = textFile.getLines().iterator(); iter.hasNext();) {
-            String content = ((URLTextFile.Line) iter.next()).getContent().trim();
-            URL lineURL;
+		for (Iterator iter = textFile.getLines().iterator(); iter.hasNext();) {
+			String content = ((URLTextFile.Line) iter.next()).getContent()
+					.trim();
+			URL lineURL;
 
-            if (content.startsWith("#") || content.length() == 0) {
-                continue;
-            }
+			if (content.startsWith("#") || content.length() == 0) {
+				continue;
+			}
 
-            lineURL = new URL(baseURL, content);
+			lineURL = new URL(baseURL, content);
 
-            urls.add(lineURL);
-        }
-    }
+			urls.add(lineURL);
+		}
+	}
 
-    private URL baseURL;
+	private URL baseURL;
 
-    public URL getBaseURL() {
-        return baseURL;
-    }
+	public URL getBaseURL() {
+		return baseURL;
+	}
 
-    public Entry get(int index) throws IOException {
-        final URL url = (URL) urls.get(index);
-        return new Entry(url.toExternalForm()) {
-        	public InputStream openStream() throws IOException {
-        		return url.openStream();
-        	}
-        };
-		
-    }
+	public Entry get(int index) throws IOException {
+		final URL url = (URL) urls.get(index);
+		return new Entry(url.toExternalForm()) {
+			public InputStream openStream() throws IOException {
+				return url.openStream();
+			}
+		};
 
-    public int size() {
-        return urls.size();
-    }
+	}
+
+	public int size() {
+		return urls.size();
+	}
 
 }

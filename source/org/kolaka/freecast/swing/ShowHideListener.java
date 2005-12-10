@@ -22,8 +22,8 @@
  */
 package org.kolaka.freecast.swing;
 
-import java.awt.event.ComponentListener;
 import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
@@ -31,7 +31,7 @@ import java.awt.event.ComponentEvent;
 public abstract class ShowHideListener implements ComponentListener {
 
 	public void componentHidden(ComponentEvent e) {
-        componentVisible(false);
+		componentVisible(false);
 	}
 
 	public void componentMoved(ComponentEvent e) {

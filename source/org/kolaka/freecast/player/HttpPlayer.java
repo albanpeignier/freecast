@@ -45,134 +45,141 @@ import org.kolaka.freecast.timer.TimerUser;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class HttpPlayer extends BaseService implements Player, TimerUser {
 
-    private Socket socket;
-    private Consumer consumer;
-    private boolean stopped;
-    private ConsumerInputStreamFactory inputFactory;
-    
-    public HttpPlayer(Socket socket) {
-        Validate.notNull(socket, "No specified socket");
-        this.socket = socket;
-    }
-    
-    private Task sending = new Task() {
+	private Socket socket;
 
-        public void run() {
-            OutputStream output = null;
-            
-            try {
-                ByteArrayOutputStream lineBuffer = new ByteArrayOutputStream();
+	private Consumer consumer;
 
-                while (true) {
-                    int read = socket.getInputStream().read();
-                    if (read == -1) {
-                        throw new EOFException("incomplete header");
-                    }
+	private boolean stopped;
 
-                    if (read == '\n') {
-                        String headerLine = new String(lineBuffer.toByteArray())
-                                .trim();
-                        lineBuffer.reset();
+	private ConsumerInputStreamFactory inputFactory;
 
-                        if (headerLine.length() == 0) {
-                            LogFactory.getLog(getClass()).trace("header ended");
-                            break;
-                        }
-                        LogFactory.getLog(getClass()).trace(
-                                "received header: " + headerLine);
-                    } else {
-                        lineBuffer.write(read);
-                    }
-                }
+	public HttpPlayer(Socket socket) {
+		Validate.notNull(socket, "No specified socket");
+		this.socket = socket;
+	}
 
-                // socket.setSendBufferSize(1024);
-                output = socket.getOutputStream();
-                
-                String reply = "HTTP/1.0 200 OK\r\n" +
-                "Content-Type: application/ogg\r\nice-name: FreeCast\r\n\r\n";
-                
-                output.write(reply.getBytes());
-                output.flush();
-                
-                while (!stopped) {
-                    InputStream input = inputFactory.next();
-                    CopyUtils.copy(input, output);
-                    IOUtils.closeQuietly(input);
-                }
-            } catch (IOException e) {
-                LogFactory.getLog(getClass()).info("connection with http player ended",e);
-            } catch (Exception e) {
-                LogFactory.getLog(getClass()).error("error in the http player connection",e);
-            } finally {
-                stopImpl();
-            }
-        }
-        
-    };
-    
-    protected void stopImpl() {
-        stopped = true;
+	private Task sending = new Task() {
 
-        LogFactory.getLog(getClass()).debug("dispose http player resources");
+		public void run() {
+			OutputStream output = null;
 
-        try {
-            socket.close();
-        } catch (IOException e) {
-            LogFactory.getLog(getClass()).error("can't close the http player socket",e);
-        }
+			try {
+				ByteArrayOutputStream lineBuffer = new ByteArrayOutputStream();
 
-        if (inputFactory != null) {
-            inputFactory.close();
-        }
+				while (true) {
+					int read = socket.getInputStream().read();
+					if (read == -1) {
+						throw new EOFException("incomplete header");
+					}
 
-        try {
-            super.stop();
-        } catch (ControlException e) {
-            LogFactory.getLog(getClass()).error("can't stop this http player", e);
-        }
-    }
-    
-    public void start() throws ControlException {
-        stopped = false;
-        
-        inputFactory = new ConsumerInputStreamFactory(consumer);
-        
-        timer.executeLater(sending);
-        
-        super.start();
-    }
-    
-    public void stop() throws ControlException {
-        sending.cancel();
-        stopImpl();
-    }
-    
-    public void init() throws ControlException {
-        super.init();
-    }
-    
-    public void dispose() throws ControlException {
-        super.dispose();
-    }
-    
-    public PlayerStatus getPlayerStatus() {
-        return PlayerStatus.INACTIVE;
-    }
+					if (read == '\n') {
+						String headerLine = new String(lineBuffer.toByteArray())
+								.trim();
+						lineBuffer.reset();
 
-    public void setConsumer(Consumer consumer) {
-        this.consumer = consumer;
-    }
+						if (headerLine.length() == 0) {
+							LogFactory.getLog(getClass()).trace("header ended");
+							break;
+						}
+						LogFactory.getLog(getClass()).trace(
+								"received header: " + headerLine);
+					} else {
+						lineBuffer.write(read);
+					}
+				}
 
-    private Timer timer = DefaultTimer.getInstance();
+				// socket.setSendBufferSize(1024);
+				output = socket.getOutputStream();
 
-    public void setTimer(Timer timer) {
-        Validate.notNull(timer, "No specified Timer");
-        this.timer = timer;
-    }
+				String reply = "HTTP/1.0 200 OK\r\n"
+						+ "Content-Type: application/ogg\r\nice-name: FreeCast\r\n\r\n";
+
+				output.write(reply.getBytes());
+				output.flush();
+
+				while (!stopped) {
+					InputStream input = inputFactory.next();
+					CopyUtils.copy(input, output);
+					IOUtils.closeQuietly(input);
+				}
+			} catch (IOException e) {
+				LogFactory.getLog(getClass()).info(
+						"connection with http player ended", e);
+			} catch (Exception e) {
+				LogFactory.getLog(getClass()).error(
+						"error in the http player connection", e);
+			} finally {
+				stopImpl();
+			}
+		}
+
+	};
+
+	protected void stopImpl() {
+		stopped = true;
+
+		LogFactory.getLog(getClass()).debug("dispose http player resources");
+
+		try {
+			socket.close();
+		} catch (IOException e) {
+			LogFactory.getLog(getClass()).error(
+					"can't close the http player socket", e);
+		}
+
+		if (inputFactory != null) {
+			inputFactory.close();
+		}
+
+		try {
+			super.stop();
+		} catch (ControlException e) {
+			LogFactory.getLog(getClass()).error("can't stop this http player",
+					e);
+		}
+	}
+
+	public void start() throws ControlException {
+		stopped = false;
+
+		inputFactory = new ConsumerInputStreamFactory(consumer);
+
+		timer.executeLater(sending);
+
+		super.start();
+	}
+
+	public void stop() throws ControlException {
+		sending.cancel();
+		stopImpl();
+	}
+
+	public void init() throws ControlException {
+		super.init();
+	}
+
+	public void dispose() throws ControlException {
+		super.dispose();
+	}
+
+	public PlayerStatus getPlayerStatus() {
+		return PlayerStatus.INACTIVE;
+	}
+
+	public void setConsumer(Consumer consumer) {
+		this.consumer = consumer;
+	}
+
+	private Timer timer = DefaultTimer.getInstance();
+
+	public void setTimer(Timer timer) {
+		Validate.notNull(timer, "No specified Timer");
+		this.timer = timer;
+	}
 
 }

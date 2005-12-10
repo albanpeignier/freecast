@@ -22,7 +22,7 @@
  */
 package org.kolaka.freecast.swing;
 
-import java.awt.*;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentListener;
 
@@ -31,7 +31,13 @@ import java.awt.event.ComponentListener;
  */
 public class ShowHideAction extends BaseAction {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4582417752772796235L;
+
 	private final Component component;
+
 	private final String componentName;
 
 	public ShowHideAction(Component component, String componentName) {
@@ -48,7 +54,8 @@ public class ShowHideAction extends BaseAction {
 		component.addComponentListener(listener);
 	}
 
-	public ShowHideAction(Resources resources, Component component, String componentName, String iconName) throws ResourcesException {
+	public ShowHideAction(Resources resources, Component component,
+			String componentName, String iconName) throws ResourcesException {
 		this(component, componentName);
 		loadIcons(resources, iconName);
 	}

@@ -37,42 +37,45 @@ import org.kolaka.freecast.transport.receiver.OggLogicalPageFactory;
 
 public class OggLogicalPageFactoryTest extends TestCase {
 
-    public void testNext() throws IOException {
-        int expectedPacketCount = 5;
-        byte[] expectedContent = new byte[(int) (Packet.DEFAULT_SIZE * expectedPacketCount * 0.9)];
-        for (int i=0; i < expectedContent.length; i++) {
-            expectedContent[i] = (byte) (i % Byte.MAX_VALUE);
-        }
-        
-        final long expectedTimestampDelta = 1000;
-        
-        MemoryOggSource source = new MemoryOggSource();
+	public void testNext() throws IOException {
+		int expectedPacketCount = 5;
+		byte[] expectedContent = new byte[(int) (Packet.DEFAULT_SIZE
+				* expectedPacketCount * 0.9)];
+		for (int i = 0; i < expectedContent.length; i++) {
+			expectedContent[i] = (byte) (i % Byte.MAX_VALUE);
+		}
 
-        DefaultOggPage firstOggPage = new DefaultOggPage();
-        firstOggPage.setFirstPage(true);
-        firstOggPage.setRawBytes(expectedContent);
-        source.add(new DefaultTimedOggPage(0, firstOggPage));
-        
-        DefaultOggPage secondOggPage = new DefaultOggPage();
-        secondOggPage.setAbsoluteGranulePosition(1);
-        secondOggPage.setRawBytes(expectedContent);
-        source.add(new DefaultTimedOggPage(expectedTimestampDelta, secondOggPage));
-        
-        OggLogicalPageFactory factory = new OggLogicalPageFactory();
-        factory.setSource(source);
-        
-        LogicalPage firstLogicalPage = factory.next();
-        assertTrue(firstLogicalPage.isFirstPage());
-        assertEquals(expectedPacketCount, firstLogicalPage.packets().size());
-        assertTrue(Arrays.equals(expectedContent, firstLogicalPage.getBytes()));
-        
-        LogicalPage secondLogicalPage = factory.next();
-        assertFalse(secondLogicalPage.isFirstPage());
-        assertEquals(expectedPacketCount, secondLogicalPage.packets().size());
-        assertTrue(Arrays.equals(expectedContent, secondLogicalPage.getBytes()));
-        assertEquals(expectedTimestampDelta, secondLogicalPage.getTimestamp() - firstLogicalPage.getTimestamp());
-        
-        assertTrue(source.isEmpty());
-    }
+		final long expectedTimestampDelta = 1000;
+
+		MemoryOggSource source = new MemoryOggSource();
+
+		DefaultOggPage firstOggPage = new DefaultOggPage();
+		firstOggPage.setFirstPage(true);
+		firstOggPage.setRawBytes(expectedContent);
+		source.add(new DefaultTimedOggPage(0, firstOggPage));
+
+		DefaultOggPage secondOggPage = new DefaultOggPage();
+		secondOggPage.setAbsoluteGranulePosition(1);
+		secondOggPage.setRawBytes(expectedContent);
+		source.add(new DefaultTimedOggPage(expectedTimestampDelta,
+				secondOggPage));
+
+		OggLogicalPageFactory factory = new OggLogicalPageFactory();
+		factory.setSource(source);
+
+		LogicalPage firstLogicalPage = factory.next();
+		assertTrue(firstLogicalPage.isFirstPage());
+		assertEquals(expectedPacketCount, firstLogicalPage.packets().size());
+		assertTrue(Arrays.equals(expectedContent, firstLogicalPage.getBytes()));
+
+		LogicalPage secondLogicalPage = factory.next();
+		assertFalse(secondLogicalPage.isFirstPage());
+		assertEquals(expectedPacketCount, secondLogicalPage.packets().size());
+		assertTrue(Arrays.equals(expectedContent, secondLogicalPage.getBytes()));
+		assertEquals(expectedTimestampDelta, secondLogicalPage.getTimestamp()
+				- firstLogicalPage.getTimestamp());
+
+		assertTrue(source.isEmpty());
+	}
 
 }

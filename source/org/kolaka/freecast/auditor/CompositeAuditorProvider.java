@@ -22,14 +22,14 @@
  */
 package org.kolaka.freecast.auditor;
 
-import org.apache.commons.lang.Validate;
-
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.Set;
-import java.util.Iterator;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import org.apache.commons.lang.Validate;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
@@ -37,7 +37,9 @@ import java.util.HashSet;
 public class CompositeAuditorProvider implements AuditorProvider {
 
 	private final Class auditorInterface;
+
 	private final Set auditors = new HashSet();
+
 	private final Auditor proxyAuditor;
 
 	public CompositeAuditorProvider(Class auditorInterface) {
@@ -47,8 +49,8 @@ public class CompositeAuditorProvider implements AuditorProvider {
 
 	public void register(Auditor auditor) {
 		Validate.isTrue(auditorInterface.isInstance(auditor),
-		        "The specified Auditor doesn't implement " + auditorInterface);
-        auditors.add(auditor);
+				"The specified Auditor doesn't implement " + auditorInterface);
+		auditors.add(auditor);
 	}
 
 	public void unregister(Auditor auditor) {
@@ -56,18 +58,18 @@ public class CompositeAuditorProvider implements AuditorProvider {
 	}
 
 	public Auditor getAuditor() {
-        return proxyAuditor;
+		return proxyAuditor;
 	}
 
 	protected Auditor createAuditor() {
-		return (Auditor)
-			Proxy.newProxyInstance(auditorInterface.getClassLoader(), new Class[]{auditorInterface}, handler);
+		return (Auditor) Proxy.newProxyInstance(auditorInterface
+				.getClassLoader(), new Class[] { auditorInterface }, handler);
 	}
 
 	private InvocationHandler handler = new InvocationHandler() {
 
 		public Object invoke(Object proxy, Method method, Object[] args)
-		        throws Throwable {
+				throws Throwable {
 			if (method.getName().equals("toString")) {
 				return "CompositeAuditor" + auditors;
 			}

@@ -27,31 +27,30 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.easymock.AbstractMatcher;
 import org.kolaka.freecast.peer.PeerStatus;
 
-
 /**
  * Needed because PeerStatus creation dates can be exactly the same.
  * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 class PeerStatusMatcher extends AbstractMatcher {
-    public boolean matches(Object args1[], Object args2[]) {
-        PeerStatus status1 = (PeerStatus) args1[0];
-        PeerStatus status2 = (PeerStatus) args2[0];
+	public boolean matches(Object args1[], Object args2[]) {
+		PeerStatus status1 = (PeerStatus) args1[0];
+		PeerStatus status2 = (PeerStatus) args2[0];
 
-        return matches(status1, status2);
-    }
+		return matches(status1, status2);
+	}
 
-    public boolean matches(PeerStatus status1, PeerStatus status2) {
-        EqualsBuilder builder = new EqualsBuilder();
+	public boolean matches(PeerStatus status1, PeerStatus status2) {
+		EqualsBuilder builder = new EqualsBuilder();
 
-        builder.append(status1.getIdentifier(), status2.getIdentifier());
-        builder.append(status1.getOrder(), status2.getOrder());
+		builder.append(status1.getIdentifier(), status2.getIdentifier());
+		builder.append(status1.getOrder(), status2.getOrder());
 
-        return builder.isEquals();
-    }
+		return builder.isEquals();
+	}
 
-    public String toString(Object args[]) {
-        return "event=" + args[0];
-    }
+	public String toString(Object args[]) {
+		return "event=" + args[0];
+	}
 
 }

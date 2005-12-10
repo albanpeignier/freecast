@@ -41,53 +41,53 @@ import com.mockobjects.util.Verifier;
  */
 public class MockSocket extends Socket implements Verifiable {
 
-    public MockSocket() {
+	public MockSocket() {
 
-    }
+	}
 
-    private ExpectationValue expectedBindpoint = new ExpectationValue(
-            "bindpoint");
+	private ExpectationValue expectedBindpoint = new ExpectationValue(
+			"bindpoint");
 
-    public void bind(SocketAddress bindpoint) throws IOException {
-        expectedBindpoint.setActual(bindpoint);
-    }
+	public void bind(SocketAddress bindpoint) throws IOException {
+		expectedBindpoint.setActual(bindpoint);
+	}
 
-    public void setExpectedBindpoint(SocketAddress bindpoint) {
-        expectedBindpoint.setExpected(bindpoint);
-    }
+	public void setExpectedBindpoint(SocketAddress bindpoint) {
+		expectedBindpoint.setExpected(bindpoint);
+	}
 
-    private ReturnValue returnedInputStream = new ReturnValue("inputStream");
+	private ReturnValue returnedInputStream = new ReturnValue("inputStream");
 
-    private ReturnValue returnedOutputStream = new ReturnValue("outputStream");
+	private ReturnValue returnedOutputStream = new ReturnValue("outputStream");
 
-    public InputStream getInputStream() throws IOException {
-        return (InputStream) returnedInputStream.getValue();
-    }
+	public InputStream getInputStream() throws IOException {
+		return (InputStream) returnedInputStream.getValue();
+	}
 
-    public OutputStream getOutputStream() throws IOException {
-        return (OutputStream) returnedOutputStream.getValue();
-    }
+	public OutputStream getOutputStream() throws IOException {
+		return (OutputStream) returnedOutputStream.getValue();
+	}
 
-    public void setupGetInputStream(InputStream inputStream) {
-        returnedInputStream.setValue(inputStream);
-    }
+	public void setupGetInputStream(InputStream inputStream) {
+		returnedInputStream.setValue(inputStream);
+	}
 
-    public void setupGetOutputStream(OutputStream outputStream) {
-        returnedOutputStream.setValue(outputStream);
-    }
+	public void setupGetOutputStream(OutputStream outputStream) {
+		returnedOutputStream.setValue(outputStream);
+	}
 
-    public void verify() {
-        Verifier.verifyObject(this);
-    }
+	public void verify() {
+		Verifier.verifyObject(this);
+	}
 
-    private ExpectationValue expectedConnectionPoint = new ExpectationValue(
-    "connectionPoint");
-    
-    public void connect(SocketAddress endpoint, int timeout) throws IOException {
-        expectedConnectionPoint.setActual(endpoint);
-    }
+	private ExpectationValue expectedConnectionPoint = new ExpectationValue(
+			"connectionPoint");
 
-    public void setExpectedConnectionPoint(SocketAddress connectionPoint) {
-        expectedConnectionPoint.setExpected(connectionPoint);
-    }
+	public void connect(SocketAddress endpoint, int timeout) throws IOException {
+		expectedConnectionPoint.setActual(endpoint);
+	}
+
+	public void setExpectedConnectionPoint(SocketAddress connectionPoint) {
+		expectedConnectionPoint.setExpected(connectionPoint);
+	}
 }

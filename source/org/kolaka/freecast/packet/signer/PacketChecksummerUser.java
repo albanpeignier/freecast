@@ -25,11 +25,11 @@ package org.kolaka.freecast.packet.signer;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public interface PacketChecksummerUser {
 
-    public void setPacketChecksummer(PacketChecksummer checksummer);
-    
+	public void setPacketChecksummer(PacketChecksummer checksummer);
+
 }

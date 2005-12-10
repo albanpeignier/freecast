@@ -30,10 +30,10 @@ package org.kolaka.freecast.peer;
  */
 public class PeerConnectionException extends Exception {
 
-    private static final long serialVersionUID = 3257569507592582193L;
+	private static final long serialVersionUID = 3257569507592582193L;
 
-    public PeerConnectionException(String message, Throwable cause) {
-        super(message, cause);
-    }
+	public PeerConnectionException(String message, Throwable cause) {
+		super(message, cause);
+	}
 
 }

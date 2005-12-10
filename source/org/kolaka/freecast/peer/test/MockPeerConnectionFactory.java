@@ -39,21 +39,21 @@ import com.mockobjects.util.Verifier;
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public class MockPeerConnectionFactory extends PeerConnectionFactory implements
-        Verifiable {
+		Verifiable {
 
-    private ReturnValue returnConnection = new ReturnValue("connection");
+	private ReturnValue returnConnection = new ReturnValue("connection");
 
-    public void setupReturnedConnection(PeerConnection connection) {
-        this.returnConnection.setValue(connection);
-    }
+	public void setupReturnedConnection(PeerConnection connection) {
+		this.returnConnection.setValue(connection);
+	}
 
-    protected PeerConnection createImpl(Peer peer, PeerReference reference)
-            throws PeerConnectionFactoryException {
-        return (PeerConnection) returnConnection.getValue();
-    }
+	protected PeerConnection createImpl(Peer peer, PeerReference reference)
+			throws PeerConnectionFactoryException {
+		return (PeerConnection) returnConnection.getValue();
+	}
 
-    public void verify() {
-        Verifier.verifyObject(this);
-    }
+	public void verify() {
+		Verifier.verifyObject(this);
+	}
 
 }

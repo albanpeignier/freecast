@@ -30,10 +30,10 @@ package org.kolaka.freecast.timer;
  */
 public interface TimeBase {
 
-    public static TimeBase DEFAULT = new DefaultTimeBase();
+	public static TimeBase DEFAULT = new DefaultTimeBase();
 
-    public long currentTimeMillis();
+	public long currentTimeMillis();
 
-    public void sleep(long delay) throws InterruptedException;
+	public void sleep(long delay) throws InterruptedException;
 
 }

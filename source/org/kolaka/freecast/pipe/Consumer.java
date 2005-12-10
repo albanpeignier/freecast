@@ -32,6 +32,6 @@ import org.kolaka.freecast.packet.LogicalPage;
  */
 public interface Consumer extends Interruptible {
 
-    LogicalPage consume() throws EmptyPipeException;
+	LogicalPage consume() throws EmptyPipeException;
 
 }

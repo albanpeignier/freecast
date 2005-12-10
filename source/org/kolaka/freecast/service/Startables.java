@@ -32,13 +32,13 @@ import org.apache.commons.logging.LogFactory;
  */
 public class Startables {
 
-    public static void stopQuietly(Startable startable) {
-        try {
-            startable.stop();
-        } catch (ControlException e) {
-            LogFactory.getLog(Startables.class).warn(
-                    "Can't stop cleanly " + startable, e);
-        }
-    }
+	public static void stopQuietly(Startable startable) {
+		try {
+			startable.stop();
+		} catch (ControlException e) {
+			LogFactory.getLog(Startables.class).warn(
+					"Can't stop cleanly " + startable, e);
+		}
+	}
 
 }

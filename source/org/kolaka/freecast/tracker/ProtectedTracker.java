@@ -32,63 +32,71 @@ import org.kolaka.freecast.service.ControlException;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class ProtectedTracker implements Tracker {
 
-    private final Tracker tracker;
-    
-    public ProtectedTracker(final Tracker tracker) {
-        this.tracker = tracker;
-    }
-    
-    public void start() throws ControlException {
-        tracker.start();
-    }
+	private final Tracker tracker;
 
-    public void stop() throws ControlException {
-        tracker.stop();
-    }
+	public ProtectedTracker(final Tracker tracker) {
+		this.tracker = tracker;
+	}
 
-    public NodeIdentifier register(PeerReference reference) throws TrackerException {
-        try {
-            return tracker.register(reference);
-        } catch (TrackerException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new TrackerException("Unexpected exception, unable to register " + reference, e);
-        }
-    }
+	public void start() throws ControlException {
+		tracker.start();
+	}
 
-    public void unregister(NodeIdentifier identifier) throws TrackerException {
-        try {
-            tracker.unregister(identifier);
-        } catch (TrackerException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new TrackerException("Unexpected exception, unable to unregister " + identifier, e);
-        }
-    }
+	public void stop() throws ControlException {
+		tracker.stop();
+	}
 
-    public void refresh(NodeStatus status) throws TrackerException {
-        try {
-            tracker.refresh(status);
-        } catch (TrackerException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new TrackerException("Unexpected exception, unable to refresh status" + status, e);
-        }
-    }
+	public NodeIdentifier register(PeerReference reference)
+			throws TrackerException {
+		try {
+			return tracker.register(reference);
+		} catch (TrackerException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new TrackerException(
+					"Unexpected exception, unable to register " + reference, e);
+		}
+	}
 
-    public Set getPeerReferences(NodeIdentifier node) throws TrackerException {
-        try {
-            return tracker.getPeerReferences(node);
-        } catch (TrackerException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new TrackerException("Unexpected exception, unable to retrive peer references " + node, e);
-        }
-    }
+	public void unregister(NodeIdentifier identifier) throws TrackerException {
+		try {
+			tracker.unregister(identifier);
+		} catch (TrackerException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new TrackerException(
+					"Unexpected exception, unable to unregister " + identifier,
+					e);
+		}
+	}
+
+	public void refresh(NodeStatus status) throws TrackerException {
+		try {
+			tracker.refresh(status);
+		} catch (TrackerException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new TrackerException(
+					"Unexpected exception, unable to refresh status" + status,
+					e);
+		}
+	}
+
+	public Set getPeerReferences(NodeIdentifier node) throws TrackerException {
+		try {
+			return tracker.getPeerReferences(node);
+		} catch (TrackerException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new TrackerException(
+					"Unexpected exception, unable to retrive peer references "
+							+ node, e);
+		}
+	}
 
 }

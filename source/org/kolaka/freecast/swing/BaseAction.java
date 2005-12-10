@@ -22,10 +22,13 @@
  */
 package org.kolaka.freecast.swing;
 
-import org.apache.commons.logging.LogFactory;
-
-import javax.swing.*;
 import java.net.URL;
+
+import javax.swing.AbstractAction;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+
+import org.apache.commons.logging.LogFactory;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
@@ -33,15 +36,15 @@ import java.net.URL;
 public abstract class BaseAction extends AbstractAction {
 
 	/**
-	 * Defines an <code>BaseAction</code> object with a default
-	 * description string and default icon.
+	 * Defines an <code>BaseAction</code> object with a default description
+	 * string and default icon.
 	 */
 	protected BaseAction() {
 	}
 
 	/**
-	 * Defines an <code>Action</code> object with the specified
-	 * description string and a the specified icon.
+	 * Defines an <code>Action</code> object with the specified description
+	 * string and a the specified icon.
 	 */
 	protected BaseAction(String name, Icon icon) {
 		super(name, icon);
@@ -56,32 +59,35 @@ public abstract class BaseAction extends AbstractAction {
 	}
 
 	protected Icon loadIcon(String resourceName) {
-        URL url = getClass().getResource(resourceName);
-        return url != null ? new ImageIcon(url) : null;
-    }
+		URL url = getClass().getResource(resourceName);
+		return url != null ? new ImageIcon(url) : null;
+	}
 
-	protected void loadIcons(Resources resources, String iconName) throws ResourcesException {
+	protected void loadIcons(Resources resources, String iconName)
+			throws ResourcesException {
 		Icon largIcon = null;
 		try {
 			largIcon = resources.getIcon(iconName + ".larg");
 		} catch (ResourcesException e) {
-            LogFactory.getLog(getClass()).debug("no larg icon for " + iconName, e);
+			LogFactory.getLog(getClass()).debug("no larg icon for " + iconName,
+					e);
 		}
 		Icon smallIcon = null;
 		try {
 			smallIcon = resources.getIcon(iconName + ".small");
 		} catch (ResourcesException e) {
-			LogFactory.getLog(getClass()).debug("no small icon for " + iconName, e);
+			LogFactory.getLog(getClass()).debug(
+					"no small icon for " + iconName, e);
 		}
 
 		if (largIcon != null && smallIcon != null) {
 			Actions.setLargIcon(this, largIcon);
-            Actions.setSmallIcon(this, smallIcon);
+			Actions.setSmallIcon(this, smallIcon);
 			return;
 		}
 
 		Icon icon;
-		
+
 		if (largIcon != null) {
 			icon = largIcon;
 		} else if (smallIcon != null) {

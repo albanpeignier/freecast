@@ -35,14 +35,14 @@ import org.kolaka.freecast.node.NodeIdentifier;
  */
 public class NodeIdentifierGenerator {
 
-    private Random random = new Random();
+	private Random random = new Random();
 
-    public synchronized NodeIdentifier next() {
-        long timeBase = System.currentTimeMillis() % Integer.MAX_VALUE;
-        long randomValue = random.nextInt();
-        long identifier = (timeBase << 32) + randomValue;
+	public synchronized NodeIdentifier next() {
+		long timeBase = System.currentTimeMillis() % Integer.MAX_VALUE;
+		long randomValue = random.nextInt();
+		long identifier = (timeBase << 32) + randomValue;
 
-        return new DefaultNodeIdentifier(identifier);
-    }
+		return new DefaultNodeIdentifier(identifier);
+	}
 
 }

@@ -22,8 +22,10 @@
  */
 package org.kolaka.freecast.swing;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Image;
+
+import javax.swing.Icon;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>

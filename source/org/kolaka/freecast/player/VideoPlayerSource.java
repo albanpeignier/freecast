@@ -23,26 +23,27 @@
 
 package org.kolaka.freecast.player;
 
+import javax.swing.JComponent;
+
 import org.kolaka.freecast.cortado.CortadoPanel;
 import org.kolaka.freecast.service.ControlException;
 
-import javax.swing.*;
-
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class VideoPlayerSource extends BasePlayerSource implements
-        InteractivePlayerSource, GraphicalPlayerSource {
+		InteractivePlayerSource, GraphicalPlayerSource {
 
-    private CortadoPanel panel;
-    private boolean autoPlayerCreation;
+	private CortadoPanel panel;
 
-    public VideoPlayerSource(boolean autoPlayerCreation) {
-        this.autoPlayerCreation = autoPlayerCreation;
-        panel = new CortadoPanel();
-    }
+	private boolean autoPlayerCreation;
+
+	public VideoPlayerSource(boolean autoPlayerCreation) {
+		this.autoPlayerCreation = autoPlayerCreation;
+		panel = new CortadoPanel();
+	}
 
 	public void setAudio(boolean audio) {
 		panel.setAudio(audio);
@@ -52,22 +53,21 @@ public class VideoPlayerSource extends BasePlayerSource implements
 		panel.setFrameRate(frameRate);
 	}
 
-    public void start() throws ControlException {
-        super.start();
+	public void start() throws ControlException {
+		super.start();
 
-        if (autoPlayerCreation) {
-            createPlayer();
-        }
-    }
+		if (autoPlayerCreation) {
+			createPlayer();
+		}
+	}
 
-    public void createPlayer() {
-        VideoPlayer player = new VideoPlayer(panel);
-        processPlayerCreated(player);
-    }
+	public void createPlayer() {
+		VideoPlayer player = new VideoPlayer(panel);
+		processPlayerCreated(player);
+	}
 
-    public JComponent getJComponent() {
-        return panel;
-    }
-    
+	public JComponent getJComponent() {
+		return panel;
+	}
 
 }

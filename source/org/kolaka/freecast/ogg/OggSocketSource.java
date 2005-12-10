@@ -28,21 +28,21 @@ import java.net.Socket;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class OggSocketSource extends OggStreamSource {
 
-    private final Socket socket;
-    
-    public OggSocketSource(Socket socket) throws IOException {
-        super(socket.getInputStream());
-        this.socket = socket;
-    }
-    
-    public void close() throws IOException {
-        super.close();
-        socket.close();
-    }
+	private final Socket socket;
+
+	public OggSocketSource(Socket socket) throws IOException {
+		super(socket.getInputStream());
+		this.socket = socket;
+	}
+
+	public void close() throws IOException {
+		super.close();
+		socket.close();
+	}
 
 }

@@ -29,32 +29,34 @@ import org.kolaka.freecast.packet.SequenceGenerator;
 
 public class SequenceGeneratorTest extends TestCase {
 
-    /**
-     * Tests the sequence numbers returned by new <code>SequenceGenerator</code> instances.
-     *  
-     * @throws InterruptedException if the test is in error
-     */
-    public void testInitialSequenceNumber() throws InterruptedException {
-        long firstSequenceNumber = new SequenceGenerator().next();
-        assertTrue(firstSequenceNumber > 0);
-        
-        Thread.sleep(1);
-        
-        assertTrue(firstSequenceNumber < new SequenceGenerator().next());
-    }
-    
-    /**
-     * Tests the sequence numbers returned by a <code>SequenceGenerator</code>.
-     */
-    public void testSequence() {
-        SequenceGenerator generator = new SequenceGenerator();
-        
-        long lastSequenceNumber = generator.next();
-        for (int i=0; i < 100; i++) {
-            long sequenceNumber = generator.next();
-            assertEquals(lastSequenceNumber + 1, sequenceNumber);
-            lastSequenceNumber = sequenceNumber; 
-        }
-    }
+	/**
+	 * Tests the sequence numbers returned by new <code>SequenceGenerator</code>
+	 * instances.
+	 * 
+	 * @throws InterruptedException
+	 *             if the test is in error
+	 */
+	public void testInitialSequenceNumber() throws InterruptedException {
+		long firstSequenceNumber = new SequenceGenerator().next();
+		assertTrue(firstSequenceNumber > 0);
+
+		Thread.sleep(1);
+
+		assertTrue(firstSequenceNumber < new SequenceGenerator().next());
+	}
+
+	/**
+	 * Tests the sequence numbers returned by a <code>SequenceGenerator</code>.
+	 */
+	public void testSequence() {
+		SequenceGenerator generator = new SequenceGenerator();
+
+		long lastSequenceNumber = generator.next();
+		for (int i = 0; i < 100; i++) {
+			long sequenceNumber = generator.next();
+			assertEquals(lastSequenceNumber + 1, sequenceNumber);
+			lastSequenceNumber = sequenceNumber;
+		}
+	}
 
 }

@@ -29,6 +29,11 @@ import java.awt.event.ActionEvent;
  */
 public class QuitAction extends BaseAction {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5775771100552370016L;
+
 	public QuitAction(Resources resources) throws ResourcesException {
 		super("Quit");
 		loadIcons(resources, "quit");

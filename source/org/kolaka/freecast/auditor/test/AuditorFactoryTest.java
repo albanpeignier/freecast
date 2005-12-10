@@ -22,15 +22,16 @@
  */
 package org.kolaka.freecast.auditor.test;
 
-import junit.framework.TestCase;
-import org.kolaka.freecast.auditor.NullAuditorProvider;
-import org.kolaka.freecast.auditor.AuditorFactory;
-import org.kolaka.freecast.auditor.Auditor;
-import org.easymock.MockControl;
-
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.Iterator;
+import java.util.LinkedList;
+
+import junit.framework.TestCase;
+
+import org.easymock.MockControl;
+import org.kolaka.freecast.auditor.Auditor;
+import org.kolaka.freecast.auditor.AuditorFactory;
+import org.kolaka.freecast.auditor.NullAuditorProvider;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
@@ -45,21 +46,22 @@ public class AuditorFactoryTest extends TestCase {
 	}
 
 	public void testNullAuditor() {
-        TestAuditor auditor = (TestAuditor)
-		        new NullAuditorProvider(TestAuditor.class).getAuditor();
+		TestAuditor auditor = (TestAuditor) new NullAuditorProvider(
+				TestAuditor.class).getAuditor();
 		auditor.auditMethod1(new Object());
 		auditor.auditMethod2(new Object(), new Object());
 	}
 
 	public void testNoRegisteredAuditor() {
-		TestAuditor auditor =
-		        (TestAuditor) factory.get(TestAuditor.class, this);
+		TestAuditor auditor = (TestAuditor) factory
+				.get(TestAuditor.class, this);
 		auditor.auditMethod1(new Object());
 		auditor.auditMethod2(new Object(), new Object());
 	}
 
 	public void testRegisteredAuditor() {
-		MockControl mockAuditorControl = MockControl.createControl(TestAuditor.class);
+		MockControl mockAuditorControl = MockControl
+				.createControl(TestAuditor.class);
 		TestAuditor mockAuditor = (TestAuditor) mockAuditorControl.getMock();
 
 		Object auditArgument = new Object();
@@ -69,15 +71,16 @@ public class AuditorFactoryTest extends TestCase {
 
 		factory.register(TestAuditor.class, mockAuditor);
 
-		TestAuditor auditor =
-		        (TestAuditor) factory.get(TestAuditor.class, this);
+		TestAuditor auditor = (TestAuditor) factory
+				.get(TestAuditor.class, this);
 		auditor.auditMethod1(auditArgument);
 
 		mockAuditorControl.verify();
 	}
 
 	public void testUnregisteredAuditor() {
-		MockControl mockAuditorControl = MockControl.createControl(TestAuditor.class);
+		MockControl mockAuditorControl = MockControl
+				.createControl(TestAuditor.class);
 		TestAuditor mockAuditor = (TestAuditor) mockAuditorControl.getMock();
 
 		Object auditArgument = new Object();
@@ -87,8 +90,8 @@ public class AuditorFactoryTest extends TestCase {
 
 		factory.register(TestAuditor.class, mockAuditor);
 
-		TestAuditor auditor =
-		        (TestAuditor) factory.get(TestAuditor.class, this);
+		TestAuditor auditor = (TestAuditor) factory
+				.get(TestAuditor.class, this);
 		auditor.auditMethod1(auditArgument);
 
 		factory.unregister(TestAuditor.class, mockAuditor);
@@ -101,10 +104,12 @@ public class AuditorFactoryTest extends TestCase {
 	public void testMultipleRegisteredAuditors() {
 		Object auditArgument = new Object();
 
-        Collection controls = new LinkedList();
+		Collection controls = new LinkedList();
 		for (int i = 0; i < 3; i++) {
-			MockControl mockAuditorControl = MockControl.createControl(TestAuditor.class);
-			TestAuditor mockAuditor = (TestAuditor) mockAuditorControl.getMock();
+			MockControl mockAuditorControl = MockControl
+					.createControl(TestAuditor.class);
+			TestAuditor mockAuditor = (TestAuditor) mockAuditorControl
+					.getMock();
 
 			mockAuditor.auditMethod1(auditArgument);
 
@@ -114,8 +119,8 @@ public class AuditorFactoryTest extends TestCase {
 			controls.add(mockAuditorControl);
 		}
 
-		TestAuditor auditor =
-		        (TestAuditor) factory.get(TestAuditor.class, this);
+		TestAuditor auditor = (TestAuditor) factory
+				.get(TestAuditor.class, this);
 		auditor.auditMethod1(auditArgument);
 
 		for (Iterator iterator = controls.iterator(); iterator.hasNext();) {

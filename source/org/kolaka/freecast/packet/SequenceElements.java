@@ -34,20 +34,20 @@ import org.apache.commons.collections.comparators.TransformingComparator;
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public class SequenceElements {
-    private static final Transformer SEQUENCENUMBER_TRANSFORMER = new Transformer() {
-        public Object transform(Object input) {
-            return new Long(((SequenceElement) input).getSequenceNumber());
-        }
-    };
+	private static final Transformer SEQUENCENUMBER_TRANSFORMER = new Transformer() {
+		public Object transform(Object input) {
+			return new Long(((SequenceElement) input).getSequenceNumber());
+		}
+	};
 
-    public static Transformer returnSequenceNumber() {
-        return SEQUENCENUMBER_TRANSFORMER;
-    }
+	public static Transformer returnSequenceNumber() {
+		return SEQUENCENUMBER_TRANSFORMER;
+	}
 
-    private static final Comparator SEQUENCENUMBER_COMPARATOR = new TransformingComparator(
-            returnSequenceNumber());
+	private static final Comparator SEQUENCENUMBER_COMPARATOR = new TransformingComparator(
+			returnSequenceNumber());
 
-    public static Comparator compareSequenceNumber() {
-        return SEQUENCENUMBER_COMPARATOR;
-    }
+	public static Comparator compareSequenceNumber() {
+		return SEQUENCENUMBER_COMPARATOR;
+	}
 }

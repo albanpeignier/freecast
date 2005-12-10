@@ -34,48 +34,48 @@ import java.util.Set;
  */
 public class ServiceListenerSupport {
 
-    private Service service;
+	private Service service;
 
-    public ServiceListenerSupport(Service service) {
-        this.service = service;
-    }
+	public ServiceListenerSupport(Service service) {
+		this.service = service;
+	}
 
-    private final Set listeners = new HashSet();
+	private final Set listeners = new HashSet();
 
-    public void fireStarted() {
-        for (Iterator iter = listeners.iterator(); iter.hasNext();) {
-            Service.Listener listener = (Service.Listener) iter.next();
-            listener.serviceStarted(service);
-        }
-    }
+	public void fireStarted() {
+		for (Iterator iter = listeners.iterator(); iter.hasNext();) {
+			Service.Listener listener = (Service.Listener) iter.next();
+			listener.serviceStarted(service);
+		}
+	}
 
-    public void fireStopped() {
-        for (Iterator iter = listeners.iterator(); iter.hasNext();) {
-            Service.Listener listener = (Service.Listener) iter.next();
-            listener.serviceStopped(service);
-        }
-    }
+	public void fireStopped() {
+		for (Iterator iter = listeners.iterator(); iter.hasNext();) {
+			Service.Listener listener = (Service.Listener) iter.next();
+			listener.serviceStopped(service);
+		}
+	}
 
-    public void fireInitialized() {
-        for (Iterator iter = listeners.iterator(); iter.hasNext();) {
-            Service.Listener listener = (Service.Listener) iter.next();
-            listener.serviceInitialized(service);
-        }
-    }
+	public void fireInitialized() {
+		for (Iterator iter = listeners.iterator(); iter.hasNext();) {
+			Service.Listener listener = (Service.Listener) iter.next();
+			listener.serviceInitialized(service);
+		}
+	}
 
-    public void fireDisposed() {
-        for (Iterator iter = listeners.iterator(); iter.hasNext();) {
-            Service.Listener listener = (Service.Listener) iter.next();
-            listener.serviceDisposed(service);
-        }
-    }
+	public void fireDisposed() {
+		for (Iterator iter = listeners.iterator(); iter.hasNext();) {
+			Service.Listener listener = (Service.Listener) iter.next();
+			listener.serviceDisposed(service);
+		}
+	}
 
-    public void add(Service.Listener listener) {
-        listeners.add(listener);
-    }
+	public void add(Service.Listener listener) {
+		listeners.add(listener);
+	}
 
-    public void remove(Service.Listener listener) {
-        listeners.remove(listener);
-    }
+	public void remove(Service.Listener listener) {
+		listeners.remove(listener);
+	}
 
 }

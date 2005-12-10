@@ -31,34 +31,34 @@ import org.kolaka.freecast.service.ControlException;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public abstract class BasePlayerSource implements PlayerSource {
 
-    private Set listeners = new HashSet();
+	private Set listeners = new HashSet();
 
-    public void addListener(Listener listener) {
-        listeners.add(listener);
-    }
+	public void addListener(Listener listener) {
+		listeners.add(listener);
+	}
 
-    public void removeListener(Listener listener) {
-        listeners.remove(listener);
-    }
-    
-    protected void processPlayerCreated(Player player) {
-        for (Iterator iter = listeners.iterator(); iter.hasNext();) {
-            Listener listener = (Listener) iter.next();
-            listener.playerCreated(player);
-        }
-    }
+	public void removeListener(Listener listener) {
+		listeners.remove(listener);
+	}
 
-    public void start() throws ControlException {
-        
-    }
-    
-    public void stop() throws ControlException {
-        
-    }
-    
+	protected void processPlayerCreated(Player player) {
+		for (Iterator iter = listeners.iterator(); iter.hasNext();) {
+			Listener listener = (Listener) iter.next();
+			listener.playerCreated(player);
+		}
+	}
+
+	public void start() throws ControlException {
+
+	}
+
+	public void stop() throws ControlException {
+
+	}
+
 }

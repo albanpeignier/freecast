@@ -40,114 +40,114 @@ import org.kolaka.freecast.timer.TimeBase;
  */
 public class MeasuredMessageWriter extends ProxyMessageWriter {
 
-    public int write(Message message) throws IOException {
-        int length = super.write(message);
-        addWrite(length);
-        return length;
-    }
+	public int write(Message message) throws IOException {
+		int length = super.write(message);
+		addWrite(length);
+		return length;
+	}
 
-    public MeasuredMessageWriter(MessageWriter writer) {
-        super(writer);
-    }
+	public MeasuredMessageWriter(MessageWriter writer) {
+		super(writer);
+	}
 
-    public int getWriteLength() {
-        return getWriteLength(maximumWriteAge);
-    }
+	public int getWriteLength() {
+		return getWriteLength(maximumWriteAge);
+	}
 
-    public int getWriteLength(long timeLength) {
-        long oldest = timeBase.currentTimeMillis() - timeLength;
+	public int getWriteLength(long timeLength) {
+		long oldest = timeBase.currentTimeMillis() - timeLength;
 
-        int writeLength = 0;
-        for (Iterator iterator = writes.iterator(); iterator.hasNext();) {
-            Write current = (Write) iterator.next();
-            if (current.getTimestamp() > oldest) {
-                writeLength += current.getLength();
-            }
-        }
-        return writeLength;
-    }
+		int writeLength = 0;
+		for (Iterator iterator = writes.iterator(); iterator.hasNext();) {
+			Write current = (Write) iterator.next();
+			if (current.getTimestamp() > oldest) {
+				writeLength += current.getLength();
+			}
+		}
+		return writeLength;
+	}
 
-    public int getAverageLength() {
-        return getWriteLength() / writes.size();
-    }
+	public int getAverageLength() {
+		return getWriteLength() / writes.size();
+	}
 
-    protected void addWrite(int length) {
-        writes.add(new Write(length));
-        trim();
-    }
+	protected void addWrite(int length) {
+		writes.add(new Write(length));
+		trim();
+	}
 
-    protected void trim() {
-        long now = timeBase.currentTimeMillis();
+	protected void trim() {
+		long now = timeBase.currentTimeMillis();
 
-        for (Iterator iter = writes.iterator(); iter.hasNext();) {
-            Write current = (Write) iter.next();
-            long age = current.getAge(now);
-            if (age > maximumWriteAge) {
-                iter.remove();
-            } else {
-                break;
-            }
-        }
-    }
+		for (Iterator iter = writes.iterator(); iter.hasNext();) {
+			Write current = (Write) iter.next();
+			long age = current.getAge(now);
+			if (age > maximumWriteAge) {
+				iter.remove();
+			} else {
+				break;
+			}
+		}
+	}
 
-    private long maximumWriteAge = 30 * DateUtils.MILLIS_PER_SECOND;
+	private long maximumWriteAge = 30 * DateUtils.MILLIS_PER_SECOND;
 
-    private List writes = new LinkedList();
+	private List writes = new LinkedList();
 
-    class Write {
+	class Write {
 
-        private final long timestamp;
+		private final long timestamp;
 
-        private final int length;
+		private final int length;
 
-        public Write(int length) {
-            this.timestamp = timeBase.currentTimeMillis();
-            this.length = length;
-        }
+		public Write(int length) {
+			this.timestamp = timeBase.currentTimeMillis();
+			this.length = length;
+		}
 
-        public long getTimestamp() {
-            return timestamp;
-        }
+		public long getTimestamp() {
+			return timestamp;
+		}
 
-        public int getLength() {
-            return length;
-        }
+		public int getLength() {
+			return length;
+		}
 
-        public long getAge() {
-            return getAge(timeBase.currentTimeMillis());
-        }
+		public long getAge() {
+			return getAge(timeBase.currentTimeMillis());
+		}
 
-        public long getAge(long now) {
-            return now - timestamp;
-        }
+		public long getAge(long now) {
+			return now - timestamp;
+		}
 
-        public String toString() {
-            return ToStringBuilder.reflectionToString(this);
-        }
+		public String toString() {
+			return ToStringBuilder.reflectionToString(this);
+		}
 
-    }
+	}
 
-    private TimeBase timeBase = TimeBase.DEFAULT;
+	private TimeBase timeBase = TimeBase.DEFAULT;
 
-    public void setTimeBase(TimeBase timeBase) {
-        Validate.notNull(timeBase, "No specified TimeBase");
-        this.timeBase = timeBase;
-    }
+	public void setTimeBase(TimeBase timeBase) {
+		Validate.notNull(timeBase, "No specified TimeBase");
+		this.timeBase = timeBase;
+	}
 
-    public long getMaximumWriteAge() {
-        return maximumWriteAge;
-    }
+	public long getMaximumWriteAge() {
+		return maximumWriteAge;
+	}
 
-    /**
-     * 
-     * @param maximumWriteAge
-     * @throws IllegalArgumentException
-     *             if the specified maximumWriteAge is lower than a second
-     *             (1000).
-     */
-    public void setMaximumWriteAge(long maximumWriteAge) {
-        Validate.isTrue(maximumWriteAge > DateUtils.MILLIS_PER_SECOND,
-                "Maximum write age can't lower than a second");
-        this.maximumWriteAge = maximumWriteAge;
-    }
+	/**
+	 * 
+	 * @param maximumWriteAge
+	 * @throws IllegalArgumentException
+	 *             if the specified maximumWriteAge is lower than a second
+	 *             (1000).
+	 */
+	public void setMaximumWriteAge(long maximumWriteAge) {
+		Validate.isTrue(maximumWriteAge > DateUtils.MILLIS_PER_SECOND,
+				"Maximum write age can't lower than a second");
+		this.maximumWriteAge = maximumWriteAge;
+	}
 }

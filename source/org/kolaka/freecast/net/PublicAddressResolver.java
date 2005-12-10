@@ -22,11 +22,11 @@
  */
 package org.kolaka.freecast.net;
 
-import org.apache.commons.io.IOUtils;
-
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URL;
-import java.io.IOException;
+
+import org.apache.commons.io.IOUtils;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
@@ -37,7 +37,8 @@ public abstract class PublicAddressResolver {
 
 	public static PublicAddressResolver getDefaultInstance() throws IOException {
 		if (instance == null) {
-			instance = new Cache(new ExternalReference(new URL("http://www.freecast.org/reference")));
+			instance = new Cache(new ExternalReference(new URL(
+					"http://www.freecast.org/reference")));
 		}
 
 		return instance;
@@ -48,6 +49,7 @@ public abstract class PublicAddressResolver {
 	static class Cache extends PublicAddressResolver {
 
 		private final PublicAddressResolver delegate;
+
 		private InetAddress cache;
 
 		public Cache(PublicAddressResolver delegate) {

@@ -44,54 +44,58 @@ import org.kolaka.freecast.transport.StreamMessageWriter;
  * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
-public class SocketPeerConnectionFactoryTest extends PeerConnectionFactoryBaseTest {
+public class SocketPeerConnectionFactoryTest extends
+		PeerConnectionFactoryBaseTest {
 
-    private MockSocketFactory mockSocketFactory;
-    private MockSocket mockSocket;
+	private MockSocketFactory mockSocketFactory;
 
-    private InetSocketAddress address = new InetSocketAddress(4000);
+	private MockSocket mockSocket;
 
-    protected PeerReference createReference() {
-        return InetPeerReference.getInstance(address);
-    }
+	private InetSocketAddress address = new InetSocketAddress(4000);
 
-    protected void setUpTestCreate(List sendMessages, List receivedMessages) throws IOException {
-        mockSocket.setupGetInputStream(new ByteArrayInputStream(toByteArray(receivedMessages)));
-        mockSocket.setupGetOutputStream(new ByteArrayOutputStream());
-        
-        mockSocket.setExpectedConnectionPoint(address);
-    }
+	protected PeerReference createReference() {
+		return InetPeerReference.getInstance(address);
+	}
 
-    private byte[] toByteArray(List messages) throws IOException {
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        MessageWriter writer = new StreamMessageWriter(buffer);
-        for (Iterator iter=messages.iterator(); iter.hasNext(); ) {
-            Message message = (Message) iter.next();
-            writer.write(message);
-        }
+	protected void setUpTestCreate(List sendMessages, List receivedMessages)
+			throws IOException {
+		mockSocket.setupGetInputStream(new ByteArrayInputStream(
+				toByteArray(receivedMessages)));
+		mockSocket.setupGetOutputStream(new ByteArrayOutputStream());
 
-        byte bytes[] = buffer.toByteArray();
+		mockSocket.setExpectedConnectionPoint(address);
+	}
 
-        buffer.close();
-        return bytes;
-    }
+	private byte[] toByteArray(List messages) throws IOException {
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		MessageWriter writer = new StreamMessageWriter(buffer);
+		for (Iterator iter = messages.iterator(); iter.hasNext();) {
+			Message message = (Message) iter.next();
+			writer.write(message);
+		}
 
-    protected void setUp() throws Exception {
-        super.setUp();
+		byte bytes[] = buffer.toByteArray();
 
-        mockSocketFactory = new MockSocketFactory();
+		buffer.close();
+		return bytes;
+	}
 
-        mockSocket = new MockSocket();
-        mockSocketFactory.setupCreateSocket(mockSocket);
-    }
+	protected void setUp() throws Exception {
+		super.setUp();
 
-    protected PeerConnectionFactory createFactory() {
-        SocketPeerConnectionFactory factory = new SocketPeerConnectionFactory();
-        factory.setSocketFactory(mockSocketFactory);
-        return factory;
-    }
+		mockSocketFactory = new MockSocketFactory();
 
-    protected void verifyTestCreate() {
-    }
-    
+		mockSocket = new MockSocket();
+		mockSocketFactory.setupCreateSocket(mockSocket);
+	}
+
+	protected PeerConnectionFactory createFactory() {
+		SocketPeerConnectionFactory factory = new SocketPeerConnectionFactory();
+		factory.setSocketFactory(mockSocketFactory);
+		return factory;
+	}
+
+	protected void verifyTestCreate() {
+	}
+
 }

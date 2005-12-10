@@ -40,77 +40,81 @@ import org.kolaka.freecast.service.Startable;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class ShoutServerOggSourceFactory implements OggSourceFactory, Startable {
 
-    private final InetSocketAddress listenAddress;
-    private ServerSocket serverSocket;
+	private final InetSocketAddress listenAddress;
 
-    public ShoutServerOggSourceFactory(InetSocketAddress listenAddress) {
-        this.listenAddress = listenAddress;
-    }
+	private ServerSocket serverSocket;
 
-    public OggSource next() throws IOException {
-        LogFactory.getLog(getClass()).info("waiting ices connection on " + listenAddress);
+	public ShoutServerOggSourceFactory(InetSocketAddress listenAddress) {
+		this.listenAddress = listenAddress;
+	}
 
-        Socket socket = serverSocket.accept();
-        LogFactory.getLog(getClass()).info("new ices connection from " + socket.getInetAddress());
-        LogFactory.getLog(getClass()).debug("read http header");
+	public OggSource next() throws IOException {
+		LogFactory.getLog(getClass()).info(
+				"waiting ices connection on " + listenAddress);
 
-        receiveHeader(socket);
+		Socket socket = serverSocket.accept();
+		LogFactory.getLog(getClass()).info(
+				"new ices connection from " + socket.getInetAddress());
+		LogFactory.getLog(getClass()).debug("read http header");
 
-        return new OggSocketSource(socket);
-    }
+		receiveHeader(socket);
 
-    protected void receiveHeader(Socket socket) throws IOException {
-        InputStream input = socket.getInputStream();
-        OutputStream output = socket.getOutputStream();
+		return new OggSocketSource(socket);
+	}
 
-        ByteArrayOutputStream lineBuffer = new ByteArrayOutputStream();
+	protected void receiveHeader(Socket socket) throws IOException {
+		InputStream input = socket.getInputStream();
+		OutputStream output = socket.getOutputStream();
 
-        while (true) {
-            int read = input.read();
-            if (read == -1) {
-                throw new EOFException("incomplete header");
-            }
+		ByteArrayOutputStream lineBuffer = new ByteArrayOutputStream();
 
-            if (read == '\n') {
-                String headerLine = new String(lineBuffer.toByteArray())
-                        .trim();
-                lineBuffer.reset();
+		while (true) {
+			int read = input.read();
+			if (read == -1) {
+				throw new EOFException("incomplete header");
+			}
 
-                if (headerLine.length() == 0) {
-                    LogFactory.getLog(getClass()).trace("header ended");
-                    output.write("HTTP/1.0 200 OK\r\n\r\n".getBytes());
-                    output.flush();
+			if (read == '\n') {
+				String headerLine = new String(lineBuffer.toByteArray()).trim();
+				lineBuffer.reset();
 
-                    return;
-                }
-                LogFactory.getLog(getClass()).trace(
-                        "received header: " + headerLine);
-            } else {
-                lineBuffer.write(read);
-            }
-        }
-    }
-    
-    public void start() throws ControlException {
-        try {
-            serverSocket = new ServerSocket();
-            serverSocket.bind(listenAddress);
-        } catch (IOException e) {
-            throw new ControlException("Can't bind the server socket on " + listenAddress, e);
-        }
-    }
+				if (headerLine.length() == 0) {
+					LogFactory.getLog(getClass()).trace("header ended");
+					output.write("HTTP/1.0 200 OK\r\n\r\n".getBytes());
+					output.flush();
 
-    public void stop() throws ControlException {
-        try {
-            serverSocket.close();
-        } catch (IOException e) {
-            LogFactory.getLog(getClass()).error("Can't close the server socket", e);
-        }
-    }
+					return;
+				}
+				LogFactory.getLog(getClass()).trace(
+						"received header: " + headerLine);
+			} else {
+				lineBuffer.write(read);
+			}
+		}
+	}
+
+	public void start() throws ControlException {
+		try {
+			serverSocket = new ServerSocket();
+			serverSocket.bind(listenAddress);
+		} catch (IOException e) {
+			throw new ControlException("Can't bind the server socket on "
+					+ listenAddress, e);
+		}
+	}
+
+	public void stop() throws ControlException {
+		try {
+			serverSocket.close();
+		} catch (IOException e) {
+			LogFactory.getLog(getClass()).error(
+					"Can't close the server socket", e);
+		}
+	}
 
 }

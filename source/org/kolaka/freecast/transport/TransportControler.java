@@ -33,6 +33,6 @@ import org.kolaka.freecast.service.Controler;
  */
 public interface TransportControler extends Controler {
 
-    public void setPipe(Pipe pipe);
+	public void setPipe(Pipe pipe);
 
 }

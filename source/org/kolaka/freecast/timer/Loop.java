@@ -30,57 +30,57 @@ import org.apache.commons.logging.LogFactory;
 
 public abstract class Loop implements TimerUser {
 
-    private Timer timer;
+	private Timer timer;
 
-    public void setTimer(Timer timer) {
-        Validate.notNull(timer, "No specified Timer");
-        this.timer = timer;
-    }
+	public void setTimer(Timer timer) {
+		Validate.notNull(timer, "No specified Timer");
+		this.timer = timer;
+	}
 
-    protected abstract long loop() throws LoopInterruptedException;
+	protected abstract long loop() throws LoopInterruptedException;
 
-    private Task task = new Task() {
+	private Task task = new Task() {
 
-        public void run() {
-            if (isCanceled()) {
-                return;
-            }
+		public void run() {
+			if (isCanceled()) {
+				return;
+			}
 
-            long delay = 0;
+			long delay = 0;
 
-            try {
-                delay = loop();
-                if (delay <= 0) {
-                    throw new LoopInterruptedException(
-                            "negative delay returned (" + delay + ")");
-                }
-            } catch (LoopInterruptedException e) {
-                LogFactory.getLog(getClass()).error(
-                        "loop interrupted: " + Loop.this, e);
-                return;
-            }
+			try {
+				delay = loop();
+				if (delay <= 0) {
+					throw new LoopInterruptedException(
+							"negative delay returned (" + delay + ")");
+				}
+			} catch (LoopInterruptedException e) {
+				LogFactory.getLog(getClass()).error(
+						"loop interrupted: " + Loop.this, e);
+				return;
+			}
 
-            if (!isCanceled()) {
-                timer.executeAfterDelay(delay, this);
-            }
-        }
+			if (!isCanceled()) {
+				timer.executeAfterDelay(delay, this);
+			}
+		}
 
-    };
+	};
 
-    public void start() {
-        if (timer == null) {
-            throw new IllegalStateException("No defined Timer for " + this);
-        }
+	public void start() {
+		if (timer == null) {
+			throw new IllegalStateException("No defined Timer for " + this);
+		}
 
-        timer.executeLater(task);
-    }
+		timer.executeLater(task);
+	}
 
-    public void cancel() {
-        task.cancel();
-    }
+	public void cancel() {
+		task.cancel();
+	}
 
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
 
 }

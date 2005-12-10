@@ -29,11 +29,11 @@ import java.util.Iterator;
  */
 public interface InetSocketAddressSpecification {
 	/**
-	 * Returns a <code>Iterator</code> which provides the InetSocketAddress specified by this
-	 * <code>InetSocketAddressSpecification</code>.
-	 *
-	 * @return a <code>Iterator</code> which provides the InetSocketAddress specified by this
-	 * <code>InetSocketAddressSpecification</code>
+	 * Returns a <code>Iterator</code> which provides the InetSocketAddress
+	 * specified by this <code>InetSocketAddressSpecification</code>.
+	 * 
+	 * @return a <code>Iterator</code> which provides the InetSocketAddress
+	 *         specified by this <code>InetSocketAddressSpecification</code>
 	 */
 	Iterator iterator();
 

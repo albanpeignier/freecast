@@ -36,77 +36,83 @@ import org.kolaka.freecast.timer.DefaultTimer;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class OggSourceFactoryReceiver extends OggSourceReceiver {
 
-    private OggSourceFactory factory;
-    
-    public OggSourceFactoryReceiver(OggSourceFactory factory) {
-        this.factory = factory;
-    }
+	private OggSourceFactory factory;
 
-    public void start() throws ControlException {
-        if (factory instanceof Startable) {
-            ((Startable) factory).start();
-        }
-        super.start();
-    }
+	public OggSourceFactoryReceiver(OggSourceFactory factory) {
+		this.factory = factory;
+	}
 
-    public void stop() throws ControlException {
-        if (factory instanceof Startable) {
-            ((Startable) factory).stop();
-        }
-        super.stop();
-    }
-    
-    protected Loop createLoop() {
-        return new Loop() {
-            
-            public long loop() throws LoopInterruptedException {
-                OggSource oggSource;
-                
-                try {
-                    oggSource = factory.next();
-                } catch (IOException e) {
-                    String message = "can't create next OggSource with " + factory + ", wait 10 secondes before retrying";
-                    LogFactory.getLog(getClass()).error(message,e);
-                    return DefaultTimer.seconds(10);
-                }
-                
-                LogFactory.getLog(getClass()).debug("change source for " + oggSource);
+	public void start() throws ControlException {
+		if (factory instanceof Startable) {
+			((Startable) factory).start();
+		}
+		super.start();
+	}
 
-                StopWatch receivingWatch = new StopWatch();
-                receivingWatch.start();
-                
-                long delay = DefaultTimer.nodelay();
-                
-                try {
-                    receive(oggSource);
-                } catch (EOFException e) {
-                		LogFactory.getLog(getClass()).debug("end of source " + oggSource, e);
-                } catch (IOException e) {
-                    LogFactory.getLog(getClass()).error("stream reception failed with  " + oggSource, e);
-                } finally {
-                		try {
+	public void stop() throws ControlException {
+		if (factory instanceof Startable) {
+			((Startable) factory).stop();
+		}
+		super.stop();
+	}
+
+	protected Loop createLoop() {
+		return new Loop() {
+
+			public long loop() throws LoopInterruptedException {
+				OggSource oggSource;
+
+				try {
+					oggSource = factory.next();
+				} catch (IOException e) {
+					String message = "can't create next OggSource with "
+							+ factory + ", wait 10 secondes before retrying";
+					LogFactory.getLog(getClass()).error(message, e);
+					return DefaultTimer.seconds(10);
+				}
+
+				LogFactory.getLog(getClass()).debug(
+						"change source for " + oggSource);
+
+				StopWatch receivingWatch = new StopWatch();
+				receivingWatch.start();
+
+				long delay = DefaultTimer.nodelay();
+
+				try {
+					receive(oggSource);
+				} catch (EOFException e) {
+					LogFactory.getLog(getClass()).debug(
+							"end of source " + oggSource, e);
+				} catch (IOException e) {
+					LogFactory.getLog(getClass()).error(
+							"stream reception failed with  " + oggSource, e);
+				} finally {
+					try {
 						oggSource.close();
 					} catch (IOException e) {
-	                    LogFactory.getLog(getClass()).debug("can't close properly the OggSource " + oggSource, e);
+						LogFactory.getLog(getClass()).debug(
+								"can't close properly the OggSource "
+										+ oggSource, e);
 					}
-					
+
 					/*
 					 * to avoid crazy loops, mark a pause if needed
 					 */
 					receivingWatch.stop();
 					if (receivingWatch.getTime() < 3 * DateUtils.MILLIS_PER_SECOND) {
-						delay = DefaultTimer.seconds(3);					
+						delay = DefaultTimer.seconds(3);
 					}
-                	}
+				}
 
-                return delay;
-            }
-        };
-    }
-    
+				return delay;
+			}
+		};
+	}
+
 }

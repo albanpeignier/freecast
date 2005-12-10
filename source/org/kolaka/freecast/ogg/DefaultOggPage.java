@@ -34,108 +34,109 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  */
 public class DefaultOggPage implements OggPage, MutableOggPage {
 
-    private boolean firstPage;
+	private boolean firstPage;
 
-    private boolean lastPage;
-    
-    private long absoluteGranulePosition;
-    
-    private int streamSerialNumber;
+	private boolean lastPage;
 
-    private byte[] bytes;
+	private long absoluteGranulePosition;
 
-    public byte[] getRawBytes() {
-        if (bytes == null) {
-            throw new IllegalStateException("No defined bytes");
-        }
-        return bytes;
-    }
+	private int streamSerialNumber;
 
-    public void setRawBytes(byte[] bytes) {
-        this.bytes = bytes;
-    }
+	private byte[] bytes;
 
-    public boolean isFirstPage() {
-        return firstPage;
-    }
+	public byte[] getRawBytes() {
+		if (bytes == null) {
+			throw new IllegalStateException("No defined bytes");
+		}
+		return bytes;
+	}
 
-    public void setFirstPage(boolean firstPage) {
-        this.firstPage = firstPage;
-    }
+	public void setRawBytes(byte[] bytes) {
+		this.bytes = bytes;
+	}
 
-    public boolean isLastPage() {
-        return lastPage;
-    }
+	public boolean isFirstPage() {
+		return firstPage;
+	}
 
-    public void setLastPage(boolean lastPage) {
-        this.lastPage = lastPage;
-    }
-    
-    public long getAbsoluteGranulePosition() {
-        return absoluteGranulePosition;
-    }
+	public void setFirstPage(boolean firstPage) {
+		this.firstPage = firstPage;
+	}
 
-    public void setAbsoluteGranulePosition(long absoluteGranulePosition) {
-        this.absoluteGranulePosition = absoluteGranulePosition;
-    }
-    
-    public int getStreamSerialNumber() {
-        return streamSerialNumber;
-    }
-    
-    public String getStreamSerialNumberString() {
-        return Integer.toHexString(streamSerialNumber);
-    }
+	public boolean isLastPage() {
+		return lastPage;
+	}
 
-    public void setStreamSerialNumber(int streamSerialNumber) {
-        this.streamSerialNumber = streamSerialNumber;
-    }
-    
-    public int getLength() {
-        return bytes != null ? bytes.length : 0;
-    }
-    
-    public boolean equals(Object o) {
-    		if (o instanceof OggPage) {
-    			return equals((OggPage) o);
-    		}
-    		return EqualsBuilder.reflectionEquals(this, o);
-    }
+	public void setLastPage(boolean lastPage) {
+		this.lastPage = lastPage;
+	}
 
-    public boolean equals(OggPage page) {
-    		if (page == null) {
-    			return false;
-    		}
-    		
-    		if (page == this) {
-    			return true;
-    		}
-    		
+	public long getAbsoluteGranulePosition() {
+		return absoluteGranulePosition;
+	}
+
+	public void setAbsoluteGranulePosition(long absoluteGranulePosition) {
+		this.absoluteGranulePosition = absoluteGranulePosition;
+	}
+
+	public int getStreamSerialNumber() {
+		return streamSerialNumber;
+	}
+
+	public String getStreamSerialNumberString() {
+		return Integer.toHexString(streamSerialNumber);
+	}
+
+	public void setStreamSerialNumber(int streamSerialNumber) {
+		this.streamSerialNumber = streamSerialNumber;
+	}
+
+	public int getLength() {
+		return bytes != null ? bytes.length : 0;
+	}
+
+	public boolean equals(Object o) {
+		if (o instanceof OggPage) {
+			return equals((OggPage) o);
+		}
+		return EqualsBuilder.reflectionEquals(this, o);
+	}
+
+	public boolean equals(OggPage page) {
+		if (page == null) {
+			return false;
+		}
+
+		if (page == this) {
+			return true;
+		}
+
 		EqualsBuilder builder = new EqualsBuilder();
-		
+
 		builder.append(streamSerialNumber, page.getStreamSerialNumber());
-		builder.append(absoluteGranulePosition, page.getAbsoluteGranulePosition());
+		builder.append(absoluteGranulePosition, page
+				.getAbsoluteGranulePosition());
 		builder.append(firstPage, page.isFirstPage());
 		builder.append(lastPage, page.isLastPage());
 		builder.append(bytes, page.getRawBytes());
-		
+
 		return builder.isEquals();
-    }
+	}
 
-    public int hashCode() {
-    		HashCodeBuilder builder = new HashCodeBuilder();
-    		builder.append(absoluteGranulePosition);
-    		builder.append(streamSerialNumber);
-    		return builder.toHashCode();
-    }
+	public int hashCode() {
+		HashCodeBuilder builder = new HashCodeBuilder();
+		builder.append(absoluteGranulePosition);
+		builder.append(streamSerialNumber);
+		return builder.toHashCode();
+	}
 
-    public String toString() {
-        ToStringBuilder builder = new ToStringBuilder(this);
-        builder.append("firstpage", firstPage);
-        builder.append("lastpage", lastPage);
-        builder.append("streamSerialNumber", getStreamSerialNumberString());
-        builder.append("absoluteGranulePosition", absoluteGranulePosition);
-        return builder.toString();
-    }
-    
+	public String toString() {
+		ToStringBuilder builder = new ToStringBuilder(this);
+		builder.append("firstpage", firstPage);
+		builder.append("lastpage", lastPage);
+		builder.append("streamSerialNumber", getStreamSerialNumberString());
+		builder.append("absoluteGranulePosition", absoluteGranulePosition);
+		return builder.toString();
+	}
+
 }

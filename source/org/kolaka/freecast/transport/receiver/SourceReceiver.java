@@ -27,7 +27,7 @@ import org.kolaka.freecast.packet.signer.PacketChecksummerUser;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public interface SourceReceiver extends Receiver, PacketChecksummerUser {

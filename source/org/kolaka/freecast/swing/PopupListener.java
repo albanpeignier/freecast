@@ -22,11 +22,13 @@
  */
 package org.kolaka.freecast.swing;
 
-import javax.swing.*;
-import java.awt.event.MouseEvent;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.*;
+
+import javax.swing.JPopupMenu;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
@@ -49,15 +51,15 @@ public class PopupListener extends MouseAdapter {
 
 	private void maybeShowPopup(MouseEvent e) {
 		if (e.isPopupTrigger()) {
-			popup.show(e.getComponent(),
-			        e.getX(), e.getY());
+			popup.show(e.getComponent(), e.getX(), e.getY());
 		}
 	}
 
-	public static void addMouseListener(Component component, MouseListener listener) {
+	public static void addMouseListener(Component component,
+			MouseListener listener) {
 		component.addMouseListener(listener);
 		if (component instanceof Container) {
-         	Component[] children = ((Container) component).getComponents();
+			Component[] children = ((Container) component).getComponents();
 			for (int i = 0; i < children.length; i++) {
 				Component child = children[i];
 				addMouseListener(child, listener);

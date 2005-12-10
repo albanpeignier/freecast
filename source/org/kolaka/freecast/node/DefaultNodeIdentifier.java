@@ -34,38 +34,38 @@ import org.apache.commons.lang.math.NumberUtils;
  */
 public class DefaultNodeIdentifier extends NodeIdentifier {
 
-    static final long serialVersionUID = 6379930740834818080L;
+	static final long serialVersionUID = 6379930740834818080L;
 
-    /**
-     * <strong>Note: </strong> final fields are supported by the Hessian
-     * serialization
-     */
-    private long value;
+	/**
+	 * <strong>Note: </strong> final fields are supported by the Hessian
+	 * serialization
+	 */
+	private long value;
 
-    public DefaultNodeIdentifier(long value) {
-        this.value = value;
-    }
+	public DefaultNodeIdentifier(long value) {
+		this.value = value;
+	}
 
-    public boolean equals(NodeIdentifier identifier) {
-        return identifier instanceof DefaultNodeIdentifier
-                && equals((DefaultNodeIdentifier) identifier);
-    }
+	public boolean equals(NodeIdentifier identifier) {
+		return identifier instanceof DefaultNodeIdentifier
+				&& equals((DefaultNodeIdentifier) identifier);
+	}
 
-    public boolean equals(DefaultNodeIdentifier identifier) {
-        return value == identifier.value;
-    }
+	public boolean equals(DefaultNodeIdentifier identifier) {
+		return value == identifier.value;
+	}
 
-    public int hashCode() {
-        return new HashCodeBuilder().append(value).toHashCode();
-    }
+	public int hashCode() {
+		return new HashCodeBuilder().append(value).toHashCode();
+	}
 
-    public String toString() {
-        return "#"
-                + StringUtils.leftPad(Long.toHexString(value).toUpperCase(),
-                        16, 'F');
-    }
+	public String toString() {
+		return "#"
+				+ StringUtils.leftPad(Long.toHexString(value).toUpperCase(),
+						16, 'F');
+	}
 
-    public int compareTo(Object o) {
-        return NumberUtils.compare(value, ((DefaultNodeIdentifier) o).value);
-    }
+	public int compareTo(Object o) {
+		return NumberUtils.compare(value, ((DefaultNodeIdentifier) o).value);
+	}
 }

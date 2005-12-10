@@ -22,14 +22,6 @@
  */
 package org.kolaka.freecast.peer;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.EnumerationUtils;
-import org.apache.commons.collections.Predicate;
-import org.apache.commons.collections.functors.InstanceofPredicate;
-import org.apache.commons.collections.functors.NotPredicate;
-import org.apache.commons.lang.Validate;
-import org.kolaka.freecast.net.PublicAddressResolver;
-
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -39,81 +31,99 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.EnumerationUtils;
+import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.functors.InstanceofPredicate;
+import org.apache.commons.collections.functors.NotPredicate;
+import org.apache.commons.lang.Validate;
+import org.kolaka.freecast.net.PublicAddressResolver;
+
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public class AutomaticPeerReferenceFactory implements PeerReferenceFactory {
 
-    private int defaultPort = UNDEFINED;
+	private int defaultPort = UNDEFINED;
+
 	private PublicAddressResolver publicAddressResolver;
 
-    private static final int UNDEFINED = -1;
+	private static final int UNDEFINED = -1;
 
-    public void setDefaultPort(int defaultPort) {
-        Validate.isTrue(InetPeerReference.validatePort(defaultPort), "Invalid port: " + defaultPort);
-        this.defaultPort = defaultPort;
-    }
+	public void setDefaultPort(int defaultPort) {
+		Validate.isTrue(InetPeerReference.validatePort(defaultPort),
+				"Invalid port: " + defaultPort);
+		this.defaultPort = defaultPort;
+	}
 
-	public void setPublicAddressResolver(PublicAddressResolver publicAddressResolver) {
-		Validate.notNull(publicAddressResolver, "No specified PublicAddressResolver");
+	public void setPublicAddressResolver(
+			PublicAddressResolver publicAddressResolver) {
+		Validate.notNull(publicAddressResolver,
+				"No specified PublicAddressResolver");
 		this.publicAddressResolver = publicAddressResolver;
 	}
 
 	public PeerReference create() throws PeerReferenceFactoryException {
-        if (defaultPort == UNDEFINED) {
-            throw new IllegalStateException("No defined default port");
-        }
+		if (defaultPort == UNDEFINED) {
+			throw new IllegalStateException("No defined default port");
+		}
 
-        Set addresses;
-        try {
-            addresses = getLocalInetAddress();
-        } catch (IOException e) {
-            throw new PeerReferenceFactoryException("Can't determinate the local inet addresses",e);
-        }
+		Set addresses;
+		try {
+			addresses = getLocalInetAddress();
+		} catch (IOException e) {
+			throw new PeerReferenceFactoryException(
+					"Can't determinate the local inet addresses", e);
+		}
 
-        try {
-            addresses.add(getPublicAddress());
-        } catch (IOException e) {
-            throw new PeerReferenceFactoryException("Can't determinate the public inet addresses",e);
-        }
+		try {
+			addresses.add(getPublicAddress());
+		} catch (IOException e) {
+			throw new PeerReferenceFactoryException(
+					"Can't determinate the public inet addresses", e);
+		}
 
-        Set references = new HashSet();
-        for (Iterator iter=addresses.iterator(); iter.hasNext(); ) {
-            InetAddress address = (InetAddress) iter.next();
-            references.add(InetPeerReference.getInstance(address.getHostAddress(), defaultPort, false));
-        }
-        return new MultiplePeerReference(references);
-    }
+		Set references = new HashSet();
+		for (Iterator iter = addresses.iterator(); iter.hasNext();) {
+			InetAddress address = (InetAddress) iter.next();
+			references.add(InetPeerReference.getInstance(address
+					.getHostAddress(), defaultPort, false));
+		}
+		return new MultiplePeerReference(references);
+	}
 
-    private InetAddress getPublicAddress() throws IOException {
+	private InetAddress getPublicAddress() throws IOException {
 		if (publicAddressResolver == null) {
 			publicAddressResolver = PublicAddressResolver.getDefaultInstance();
 		}
 		return publicAddressResolver.getPublicAddress();
-    }
+	}
 
-    private Set getLocalInetAddress() throws IOException {
-        Set inetAddresses = new HashSet();
+	private Set getLocalInetAddress() throws IOException {
+		Set inetAddresses = new HashSet();
 
-        Enumeration networkInterfaces = NetworkInterface.getNetworkInterfaces();
-        while (networkInterfaces.hasMoreElements()) {
-            NetworkInterface networkInterface = (NetworkInterface) networkInterfaces.nextElement();
-            inetAddresses.addAll(EnumerationUtils.toList(networkInterface.getInetAddresses()));
-        }
+		Enumeration networkInterfaces = NetworkInterface.getNetworkInterfaces();
+		while (networkInterfaces.hasMoreElements()) {
+			NetworkInterface networkInterface = (NetworkInterface) networkInterfaces
+					.nextElement();
+			inetAddresses.addAll(EnumerationUtils.toList(networkInterface
+					.getInetAddresses()));
+		}
 
-        CollectionUtils.filter(inetAddresses, new InstanceofPredicate(Inet4Address.class));
+		CollectionUtils.filter(inetAddresses, new InstanceofPredicate(
+				Inet4Address.class));
 
-        if (inetAddresses.size() > 1) {
-            Predicate loopback = new Predicate() {
+		if (inetAddresses.size() > 1) {
+			Predicate loopback = new Predicate() {
 
-                public boolean evaluate(Object object) {
-                    return ((InetAddress) object).isLoopbackAddress();
-                }
-            };
-            CollectionUtils.filter(inetAddresses, new NotPredicate(loopback));
-        }
+				public boolean evaluate(Object object) {
+					return ((InetAddress) object).isLoopbackAddress();
+				}
+			};
+			CollectionUtils.filter(inetAddresses, new NotPredicate(loopback));
+		}
 
-        return inetAddresses;
-    }
+		return inetAddresses;
+	}
 
 }

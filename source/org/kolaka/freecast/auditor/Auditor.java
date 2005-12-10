@@ -26,5 +26,5 @@ package org.kolaka.freecast.auditor;
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public interface Auditor {
-	
+
 }

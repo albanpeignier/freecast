@@ -30,6 +30,6 @@ package org.kolaka.freecast.timer;
  */
 public interface TimerUser {
 
-    void setTimer(Timer timer);
+	void setTimer(Timer timer);
 
 }

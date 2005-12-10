@@ -35,20 +35,20 @@ import com.mockobjects.MockObject;
  */
 public abstract class MockProducer extends MockObject implements Producer {
 
-    public void add(Listener listener) {
-        throw new NotImplementedException(getClass());
-    }
+	public void add(Listener listener) {
+		throw new NotImplementedException(getClass());
+	}
 
-    public void close() {
+	public void close() {
 
-    }
+	}
 
-    public boolean isClosed() {
-        throw new NotImplementedException(getClass());
-    }
+	public boolean isClosed() {
+		throw new NotImplementedException(getClass());
+	}
 
-    public void remove(Listener listener) {
-        throw new NotImplementedException(getClass());
-    }
+	public void remove(Listener listener) {
+		throw new NotImplementedException(getClass());
+	}
 
 }

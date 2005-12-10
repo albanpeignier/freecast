@@ -23,9 +23,6 @@
 
 package org.kolaka.freecast.swing;
 
-import org.apache.commons.lang.ObjectUtils;
-
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -33,79 +30,82 @@ import java.beans.PropertyChangeSupport;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.swing.Action;
+
+import org.apache.commons.lang.ObjectUtils;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class ProxyAction implements Action {
-    
-    private final Action action;
-    
-    public ProxyAction(Action action) {
-        PropertyChangeListener listener = new PropertyChangeListener() {
 
-            public void propertyChange(PropertyChangeEvent event) {
-                if (!values.containsKey(event.getPropertyName())) {
-                    support.firePropertyChange(event);
-                }
-            }
-            
-        };
-        this.action = action;
-        action.addPropertyChangeListener(listener);
-    }
+	private final Action action;
 
-    private PropertyChangeSupport support = new PropertyChangeSupport(this);
+	public ProxyAction(Action action) {
+		PropertyChangeListener listener = new PropertyChangeListener() {
 
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        support.addPropertyChangeListener(listener);
-    }
+			public void propertyChange(PropertyChangeEvent event) {
+				if (!values.containsKey(event.getPropertyName())) {
+					support.firePropertyChange(event);
+				}
+			}
 
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        support.removePropertyChangeListener(listener);
-    }
+		};
+		this.action = action;
+		action.addPropertyChangeListener(listener);
+	}
 
-    private final Map values = new TreeMap();
-    
-    public Object getValue(String key) {
-        Object value = values.get(key);
-        if (value != null) {
-            if (value == ObjectUtils.NULL) {
-                return null;
-            }
+	private PropertyChangeSupport support = new PropertyChangeSupport(this);
 
-            return value;
-        }
-        return action.getValue(key);
-    }
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		support.addPropertyChangeListener(listener);
+	}
 
-    public void putValue(String key, Object value) {
-        putValue(key, value, false);
-    }
-    
-    public void putValue(String key, Object value, boolean override) {
-        if (!override) {
-            action.putValue(key, value);
-        } else {
-            if (value == null) {
-                value = ObjectUtils.NULL;
-            }
-            values.put(key, value);
-        }
-    }
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		support.removePropertyChangeListener(listener);
+	}
 
-    public boolean isEnabled() {
-        return action.isEnabled();
-    }
+	private final Map values = new TreeMap();
 
-    public void setEnabled(boolean b) {
-        action.setEnabled(b);
-    }
+	public Object getValue(String key) {
+		Object value = values.get(key);
+		if (value != null) {
+			if (value == ObjectUtils.NULL) {
+				return null;
+			}
 
-    public void actionPerformed(ActionEvent e) {
-        action.actionPerformed(e);
-    }
+			return value;
+		}
+		return action.getValue(key);
+	}
+
+	public void putValue(String key, Object value) {
+		putValue(key, value, false);
+	}
+
+	public void putValue(String key, Object value, boolean override) {
+		if (!override) {
+			action.putValue(key, value);
+		} else {
+			if (value == null) {
+				value = ObjectUtils.NULL;
+			}
+			values.put(key, value);
+		}
+	}
+
+	public boolean isEnabled() {
+		return action.isEnabled();
+	}
+
+	public void setEnabled(boolean b) {
+		action.setEnabled(b);
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		action.actionPerformed(e);
+	}
 
 }

@@ -32,6 +32,6 @@ import org.kolaka.freecast.peer.PeerConnection;
  */
 public interface PeerConnectionOpeningListener {
 
-    public void connectionOpening(PeerConnection connection);
+	public void connectionOpening(PeerConnection connection);
 
 }

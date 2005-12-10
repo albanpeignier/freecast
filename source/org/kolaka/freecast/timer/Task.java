@@ -30,32 +30,32 @@ import EDU.oswego.cs.dl.util.concurrent.ClockDaemon;
 
 public abstract class Task implements Runnable {
 
-    private Object taskID;
+	private Object taskID;
 
-    private boolean canceled;
+	private boolean canceled;
 
-    void setTaskID(Object taskID) {
-        this.taskID = taskID;
-    }
+	void setTaskID(Object taskID) {
+		this.taskID = taskID;
+	}
 
-    public void cancel() {
-        if (canceled) {
-            return;
-        }
+	public void cancel() {
+		if (canceled) {
+			return;
+		}
 
-        if (taskID != null) {
-            ClockDaemon.cancel(taskID);
-        }
+		if (taskID != null) {
+			ClockDaemon.cancel(taskID);
+		}
 
-        canceled = true;
-    }
+		canceled = true;
+	}
 
-    public boolean isCanceled() {
-        return canceled;
-    }
+	public boolean isCanceled() {
+		return canceled;
+	}
 
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
 
 }

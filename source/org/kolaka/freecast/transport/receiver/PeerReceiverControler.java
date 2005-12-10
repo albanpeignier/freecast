@@ -26,8 +26,6 @@ package org.kolaka.freecast.transport.receiver;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.LogFactory;
-import org.kolaka.freecast.packet.signer.DigestPacketChecksummer;
-import org.kolaka.freecast.packet.signer.DigestPacketValidator;
 import org.kolaka.freecast.packet.signer.DummyPacketValidator;
 import org.kolaka.freecast.packet.signer.PacketValidator;
 import org.kolaka.freecast.packet.signer.PacketValidatorUser;
@@ -50,150 +48,150 @@ import org.kolaka.freecast.timer.TimerUser;
  * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
-public class PeerReceiverControler implements ReceiverControler, TimerUser, PacketValidatorUser {
+public class PeerReceiverControler implements ReceiverControler, TimerUser,
+		PacketValidatorUser {
 
-    private Pipe pipe;
+	private Pipe pipe;
 
-    public void setPipe(Pipe pipe) {
-        this.pipe = pipe;
-    }
+	public void setPipe(Pipe pipe) {
+		this.pipe = pipe;
+	}
 
-    private PeerControler peerControler;
+	private PeerControler peerControler;
 
-    public void setPeerControler(PeerControler peerControler) {
-        this.peerControler = peerControler;
-    }
+	public void setPeerControler(PeerControler peerControler) {
+		this.peerControler = peerControler;
+	}
 
-    private final Task startReceiverTask = new Task() {
-        public void run() {
-            long retryDelay = -1;
+	private final Task startReceiverTask = new Task() {
+		public void run() {
+			long retryDelay = -1;
 
-            try {
-                createReceiver();
-            } catch (NoPeerAvailableException e) {
-                LogFactory.getLog(getClass()).debug("no peer available");
-                retryDelay = DefaultTimer.seconds(5);
-            } catch (PeerConnectionFactoryException e) {
-                LogFactory.getLog(getClass()).debug(
-                        "error while establishing connection", e);
-                retryDelay = DefaultTimer.seconds(2);
-            } catch (Throwable e) {
-                LogFactory.getLog(getClass()).error("receiver creation failed",
-                        e);
-                retryDelay = DefaultTimer.seconds(3);
-            }
+			try {
+				createReceiver();
+			} catch (NoPeerAvailableException e) {
+				LogFactory.getLog(getClass()).debug("no peer available");
+				retryDelay = DefaultTimer.seconds(5);
+			} catch (PeerConnectionFactoryException e) {
+				LogFactory.getLog(getClass()).debug(
+						"error while establishing connection", e);
+				retryDelay = DefaultTimer.seconds(2);
+			} catch (Throwable e) {
+				LogFactory.getLog(getClass()).error("receiver creation failed",
+						e);
+				retryDelay = DefaultTimer.seconds(3);
+			}
 
-            if (retryDelay > -1) {
-                startReceiver(retryDelay);
-            }
-        }
-    };
+			if (retryDelay > -1) {
+				startReceiver(retryDelay);
+			}
+		}
+	};
 
-    private Service.Listener listener = new Service.Adapter() {
-        public void serviceStopped(Service service) {
-            if (ObjectUtils.equals(receiver, service)) {
-                disposeReceiver();
-            }
+	private Service.Listener listener = new Service.Adapter() {
+		public void serviceStopped(Service service) {
+			if (ObjectUtils.equals(receiver, service)) {
+				disposeReceiver();
+			}
 
-            service.remove(this);
-        }
-    };
+			service.remove(this);
+		}
+	};
 
-    private PacketValidator packetValidator = new DummyPacketValidator();
-    
-    public void setPacketValidator(PacketValidator packetValidator) {
-        Validate.notNull(packetValidator);
-        this.packetValidator = packetValidator;
-    }
+	private PacketValidator packetValidator = new DummyPacketValidator();
 
-    private PeerReceiver receiver;
+	public void setPacketValidator(PacketValidator packetValidator) {
+		Validate.notNull(packetValidator);
+		this.packetValidator = packetValidator;
+	}
 
-    
-    /**
-     * @todo review the exception handling
-     * 
-     * @throws NoPeerAvailableException
-     * @throws PeerConnectionFactoryException
-     * @throws ControlException
-     */
-    private void createReceiver() throws NoPeerAvailableException,
-            PeerConnectionFactoryException, ControlException {
-        if (receiver != null) {
-            throw new IllegalStateException("Receiver already exists: "
-                    + receiver);
-        }
+	private PeerReceiver receiver;
 
-        Peer peer = peerControler.getBestPeer();
+	/**
+	 * @todo review the exception handling
+	 * 
+	 * @throws NoPeerAvailableException
+	 * @throws PeerConnectionFactoryException
+	 * @throws ControlException
+	 */
+	private void createReceiver() throws NoPeerAvailableException,
+			PeerConnectionFactoryException, ControlException {
+		if (receiver != null) {
+			throw new IllegalStateException("Receiver already exists: "
+					+ receiver);
+		}
 
-        LogFactory.getLog(getClass()).debug(
-                "try to open a connection with " + peer);
-        PeerConnection peerConnection = peer.connect();
-        peerConnection.activate();
+		Peer peer = peerControler.getBestPeer();
 
-        LogFactory.getLog(getClass()).debug(
-                "create a peer receiver for " + peerConnection);
-        PeerReceiver receiver = new PeerReceiver(peerConnection);
-        receiver.setPacketValidator(packetValidator);
-        receiver.setProducer(pipe.createProducer());
+		LogFactory.getLog(getClass()).debug(
+				"try to open a connection with " + peer);
+		PeerConnection peerConnection = peer.connect();
+		peerConnection.activate();
 
-        receiver.add(listener);
+		LogFactory.getLog(getClass()).debug(
+				"create a peer receiver for " + peerConnection);
+		PeerReceiver receiver = new PeerReceiver(peerConnection);
+		receiver.setPacketValidator(packetValidator);
+		receiver.setProducer(pipe.createProducer());
 
-        LogFactory.getLog(getClass()).debug("start peer receiver " + receiver);
-        Controlables.start(receiver);
+		receiver.add(listener);
 
-        this.receiver = receiver;
-    }
+		LogFactory.getLog(getClass()).debug("start peer receiver " + receiver);
+		Controlables.start(receiver);
 
-    private Timer timer = DefaultTimer.getInstance();
+		this.receiver = receiver;
+	}
 
-    public void setTimer(Timer timer) {
-        Validate.notNull(timer, "No specified Timer");
-        this.timer = timer;
-    }
+	private Timer timer = DefaultTimer.getInstance();
 
-    private void startReceiver() {
-        LogFactory.getLog(getClass()).debug("start a new receiver");
-        timer.executeLater(startReceiverTask);
-    }
+	public void setTimer(Timer timer) {
+		Validate.notNull(timer, "No specified Timer");
+		this.timer = timer;
+	}
 
-    private void startReceiver(long delay) {
-        LogFactory.getLog(getClass()).debug(
-                "start a new receiver in " + delay + " ms");
-        timer.executeAfterDelay(delay, startReceiverTask);
-    }
+	private void startReceiver() {
+		LogFactory.getLog(getClass()).debug("start a new receiver");
+		timer.executeLater(startReceiverTask);
+	}
 
-    private void disposeReceiver() {
-        LogFactory.getLog(getClass()).debug(
-                "dispose current receiver " + receiver);
-        receiver = null;
-        if (!stopped) {
-            startReceiver();
-        }
-    }
+	private void startReceiver(long delay) {
+		LogFactory.getLog(getClass()).debug(
+				"start a new receiver in " + delay + " ms");
+		timer.executeAfterDelay(delay, startReceiverTask);
+	}
 
-    public void start() throws ControlException {
-        LogFactory.getLog(getClass()).debug("start");
-        startReceiver();
-    }
+	private void disposeReceiver() {
+		LogFactory.getLog(getClass()).debug(
+				"dispose current receiver " + receiver);
+		receiver = null;
+		if (!stopped) {
+			startReceiver();
+		}
+	}
 
-    private boolean stopped;
+	public void start() throws ControlException {
+		LogFactory.getLog(getClass()).debug("start");
+		startReceiver();
+	}
 
-    public void stop() throws ControlException {
-        stopped = true;
-        if (receiver != null) {
-            receiver.stop();
-        }
-    }
+	private boolean stopped;
 
-    public void dispose() throws ControlException {
+	public void stop() throws ControlException {
+		stopped = true;
+		if (receiver != null) {
+			receiver.stop();
+		}
+	}
 
-    }
+	public void dispose() throws ControlException {
 
-    public void init() throws ControlException {
+	}
 
-    }
+	public void init() throws ControlException {
 
-    public PeerReceiverControler(PeerControler peerControler) {
-        this.peerControler = peerControler;
-    }
+	}
+
+	public PeerReceiverControler(PeerControler peerControler) {
+		this.peerControler = peerControler;
+	}
 }

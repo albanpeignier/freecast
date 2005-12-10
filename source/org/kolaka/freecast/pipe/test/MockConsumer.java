@@ -32,19 +32,19 @@ import org.kolaka.freecast.pipe.Consumer;
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public abstract class MockConsumer implements Consumer {
-    public boolean isClosed() {
-        throw new NotImplementedException(getClass());
-    }
+	public boolean isClosed() {
+		throw new NotImplementedException(getClass());
+	}
 
-    public void close() {
-        throw new NotImplementedException(getClass());
-    }
+	public void close() {
+		throw new NotImplementedException(getClass());
+	}
 
-    public void add(Listener listener) {
-        throw new NotImplementedException(getClass());
-    }
+	public void add(Listener listener) {
+		throw new NotImplementedException(getClass());
+	}
 
-    public void remove(Listener listener) {
-        throw new NotImplementedException(getClass());
-    }
+	public void remove(Listener listener) {
+		throw new NotImplementedException(getClass());
+	}
 }

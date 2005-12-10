@@ -22,6 +22,23 @@
  */
 package org.kolaka.freecast.manager.gui;
 
+import java.awt.Color;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.net.InetSocketAddress;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.border.Border;
+
 import org.kolaka.freecast.auditor.AuditorFactory;
 import org.kolaka.freecast.lang.mutable.ObservableValue;
 import org.kolaka.freecast.node.Node;
@@ -32,31 +49,33 @@ import org.kolaka.freecast.swing.Resources;
 import org.kolaka.freecast.swing.ResourcesException;
 import org.kolaka.freecast.tracker.Tracker;
 
-import javax.swing.*;
-import javax.swing.border.Border;
-import java.awt.*;
-import java.net.InetSocketAddress;
-import java.util.*;
-import java.util.List;
-
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class MainFrame extends BaseFrame {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5807144656289901506L;
+
 	private final Tracker tracker;
+
 	private final Node node;
+
 	private final Action visitAction;
+
 	private final Action emailHomepageAction;
 
-	public MainFrame(Resources resources, Tracker tracker, Node node, InetSocketAddress publicHttpServer)
-	        throws ResourcesException {
+	public MainFrame(Resources resources, Tracker tracker, Node node,
+			InetSocketAddress publicHttpServer) throws ResourcesException {
 		super(resources);
 
 		this.tracker = tracker;
 		this.node = node;
 
 		visitAction = new BrowseHomepageAction(resources, publicHttpServer);
-		emailHomepageAction = new EmailHomepageAction(resources, publicHttpServer);
+		emailHomepageAction = new EmailHomepageAction(resources,
+				publicHttpServer);
 	}
 
 	protected JComponent createContentPane() {
@@ -87,8 +106,8 @@ public class MainFrame extends BaseFrame {
 		protected ControlPanel(String title) {
 			super(new GridBagLayout());
 			setOpaque(false);
-			Border border =
-			        BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.WHITE), " " + title + " ");
+			Border border = BorderFactory.createTitledBorder(BorderFactory
+					.createLineBorder(Color.WHITE), " " + title + " ");
 			setBorder(border);
 		}
 
@@ -96,14 +115,16 @@ public class MainFrame extends BaseFrame {
 			GridBagConstraints constraints = new GridBagConstraints();
 			constraints.insets = new Insets(3, 3, 3, 3);
 
-			GridBagConstraints labelConstraints = (GridBagConstraints) constraints.clone();
+			GridBagConstraints labelConstraints = (GridBagConstraints) constraints
+					.clone();
 			labelConstraints.insets.left += 15;
 			labelConstraints.weightx = 1;
 			labelConstraints.anchor = GridBagConstraints.WEST;
 
 			add(new JLabel(label + ":", JLabel.CENTER), labelConstraints);
 
-			GridBagConstraints valueConstraints = (GridBagConstraints) constraints.clone();
+			GridBagConstraints valueConstraints = (GridBagConstraints) constraints
+					.clone();
 			valueConstraints.gridwidth = GridBagConstraints.REMAINDER;
 			valueConstraints.anchor = GridBagConstraints.EAST;
 
@@ -126,13 +147,17 @@ public class MainFrame extends BaseFrame {
 	}
 
 	class TrackerControlPanel extends ControlPanel {
-		private final Tracker tracker;
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 7865840587031612121L;
 
 		public TrackerControlPanel(Tracker tracker) {
 			super("Tracker");
-			this.tracker = tracker;
 
-			final ObservableValue nodeCount = new ObservableValue(new Integer(0));
+			final ObservableValue nodeCount = new ObservableValue(
+					new Integer(0));
 
 			Tracker.Auditor auditor = new Tracker.Auditor() {
 				public void connectedNodes(int count) {
@@ -147,7 +172,8 @@ public class MainFrame extends BaseFrame {
 
 				}
 			};
-			AuditorFactory.getInstance().register(Tracker.Auditor.class, auditor);
+			AuditorFactory.getInstance().register(Tracker.Auditor.class,
+					auditor);
 
 			add("Node count", nodeCount);
 		}
@@ -155,13 +181,16 @@ public class MainFrame extends BaseFrame {
 	}
 
 	class NodeControlPanel extends ControlPanel {
-		private final Node node;
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -7791975666622103751L;
 
 		public NodeControlPanel(Node node) {
 			super("Root Node");
-			this.node = node;
 
-			final ObservableValue connectedPeers = new ObservableValue(new Integer(0));
+			final ObservableValue connectedPeers = new ObservableValue(
+					new Integer(0));
 
 			PeerControler.Auditor auditor = new PeerControler.Auditor() {
 				public void acceptConnection(PeerReference reference) {
@@ -176,7 +205,8 @@ public class MainFrame extends BaseFrame {
 					connectedPeers.setValue(new Integer(count));
 				}
 			};
-			AuditorFactory.getInstance().register(PeerControler.Auditor.class, auditor);
+			AuditorFactory.getInstance().register(PeerControler.Auditor.class,
+					auditor);
 
 			add("Connected peers", connectedPeers);
 		}

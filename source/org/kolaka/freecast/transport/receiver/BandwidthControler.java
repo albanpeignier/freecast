@@ -27,11 +27,11 @@ import org.kolaka.freecast.packet.LogicalPage;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public interface BandwidthControler {
 
-    public long getTimeDelay(LogicalPage page);
-    
+	public long getTimeDelay(LogicalPage page);
+
 }

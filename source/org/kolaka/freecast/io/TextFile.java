@@ -26,8 +26,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
@@ -41,21 +41,21 @@ public class TextFile {
 	}
 
 	public void load(BufferedReader reader) throws IOException {
-	    List lines = new LinkedList();
+		List lines = new LinkedList();
 
-	    int lineNumber = 0;
-	    String lineContent;
-	    while ((lineContent = reader.readLine()) != null) {
-	        lines.add(new Line(++lineNumber, lineContent));
-	    }
+		int lineNumber = 0;
+		String lineContent;
+		while ((lineContent = reader.readLine()) != null) {
+			lines.add(new Line(++lineNumber, lineContent));
+		}
 
-	    this.lines = lines;
+		this.lines = lines;
 	}
 
 	protected void checkLoading() throws IOException {
-	    if (!isLoaded()) {
-	        throw new IOException("not loaded text file");
-	    }
+		if (!isLoaded()) {
+			throw new IOException("not loaded text file");
+		}
 	}
 
 	protected boolean isLoaded() {
@@ -63,33 +63,33 @@ public class TextFile {
 	}
 
 	public int getLineCount() throws IOException {
-	    checkLoading();
-	    return lines.size();
+		checkLoading();
+		return lines.size();
 	}
 
 	public List getLines() throws IOException {
-	    checkLoading();
-	    return lines;
+		checkLoading();
+		return lines;
 	}
 
 	public static class Line {
 
-	    private final int number;
+		private final int number;
 
-	    private final String content;
+		private final String content;
 
-	    public Line(int number, String content) {
-	        this.number = number;
-	        this.content = content;
-	    }
+		public Line(int number, String content) {
+			this.number = number;
+			this.content = content;
+		}
 
-	    public int getNumber() {
-	        return number;
-	    }
+		public int getNumber() {
+			return number;
+		}
 
-	    public String getContent() {
-	        return content;
-	    }
+		public String getContent() {
+			return content;
+		}
 
 	}
 }

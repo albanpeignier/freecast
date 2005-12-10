@@ -32,31 +32,31 @@ import java.util.StringTokenizer;
  */
 public class InetSocketAddressParser {
 
-    public static final InetSocketAddressParser DEFAULT = new InetSocketAddressParser();
+	public static final InetSocketAddressParser DEFAULT = new InetSocketAddressParser();
 
-    public InetSocketAddress parse(String string) throws ParseException {
-        InetSocketAddress address;
+	public InetSocketAddress parse(String string) throws ParseException {
+		InetSocketAddress address;
 
-        StringTokenizer st = new StringTokenizer(string, ":", false);
-        if (st.countTokens() > 2) {
-            throw new ParseException("Invalid SocketAddress " + string, string
-                    .length());
-        } else if (st.countTokens() == 2) {
-            address = new InetSocketAddress(st.nextToken(), parsePortNumber(st
-                    .nextToken()));
-        } else {
-            address = new InetSocketAddress(parsePortNumber(st.nextToken()));
-        }
+		StringTokenizer st = new StringTokenizer(string, ":", false);
+		if (st.countTokens() > 2) {
+			throw new ParseException("Invalid SocketAddress " + string, string
+					.length());
+		} else if (st.countTokens() == 2) {
+			address = new InetSocketAddress(st.nextToken(), parsePortNumber(st
+					.nextToken()));
+		} else {
+			address = new InetSocketAddress(parsePortNumber(st.nextToken()));
+		}
 
-        return address;
-    }
+		return address;
+	}
 
-    private int parsePortNumber(String token) throws ParseException {
-        try {
-            return Integer.parseInt(token);
-        } catch (NumberFormatException e) {
-            throw new ParseException("Invalid port number", 0);
-        }
-    }
+	private int parsePortNumber(String token) throws ParseException {
+		try {
+			return Integer.parseInt(token);
+		} catch (NumberFormatException e) {
+			throw new ParseException("Invalid port number", 0);
+		}
+	}
 
 }

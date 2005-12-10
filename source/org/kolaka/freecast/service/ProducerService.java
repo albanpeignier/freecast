@@ -32,6 +32,6 @@ import org.kolaka.freecast.pipe.Producer;
  */
 public interface ProducerService extends Service {
 
-    public void setProducer(Producer producer);
+	public void setProducer(Producer producer);
 
 }

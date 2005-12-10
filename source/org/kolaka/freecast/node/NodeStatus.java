@@ -37,51 +37,51 @@ import org.kolaka.freecast.player.PlayerStatus;
  */
 public class NodeStatus implements Serializable {
 
-    static final long serialVersionUID = -7418743416419044755L;
+	static final long serialVersionUID = -7418743416419044755L;
 
-    /**
-     * <strong>Note: </strong> final fields are supported by the Hessian
-     * serialization
-     */
-    private NodeIdentifier identifier;
+	/**
+	 * <strong>Note: </strong> final fields are supported by the Hessian
+	 * serialization
+	 */
+	private NodeIdentifier identifier;
 
-    private Date date;
+	private Date date;
 
-    private Order order;
+	private Order order;
 
-    private PlayerStatus playStatus;
+	private PlayerStatus playStatus;
 
-    public NodeStatus(NodeIdentifier identifier, Order order) {
-        this.identifier = identifier;
-        this.date = new Date();
-        this.order = order;
-    }
+	public NodeStatus(NodeIdentifier identifier, Order order) {
+		this.identifier = identifier;
+		this.date = new Date();
+		this.order = order;
+	}
 
-    public NodeIdentifier getIdentifier() {
-        return identifier;
-    }
+	public NodeIdentifier getIdentifier() {
+		return identifier;
+	}
 
-    public Date getDate() {
-        return date;
-    }
+	public Date getDate() {
+		return date;
+	}
 
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
 
-    public Order getOrder() {
-        return order;
-    }
+	public Order getOrder() {
+		return order;
+	}
 
-    public PeerStatus createPeerStatus() {
-        return new PeerStatus(identifier, order);
-    }
+	public PeerStatus createPeerStatus() {
+		return new PeerStatus(identifier, order);
+	}
 
-    public PlayerStatus getPlayStatus() {
-        return playStatus;
-    }
+	public PlayerStatus getPlayStatus() {
+		return playStatus;
+	}
 
-    public void setPlayStatus(PlayerStatus playStatus) {
-        this.playStatus = playStatus;
-    }
+	public void setPlayStatus(PlayerStatus playStatus) {
+		this.playStatus = playStatus;
+	}
 }

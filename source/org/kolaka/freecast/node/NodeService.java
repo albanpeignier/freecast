@@ -32,6 +32,6 @@ import org.kolaka.freecast.service.Service;
  */
 public interface NodeService extends Service {
 
-    public void setNode(ConfigurableNode node);
+	public void setNode(ConfigurableNode node);
 
 }

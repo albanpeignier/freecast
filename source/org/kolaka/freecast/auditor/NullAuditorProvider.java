@@ -35,13 +35,13 @@ public class NullAuditorProvider extends ProxyAuditorProvider {
 	}
 
 	protected Auditor createAuditor(Class auditorInterface) {
-        return createAuditor(auditorInterface, HANDLER);
+		return createAuditor(auditorInterface, HANDLER);
 	}
 
 	private static InvocationHandler HANDLER = new AuditInvocationHandler() {
 
 		protected void invokeAuditMethod(Method method, Object[] args) {
-			
+
 		}
 
 	};

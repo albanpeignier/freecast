@@ -23,12 +23,12 @@
 
 package org.kolaka.freecast.pipe;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.packet.LogicalPage;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * 
@@ -37,97 +37,100 @@ import java.io.InputStream;
  */
 public class ConsumerInputStreamFactory {
 
-    private Consumer consumer;
+	private Consumer consumer;
 
-    public ConsumerInputStreamFactory(Consumer consumer) {
-        this.consumer = consumer;
-    }
+	public ConsumerInputStreamFactory(Consumer consumer) {
+		this.consumer = consumer;
+	}
 
-    private long delayOnEmptyPipe = 5000;
+	private long delayOnEmptyPipe = 5000;
 
-    private Stream next = null;
+	private Stream next = null;
 
-    public InputStream next() {
-        if (next == null) {
-            next = new Stream(nextPage());
-        }
-        
-        return next;
-    }
-    
-    private LogicalPage nextPage() {
-        LogicalPage readPage = null;
-        
-        do {
-            try {
-                readPage = consumer.consume();
-            } catch (EmptyPipeException e) {
-                sleep();
-            }
-        } while (readPage == null);
-        
-        return readPage;
-    }
+	public InputStream next() {
+		if (next == null) {
+			next = new Stream(nextPage());
+		}
 
-    class Stream extends InputStream {
+		return next;
+	}
 
-        private LogicalPage readPage;
-        private int readIndex;
+	private LogicalPage nextPage() {
+		LogicalPage readPage = null;
 
-        Stream(LogicalPage readPage) {
-            Validate.isTrue(readPage.isFirstPage(), "Read page isn't first page: " + readPage);
-            this.readPage = readPage;
-        }
+		do {
+			try {
+				readPage = consumer.consume();
+			} catch (EmptyPipeException e) {
+				sleep();
+			}
+		} while (readPage == null);
 
-        public int read() throws IOException {
-            if (readPage == null) {
-                readPage = nextPage();
-                readIndex = 0;
+		return readPage;
+	}
 
-                if (readPage.isFirstPage()) {
-                    LogFactory.getLog(getClass()).debug("New header: " + readPage);
-                    next = new Stream(readPage);
-                    return -1;
-                }
-            }
+	class Stream extends InputStream {
 
-            if (closed) {
-                return -1;
-            }
+		private LogicalPage readPage;
 
-            byte bytes[] = readPage.getBytes();
-            int read = bytes[readIndex] & 0xff;
-            readIndex++;
+		private int readIndex;
 
-            if (readIndex >= bytes.length) {
-                readPage = null;
-            }
+		Stream(LogicalPage readPage) {
+			Validate.isTrue(readPage.isFirstPage(),
+					"Read page isn't first page: " + readPage);
+			this.readPage = readPage;
+		}
 
-            return read;
-        }
+		public int read() throws IOException {
+			if (readPage == null) {
+				readPage = nextPage();
+				readIndex = 0;
 
-        private boolean closed;
+				if (readPage.isFirstPage()) {
+					LogFactory.getLog(getClass()).debug(
+							"New header: " + readPage);
+					next = new Stream(readPage);
+					return -1;
+				}
+			}
 
-        public void close() {
-            closed = true;
-        }
+			if (closed) {
+				return -1;
+			}
 
-    }
+			byte bytes[] = readPage.getBytes();
+			int read = bytes[readIndex] & 0xff;
+			readIndex++;
 
-    private void sleep() {
-        String msg = "pipe is empty. Sleep " + delayOnEmptyPipe / 1000
-                + " seconds";
-        LogFactory.getLog(getClass()).debug(msg);
+			if (readIndex >= bytes.length) {
+				readPage = null;
+			}
 
-        try {
-            Thread.sleep(delayOnEmptyPipe);
-        } catch (InterruptedException e) {
-            LogFactory.getLog(getClass()).error("Can make the thead sleep", e);
-        }
-    }
+			return read;
+		}
 
-    public void close() {
-        consumer.close();
-    }
+		private boolean closed;
+
+		public void close() {
+			closed = true;
+		}
+
+	}
+
+	private void sleep() {
+		String msg = "pipe is empty. Sleep " + delayOnEmptyPipe / 1000
+				+ " seconds";
+		LogFactory.getLog(getClass()).debug(msg);
+
+		try {
+			Thread.sleep(delayOnEmptyPipe);
+		} catch (InterruptedException e) {
+			LogFactory.getLog(getClass()).error("Can make the thead sleep", e);
+		}
+	}
+
+	public void close() {
+		consumer.close();
+	}
 
 }

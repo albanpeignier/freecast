@@ -25,11 +25,11 @@ package org.kolaka.freecast.packet;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public interface SequenceElement {
 
-    public long getSequenceNumber();
-    
+	public long getSequenceNumber();
+
 }

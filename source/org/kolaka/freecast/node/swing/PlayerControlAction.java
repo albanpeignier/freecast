@@ -22,6 +22,10 @@
  */
 package org.kolaka.freecast.node.swing;
 
+import java.awt.event.ActionEvent;
+
+import javax.swing.Icon;
+
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.player.InteractivePlayer;
 import org.kolaka.freecast.player.InteractivePlayerSource;
@@ -35,21 +39,24 @@ import org.kolaka.freecast.swing.BaseAction;
 import org.kolaka.freecast.swing.Resources;
 import org.kolaka.freecast.swing.ResourcesException;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public class PlayerControlAction extends BaseAction {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7571570213244844002L;
+
 	private InteractivePlayerSource playerSource;
+
 	private Player player;
 
 	final Icon playerStartedIcon, playerStoppedIcon;
 
-	public PlayerControlAction(Resources resources, InteractivePlayerSource playerSource)
-	        throws ResourcesException {
+	public PlayerControlAction(Resources resources,
+			InteractivePlayerSource playerSource) throws ResourcesException {
 		playerStartedIcon = resources.getIcon("player.started");
 		playerStoppedIcon = resources.getIcon("player.stopped");
 
@@ -94,9 +101,8 @@ public class PlayerControlAction extends BaseAction {
 		playing = state;
 		putValue(NAME, (playing ? "Mute" : "Unmute") + " player");
 		Actions.setLargIcon(this, playing ? playerStartedIcon
-		        : playerStoppedIcon);
-		putValue(SHORT_DESCRIPTION, "click to "
-		        + (playing ? "mute" : "listen"));
+				: playerStoppedIcon);
+		putValue(SHORT_DESCRIPTION, "click to " + (playing ? "mute" : "listen"));
 	}
 
 	public void changeState(boolean newState) {
@@ -112,7 +118,7 @@ public class PlayerControlAction extends BaseAction {
 			}
 		} catch (ControlException e) {
 			LogFactory.getLog(getClass()).error(
-			        "Can't " + newStateDescription + " the player", e);
+					"Can't " + newStateDescription + " the player", e);
 		}
 	}
 
@@ -121,4 +127,3 @@ public class PlayerControlAction extends BaseAction {
 	}
 
 }
-

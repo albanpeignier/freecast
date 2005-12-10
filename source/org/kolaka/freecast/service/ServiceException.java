@@ -30,14 +30,14 @@ package org.kolaka.freecast.service;
  */
 public class ServiceException extends Exception {
 
-    private static final long serialVersionUID = 3257849865861085489L;
+	private static final long serialVersionUID = 3257849865861085489L;
 
-    public ServiceException(String message) {
-        super(message);
-    }
+	public ServiceException(String message) {
+		super(message);
+	}
 
-    public ServiceException(String message, Throwable cause) {
-        super(message, cause);
-    }
+	public ServiceException(String message, Throwable cause) {
+		super(message, cause);
+	}
 
 }

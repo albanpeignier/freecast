@@ -34,17 +34,16 @@ public class URIParser {
 		uriDefinition = filterWin32Path(uriDefinition);
 		return new URI(encode(uriDefinition));
 	}
-	
+
 	private String filterWin32Path(String uriDefinition) {
-		boolean isWin32Path = uriDefinition.length() > 2 &&
-			Character.isLetter(uriDefinition.charAt(0)) &&
-			uriDefinition.charAt(1) == WIN32_FILESEPARATOR;
+		boolean isWin32Path = uriDefinition.length() > 2
+				&& Character.isLetter(uriDefinition.charAt(0))
+				&& uriDefinition.charAt(1) == WIN32_FILESEPARATOR;
 		if (!isWin32Path) {
 			return uriDefinition;
 		}
 		return "file:/" + uriDefinition.charAt(0) + "/";
 	}
-	
 
 	private String encode(String uriDefinition) {
 		StringBuffer sb = new StringBuffer();
@@ -64,14 +63,14 @@ public class URIParser {
 	}
 
 	private static String reservedCharacters = "./?:@&=+%_-";
-	
+
 	/**
 	 * @param c
 	 * @return
 	 */
 	private boolean isSpecialCharacter(char c) {
-		return reservedCharacters.indexOf(c) == -1 && !Character.isLetterOrDigit(c); 
+		return reservedCharacters.indexOf(c) == -1
+				&& !Character.isLetterOrDigit(c);
 	}
-	
 
 }

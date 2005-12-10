@@ -38,44 +38,44 @@ import com.mockobjects.util.Verifier;
  */
 public class MockPeerConnection extends PeerConnection implements Verifiable {
 
-    public MockPeerConnection(Type type) {
-        super(type);
-    }
+	public MockPeerConnection(Type type) {
+		super(type);
+	}
 
-    private final ReturnValue reader = new ReturnValue("reader");
+	private final ReturnValue reader = new ReturnValue("reader");
 
-    private final ReturnValue writer = new ReturnValue("writer");
+	private final ReturnValue writer = new ReturnValue("writer");
 
-    protected MessageReader createReader() {
-        return (MessageReader) reader.getValue();
-    }
+	protected MessageReader createReader() {
+		return (MessageReader) reader.getValue();
+	}
 
-    public void setupCreateReader(MessageReader returnedReader) {
-        reader.setValue(returnedReader);
-    }
+	public void setupCreateReader(MessageReader returnedReader) {
+		reader.setValue(returnedReader);
+	}
 
-    protected MessageWriter createWriter() {
-        return (MessageWriter) writer.getValue();
-    }
+	protected MessageWriter createWriter() {
+		return (MessageWriter) writer.getValue();
+	}
 
-    public void setupCreateWriter(MessageWriter returnedWriter) {
-        writer.setValue(returnedWriter);
-    }
+	public void setupCreateWriter(MessageWriter returnedWriter) {
+		writer.setValue(returnedWriter);
+	}
 
-    public void verify() {
-        Verifier.verifyObject(this);
-    }
+	public void verify() {
+		Verifier.verifyObject(this);
+	}
 
-    protected void disposeImpl() {
+	protected void disposeImpl() {
 
-    }
+	}
 
-    public void open() {
-        super.open();
-    }
+	public void open() {
+		super.open();
+	}
 
-    public String toString() {
-        return "MockConnection";
-    }
+	public String toString() {
+		return "MockConnection";
+	}
 
 }

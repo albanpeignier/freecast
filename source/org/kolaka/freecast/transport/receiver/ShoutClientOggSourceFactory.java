@@ -36,30 +36,33 @@ import org.kolaka.freecast.ogg.OggStreamSource;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class ShoutClientOggSourceFactory implements OggSourceFactory {
 
-    private final URL url;
-    private final HttpClient httpClient;
-    
-    public ShoutClientOggSourceFactory(URL url) {
-        this.url = url;
-        this.httpClient = new HttpClient();
-    }
-    
-    public OggSource next() throws IOException {
-        GetMethod httpRetrieve = new GetMethod(url.toExternalForm());
-        int statusCode = httpClient.executeMethod(httpRetrieve);
-        
-        if (statusCode != HttpStatus.SC_OK) {
-            throw new HttpException("Can't connect to " + url +" (" + httpRetrieve.getStatusLine() + ")");
-        }
-        
-        LogFactory.getLog(getClass()).info("ShoutClient successfully connected to " + url);
-        
-        return new OggStreamSource(httpRetrieve.getResponseBodyAsStream());
-    }
-    
+	private final URL url;
+
+	private final HttpClient httpClient;
+
+	public ShoutClientOggSourceFactory(URL url) {
+		this.url = url;
+		this.httpClient = new HttpClient();
+	}
+
+	public OggSource next() throws IOException {
+		GetMethod httpRetrieve = new GetMethod(url.toExternalForm());
+		int statusCode = httpClient.executeMethod(httpRetrieve);
+
+		if (statusCode != HttpStatus.SC_OK) {
+			throw new HttpException("Can't connect to " + url + " ("
+					+ httpRetrieve.getStatusLine() + ")");
+		}
+
+		LogFactory.getLog(getClass()).info(
+				"ShoutClient successfully connected to " + url);
+
+		return new OggStreamSource(httpRetrieve.getResponseBodyAsStream());
+	}
+
 }

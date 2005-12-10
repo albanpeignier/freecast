@@ -34,37 +34,41 @@ import org.kolaka.freecast.packet.Packet;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class SignaturePacketValidator implements PacketValidator,
-        SignaturePacketConstants {
+		SignaturePacketConstants {
 
-    private final String algorithm;
-    private final PublicKey publicKey;
+	private final String algorithm;
 
-    public SignaturePacketValidator(String algorithm, PublicKey publicKey) {
-        Validate.notNull(algorithm,"No specified algorithm");
-        Validate.notNull(publicKey,"No specified PublicKey");
+	private final PublicKey publicKey;
 
-        this.algorithm = algorithm;
-        this.publicKey = publicKey;
-    }
+	public SignaturePacketValidator(String algorithm, PublicKey publicKey) {
+		Validate.notNull(algorithm, "No specified algorithm");
+		Validate.notNull(publicKey, "No specified PublicKey");
 
-    public static SignaturePacketValidator getInstance(URL publicKeyURL) throws IOException {
-        PublicKey publicKey = (PublicKey) SerializationUtils.deserialize(publicKeyURL.openStream());
-        return new SignaturePacketValidator(DEFAULT_ALGORITHM, publicKey);
-    }
+		this.algorithm = algorithm;
+		this.publicKey = publicKey;
+	}
 
-    public boolean validate(Packet packet) throws PacketValidatorException {
-        try {
-            Signature verifierSignature = Signature.getInstance(algorithm);
-            verifierSignature.initVerify(publicKey);
-            verifierSignature.update(packet.getBytes());
-            return verifierSignature.verify(packet.getChecksum().getData());
-        } catch (Exception e) {
-            throw new PacketValidatorException("Can't verify the packet signature",e);
-        } 
-    }
+	public static SignaturePacketValidator getInstance(URL publicKeyURL)
+			throws IOException {
+		PublicKey publicKey = (PublicKey) SerializationUtils
+				.deserialize(publicKeyURL.openStream());
+		return new SignaturePacketValidator(DEFAULT_ALGORITHM, publicKey);
+	}
+
+	public boolean validate(Packet packet) throws PacketValidatorException {
+		try {
+			Signature verifierSignature = Signature.getInstance(algorithm);
+			verifierSignature.initVerify(publicKey);
+			verifierSignature.update(packet.getBytes());
+			return verifierSignature.verify(packet.getChecksum().getData());
+		} catch (Exception e) {
+			throw new PacketValidatorException(
+					"Can't verify the packet signature", e);
+		}
+	}
 
 }

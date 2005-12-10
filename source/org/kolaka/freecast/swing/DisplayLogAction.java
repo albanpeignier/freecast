@@ -22,16 +22,21 @@
  */
 package org.kolaka.freecast.swing;
 
-import javax.swing.*;
+import javax.swing.JDialog;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public class DisplayLogAction extends ShowHideAction {
 
-    public DisplayLogAction(JDialog logDialog) {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5461572404345579648L;
+
+	public DisplayLogAction(JDialog logDialog) {
 		super(logDialog, "Log dialog");
-        putValue(SMALL_ICON, loadIcon("resources/log.png"));
-    }
+		putValue(SMALL_ICON, loadIcon("resources/log.png"));
+	}
 
 }

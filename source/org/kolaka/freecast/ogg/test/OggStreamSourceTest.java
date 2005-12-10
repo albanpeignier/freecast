@@ -25,7 +25,6 @@ package org.kolaka.freecast.ogg.test;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 
 import junit.framework.TestCase;
 
@@ -39,23 +38,23 @@ import org.kolaka.freecast.ogg.OggStreamSource;
  */
 public class OggStreamSourceTest extends TestCase {
 
-    public void testReadFile() throws IOException {
-        InputStream resource = getClass().getResourceAsStream(
-                "resources/sample.ogg");
-        assertNotNull("resource not found", resource);
+	public void testReadFile() throws IOException {
+		InputStream resource = getClass().getResourceAsStream(
+				"resources/sample.ogg");
+		assertNotNull("resource not found", resource);
 
-        OggStreamSource oggSource = new OggStreamSource(resource);
+		OggStreamSource oggSource = new OggStreamSource(resource);
 
-        OggPage firstPage = oggSource.next();
-        assertTrue("page must be first", firstPage.isFirstPage());
+		OggPage firstPage = oggSource.next();
+		assertTrue("page must be first", firstPage.isFirstPage());
 
-        OggPage page = firstPage;
-        while (!page.isLastPage()) {
-            page = oggSource.next();
-            assertFalse("page can't be first", page.isFirstPage());
-        }
+		OggPage page = firstPage;
+		while (!page.isLastPage()) {
+			page = oggSource.next();
+			assertFalse("page can't be first", page.isFirstPage());
+		}
 
-        oggSource.close();
-    }
+		oggSource.close();
+	}
 
 }

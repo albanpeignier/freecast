@@ -29,7 +29,6 @@ import java.util.Iterator;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
-import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.spi.AudioFileReader;
 import javax.sound.sampled.spi.FormatConversionProvider;
@@ -45,20 +44,22 @@ import org.kolaka.freecast.resource.ResourceLocators;
 import sun.misc.Service;
 
 public class OggDecoderTest extends TestCase {
-	
+
 	public void testConversionProviderAvailable() {
 		Iterator iterator = Service.providers(FormatConversionProvider.class);
 		assertTrue(iterator.hasNext());
-		LogFactory.getLog(getClass()).debug("converters: " + IteratorUtils.toList(iterator));
+		LogFactory.getLog(getClass()).debug(
+				"converters: " + IteratorUtils.toList(iterator));
 	}
 
 	public void testFileReaderAvailable() {
 		Iterator iterator = Service.providers(AudioFileReader.class);
 		assertTrue(iterator.hasNext());
-		LogFactory.getLog(getClass()).debug("filereaders: " + IteratorUtils.toList(iterator));
+		LogFactory.getLog(getClass()).debug(
+				"filereaders: " + IteratorUtils.toList(iterator));
 	}
 
-	public void testJavaZoom() throws Exception  {
+	public void testJavaZoom() throws Exception {
 		if (isEnabled("javazoom")) {
 			testProvider(OggDecoder.createOggDecoder("javazoom"));
 		}
@@ -69,25 +70,26 @@ public class OggDecoderTest extends TestCase {
 			testProvider(OggDecoder.createOggDecoder("tritonus"));
 		}
 	}
-	
+
 	public void testDefault() throws Exception {
 		testProvider(OggDecoder.getInstance());
 	}
-	
+
 	private boolean isEnabled(String provider) {
 		String propertyName = getClass().getName() + "." + provider;
-		String property = System.getProperty(propertyName );
+		String property = System.getProperty(propertyName);
 		return property == null || !property.equals("false");
 	}
 
 	private void testProvider(OggDecoder decoder) throws Exception {
 		InputStream inputResources = getResourceAsStream();
 		AudioInputStream pcmInputStream = decoder.decode(inputResources);
-		
-		long readLength = 0; 
+
+		long readLength = 0;
 		int read = 0;
-		byte[] buffer = new byte[1024 * pcmInputStream.getFormat().getFrameSize()];
-		Checksum checksum = new CRC32(); 
+		byte[] buffer = new byte[1024 * pcmInputStream.getFormat()
+				.getFrameSize()];
+		Checksum checksum = new CRC32();
 		while (read > -1) {
 			read = pcmInputStream.read(buffer);
 			if (read > -1) {
@@ -95,26 +97,30 @@ public class OggDecoderTest extends TestCase {
 				checksum.update(buffer, 0, read);
 			}
 		}
-		LogFactory.getLog(getClass()).debug("read length: " + readLength + " checksum: " + Long.toHexString(checksum.getValue()));
-		
+		LogFactory.getLog(getClass()).debug(
+				"read length: " + readLength + " checksum: "
+						+ Long.toHexString(checksum.getValue()));
+
 		pcmInputStream.close();
 	}
 
 	/**
 	 * @return
-	 * @throws ResourceLocator.Exception 
+	 * @throws ResourceLocator.Exception
 	 * @throws Exception
 	 */
 	private InputStream getResourceAsStream() throws ResourceLocator.Exception {
 		InputStream inputResources;
-		String property = System.getProperty(getClass().getName() + ".resource");
-		
+		String property = System
+				.getProperty(getClass().getName() + ".resource");
+
 		if (property == null || property.equals("default")) {
 			LogFactory.getLog(getClass()).debug("load default resource");
 			inputResources = OggTestResources.getResourceAsStream("sample.ogg");
 		} else {
 			LogFactory.getLog(getClass()).debug("load resource: " + property);
-			inputResources = ResourceLocators.getDefaultInstance().openResource(URI.create(property));
+			inputResources = ResourceLocators.getDefaultInstance()
+					.openResource(URI.create(property));
 		}
 		return inputResources;
 	}

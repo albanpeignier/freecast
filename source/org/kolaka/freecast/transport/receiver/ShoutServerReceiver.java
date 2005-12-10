@@ -27,13 +27,13 @@ import java.net.InetSocketAddress;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class ShoutServerReceiver extends OggSourceFactoryReceiver {
 
-    public ShoutServerReceiver(InetSocketAddress listenAddress) {
-        super(new ShoutServerOggSourceFactory(listenAddress));
-    }
+	public ShoutServerReceiver(InetSocketAddress listenAddress) {
+		super(new ShoutServerOggSourceFactory(listenAddress));
+	}
 
 }

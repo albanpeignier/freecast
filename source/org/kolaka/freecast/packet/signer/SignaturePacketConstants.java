@@ -23,11 +23,8 @@
 
 package org.kolaka.freecast.packet.signer;
 
-
-
-
 public interface SignaturePacketConstants {
 
-    public static final String DEFAULT_ALGORITHM = "SHA1withRSA";
+	public static final String DEFAULT_ALGORITHM = "SHA1withRSA";
 
 }

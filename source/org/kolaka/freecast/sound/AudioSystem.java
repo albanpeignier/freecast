@@ -76,16 +76,19 @@ public class AudioSystem {
 		}
 
 		LogFactory.getLog(AudioSystem.class).debug(
-				"try to find a codec to transform " + sourceFormat + " into " + targetFormat);
+				"try to find a codec to transform " + sourceFormat + " into "
+						+ targetFormat);
 
 		Iterator providers = getProviders(FormatConversionProvider.class);
 		while (providers.hasNext()) {
 			FormatConversionProvider codec = (FormatConversionProvider) providers
-						.next();
-			LogFactory.getLog(AudioSystem.class).debug("test next codec " + codec);
+					.next();
+			LogFactory.getLog(AudioSystem.class).debug(
+					"test next codec " + codec);
 			if (codec.isConversionSupported(targetFormat, sourceFormat)) {
 				LogFactory.getLog(AudioSystem.class).debug(
-						"find compatible codec to transform " + sourceFormat + " into " + targetFormat + ": " + codec);
+						"find compatible codec to transform " + sourceFormat
+								+ " into " + targetFormat + ": " + codec);
 				return codec.getAudioInputStream(targetFormat, sourceStream);
 			}
 		}
@@ -95,11 +98,12 @@ public class AudioSystem {
 	}
 
 	/**
-	 * Prefer full-Java implementations to native ones  
+	 * Prefer full-Java implementations to native ones
 	 */
 	private static final List FAVORITE_SELECTORS = Arrays
 			.asList(new ProviderSelector[] {
-					new PackageProviderSelector("javazoom"), new PackageProviderSelector("org.tritonus") });
+					new PackageProviderSelector("javazoom"),
+					new PackageProviderSelector("org.tritonus") });
 
 	/**
 	 * @param providerClass
@@ -110,16 +114,18 @@ public class AudioSystem {
 	private static Iterator getProviders(Class providerClass)
 			throws ServiceConfigurationError {
 		List availables = new LinkedList();
-		
-		for (Iterator iter=Service.providers(providerClass); iter.hasNext(); ) {
+
+		for (Iterator iter = Service.providers(providerClass); iter.hasNext();) {
 			try {
 				availables.add(iter.next());
 			} catch (Throwable t) {
-				LogFactory.getLog(AudioSystem.class).error("can't load one of the provider for " + providerClass.getName(), t);
+				LogFactory.getLog(AudioSystem.class).error(
+						"can't load one of the provider for "
+								+ providerClass.getName(), t);
 				continue;
 			}
 		}
-		
+
 		final List favorites = selectFavorites(availables);
 
 		List providers = new LinkedList();

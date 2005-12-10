@@ -23,33 +23,39 @@
 
 package org.kolaka.freecast.config.test;
 
+import java.util.NoSuchElementException;
+
 import junit.framework.TestCase;
+
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.kolaka.freecast.config.ConfigurationLoader;
 import org.kolaka.freecast.config.DefaultConfigurationLoader;
 
-import java.util.NoSuchElementException;
-
 public class ConfigurationLoaderTest extends TestCase {
 
-    public void testTrackerLoad() throws ConfigurationException {
-        ConfigurationLoader configurationLoader = new DefaultConfigurationLoader("tracker");
-        configurationLoader.load();
-        Configuration configuration = configurationLoader.getRootConfiguration().subset("tracker");
-        
-        try {
-            configuration.getString("dummy");
-            fail("should throw a NoSuchElementException");
-        } catch (NoSuchElementException e) {
+	public void testTrackerLoad() throws ConfigurationException {
+		ConfigurationLoader configurationLoader = new DefaultConfigurationLoader(
+				"tracker");
+		configurationLoader.load();
+		Configuration configuration = configurationLoader
+				.getRootConfiguration().subset("tracker");
 
-        }
-        
-        assertEquals("http", configuration.getString("connector.class"));
-        
-        Configuration connectorConfiguration = configuration.subset("connector");
-        assertEquals("0.0.0.0", connectorConfiguration.getString("listenaddress.host"));
-        assertEquals("1665", connectorConfiguration.getString("listenaddress.port"));
-    }
+		try {
+			configuration.getString("dummy");
+			fail("should throw a NoSuchElementException");
+		} catch (NoSuchElementException e) {
+
+		}
+
+		assertEquals("http", configuration.getString("connector.class"));
+
+		Configuration connectorConfiguration = configuration
+				.subset("connector");
+		assertEquals("0.0.0.0", connectorConfiguration
+				.getString("listenaddress.host"));
+		assertEquals("1665", connectorConfiguration
+				.getString("listenaddress.port"));
+	}
 
 }

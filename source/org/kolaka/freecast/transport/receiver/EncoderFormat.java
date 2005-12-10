@@ -26,9 +26,11 @@ package org.kolaka.freecast.transport.receiver;
 public class EncoderFormat {
 
 	private final int channels;
+
 	private final int sampleRate;
+
 	private final float quality;
-	
+
 	/**
 	 * @param channels
 	 * @param sampleRate
@@ -50,6 +52,6 @@ public class EncoderFormat {
 
 	public int getSampleRate() {
 		return sampleRate;
-	}	
+	}
 
 }

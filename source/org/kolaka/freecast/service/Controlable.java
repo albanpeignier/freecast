@@ -30,16 +30,16 @@ package org.kolaka.freecast.service;
  */
 public interface Controlable extends Startable {
 
-    /**
-     * @deprecated useless
-     * @throws ControlException
-     */
-    public void init() throws ControlException;
+	/**
+	 * @deprecated useless
+	 * @throws ControlException
+	 */
+	public void init() throws ControlException;
 
-    /**
-     * @deprecated useless
-     * @throws ControlException
-     */
-    public void dispose() throws ControlException;
+	/**
+	 * @deprecated useless
+	 * @throws ControlException
+	 */
+	public void dispose() throws ControlException;
 
 }

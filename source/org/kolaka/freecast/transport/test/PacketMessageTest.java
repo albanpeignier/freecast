@@ -41,41 +41,47 @@ import org.kolaka.freecast.transport.PacketMessage;
 
 public class PacketMessageTest extends TestCase {
 
-    public void testWriteRead() throws IOException {
-        byte[] expectedBytes = new byte[Packet.DEFAULT_SIZE];
-        for (int i=0; i < expectedBytes.length; i++) {
-            expectedBytes[i] = (byte) (i % Byte.MAX_VALUE);
-        }
-        
-        byte[] expectedChecksumContent = new byte[64];
-        for (int i=0; i < expectedChecksumContent.length; i++) {
-            expectedChecksumContent[i] = (byte) (i % Byte.MAX_VALUE);
-        }
-        Checksum checksum = new Checksum(expectedChecksumContent);
-        
-        DefaultLogicalPageDescriptor pageDescriptor = new DefaultLogicalPageDescriptor(1, 0, 1, true);
-        LogicalPageDescriptor.Element elementDescriptor = pageDescriptor.createElementDescriptor(1);
-        
-        Packet packet = new DefaultPacket(1, System.currentTimeMillis(), new DefaultPacketData(expectedBytes), checksum, elementDescriptor);
-        
-        PacketMessage message = PacketMessage.getInstance(packet);
-        
-        ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
-        DataOutputStream dataOutputStream = new DataOutputStream(byteOutputStream);
-        message.write(dataOutputStream);
-        dataOutputStream.close();
-        
-        byte[] packetRawBytes = byteOutputStream.toByteArray();
-        
-        ByteArrayInputStream byteInputStream = new ByteArrayInputStream(packetRawBytes);
-        PacketMessage readMessage = new PacketMessage();
-        DataInputStream dataInputStream = new DataInputStream(byteInputStream);
-        readMessage.read(dataInputStream);
-        dataInputStream.close();
-        
-        Packet readPacket = readMessage.getPacket();
-        assertEquals(packet.getSequenceNumber(), readPacket.getSequenceNumber());
-        assertEquals(packet.getChecksum(), readPacket.getChecksum());
-    }
-    
+	public void testWriteRead() throws IOException {
+		byte[] expectedBytes = new byte[Packet.DEFAULT_SIZE];
+		for (int i = 0; i < expectedBytes.length; i++) {
+			expectedBytes[i] = (byte) (i % Byte.MAX_VALUE);
+		}
+
+		byte[] expectedChecksumContent = new byte[64];
+		for (int i = 0; i < expectedChecksumContent.length; i++) {
+			expectedChecksumContent[i] = (byte) (i % Byte.MAX_VALUE);
+		}
+		Checksum checksum = new Checksum(expectedChecksumContent);
+
+		DefaultLogicalPageDescriptor pageDescriptor = new DefaultLogicalPageDescriptor(
+				1, 0, 1, true);
+		LogicalPageDescriptor.Element elementDescriptor = pageDescriptor
+				.createElementDescriptor(1);
+
+		Packet packet = new DefaultPacket(1, System.currentTimeMillis(),
+				new DefaultPacketData(expectedBytes), checksum,
+				elementDescriptor);
+
+		PacketMessage message = PacketMessage.getInstance(packet);
+
+		ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
+		DataOutputStream dataOutputStream = new DataOutputStream(
+				byteOutputStream);
+		message.write(dataOutputStream);
+		dataOutputStream.close();
+
+		byte[] packetRawBytes = byteOutputStream.toByteArray();
+
+		ByteArrayInputStream byteInputStream = new ByteArrayInputStream(
+				packetRawBytes);
+		PacketMessage readMessage = new PacketMessage();
+		DataInputStream dataInputStream = new DataInputStream(byteInputStream);
+		readMessage.read(dataInputStream);
+		dataInputStream.close();
+
+		Packet readPacket = readMessage.getPacket();
+		assertEquals(packet.getSequenceNumber(), readPacket.getSequenceNumber());
+		assertEquals(packet.getChecksum(), readPacket.getChecksum());
+	}
+
 }

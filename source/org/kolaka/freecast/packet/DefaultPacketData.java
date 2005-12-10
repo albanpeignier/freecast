@@ -27,20 +27,20 @@ import org.apache.commons.lang.Validate;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class DefaultPacketData implements PacketData {
 
-    private byte[] bytes;
-    
-    public DefaultPacketData(byte[] bytes) {
-        Validate.notNull(bytes, "No specified bytes");
-        this.bytes = bytes;
-    }
+	private byte[] bytes;
 
-    public byte[] getBytes() {
-        return bytes;
-    }
+	public DefaultPacketData(byte[] bytes) {
+		Validate.notNull(bytes, "No specified bytes");
+		this.bytes = bytes;
+	}
+
+	public byte[] getBytes() {
+		return bytes;
+	}
 
 }

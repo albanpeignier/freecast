@@ -37,8 +37,6 @@ import org.kolaka.freecast.pipe.Consumer;
 import org.kolaka.freecast.pipe.ConsumerInputStreamFactory;
 import org.kolaka.freecast.service.BaseService;
 import org.kolaka.freecast.service.ControlException;
-import org.kolaka.freecast.sound.AudioSystem;
-import org.kolaka.freecast.sound.StereoPCMAudioInputStream;
 
 /**
  * 
@@ -47,162 +45,162 @@ import org.kolaka.freecast.sound.StereoPCMAudioInputStream;
  */
 public class AudioPlayer extends BaseService implements InteractivePlayer {
 
-    private Consumer consumer;
+	private Consumer consumer;
 
-    public void setConsumer(Consumer consumer) {
-        this.consumer = consumer;
-    }
+	public void setConsumer(Consumer consumer) {
+		this.consumer = consumer;
+	}
 
-    private SourceDataLine line;
+	private SourceDataLine line;
 
-    private PlayRunnable runnable;
+	private PlayRunnable runnable;
 
-    private ConsumerInputStreamFactory consumerInputStreamFactory;
+	private ConsumerInputStreamFactory consumerInputStreamFactory;
 
-    private final AudioFormat OUTPUT_FORMAT = new AudioFormat(44100, 16, 2,
-            true, false);
+	private final AudioFormat OUTPUT_FORMAT = new AudioFormat(44100, 16, 2,
+			true, false);
 
-    public void dispose() throws ControlException {
-        super.dispose();
+	public void dispose() throws ControlException {
+		super.dispose();
 
-        if (line != null) {
-            line.close();
-            line = null;
-        }
-    }
+		if (line != null) {
+			line.close();
+			line = null;
+		}
+	}
 
-    public void init() throws ControlException {
-        super.init();
+	public void init() throws ControlException {
+		super.init();
 
-        DataLine.Info info = new DataLine.Info(SourceDataLine.class,
-                OUTPUT_FORMAT);
+		DataLine.Info info = new DataLine.Info(SourceDataLine.class,
+				OUTPUT_FORMAT);
 
-        if (!javax.sound.sampled.AudioSystem.isLineSupported(info)) {
-            throw new ControlException("Can't find a compatible sound ouput");
-        }
+		if (!javax.sound.sampled.AudioSystem.isLineSupported(info)) {
+			throw new ControlException("Can't find a compatible sound ouput");
+		}
 
-        try {
-            line = (SourceDataLine) javax.sound.sampled.AudioSystem.getLine(info);
-        } catch (LineUnavailableException e) {
-            throw new ControlException("Can't obtain a sound ouput", e);
-        }
-    }
+		try {
+			line = (SourceDataLine) javax.sound.sampled.AudioSystem
+					.getLine(info);
+		} catch (LineUnavailableException e) {
+			throw new ControlException("Can't obtain a sound ouput", e);
+		}
+	}
 
-    public void start() throws ControlException {
-        stoppedOnError = false;
-        consumerInputStreamFactory = new ConsumerInputStreamFactory(consumer);
+	public void start() throws ControlException {
+		stoppedOnError = false;
+		consumerInputStreamFactory = new ConsumerInputStreamFactory(consumer);
 
-        try {
-            line.open(OUTPUT_FORMAT);
-        } catch (LineUnavailableException e) {
-            throw new ControlException("Can't open sound ouput", e);
-        }
-        line.start();
+		try {
+			line.open(OUTPUT_FORMAT);
+		} catch (LineUnavailableException e) {
+			throw new ControlException("Can't open sound ouput", e);
+		}
+		line.start();
 
-        LogFactory.getLog(getClass()).debug(
-                "line " + line + " is open and started");
+		LogFactory.getLog(getClass()).debug(
+				"line " + line + " is open and started");
 
-        runnable = new PlayRunnable();
-        Thread thread = new Thread(runnable, "AudioPlayer");
-        thread.start();
+		runnable = new PlayRunnable();
+		Thread thread = new Thread(runnable, "AudioPlayer");
+		thread.start();
 
-        super.start();
-    }
+		super.start();
+	}
 
-    public void stop() throws ControlException {
-        if (runnable != null) {
-            runnable.stop();
-        }
+	public void stop() throws ControlException {
+		if (runnable != null) {
+			runnable.stop();
+		}
 
-        if (line != null) {
-            line.drain();
-            line.stop();
-        }
+		if (line != null) {
+			line.drain();
+			line.stop();
+		}
 
-        if (consumerInputStreamFactory != null) {
-            consumerInputStreamFactory.close();
-        }
+		if (consumerInputStreamFactory != null) {
+			consumerInputStreamFactory.close();
+		}
 
-        super.stop();
-    }
+		super.stop();
+	}
 
-    private boolean stoppedOnError;
+	private boolean stoppedOnError;
 
-    private long streamBytesLength;
+	private long streamBytesLength;
 
-    private Date streamStartDate;
+	private Date streamStartDate;
 
-    public PlayerStatus getPlayerStatus() {
-        if (isStopped() || streamStartDate == null || streamBytesLength == 0) {
-            return PlayerStatus.INACTIVE;
-        }
+	public PlayerStatus getPlayerStatus() {
+		if (isStopped() || streamStartDate == null || streamBytesLength == 0) {
+			return PlayerStatus.INACTIVE;
+		}
 
-        long streamTimeLength = (long) (streamBytesLength * 1000 / (OUTPUT_FORMAT
-                .getFrameRate() * OUTPUT_FORMAT.getFrameSize()));
-        long playTimeLength = System.currentTimeMillis()
-                - streamStartDate.getTime();
+		long streamTimeLength = (long) (streamBytesLength * 1000 / (OUTPUT_FORMAT
+				.getFrameRate() * OUTPUT_FORMAT.getFrameSize()));
+		long playTimeLength = System.currentTimeMillis()
+				- streamStartDate.getTime();
 
-        double missingDataRate = Math.max(0,
-                (double) (playTimeLength - streamTimeLength) / playTimeLength);
+		double missingDataRate = Math.max(0,
+				(double) (playTimeLength - streamTimeLength) / playTimeLength);
 
-        return new PlayerStatus(playTimeLength, missingDataRate);
-    }
+		return new PlayerStatus(playTimeLength, missingDataRate);
+	}
 
-    class PlayRunnable implements Runnable {
+	class PlayRunnable implements Runnable {
 
-        private boolean stopped;
+		private boolean stopped;
 
-        public void stop() {
-            stopped = true;
-        }
+		public void stop() {
+			stopped = true;
+		}
 
-        public void run() {
-            stopped = false;
-            LogFactory.getLog(getClass()).debug("started");
+		public void run() {
+			stopped = false;
+			LogFactory.getLog(getClass()).debug("started");
 
-            streamStartDate = new Date();
-            streamBytesLength = 0;
+			streamStartDate = new Date();
+			streamBytesLength = 0;
 
-            try {
-                byte buffer[] = new byte[1024];
+			try {
+				byte buffer[] = new byte[1024];
 
-                AudioInputStream audioInput = null;
+				AudioInputStream audioInput = null;
 
-                while (!stopped) {
-                    if (audioInput == null) {
-                        audioInput = OggDecoder.getInstance().decode(OUTPUT_FORMAT, consumerInputStreamFactory
-                                .next()); 
-                    }
+				while (!stopped) {
+					if (audioInput == null) {
+						audioInput = OggDecoder.getInstance().decode(
+								OUTPUT_FORMAT,
+								consumerInputStreamFactory.next());
+					}
 
-                    int read = audioInput.read(buffer, 0, buffer.length);
-                    if (read == -1) {
-                        LogFactory.getLog(getClass()).debug(
-                                "sound stream is ended");
-                        audioInput = null;
-                        continue;
-                    }
+					int read = audioInput.read(buffer, 0, buffer.length);
+					if (read == -1) {
+						LogFactory.getLog(getClass()).debug(
+								"sound stream is ended");
+						audioInput = null;
+						continue;
+					}
 
-                    streamBytesLength += read;
+					streamBytesLength += read;
 
-                    if (line != null) {
-                        line.write(buffer, 0, read);
-                    }
-                }
-            } catch (Exception e) {
-                LogFactory.getLog(getClass()).error("Sound stream error", e);
-                stoppedOnError = true;
-                stopQuietly();
-            }
+					if (line != null) {
+						line.write(buffer, 0, read);
+					}
+				}
+			} catch (Exception e) {
+				LogFactory.getLog(getClass()).error("Sound stream error", e);
+				stoppedOnError = true;
+				stopQuietly();
+			}
 
-            LogFactory.getLog(getClass()).debug("stopped");
-        }
+			LogFactory.getLog(getClass()).debug("stopped");
+		}
 
-    }
+	}
 
-    public boolean isStoppedOnError() {
-        return stoppedOnError;
-    }
-    
+	public boolean isStoppedOnError() {
+		return stoppedOnError;
+	}
 
-    
 }

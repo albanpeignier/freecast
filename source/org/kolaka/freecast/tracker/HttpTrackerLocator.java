@@ -35,24 +35,25 @@ import com.caucho.hessian.client.HessianProxyFactory;
  */
 public class HttpTrackerLocator implements TrackerLocator {
 
-    private static final TrackerLocator instance = new HttpTrackerLocator();
+	private static final TrackerLocator instance = new HttpTrackerLocator();
 
-    public static TrackerLocator getInstance() {
-        return instance;
-    }
+	public static TrackerLocator getInstance() {
+		return instance;
+	}
 
-    public Tracker resolve(InetSocketAddress address) throws TrackerException {
-        String url = "http://" + address.getHostName() + ":"
-                + address.getPort() + "/tracker";
+	public Tracker resolve(InetSocketAddress address) throws TrackerException {
+		String url = "http://" + address.getHostName() + ":"
+				+ address.getPort() + "/tracker";
 
-        try {
-            HessianProxyFactory factory = new HessianProxyFactory();
-            Tracker hessianTracker = (Tracker) factory.create(Tracker.class, url);
-            return new ProtectedTracker(hessianTracker);
-        } catch (MalformedURLException e) {
-            throw new TrackerException("The tracker url is invalid '" + url
-                    + "'", e);
-        }
-    }
+		try {
+			HessianProxyFactory factory = new HessianProxyFactory();
+			Tracker hessianTracker = (Tracker) factory.create(Tracker.class,
+					url);
+			return new ProtectedTracker(hessianTracker);
+		} catch (MalformedURLException e) {
+			throw new TrackerException("The tracker url is invalid '" + url
+					+ "'", e);
+		}
+	}
 
 }

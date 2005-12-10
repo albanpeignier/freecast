@@ -22,6 +22,10 @@
  */
 package org.kolaka.freecast.manager.http;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.service.ControlException;
@@ -34,17 +38,15 @@ import org.mortbay.jetty.servlet.ServletHolder;
 import org.mortbay.jetty.servlet.ServletHttpContext;
 import org.mortbay.util.Resource;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public class HttpServer implements Startable {
 
 	private InetSocketAddress listenAddress;
+
 	private Server server;
+
 	private InetAddress serverName;
 
 	public HttpServer(InetSocketAddress listenAddress) {
@@ -58,30 +60,39 @@ public class HttpServer implements Startable {
 		listener.setPort(listenAddress.getPort());
 		server.addListener(listener);
 
-		String dataResourceName = ClassUtils.getPackageName(getClass()).replace('.','/') + "/resources/data";
+		String dataResourceName = ClassUtils.getPackageName(getClass())
+				.replace('.', '/')
+				+ "/resources/data";
 		Resource dataResource = null;
 		try {
 			dataResource = Resource.newSystemResource(dataResourceName);
 		} catch (IOException e) {
-			throw new ControlException("Can't find http server resources (" + dataResourceName + ")", e);
+			throw new ControlException("Can't find http server resources ("
+					+ dataResourceName + ")", e);
 		}
 		HttpContext imagesContext = server.getContext("/data");
 		imagesContext.addHandler(new ResourceHandler());
 		imagesContext.setBaseResource(dataResource);
 
-		ServletHttpContext context = (ServletHttpContext) server.getContext("/");
+		ServletHttpContext context = (ServletHttpContext) server
+				.getContext("/");
 
 		try {
-			context.addServlet("Descriptor", "/descriptor.xml", DescriptorServlet.class.getName());
-			context.addServlet("Config", "/config.xml", ConfigurationServlet.class.getName());
-			ServletHolder holder = context.addServlet("Home", "/", HomeServlet.class.getName());
+			context.addServlet("Descriptor", "/descriptor.xml",
+					DescriptorServlet.class.getName());
+			context.addServlet("Config", "/config.xml",
+					ConfigurationServlet.class.getName());
+			ServletHolder holder = context.addServlet("Home", "/",
+					HomeServlet.class.getName());
 			holder.setInitParameter("servername", serverName.getHostAddress());
 		} catch (Exception e) {
-			throw new ControlException("Can't install the descriptor servlet", e);
+			throw new ControlException("Can't install the descriptor servlet",
+					e);
 		}
 
-		LogFactory.getLog(getClass()).info("start http server on " + listenAddress);
-		
+		LogFactory.getLog(getClass()).info(
+				"start http server on " + listenAddress);
+
 		try {
 			server.start();
 		} catch (Exception e) {

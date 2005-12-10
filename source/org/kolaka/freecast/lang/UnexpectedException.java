@@ -26,10 +26,10 @@ package org.kolaka.freecast.lang;
 
 public class UnexpectedException extends RuntimeException {
 
-    private static final long serialVersionUID = 3618700790366155576L;
+	private static final long serialVersionUID = 3618700790366155576L;
 
-    public UnexpectedException(String message, Throwable cause) {
-        super(message, cause);
-    }
+	public UnexpectedException(String message, Throwable cause) {
+		super(message, cause);
+	}
 
 }

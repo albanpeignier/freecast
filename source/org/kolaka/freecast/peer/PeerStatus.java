@@ -39,67 +39,67 @@ import org.kolaka.freecast.node.Order;
  */
 public class PeerStatus implements Serializable {
 
-    static final long serialVersionUID = 2356337954683447228L;
+	static final long serialVersionUID = 2356337954683447228L;
 
-    private final NodeIdentifier identifier;
+	private final NodeIdentifier identifier;
 
-    private final Order order;
+	private final Order order;
 
-    private final Date date;
+	private final Date date;
 
-    public PeerStatus(final NodeIdentifier identifier, final Order order) {
-        this.identifier = identifier;
-        this.order = order;
-        this.date = new Date();
-    }
+	public PeerStatus(final NodeIdentifier identifier, final Order order) {
+		this.identifier = identifier;
+		this.order = order;
+		this.date = new Date();
+	}
 
-    public NodeIdentifier getIdentifier() {
-        return identifier;
-    }
+	public NodeIdentifier getIdentifier() {
+		return identifier;
+	}
 
-    public Order getOrder() {
-        return order;
-    }
+	public Order getOrder() {
+		return order;
+	}
 
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
 
-    public boolean equals(Object o) {
-        return o instanceof PeerStatus && equals((PeerStatus) o);
-    }
+	public boolean equals(Object o) {
+		return o instanceof PeerStatus && equals((PeerStatus) o);
+	}
 
-    public boolean equals(PeerStatus other) {
-        EqualsBuilder builder = new EqualsBuilder();
-        builder.append(identifier, other.identifier);
-        builder.append(date, other.date);
-        builder.append(order, other.order);
-        return builder.isEquals();
-    }
+	public boolean equals(PeerStatus other) {
+		EqualsBuilder builder = new EqualsBuilder();
+		builder.append(identifier, other.identifier);
+		builder.append(date, other.date);
+		builder.append(order, other.order);
+		return builder.isEquals();
+	}
 
-    public int hashCode() {
-        HashCodeBuilder builder = new HashCodeBuilder();
-        builder.append(identifier);
-        builder.append(date);
-        builder.append(order);
-        return builder.toHashCode();
-    }
+	public int hashCode() {
+		HashCodeBuilder builder = new HashCodeBuilder();
+		builder.append(identifier);
+		builder.append(date);
+		builder.append(order);
+		return builder.toHashCode();
+	}
 
-    /**
-     * Returns <code>true</code> if the specified <code>PeerStatus</code>
-     * has the same identifier and order.
-     * 
-     * @param other
-     * @return
-     */
-    public boolean sameAs(PeerStatus other) {
-        EqualsBuilder builder = new EqualsBuilder();
-        builder.append(identifier, other.identifier);
-        builder.append(order, other.order);
-        return builder.isEquals();
-    }
+	/**
+	 * Returns <code>true</code> if the specified <code>PeerStatus</code>
+	 * has the same identifier and order.
+	 * 
+	 * @param other
+	 * @return
+	 */
+	public boolean sameAs(PeerStatus other) {
+		EqualsBuilder builder = new EqualsBuilder();
+		builder.append(identifier, other.identifier);
+		builder.append(order, other.order);
+		return builder.isEquals();
+	}
 
-    public Date getDate() {
-        return date;
-    }
+	public Date getDate() {
+		return date;
+	}
 }

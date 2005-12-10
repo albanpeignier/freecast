@@ -33,73 +33,73 @@ import org.apache.commons.logging.LogFactory;
  */
 public abstract class LoopService extends BaseService {
 
-    private Loop loop;
+	private Loop loop;
 
-    public void init() throws ControlException {
-        super.init();
+	public void init() throws ControlException {
+		super.init();
 
-        loop = createLoop();
-    }
+		loop = createLoop();
+	}
 
-    private static int threadIdentifier = 1;
+	private static int threadIdentifier = 1;
 
-    public void start() throws ControlException {
-        super.start();
+	public void start() throws ControlException {
+		super.start();
 
-        String threadName = ClassUtils.getShortClassName(getClass()) + "-"
-                + threadIdentifier;
-        Thread thread = new Thread(new LoopRunnable(), threadName);
-        thread.start();
-    }
+		String threadName = ClassUtils.getShortClassName(getClass()) + "-"
+				+ threadIdentifier;
+		Thread thread = new Thread(new LoopRunnable(), threadName);
+		thread.start();
+	}
 
-    public void dispose() throws ControlException {
-        super.dispose();
-    }
+	public void dispose() throws ControlException {
+		super.dispose();
+	}
 
-    protected abstract Loop createLoop();
+	protected abstract Loop createLoop();
 
-    class LoopRunnable implements Runnable {
+	class LoopRunnable implements Runnable {
 
-        public void run() {
-            try {
-                while (!isStopped()) {
-                    long delay = loop.loop();
-                    if (delay < 0) {
-                        throw new IllegalStateException("Negative delay "
-                                + delay);
-                    }
-                    Thread.sleep(delay);
-                }
-            } catch (LoopInterruptedException e) {
-                LogFactory.getLog(getClass()).warn(
-                        "Loop interrupted " + LoopService.this, e);
-                stopQuietly();
-            } catch (Exception e) {
-                LogFactory.getLog(getClass()).error(
-                        "Loop execution failed in " + LoopService.this, e);
-            }
-        }
+		public void run() {
+			try {
+				while (!isStopped()) {
+					long delay = loop.loop();
+					if (delay < 0) {
+						throw new IllegalStateException("Negative delay "
+								+ delay);
+					}
+					Thread.sleep(delay);
+				}
+			} catch (LoopInterruptedException e) {
+				LogFactory.getLog(getClass()).warn(
+						"Loop interrupted " + LoopService.this, e);
+				stopQuietly();
+			} catch (Exception e) {
+				LogFactory.getLog(getClass()).error(
+						"Loop execution failed in " + LoopService.this, e);
+			}
+		}
 
-    }
+	}
 
-    protected static interface Loop {
+	protected static interface Loop {
 
-        public long loop() throws LoopInterruptedException;
+		public long loop() throws LoopInterruptedException;
 
-    }
+	}
 
-    protected static class LoopInterruptedException extends Exception {
+	protected static class LoopInterruptedException extends Exception {
 
-        private static final long serialVersionUID = 3258415044936217397L;
+		private static final long serialVersionUID = 3258415044936217397L;
 
-        public LoopInterruptedException(String message) {
-            super(message);
-        }
+		public LoopInterruptedException(String message) {
+			super(message);
+		}
 
-        public LoopInterruptedException(String message, Throwable cause) {
-            super(message, cause);
-        }
+		public LoopInterruptedException(String message, Throwable cause) {
+			super(message, cause);
+		}
 
-    }
+	}
 
 }

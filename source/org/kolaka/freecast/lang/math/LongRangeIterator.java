@@ -32,7 +32,7 @@ public class LongRangeIterator extends RangeIterator {
 	public LongRangeIterator(LongRange range) {
 		super(range);
 	}
-	
+
 	protected Number increment(Number next) {
 		return new Long(next.longValue() + 1);
 	}

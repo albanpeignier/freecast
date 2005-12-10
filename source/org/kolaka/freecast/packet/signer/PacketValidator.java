@@ -27,11 +27,11 @@ import org.kolaka.freecast.packet.Packet;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public interface PacketValidator {
-    
-    public boolean validate(Packet packet) throws PacketValidatorException;
+
+	public boolean validate(Packet packet) throws PacketValidatorException;
 
 }

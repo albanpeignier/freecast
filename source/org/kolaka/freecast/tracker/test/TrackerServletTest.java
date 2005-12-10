@@ -31,7 +31,6 @@ import org.kolaka.freecast.peer.InetPeerReference;
 import org.kolaka.freecast.tracker.HttpTracker;
 import org.kolaka.freecast.tracker.HttpTrackerLocator;
 import org.kolaka.freecast.tracker.Tracker;
-import org.kolaka.freecast.tracker.TrackerException;
 
 /**
  * 
@@ -40,21 +39,20 @@ import org.kolaka.freecast.tracker.TrackerException;
  */
 public class TrackerServletTest extends TestCase {
 
-    public void testBindConnect() throws Exception {
-        InetSocketAddress address = new InetSocketAddress(50000 + (int) (Math
-                .random() * 1000));
-        HttpTracker tracker = new HttpTracker();
+	public void testBindConnect() throws Exception {
+		InetSocketAddress address = new InetSocketAddress(50000 + (int) (Math
+				.random() * 1000));
+		HttpTracker tracker = new HttpTracker();
 
-        tracker.setListenAddress(address);
-        tracker.start();
-        
-        Tracker remoteTracker = HttpTrackerLocator.getInstance().resolve(
-                address);
-        remoteTracker.register(InetPeerReference
-                .getInstance(new InetSocketAddress(4000)));
-        
-        
-        tracker.stop();
-    }
+		tracker.setListenAddress(address);
+		tracker.start();
+
+		Tracker remoteTracker = HttpTrackerLocator.getInstance().resolve(
+				address);
+		remoteTracker.register(InetPeerReference
+				.getInstance(new InetSocketAddress(4000)));
+
+		tracker.stop();
+	}
 
 }

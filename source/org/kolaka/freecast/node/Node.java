@@ -37,24 +37,24 @@ import org.kolaka.freecast.transport.sender.SenderControler;
  */
 public interface Node extends Controlable {
 
-    public PeerReference getPeerReference();
+	public PeerReference getPeerReference();
 
-    public NodeIdentifier getIdentifier();
+	public NodeIdentifier getIdentifier();
 
-    public Order getOrder();
+	public Order getOrder();
 
-    public ReceiverControler getReceiverControler();
+	public ReceiverControler getReceiverControler();
 
-    public SenderControler getSenderControler();
+	public SenderControler getSenderControler();
 
-    public NodeService getNodeService();
+	public NodeService getNodeService();
 
-    public PeerControler getPeerControler();
+	public PeerControler getPeerControler();
 
-    public NodeStatus getNodeStatus();
+	public NodeStatus getNodeStatus();
 
-    public void checkQoS();
-    
-    public PlayerControler getPlayerControler();
+	public void checkQoS();
+
+	public PlayerControler getPlayerControler();
 
 }

@@ -28,11 +28,13 @@ import java.net.URL;
 
 public class PlaylistEncoderReceiver extends OggSourceFactoryReceiver {
 
-	public PlaylistEncoderReceiver(URL playlist, EncoderFormat format) throws IOException {
+	public PlaylistEncoderReceiver(URL playlist, EncoderFormat format)
+			throws IOException {
 		super(new PlaylistEncoderOggSourceFactory(playlist, format));
 	}
 
-	public PlaylistEncoderReceiver(Playlist playlist, EncoderFormat format) throws IOException {
+	public PlaylistEncoderReceiver(Playlist playlist, EncoderFormat format)
+			throws IOException {
 		super(new PlaylistEncoderOggSourceFactory(playlist, format));
 	}
 

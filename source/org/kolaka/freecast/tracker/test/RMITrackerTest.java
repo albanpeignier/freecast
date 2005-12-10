@@ -40,16 +40,16 @@ import org.kolaka.freecast.tracker.TrackerException;
  */
 public class RMITrackerTest extends TestCase {
 
-    public void testBindConnect() throws IOException, TrackerException {
-        InetSocketAddress address = new InetSocketAddress(50000 + (int) (Math
-                .random() * 1000));
-        RMITracker tracker = new RMITracker(address.getPort() + 1);
+	public void testBindConnect() throws IOException, TrackerException {
+		InetSocketAddress address = new InetSocketAddress(50000 + (int) (Math
+				.random() * 1000));
+		RMITracker tracker = new RMITracker(address.getPort() + 1);
 
-        tracker.bind(address);
+		tracker.bind(address);
 
-        RemoteTracker remoteTracker = RMITracker.connect(address);
-        remoteTracker.register(InetPeerReference
-                .getInstance(new InetSocketAddress(4000)));
-    }
+		RemoteTracker remoteTracker = RMITracker.connect(address);
+		remoteTracker.register(InetPeerReference
+				.getInstance(new InetSocketAddress(4000)));
+	}
 
 }

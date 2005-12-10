@@ -23,12 +23,12 @@
 
 package org.kolaka.freecast.tracker;
 
+import java.util.Set;
+
 import org.kolaka.freecast.node.NodeIdentifier;
 import org.kolaka.freecast.node.NodeStatus;
 import org.kolaka.freecast.peer.PeerReference;
 import org.kolaka.freecast.service.Startable;
-
-import java.util.Set;
 
 /**
  * 
@@ -37,14 +37,14 @@ import java.util.Set;
  */
 public interface Tracker extends Startable {
 
-    public NodeIdentifier register(PeerReference reference)
-            throws TrackerException;
+	public NodeIdentifier register(PeerReference reference)
+			throws TrackerException;
 
-    public void unregister(NodeIdentifier identifier) throws TrackerException;
+	public void unregister(NodeIdentifier identifier) throws TrackerException;
 
-    public void refresh(NodeStatus status) throws TrackerException;
+	public void refresh(NodeStatus status) throws TrackerException;
 
-    public Set getPeerReferences(NodeIdentifier node) throws TrackerException;
+	public Set getPeerReferences(NodeIdentifier node) throws TrackerException;
 
 	interface Auditor extends org.kolaka.freecast.auditor.Auditor {
 

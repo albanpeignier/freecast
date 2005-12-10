@@ -34,20 +34,21 @@ import org.apache.commons.collections.comparators.TransformingComparator;
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public class Packets {
-    private static final Transformer INDEX_TRANSFORMER = new Transformer() {
-        public Object transform(Object input) {
-            return new Integer(((Packet) input).getElementDescriptor().getIndex());
-        }
-    };
+	private static final Transformer INDEX_TRANSFORMER = new Transformer() {
+		public Object transform(Object input) {
+			return new Integer(((Packet) input).getElementDescriptor()
+					.getIndex());
+		}
+	};
 
-    public static Transformer returnElementIndex() {
-        return INDEX_TRANSFORMER;
-    }
+	public static Transformer returnElementIndex() {
+		return INDEX_TRANSFORMER;
+	}
 
-    private static final Comparator INDEX_COMPARATOR = new TransformingComparator(
-            returnElementIndex());
+	private static final Comparator INDEX_COMPARATOR = new TransformingComparator(
+			returnElementIndex());
 
-    public static Comparator compareElementIndex() {
-        return INDEX_COMPARATOR;
-    }
+	public static Comparator compareElementIndex() {
+		return INDEX_COMPARATOR;
+	}
 }

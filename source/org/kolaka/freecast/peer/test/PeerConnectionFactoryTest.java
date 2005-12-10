@@ -44,61 +44,64 @@ import org.kolaka.freecast.transport.MessageWriter;
  */
 public class PeerConnectionFactoryTest extends PeerConnectionFactoryBaseTest {
 
-    private MockPeerConnection mockConnection;
+	private MockPeerConnection mockConnection;
 
-    private MockControl mockWriterControl;
-    private MessageWriter mockWriter;
+	private MockControl mockWriterControl;
 
-    private MockControl mockReaderControl;
-    private MessageReader mockReader;
+	private MessageWriter mockWriter;
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        
-        mockWriterControl = MockControl.createControl(MessageWriter.class);
-        mockWriterControl.setDefaultMatcher(new MessageMatcher());
-        mockWriter = (MessageWriter) mockWriterControl.getMock();
+	private MockControl mockReaderControl;
 
-        mockReaderControl = MockControl.createControl(MessageReader.class);
-        mockReader = (MessageReader) mockReaderControl.getMock();
+	private MessageReader mockReader;
 
-        mockConnection = new MockPeerConnection(PeerConnection.Type.SOURCE);
-        mockConnection.setupCreateReader(mockReader);
-        mockConnection.setupCreateWriter(mockWriter);
-    }
+	protected void setUp() throws Exception {
+		super.setUp();
 
-    protected void setUpTestCreate(List sendMessages, List receivedMessages) throws IOException {
-        for (Iterator iter=sendMessages.iterator(); iter.hasNext(); ) {
-            Message message = (Message) iter.next();
-            mockWriter.write(message);
-            mockWriterControl.setReturnValue(1);
-        }
-        mockWriterControl.replay();
+		mockWriterControl = MockControl.createControl(MessageWriter.class);
+		mockWriterControl.setDefaultMatcher(new MessageMatcher());
+		mockWriter = (MessageWriter) mockWriterControl.getMock();
 
-        for (Iterator iter=receivedMessages.iterator(); iter.hasNext(); ) {
-            Message message = (Message) iter.next();
-	        mockReader.read();
-	        mockReaderControl.setReturnValue(message);
-        }
-        mockReaderControl.replay();
-    }
-    
-    protected void verifyTestCreate() {
-        mockReaderControl.verify();
-        mockWriterControl.verify();
-    }
-    
-    protected PeerReference createReference() {
-        return InetPeerReference.getInstance("nowhere", 1000, false);
-    }
+		mockReaderControl = MockControl.createControl(MessageReader.class);
+		mockReader = (MessageReader) mockReaderControl.getMock();
 
-    protected PeerConnectionFactory createFactory() {
-        return new PeerConnectionFactory() {
-            protected PeerConnection createImpl(Peer peer,
-                    PeerReference reference) {
-                return mockConnection;
-            }
-        };
-    }
+		mockConnection = new MockPeerConnection(PeerConnection.Type.SOURCE);
+		mockConnection.setupCreateReader(mockReader);
+		mockConnection.setupCreateWriter(mockWriter);
+	}
+
+	protected void setUpTestCreate(List sendMessages, List receivedMessages)
+			throws IOException {
+		for (Iterator iter = sendMessages.iterator(); iter.hasNext();) {
+			Message message = (Message) iter.next();
+			mockWriter.write(message);
+			mockWriterControl.setReturnValue(1);
+		}
+		mockWriterControl.replay();
+
+		for (Iterator iter = receivedMessages.iterator(); iter.hasNext();) {
+			Message message = (Message) iter.next();
+			mockReader.read();
+			mockReaderControl.setReturnValue(message);
+		}
+		mockReaderControl.replay();
+	}
+
+	protected void verifyTestCreate() {
+		mockReaderControl.verify();
+		mockWriterControl.verify();
+	}
+
+	protected PeerReference createReference() {
+		return InetPeerReference.getInstance("nowhere", 1000, false);
+	}
+
+	protected PeerConnectionFactory createFactory() {
+		return new PeerConnectionFactory() {
+			protected PeerConnection createImpl(Peer peer,
+					PeerReference reference) {
+				return mockConnection;
+			}
+		};
+	}
 
 }

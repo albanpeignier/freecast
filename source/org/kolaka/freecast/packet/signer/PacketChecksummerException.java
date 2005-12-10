@@ -25,19 +25,19 @@ package org.kolaka.freecast.packet.signer;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class PacketChecksummerException extends Exception {
 
-    private static final long serialVersionUID = 3258411733449453876L;
+	private static final long serialVersionUID = 3258411733449453876L;
 
-    public PacketChecksummerException(String message) {
-        super(message);
-    }
+	public PacketChecksummerException(String message) {
+		super(message);
+	}
 
-    public PacketChecksummerException(String message, Throwable cause) {
-        super(message, cause);
-    }
+	public PacketChecksummerException(String message, Throwable cause) {
+		super(message, cause);
+	}
 
 }

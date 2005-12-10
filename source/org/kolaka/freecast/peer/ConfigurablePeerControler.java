@@ -31,12 +31,12 @@ import org.kolaka.freecast.node.NodeStatusProvider;
  */
 public interface ConfigurablePeerControler extends PeerControler {
 
-    public void setNodeStatusProvider(NodeStatusProvider statusProvider);
+	public void setNodeStatusProvider(NodeStatusProvider statusProvider);
 
-    public void setPeerProvider(PeerProvider provider);
+	public void setPeerProvider(PeerProvider provider);
 
-    public void register(PeerConnectionFactory factory);
+	public void register(PeerConnectionFactory factory);
 
-    public void register(PeerConnectionSource source);
+	public void register(PeerConnectionSource source);
 
 }

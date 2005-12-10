@@ -37,16 +37,16 @@ import org.kolaka.freecast.packet.Packet;
  */
 public class Producers {
 
-    public static void pushAll(Producer producer, Collection packets) {
-        for (Iterator iter = packets.iterator(); iter.hasNext();) {
-            Packet packet = (Packet) iter.next();
-            producer.push(packet);
-        }
-    }
+	public static void pushAll(Producer producer, Collection packets) {
+		for (Iterator iter = packets.iterator(); iter.hasNext();) {
+			Packet packet = (Packet) iter.next();
+			producer.push(packet);
+		}
+	}
 
-    public static void pushAll(Producer producer, LogicalPage page) {
-        Validate.isTrue(page.isComplete());
-        pushAll(producer, page.packets());
-    }
+	public static void pushAll(Producer producer, LogicalPage page) {
+		Validate.isTrue(page.isComplete());
+		pushAll(producer, page.packets());
+	}
 
 }

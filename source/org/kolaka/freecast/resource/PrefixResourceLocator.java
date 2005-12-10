@@ -22,10 +22,10 @@
  */
 package org.kolaka.freecast.resource;
 
-import org.apache.commons.lang.Validate;
-
 import java.io.InputStream;
 import java.net.URI;
+
+import org.apache.commons.lang.Validate;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
@@ -33,6 +33,7 @@ import java.net.URI;
 public class PrefixResourceLocator implements ResourceLocator {
 
 	private final URI prefix;
+
 	private final ResourceLocator locator;
 
 	public PrefixResourceLocator(URI prefix, ResourceLocator locator) {

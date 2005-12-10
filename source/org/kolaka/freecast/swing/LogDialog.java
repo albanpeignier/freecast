@@ -23,10 +23,13 @@
 
 package org.kolaka.freecast.swing;
 
-import org.apache.log4j.Logger;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+
+import org.apache.log4j.Logger;
 
 /**
  * @author alban
@@ -36,23 +39,28 @@ import java.awt.*;
  */
 public class LogDialog extends JDialog {
 
-    private LogPane logPane;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5822190349981900757L;
 
-    public LogDialog(JFrame parent) {
-        super(parent, parent.getTitle() + " - Log");
-        setDefaultCloseOperation(HIDE_ON_CLOSE);
+	private LogPane logPane;
 
-        logPane = new LogPane();
+	public LogDialog(JFrame parent) {
+		super(parent, parent.getTitle() + " - Log");
+		setDefaultCloseOperation(HIDE_ON_CLOSE);
+
+		logPane = new LogPane();
 		Logger.getRootLogger().addAppender(logPane.getAppender());
 
-        getContentPane().setLayout(new GridBagLayout());
+		getContentPane().setLayout(new GridBagLayout());
 
-        GridBagConstraints logPaneConstraints = new GridBagConstraints();
-        logPaneConstraints.fill = GridBagConstraints.BOTH;
-        logPaneConstraints.weightx = logPaneConstraints.weighty = 1.0;
-        getContentPane().add(logPane, logPaneConstraints);
+		GridBagConstraints logPaneConstraints = new GridBagConstraints();
+		logPaneConstraints.fill = GridBagConstraints.BOTH;
+		logPaneConstraints.weightx = logPaneConstraints.weighty = 1.0;
+		getContentPane().add(logPane, logPaneConstraints);
 
-        pack();
-    }
+		pack();
+	}
 
 }

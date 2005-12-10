@@ -32,6 +32,6 @@ import java.io.IOException;
  */
 public interface MessageWriter {
 
-    int write(Message message) throws IOException;
+	int write(Message message) throws IOException;
 
 }

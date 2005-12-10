@@ -42,12 +42,14 @@ public class Main extends Application {
 
 	protected void postInit(Configuration configuration) {
 		HttpTracker tracker = new HttpTracker();
-		new HttpTrackerConfigurator().configure(tracker, configuration.subset("tracker"));
+		new HttpTrackerConfigurator().configure(tracker, configuration
+				.subset("tracker"));
 		this.tracker = tracker;
 	}
 
 	protected void run() throws Exception {
-		LogFactory.getLog(Main.class).info("start a HttpTracker on port " + tracker.getListenAddress());
+		LogFactory.getLog(Main.class).info(
+				"start a HttpTracker on port " + tracker.getListenAddress());
 		tracker.start();
 
 		Object lock = new Object();

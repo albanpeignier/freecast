@@ -23,7 +23,6 @@
 
 package org.kolaka.freecast.service;
 
-
 /**
  * 
  * 
@@ -31,42 +30,42 @@ package org.kolaka.freecast.service;
  */
 public interface Service extends Controlable {
 
-    public static interface Listener {
+	public static interface Listener {
 
-        void serviceStarted(Service service);
+		void serviceStarted(Service service);
 
-        void serviceStopped(Service service);
+		void serviceStopped(Service service);
 
-        void serviceInitialized(Service service);
+		void serviceInitialized(Service service);
 
-        void serviceDisposed(Service service);
+		void serviceDisposed(Service service);
 
-    }
+	}
 
-    public static class Adapter implements Listener {
+	public static class Adapter implements Listener {
 
-        public void serviceStarted(Service service) {
+		public void serviceStarted(Service service) {
 
-        }
+		}
 
-        public void serviceStopped(Service service) {
+		public void serviceStopped(Service service) {
 
-        }
+		}
 
-        public void serviceInitialized(Service service) {
+		public void serviceInitialized(Service service) {
 
-        }
+		}
 
-        public void serviceDisposed(Service service) {
+		public void serviceDisposed(Service service) {
 
-        }
+		}
 
-    }
+	}
 
-    public void add(Listener listener);
+	public void add(Listener listener);
 
-    public void remove(Listener listener);
-    
-    public Status getStatus();
+	public void remove(Listener listener);
+
+	public Status getStatus();
 
 }

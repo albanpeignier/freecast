@@ -23,6 +23,7 @@
 
 package org.kolaka.freecast.ogg.test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.InputStream;
 
@@ -39,25 +40,26 @@ import org.kolaka.freecast.ogg.OggSource;
 public class EncoderOggSourceTest extends TestCase {
 
 	public void testEncoding() throws Exception {
-		InputStream inputResources = OggTestResources.getResourceAsStream("sample.ogg");
+		InputStream inputResources = OggTestResources
+				.getResourceAsStream("sample.ogg");
 
 		AudioFormat pcmFormat = new AudioFormat(44100, 16, 1, true, false);
 		AudioInputStream audioInput = AudioSystem.getAudioInputStream(
 				pcmFormat, AudioSystem.getAudioInputStream(inputResources));
 
 		OggSource oggSource = new EncoderOggSource(audioInput, 0);
-		
-		// OutputStream testOutput = new FileOutputStream("/tmp/test.ogg");
+
+		ByteArrayOutputStream testOutput = new ByteArrayOutputStream();
 
 		try {
 			while (true) {
 				OggPage page = oggSource.next();
-				// testOutput.write(page.getRawBytes());
+				testOutput.write(page.getRawBytes());
 			}
 		} catch (EOFException e) {
 
 		} finally {
-			// testOutput.close();
+			testOutput.close();
 			oggSource.close();
 			audioInput.close();
 		}

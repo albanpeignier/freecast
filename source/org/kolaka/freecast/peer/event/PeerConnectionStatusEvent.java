@@ -35,25 +35,26 @@ import org.kolaka.freecast.peer.PeerConnection;
  */
 public class PeerConnectionStatusEvent extends EventObject {
 
-    private static final long serialVersionUID = 3257008752401396274L;
-    private PeerConnection.Status status;
+	private static final long serialVersionUID = 3257008752401396274L;
 
-    public PeerConnectionStatusEvent(PeerConnection connection,
-            PeerConnection.Status status) {
-        super(connection);
-        this.status = status;
-    }
+	private PeerConnection.Status status;
 
-    public PeerConnection getConnection() {
-        return (PeerConnection) getSource();
-    }
+	public PeerConnectionStatusEvent(PeerConnection connection,
+			PeerConnection.Status status) {
+		super(connection);
+		this.status = status;
+	}
 
-    public PeerConnection.Status getStatus() {
-        return status;
-    }
+	public PeerConnection getConnection() {
+		return (PeerConnection) getSource();
+	}
 
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
+	public PeerConnection.Status getStatus() {
+		return status;
+	}
+
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
 
 }

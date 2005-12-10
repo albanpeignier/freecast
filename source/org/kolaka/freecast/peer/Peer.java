@@ -35,41 +35,41 @@ import org.kolaka.freecast.node.Order;
  */
 public interface Peer {
 
-    PeerReference getReference();
+	PeerReference getReference();
 
-    /**
-     * @return Returns the identifier.
-     */
-    NodeIdentifier getIdentifier();
+	/**
+	 * @return Returns the identifier.
+	 */
+	NodeIdentifier getIdentifier();
 
-    public static final String ORDER_PROPERTYNAME = "order";
+	public static final String ORDER_PROPERTYNAME = "order";
 
-    Order getOrder();
+	Order getOrder();
 
-    ConnectivityScoring getConnectivityScoring();
+	ConnectivityScoring getConnectivityScoring();
 
-    void updateScoring();
+	void updateScoring();
 
-    PeerStatus getStatus();
+	PeerStatus getStatus();
 
-    PeerConnection connect() throws PeerConnectionFactoryException;
+	PeerConnection connect() throws PeerConnectionFactoryException;
 
-    public static final String CONNECTION_PROPERTYNAME = "connection";
+	public static final String CONNECTION_PROPERTYNAME = "connection";
 
-    public PeerConnection getConnection();
+	public PeerConnection getConnection();
 
-    public boolean isConnected();
+	public boolean isConnected();
 
-    public void disconnect();
+	public void disconnect();
 
-    public void registerConnection(PeerConnection connection);
+	public void registerConnection(PeerConnection connection);
 
-    void update(PeerStatus peerStatus);
+	void update(PeerStatus peerStatus);
 
-    void update(PeerReference reference);
+	void update(PeerReference reference);
 
-    public void add(PropertyChangeListener listener);
+	public void add(PropertyChangeListener listener);
 
-    public void remove(PropertyChangeListener listener);
+	public void remove(PropertyChangeListener listener);
 
 }

@@ -32,36 +32,37 @@ import org.apache.commons.lang.enums.ValuedEnum;
  */
 public class MessageType extends ValuedEnum {
 
-    private static final long serialVersionUID = 3834590989301069619L;
-    public static final int ID_PACKET = 1;
+	private static final long serialVersionUID = 3834590989301069619L;
 
-    public static final MessageType PACKET = new MessageType("packet",
-            ID_PACKET, PacketMessage.class);
+	public static final int ID_PACKET = 1;
 
-    public static final int ID_PEERSTATUS = 3;
+	public static final MessageType PACKET = new MessageType("packet",
+			ID_PACKET, PacketMessage.class);
 
-    public static final MessageType PEERSTATUS = new MessageType("peerStatus",
-            ID_PEERSTATUS, PeerStatusMessage.class);
+	public static final int ID_PEERSTATUS = 3;
 
-    public static final int ID_CONNECTIONSTATUS = 4;
+	public static final MessageType PEERSTATUS = new MessageType("peerStatus",
+			ID_PEERSTATUS, PeerStatusMessage.class);
 
-    public static final MessageType CONNECTIONSTATUS = new MessageType(
-            "connectionStatus", ID_CONNECTIONSTATUS,
-            PeerConnectionStatusMessage.class);
+	public static final int ID_CONNECTIONSTATUS = 4;
 
-    private final Class messageClass;
+	public static final MessageType CONNECTIONSTATUS = new MessageType(
+			"connectionStatus", ID_CONNECTIONSTATUS,
+			PeerConnectionStatusMessage.class);
 
-    public MessageType(String value, int identifier, Class messageClass) {
-        super(value, identifier);
-        this.messageClass = messageClass;
-    }
+	private final Class messageClass;
 
-    public Class getMessageClass() {
-        return messageClass;
-    }
+	public MessageType(String value, int identifier, Class messageClass) {
+		super(value, identifier);
+		this.messageClass = messageClass;
+	}
 
-    public static MessageType get(int identifier) {
-        return (MessageType) getEnum(MessageType.class, identifier);
-    }
+	public Class getMessageClass() {
+		return messageClass;
+	}
+
+	public static MessageType get(int identifier) {
+		return (MessageType) getEnum(MessageType.class, identifier);
+	}
 
 }

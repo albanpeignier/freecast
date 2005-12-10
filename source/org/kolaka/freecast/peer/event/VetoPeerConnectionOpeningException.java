@@ -32,16 +32,17 @@ import org.kolaka.freecast.peer.PeerConnection;
  */
 public class VetoPeerConnectionOpeningException extends Exception {
 
-    private static final long serialVersionUID = 3617570483806483513L;
-    private PeerConnection connection;
+	private static final long serialVersionUID = 3617570483806483513L;
 
-    public VetoPeerConnectionOpeningException(String message,
-            PeerConnection connection) {
-        super(message);
-        this.connection = connection;
-    }
+	private PeerConnection connection;
 
-    public PeerConnection getConnection() {
-        return connection;
-    }
+	public VetoPeerConnectionOpeningException(String message,
+			PeerConnection connection) {
+		super(message);
+		this.connection = connection;
+	}
+
+	public PeerConnection getConnection() {
+		return connection;
+	}
 }

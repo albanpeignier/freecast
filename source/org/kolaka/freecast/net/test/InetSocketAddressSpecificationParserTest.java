@@ -22,18 +22,19 @@
  */
 package org.kolaka.freecast.net.test;
 
-import junit.framework.TestCase;
-import org.kolaka.freecast.net.InetSocketAddressSpecification;
-import org.kolaka.freecast.net.InetSocketAddressSpecificationParser;
-import org.apache.commons.lang.ArrayUtils;
-
-import java.util.Set;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.text.ParseException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Arrays;
-import java.net.InetSocketAddress;
-import java.net.InetAddress;
-import java.text.ParseException;
+import java.util.Set;
+
+import junit.framework.TestCase;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.kolaka.freecast.net.InetSocketAddressSpecification;
+import org.kolaka.freecast.net.InetSocketAddressSpecificationParser;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
@@ -48,41 +49,46 @@ public class InetSocketAddressSpecificationParserTest extends TestCase {
 	}
 
 	public void testSingleton() throws ParseException {
-        testSpecification("1000", new int[] { 1000 });
+		testSpecification("1000", new int[] { 1000 });
 	}
 
 	public void testRange() throws ParseException {
-		testSpecification("1000-1002", new int[]{1000, 1001, 1002});
+		testSpecification("1000-1002", new int[] { 1000, 1001, 1002 });
 	}
 
 	public void testSequence() throws ParseException {
-		testSpecification("1000,2000", new int[]{1000, 2000});
-		testSpecification("1000-1002,2000", new int[]{1000, 1001, 1002, 2000});
+		testSpecification("1000,2000", new int[] { 1000, 2000 });
+		testSpecification("1000-1002,2000",
+				new int[] { 1000, 1001, 1002, 2000 });
 
-		testSpecification(",1000", new int[]{1000});
-		testSpecification("1000,", new int[]{1000});
+		testSpecification(",1000", new int[] { 1000 });
+		testSpecification("1000,", new int[] { 1000 });
 	}
 
 	public void testParseException() {
-        testParseException("abc");
+		testParseException("abc");
 		testParseException("-1");
 		testParseException("1000-");
 	}
 
 	private void testParseException(String definition) {
 		try {
-			new InetSocketAddressSpecificationParser().parse(inetAddress, definition);
+			new InetSocketAddressSpecificationParser().parse(inetAddress,
+					definition);
 			fail("should throw a ParseException");
 		} catch (ParseException e) {
 			// expected exception
 		}
 	}
 
-	private void testSpecification(String definition, int[] expectedPorts) throws ParseException {
-		testSpecification(new InetSocketAddressSpecificationParser().parse(inetAddress, definition), expectedPorts);
+	private void testSpecification(String definition, int[] expectedPorts)
+			throws ParseException {
+		testSpecification(new InetSocketAddressSpecificationParser().parse(
+				inetAddress, definition), expectedPorts);
 	}
 
-	private void testSpecification(InetSocketAddressSpecification specification, int[] expectedPorts) {
+	private void testSpecification(
+			InetSocketAddressSpecification specification, int[] expectedPorts) {
 		Set ports = new HashSet();
 		for (Iterator iter = specification.iterator(); iter.hasNext();) {
 			InetSocketAddress address = (InetSocketAddress) iter.next();

@@ -45,89 +45,89 @@ import org.kolaka.freecast.service.Service;
  */
 public class PeerSenderControler implements SenderControler {
 
-    private PeerControler peerControler;
+	private PeerControler peerControler;
 
-    private Pipe pipe;
+	private Pipe pipe;
 
-    public void setPipe(Pipe pipe) {
-        Validate.notNull(pipe, "No specified Pipe");
-        this.pipe = pipe;
-    }
+	public void setPipe(Pipe pipe) {
+		Validate.notNull(pipe, "No specified Pipe");
+		this.pipe = pipe;
+	}
 
-    public void init() throws ControlException {
-        // deprecated
-    }
+	public void init() throws ControlException {
+		// deprecated
+	}
 
-    public void dispose() throws ControlException {
-        // deprecated
-    }
+	public void dispose() throws ControlException {
+		// deprecated
+	}
 
-    private final PeerConnectionStatusListener connectionListener = new PeerConnectionStatusListener() {
+	private final PeerConnectionStatusListener connectionListener = new PeerConnectionStatusListener() {
 
-        public void peerConnectionStatusChanged(PeerConnectionStatusEvent event) {
-            if (event.getStatus().equals(PeerConnection.Status.ACTIVATED)
-                    && event.getConnection().getType().equals(
-                            PeerConnection.Type.RELAY)) {
-                createSender(event.getConnection());
-            }
-        }
+		public void peerConnectionStatusChanged(PeerConnectionStatusEvent event) {
+			if (event.getStatus().equals(PeerConnection.Status.ACTIVATED)
+					&& event.getConnection().getType().equals(
+							PeerConnection.Type.RELAY)) {
+				createSender(event.getConnection());
+			}
+		}
 
-    };
+	};
 
-    private Service.Listener senderListener = new Service.Adapter() {
-        public void serviceStopped(Service service) {
-            PeerSender sender = (PeerSender) service;
+	private Service.Listener senderListener = new Service.Adapter() {
+		public void serviceStopped(Service service) {
+			PeerSender sender = (PeerSender) service;
 
-            LogFactory.getLog(getClass()).debug("sender stopped: " + sender);
-            senders.remove(sender);
-        }
-    };
+			LogFactory.getLog(getClass()).debug("sender stopped: " + sender);
+			senders.remove(sender);
+		}
+	};
 
-    private Set senders = new HashSet();
+	private Set senders = new HashSet();
 
-    /**
-     * @todo find a better Exception
-     * @param connection
-     * @throws VetoPeerConnectionOpeningException
-     */
-    private void createSender(PeerConnection connection) {
-        LogFactory.getLog(getClass()).debug("create sender for " + connection);
-        PeerSender sender = new PeerSender(connection);
+	/**
+	 * @todo find a better Exception
+	 * @param connection
+	 * @throws VetoPeerConnectionOpeningException
+	 */
+	private void createSender(PeerConnection connection) {
+		LogFactory.getLog(getClass()).debug("create sender for " + connection);
+		PeerSender sender = new PeerSender(connection);
 
-        String consumerName = "sender-"
-                + connection.getLastPeerStatus().getIdentifier().toString();
-        sender.setConsumer(pipe.createConsumer(consumerName));
+		String consumerName = "sender-"
+				+ connection.getLastPeerStatus().getIdentifier().toString();
+		sender.setConsumer(pipe.createConsumer(consumerName));
 
-        sender.add(senderListener);
-        try {
-            Controlables.start(sender);
-        } catch (ControlException e) {
-            String msg = "Can't start the peer sender " + sender
-                    + ", stop connection";
-            LogFactory.getLog(getClass()).error(msg, e);
+		sender.add(senderListener);
+		try {
+			Controlables.start(sender);
+		} catch (ControlException e) {
+			String msg = "Can't start the peer sender " + sender
+					+ ", stop connection";
+			LogFactory.getLog(getClass()).error(msg, e);
 
-            connection.close();
+			connection.close();
 
-            return;
-        }
+			return;
+		}
 
-        senders.add(sender);
-    }
+		senders.add(sender);
+	}
 
-    public void start() throws ControlException {
-        if (peerControler == null) {
-            throw new IllegalStateException("No defined PeerConnectionSource");
-        }
+	public void start() throws ControlException {
+		if (peerControler == null) {
+			throw new IllegalStateException("No defined PeerConnectionSource");
+		}
 
-        peerControler.add(connectionListener);
-    }
+		peerControler.add(connectionListener);
+	}
 
-    public void stop() throws ControlException {
-        peerControler.remove(connectionListener);
-    }
+	public void stop() throws ControlException {
+		peerControler.remove(connectionListener);
+	}
 
-    public void setPeerControler(PeerControler peerControler) {
-        this.peerControler = peerControler;
-    }
+	public void setPeerControler(PeerControler peerControler) {
+		this.peerControler = peerControler;
+	}
 
 }

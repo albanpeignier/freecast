@@ -22,15 +22,15 @@
  */
 package org.kolaka.freecast.net;
 
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.util.Iterator;
+import java.util.Set;
+
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.lang.math.IntRange;
 import org.kolaka.freecast.lang.math.IntRangeIterator;
-
-import java.net.InetSocketAddress;
-import java.net.InetAddress;
-import java.util.Iterator;
-import java.util.Set;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
@@ -41,11 +41,13 @@ public final class InetSocketAddressSpecifications {
 
 	}
 
-	public static InetSocketAddressSpecification singleton(InetAddress address, int port) {
+	public static InetSocketAddressSpecification singleton(InetAddress address,
+			int port) {
 		return singleton(new InetSocketAddress(address, port));
 	}
 
-	public static InetSocketAddressSpecification singleton(final InetSocketAddress address) {
+	public static InetSocketAddressSpecification singleton(
+			final InetSocketAddress address) {
 		return new InetSocketAddressSpecification() {
 			public Iterator iterator() {
 				return IteratorUtils.singletonIterator(address);
@@ -53,7 +55,8 @@ public final class InetSocketAddressSpecifications {
 		};
 	}
 
-	public static InetSocketAddressSpecification iterator(final InetAddress address, final Iterator ports) {
+	public static InetSocketAddressSpecification iterator(
+			final InetAddress address, final Iterator ports) {
 		final Transformer transformer = new Transformer() {
 			public Object transform(Object object) {
 				Number port = (Number) object;
@@ -67,11 +70,13 @@ public final class InetSocketAddressSpecifications {
 		};
 	}
 
-	public static InetSocketAddressSpecification portRange(final InetAddress address, final IntRange portRange) {
-        return iterator(address, new IntRangeIterator(portRange));
+	public static InetSocketAddressSpecification portRange(
+			final InetAddress address, final IntRange portRange) {
+		return iterator(address, new IntRangeIterator(portRange));
 	}
 
-	public static InetSocketAddressSpecification portSet(final InetAddress address, final Set portSet) {
+	public static InetSocketAddressSpecification portSet(
+			final InetAddress address, final Set portSet) {
 		return iterator(address, portSet.iterator());
 	}
 

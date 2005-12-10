@@ -33,11 +33,11 @@ import java.io.IOException;
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public interface Message {
-    public static final byte[] CAPTURE_PATTERN = new byte[] { 'F', 'C', 'M' };
+	public static final byte[] CAPTURE_PATTERN = new byte[] { 'F', 'C', 'M' };
 
-    public abstract MessageType getType();
+	public abstract MessageType getType();
 
-    public abstract void write(DataOutputStream output) throws IOException;
+	public abstract void write(DataOutputStream output) throws IOException;
 
-    public abstract void read(DataInputStream input) throws IOException;
+	public abstract void read(DataInputStream input) throws IOException;
 }

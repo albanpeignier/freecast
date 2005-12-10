@@ -34,34 +34,34 @@ import java.util.TreeMap;
  */
 public abstract class PeerReference implements Serializable {
 
-    static final long serialVersionUID = 3189920898117152786L;
+	static final long serialVersionUID = 3189920898117152786L;
 
-    public String toString() {
-        return getReferenceString() + attributes;
-    }
+	public String toString() {
+		return getReferenceString() + attributes;
+	}
 
-    protected abstract String getReferenceString();
+	protected abstract String getReferenceString();
 
-    public boolean equals(Object o) {
-        return o instanceof PeerReference && equals((PeerReference) o);
-    }
+	public boolean equals(Object o) {
+		return o instanceof PeerReference && equals((PeerReference) o);
+	}
 
-    public abstract boolean equals(PeerReference other);
+	public abstract boolean equals(PeerReference other);
 
-    public abstract int hashCode();
+	public abstract int hashCode();
 
-    private Map attributes = new TreeMap();
+	private Map attributes = new TreeMap();
 
-    public static final String IDENTIFIER_ATTRIBUTE = "identifier";
+	public static final String IDENTIFIER_ATTRIBUTE = "identifier";
 
-    public static final String ORDER_ATTRIBUTE = "order";
+	public static final String ORDER_ATTRIBUTE = "order";
 
-    public Object getAttribute(String name) {
-        return attributes.get(name);
-    }
+	public Object getAttribute(String name) {
+		return attributes.get(name);
+	}
 
-    public void setAttribute(String name, Object value) {
-        attributes.put(name, value);
-    }
+	public void setAttribute(String name, Object value) {
+		attributes.put(name, value);
+	}
 
 }

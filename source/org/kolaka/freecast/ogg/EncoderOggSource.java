@@ -89,7 +89,8 @@ public class EncoderOggSource implements OggSource {
 
 	private void init() throws IOException {
 		AudioFormat inputFormat = audioInput.getFormat();
-		LogFactory.getLog(getClass()).debug("initialize ogg encoder to encode " + inputFormat);
+		LogFactory.getLog(getClass()).debug(
+				"initialize ogg encoder to encode " + inputFormat);
 
 		readBuffer = new byte[READ * audioInput.getFormat().getFrameSize()];
 
@@ -176,7 +177,7 @@ public class EncoderOggSource implements OggSource {
 			}
 
 			fillCache();
-			
+
 			if (pages.isEmpty()) {
 				throw new EOFException();
 			}
@@ -228,7 +229,7 @@ public class EncoderOggSource implements OggSource {
 		}
 
 	}
-	
+
 	private void fillCache() throws IOException {
 		boolean cacheFilled = false;
 		while (!cacheFilled) {
@@ -290,14 +291,9 @@ public class EncoderOggSource implements OggSource {
 			// info.free();
 		}
 		/*
-		if (page != null) {
-			// page.free();
-		}
-		if (packet != null) {
-			packet.clear();
-			// packet.free();
-		}
-		*/
+		 * if (page != null) { // page.free(); } if (packet != null) {
+		 * packet.clear(); // packet.free(); }
+		 */
 	}
 
 }

@@ -30,14 +30,14 @@ package org.kolaka.freecast.peer;
  */
 public class PeerConnectionFactoryException extends Exception {
 
-    private static final long serialVersionUID = 3258417226829674551L;
+	private static final long serialVersionUID = 3258417226829674551L;
 
-    public PeerConnectionFactoryException(String message) {
-        super(message);
-    }
+	public PeerConnectionFactoryException(String message) {
+		super(message);
+	}
 
-    public PeerConnectionFactoryException(String message, Throwable cause) {
-        super(message, cause);
-    }
+	public PeerConnectionFactoryException(String message, Throwable cause) {
+		super(message, cause);
+	}
 
 }

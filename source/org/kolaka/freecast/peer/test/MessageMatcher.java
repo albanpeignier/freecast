@@ -28,24 +28,27 @@ import org.easymock.AbstractMatcher;
 import org.kolaka.freecast.transport.Message;
 import org.kolaka.freecast.transport.PeerStatusMessage;
 
-
 class MessageMatcher extends AbstractMatcher {
-    
-    private static final PeerStatusMatcher peerStatusMatcher = new PeerStatusMatcher();
-    
-    public boolean matches(Object args1[], Object args2[]) {
-        Message message1 = (Message) args1[0];
-        Message message2 = (Message) args2[0];
-        
-        if (message1 instanceof PeerStatusMessage && message2 instanceof PeerStatusMessage) {
-            return matches((PeerStatusMessage) message1, (PeerStatusMessage) message2);
-        } 
 
-        return ObjectUtils.equals(message1, message2);
-    }
-    
-    public boolean matches(PeerStatusMessage message1, PeerStatusMessage message2) {
-        return peerStatusMatcher.matches(message1.getPeerStatus(), message2.getPeerStatus());
-    }
+	private static final PeerStatusMatcher peerStatusMatcher = new PeerStatusMatcher();
+
+	public boolean matches(Object args1[], Object args2[]) {
+		Message message1 = (Message) args1[0];
+		Message message2 = (Message) args2[0];
+
+		if (message1 instanceof PeerStatusMessage
+				&& message2 instanceof PeerStatusMessage) {
+			return matches((PeerStatusMessage) message1,
+					(PeerStatusMessage) message2);
+		}
+
+		return ObjectUtils.equals(message1, message2);
+	}
+
+	public boolean matches(PeerStatusMessage message1,
+			PeerStatusMessage message2) {
+		return peerStatusMatcher.matches(message1.getPeerStatus(), message2
+				.getPeerStatus());
+	}
 
 }

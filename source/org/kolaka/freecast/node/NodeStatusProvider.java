@@ -32,10 +32,10 @@ import org.kolaka.freecast.node.event.NodeStatusListener;
  */
 public interface NodeStatusProvider {
 
-    public NodeStatus getNodeStatus();
+	public NodeStatus getNodeStatus();
 
-    public void add(NodeStatusListener listener);
+	public void add(NodeStatusListener listener);
 
-    public void remove(NodeStatusListener listener);
+	public void remove(NodeStatusListener listener);
 
 }

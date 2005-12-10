@@ -32,26 +32,26 @@ import java.util.Set;
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public abstract class BaseInterruptible implements Interruptible {
-    private boolean closed;
+	private boolean closed;
 
-    public boolean isClosed() {
-        return closed;
-    }
+	public boolean isClosed() {
+		return closed;
+	}
 
-    public void close() {
-        closed = true;
-        doClose();
-    }
+	public void close() {
+		closed = true;
+		doClose();
+	}
 
-    protected abstract void doClose();
+	protected abstract void doClose();
 
-    private final Set listeners = new HashSet();
+	private final Set listeners = new HashSet();
 
-    public void add(Listener listener) {
-        listeners.add(listener);
-    }
+	public void add(Listener listener) {
+		listeners.add(listener);
+	}
 
-    public void remove(Listener listener) {
-        listeners.remove(listener);
-    }
+	public void remove(Listener listener) {
+		listeners.remove(listener);
+	}
 }

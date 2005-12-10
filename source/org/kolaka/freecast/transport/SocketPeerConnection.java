@@ -23,11 +23,11 @@
 
 package org.kolaka.freecast.transport;
 
-import org.kolaka.freecast.peer.PeerConnection;
-import org.kolaka.freecast.peer.PeerConnectionException;
-
 import java.io.IOException;
 import java.net.Socket;
+
+import org.kolaka.freecast.peer.PeerConnection;
+import org.kolaka.freecast.peer.PeerConnectionException;
 
 /**
  * 
@@ -36,38 +36,38 @@ import java.net.Socket;
  */
 public class SocketPeerConnection extends PeerConnection {
 
-    private Socket socket;
+	private Socket socket;
 
-    private MessageWriter writer;
+	private MessageWriter writer;
 
-    private MessageReader reader;
+	private MessageReader reader;
 
-    public SocketPeerConnection(Type type, Socket socket) throws IOException {
-        super(type);
-        this.socket = socket;
+	public SocketPeerConnection(Type type, Socket socket) throws IOException {
+		super(type);
+		this.socket = socket;
 
-        this.writer = new StreamMessageWriter(socket.getOutputStream());
-        this.reader = new StreamMessageReader(socket.getInputStream());
-    }
+		this.writer = new StreamMessageWriter(socket.getOutputStream());
+		this.reader = new StreamMessageReader(socket.getInputStream());
+	}
 
-    protected MessageReader createReader() {
-        return reader;
-    }
+	protected MessageReader createReader() {
+		return reader;
+	}
 
-    protected MessageWriter createWriter() {
-        return writer;
-    }
+	protected MessageWriter createWriter() {
+		return writer;
+	}
 
-    protected void disposeImpl() throws PeerConnectionException {
-        try {
-            socket.close();
-        } catch (IOException e) {
-            throw new PeerConnectionException("Can't dispose the socket", e);
-        }
-    }
+	protected void disposeImpl() throws PeerConnectionException {
+		try {
+			socket.close();
+		} catch (IOException e) {
+			throw new PeerConnectionException("Can't dispose the socket", e);
+		}
+	}
 
-    public String toString() {
-        return "SocketPeerConnection[" + socket.getInetAddress() + "]";
-    }
+	public String toString() {
+		return "SocketPeerConnection[" + socket.getInetAddress() + "]";
+	}
 
 }

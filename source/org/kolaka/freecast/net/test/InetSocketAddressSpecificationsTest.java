@@ -22,20 +22,21 @@
  */
 package org.kolaka.freecast.net.test;
 
-import junit.framework.TestCase;
-import org.apache.commons.collections.IteratorUtils;
-import org.apache.commons.lang.math.IntRange;
-import org.apache.commons.lang.ArrayUtils;
-import org.kolaka.freecast.net.InetSocketAddressSpecification;
-import org.kolaka.freecast.net.InetSocketAddressSpecifications;
-import org.kolaka.freecast.net.InetSocketAddressSpecificationChain;
-
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.util.Iterator;
-import java.util.HashSet;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
+
+import junit.framework.TestCase;
+
+import org.apache.commons.collections.IteratorUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.math.IntRange;
+import org.kolaka.freecast.net.InetSocketAddressSpecification;
+import org.kolaka.freecast.net.InetSocketAddressSpecificationChain;
+import org.kolaka.freecast.net.InetSocketAddressSpecifications;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
@@ -51,44 +52,47 @@ public class InetSocketAddressSpecificationsTest extends TestCase {
 	public void testSingleton() {
 		final int port = 1000;
 		InetSocketAddress address = new InetSocketAddress(inetAddress, port);
-		InetSocketAddressSpecification specification = InetSocketAddressSpecifications.singleton(address);
-		testSpecification(specification, new int[]{port});
+		InetSocketAddressSpecification specification = InetSocketAddressSpecifications
+				.singleton(address);
+		testSpecification(specification, new int[] { port });
 	}
 
 	public void testIterator() {
-		int[] ports = new int[]{1000, 2000, 3000};
-		InetSocketAddressSpecification specification =
-		        InetSocketAddressSpecifications.iterator(inetAddress, IteratorUtils.arrayIterator(ports));
+		int[] ports = new int[] { 1000, 2000, 3000 };
+		InetSocketAddressSpecification specification = InetSocketAddressSpecifications
+				.iterator(inetAddress, IteratorUtils.arrayIterator(ports));
 		testSpecification(specification, ports);
 	}
 
 	public void testPortRange() {
-		int[] ports = new int[]{1000, 1001, 1002};
-		InetSocketAddressSpecification specification =
-		        InetSocketAddressSpecifications.portRange(inetAddress, new IntRange(1000, 1002));
+		int[] ports = new int[] { 1000, 1001, 1002 };
+		InetSocketAddressSpecification specification = InetSocketAddressSpecifications
+				.portRange(inetAddress, new IntRange(1000, 1002));
 		testSpecification(specification, ports);
 	}
 
 	public void testPortSet() {
-		int[] ports = new int[]{1000, 2000, 3000};
+		int[] ports = new int[] { 1000, 2000, 3000 };
 		Set portSet = createSet(ports);
-		InetSocketAddressSpecification specification =
-		        InetSocketAddressSpecifications.portSet(inetAddress, portSet);
+		InetSocketAddressSpecification specification = InetSocketAddressSpecifications
+				.portSet(inetAddress, portSet);
 		testSpecification(specification, ports);
 	}
 
 	public void testChain() {
-		int[] ports = new int[]{1000, 1001, 1002, 2000, 3000};
-		InetSocketAddressSpecificationChain specification =
-		        new InetSocketAddressSpecificationChain();
-		specification.add(InetSocketAddressSpecifications.portRange(inetAddress, new IntRange(1000, 1002)));
-		specification.add(InetSocketAddressSpecifications.portSet(inetAddress, createSet(new int[] { 2000, 3000})));
+		int[] ports = new int[] { 1000, 1001, 1002, 2000, 3000 };
+		InetSocketAddressSpecificationChain specification = new InetSocketAddressSpecificationChain();
+		specification.add(InetSocketAddressSpecifications.portRange(
+				inetAddress, new IntRange(1000, 1002)));
+		specification.add(InetSocketAddressSpecifications.portSet(inetAddress,
+				createSet(new int[] { 2000, 3000 })));
 		testSpecification(specification, ports);
 	}
 
-	private void testSpecification(InetSocketAddressSpecification specification, int[] expectedPorts) {
-        Set ports = new HashSet();
-		for (Iterator iter = specification.iterator(); iter.hasNext(); ) {
+	private void testSpecification(
+			InetSocketAddressSpecification specification, int[] expectedPorts) {
+		Set ports = new HashSet();
+		for (Iterator iter = specification.iterator(); iter.hasNext();) {
 			InetSocketAddress address = (InetSocketAddress) iter.next();
 			assertEquals(inetAddress, address.getAddress());
 			ports.add(new Integer(address.getPort()));

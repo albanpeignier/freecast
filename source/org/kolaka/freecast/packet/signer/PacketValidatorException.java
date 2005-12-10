@@ -25,19 +25,19 @@ package org.kolaka.freecast.packet.signer;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class PacketValidatorException extends Exception {
 
-    private static final long serialVersionUID = 3256722892263011893L;
+	private static final long serialVersionUID = 3256722892263011893L;
 
-    public PacketValidatorException(String message) {
-        super(message);
-    }
+	public PacketValidatorException(String message) {
+		super(message);
+	}
 
-    public PacketValidatorException(String message, Throwable cause) {
-        super(message, cause);
-    }
+	public PacketValidatorException(String message, Throwable cause) {
+		super(message, cause);
+	}
 
 }

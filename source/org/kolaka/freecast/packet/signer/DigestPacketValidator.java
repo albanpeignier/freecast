@@ -28,25 +28,26 @@ import org.kolaka.freecast.packet.Packet;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class DigestPacketValidator implements PacketValidator {
 
-    private PacketChecksummer checksummer;
-    
-    public DigestPacketValidator(PacketChecksummer checksummer) {
-        this.checksummer = checksummer;
-    }
+	private PacketChecksummer checksummer;
 
-    public boolean validate(Packet packet) throws PacketValidatorException {
-        Checksum checksum;
-        try {
-            checksum = checksummer.checksum(packet);
-        } catch (PacketChecksummerException e) {
-            throw new PacketValidatorException("Can't create the checksum of " + packet, e);
-        }
-        return checksum.equals(packet.getChecksum());
-    }
+	public DigestPacketValidator(PacketChecksummer checksummer) {
+		this.checksummer = checksummer;
+	}
+
+	public boolean validate(Packet packet) throws PacketValidatorException {
+		Checksum checksum;
+		try {
+			checksum = checksummer.checksum(packet);
+		} catch (PacketChecksummerException e) {
+			throw new PacketValidatorException("Can't create the checksum of "
+					+ packet, e);
+		}
+		return checksum.equals(packet.getChecksum());
+	}
 
 }

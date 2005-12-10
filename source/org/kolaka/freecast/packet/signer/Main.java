@@ -34,27 +34,28 @@ import org.apache.commons.lang.SerializationUtils;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class Main {
 
-    public static void main(String[] args) throws Exception {
-        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance ("RSA");
-        keyPairGenerator.initialize(1024);
-        System.out.println("Generate a RSA 1024 keypair");
-        KeyPair keyPair = keyPairGenerator.generateKeyPair();
-        writeKey(keyPair.getPrivate(),"private");
-        writeKey(keyPair.getPublic(),"public");
-        System.out.println("Take care to the private key file security");
-    }
+	public static void main(String[] args) throws Exception {
+		KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+		keyPairGenerator.initialize(1024);
+		System.out.println("Generate a RSA 1024 keypair");
+		KeyPair keyPair = keyPairGenerator.generateKeyPair();
+		writeKey(keyPair.getPrivate(), "private");
+		writeKey(keyPair.getPublic(), "public");
+		System.out.println("Take care to the private key file security");
+	}
 
-    private static void writeKey(Key key, String name) throws FileNotFoundException, IOException {
-        String filename = "freecast-" + name + ".key";
-        System.out.println("Write " + name + " key to " + filename);
-        FileOutputStream privateKeyOutput = new FileOutputStream(filename);
-        SerializationUtils.serialize(key, privateKeyOutput);
-        privateKeyOutput.close();
-    }
+	private static void writeKey(Key key, String name)
+			throws FileNotFoundException, IOException {
+		String filename = "freecast-" + name + ".key";
+		System.out.println("Write " + name + " key to " + filename);
+		FileOutputStream privateKeyOutput = new FileOutputStream(filename);
+		SerializationUtils.serialize(key, privateKeyOutput);
+		privateKeyOutput.close();
+	}
 
 }

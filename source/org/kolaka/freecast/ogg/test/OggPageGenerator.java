@@ -30,9 +30,11 @@ import org.kolaka.freecast.ogg.MutableOggPage;
 import org.kolaka.freecast.ogg.OggPage;
 
 public class OggPageGenerator {
-	
+
 	private int absoluteGranulePosition;
+
 	private boolean firstPage = true;
+
 	private int streamSerialNumber = new Random().nextInt();
 
 	public OggPage generate() {
@@ -43,10 +45,12 @@ public class OggPageGenerator {
 		page.setStreamSerialNumber(streamSerialNumber);
 		int length = 100;
 		page.setRawBytes(new byte[length]);
-		
+
 		absoluteGranulePosition += 44100 * 10;
-		if (firstPage) { firstPage = false; }
-		
+		if (firstPage) {
+			firstPage = false;
+		}
+
 		return page;
 	}
 

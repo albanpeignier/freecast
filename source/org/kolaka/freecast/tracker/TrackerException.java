@@ -30,10 +30,10 @@ package org.kolaka.freecast.tracker;
  */
 public class TrackerException extends Exception {
 
-    private static final long serialVersionUID = 3258417235302626101L;
+	private static final long serialVersionUID = 3258417235302626101L;
 
-    public TrackerException(String message, Throwable cause) {
-        super(message, cause);
-    }
+	public TrackerException(String message, Throwable cause) {
+		super(message, cause);
+	}
 
 }

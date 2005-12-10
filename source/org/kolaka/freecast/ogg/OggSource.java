@@ -32,8 +32,8 @@ import java.io.IOException;
  */
 public interface OggSource {
 
-    public OggPage next() throws IOException;
+	public OggPage next() throws IOException;
 
-    public void close() throws IOException;
+	public void close() throws IOException;
 
 }

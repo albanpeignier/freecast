@@ -39,88 +39,93 @@ import org.kolaka.freecast.timer.TimerUser;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class HttpPlayerSource extends BasePlayerSource implements TimerUser {
 
-    private InetSocketAddress listenAddress;
-    private ServerSocket serverSocket;
-    private boolean stopped;
+	private InetSocketAddress listenAddress;
 
-    public HttpPlayerSource(int port) {
-        this(new InetSocketAddress(port));
-    }
-    
-    public HttpPlayerSource(InetSocketAddress listenAddress) {
-        Validate.notNull(listenAddress, "No specified listen address");
-        this.listenAddress = listenAddress;
-    }
+	private ServerSocket serverSocket;
 
-    private Loop clientAcception = new Loop() {
+	private boolean stopped;
 
-        protected long loop() throws LoopInterruptedException {
-            LogFactory.getLog(getClass()).info("wait for http player connection at " + listenAddress);
-            
-            Socket socket;
+	public HttpPlayerSource(int port) {
+		this(new InetSocketAddress(port));
+	}
 
-            try {
-                socket = serverSocket.accept();
-            } catch (IOException e) {
-                if (stopped) {
-                    LogFactory.getLog(getClass()).debug(
-                            "socket acceptation stopped", e);
-                    return DefaultTimer.nodelay();
-                }
+	public HttpPlayerSource(InetSocketAddress listenAddress) {
+		Validate.notNull(listenAddress, "No specified listen address");
+		this.listenAddress = listenAddress;
+	}
 
-                LogFactory.getLog(getClass()).error(
-                        "socket acceptation failed", e);
-                return DefaultTimer.seconds(5);
-            }
-            
-            LogFactory.getLog(getClass()).info("accepted http player from " + socket.getInetAddress().getHostName());
-            
-            HttpPlayer player = new HttpPlayer(socket);
-            processPlayerCreated(player);
-            
-            return DefaultTimer.nodelay();
-        }
-    };
-        
-    public void start() throws ControlException {
-        stopped = false;
-        
-        try {
-            serverSocket = new ServerSocket();
-            serverSocket.bind(listenAddress);
-        } catch (IOException e) {
-            throw new ControlException("Can't wait http connections on " + listenAddress, e);
-        }
-        
-        timer.execute(clientAcception);
-        
-        super.start();
-    }
+	private Loop clientAcception = new Loop() {
 
+		protected long loop() throws LoopInterruptedException {
+			LogFactory.getLog(getClass()).info(
+					"wait for http player connection at " + listenAddress);
 
-    public void stop() throws ControlException {
-        stopped = true;
-        clientAcception.cancel();
+			Socket socket;
 
-        if (serverSocket != null) {
-            try {
-                serverSocket.close();
-            } catch (IOException e) {
-                throw new ControlException("Can't close http server socket", e);
-            }
-        }
-    }
+			try {
+				socket = serverSocket.accept();
+			} catch (IOException e) {
+				if (stopped) {
+					LogFactory.getLog(getClass()).debug(
+							"socket acceptation stopped", e);
+					return DefaultTimer.nodelay();
+				}
 
-    private Timer timer = DefaultTimer.getInstance();
+				LogFactory.getLog(getClass()).error(
+						"socket acceptation failed", e);
+				return DefaultTimer.seconds(5);
+			}
 
-    public void setTimer(Timer timer) {
-        Validate.notNull(timer, "No specified Timer");
-        this.timer = timer;
-    }
+			LogFactory.getLog(getClass()).info(
+					"accepted http player from "
+							+ socket.getInetAddress().getHostName());
+
+			HttpPlayer player = new HttpPlayer(socket);
+			processPlayerCreated(player);
+
+			return DefaultTimer.nodelay();
+		}
+	};
+
+	public void start() throws ControlException {
+		stopped = false;
+
+		try {
+			serverSocket = new ServerSocket();
+			serverSocket.bind(listenAddress);
+		} catch (IOException e) {
+			throw new ControlException("Can't wait http connections on "
+					+ listenAddress, e);
+		}
+
+		timer.execute(clientAcception);
+
+		super.start();
+	}
+
+	public void stop() throws ControlException {
+		stopped = true;
+		clientAcception.cancel();
+
+		if (serverSocket != null) {
+			try {
+				serverSocket.close();
+			} catch (IOException e) {
+				throw new ControlException("Can't close http server socket", e);
+			}
+		}
+	}
+
+	private Timer timer = DefaultTimer.getInstance();
+
+	public void setTimer(Timer timer) {
+		Validate.notNull(timer, "No specified Timer");
+		this.timer = timer;
+	}
 
 }

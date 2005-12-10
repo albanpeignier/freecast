@@ -28,14 +28,14 @@ import java.net.URL;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class PlaylistReceiver extends OggSourceFactoryReceiver {
 
-    public PlaylistReceiver(URL playlist) throws IOException {
-        super(new PlaylistOggSourceFactory(playlist));
-    }
+	public PlaylistReceiver(URL playlist) throws IOException {
+		super(new PlaylistOggSourceFactory(playlist));
+	}
 
 	public PlaylistReceiver(Playlist playlist) {
 		super(new PlaylistOggSourceFactory(playlist));

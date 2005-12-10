@@ -36,43 +36,43 @@ import org.kolaka.freecast.peer.PeerConnection;
  */
 public class PeerConnectionOpeningSupport {
 
-    private final Set listeners = new HashSet();
+	private final Set listeners = new HashSet();
 
-    private final Set vetoableListeners = new HashSet();
+	private final Set vetoableListeners = new HashSet();
 
-    public void add(PeerConnectionOpeningListener listener) {
-        listeners.add(listener);
-    }
+	public void add(PeerConnectionOpeningListener listener) {
+		listeners.add(listener);
+	}
 
-    public void remove(PeerConnectionOpeningListener listener) {
-        listeners.remove(listener);
-    }
+	public void remove(PeerConnectionOpeningListener listener) {
+		listeners.remove(listener);
+	}
 
-    public void add(VetoablePeerConnectionOpeningListener listener) {
-        vetoableListeners.add(listener);
-    }
+	public void add(VetoablePeerConnectionOpeningListener listener) {
+		vetoableListeners.add(listener);
+	}
 
-    public void remove(VetoablePeerConnectionOpeningListener listener) {
-        vetoableListeners.remove(listener);
-    }
+	public void remove(VetoablePeerConnectionOpeningListener listener) {
+		vetoableListeners.remove(listener);
+	}
 
-    public void fireConnectionOpening(PeerConnection connection) {
-        for (Iterator iter = listeners.iterator(); iter.hasNext();) {
-            PeerConnectionOpeningListener listener = (PeerConnectionOpeningListener) iter
-                    .next();
-            // TODO support other methods when needed
-            listener.connectionOpening(connection);
-        }
-    }
+	public void fireConnectionOpening(PeerConnection connection) {
+		for (Iterator iter = listeners.iterator(); iter.hasNext();) {
+			PeerConnectionOpeningListener listener = (PeerConnectionOpeningListener) iter
+					.next();
+			// TODO support other methods when needed
+			listener.connectionOpening(connection);
+		}
+	}
 
-    public void fireVetoableConnectionOpening(PeerConnection connection)
-            throws VetoPeerConnectionOpeningException {
-        for (Iterator iter = vetoableListeners.iterator(); iter.hasNext();) {
-            VetoablePeerConnectionOpeningListener listener = (VetoablePeerConnectionOpeningListener) iter
-                    .next();
-            // TODO support other methods when needed
-            listener.vetoableConnectionOpening(connection);
-        }
-    }
+	public void fireVetoableConnectionOpening(PeerConnection connection)
+			throws VetoPeerConnectionOpeningException {
+		for (Iterator iter = vetoableListeners.iterator(); iter.hasNext();) {
+			VetoablePeerConnectionOpeningListener listener = (VetoablePeerConnectionOpeningListener) iter
+					.next();
+			// TODO support other methods when needed
+			listener.vetoableConnectionOpening(connection);
+		}
+	}
 
 }

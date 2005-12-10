@@ -33,36 +33,37 @@ import org.apache.commons.lang.time.StopWatch;
 
 public class SignatureTest extends TestCase {
 
-    public void testSimpleSignature() throws Exception {
-        byte[] data = new byte[1024];
-        for (int i=0; i < data.length; i++) {
-            data[i] = (byte) (Byte.MIN_VALUE + (Math.random() * (Byte.MAX_VALUE - Byte.MIN_VALUE)));
-        }
-        
-        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance ("RSA");
-        keyPairGenerator.initialize(1024);
-        
-        KeyPair keyPair = keyPairGenerator.generateKeyPair();
+	public void testSimpleSignature() throws Exception {
+		byte[] data = new byte[1024];
+		for (int i = 0; i < data.length; i++) {
+			data[i] = (byte) (Byte.MIN_VALUE + (Math.random() * (Byte.MAX_VALUE - Byte.MIN_VALUE)));
+		}
 
-        StopWatch watch = new StopWatch();
-        watch.start();
-        int operationCount = 100;
-        for (int i=0; i < operationCount; i++) {
-            Signature signature = Signature.getInstance("SHA1withRSA");
-            signature.initSign(keyPair.getPrivate());
-            
-            signature.update(data);
-            
-            byte signedChecksum[] = signature.sign();
-            
-            Signature verifierSignature = Signature.getInstance("SHA1withRSA");
-            verifierSignature.initVerify(keyPair.getPublic());
-            
-            verifierSignature.update(data);
-            assertTrue(verifierSignature.verify(signedChecksum));
-        }
-        watch.stop();
-        System.out.println("time to sign and verify: " + (watch.getTime() / operationCount) + " ms");
-    }
-    
+		KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+		keyPairGenerator.initialize(1024);
+
+		KeyPair keyPair = keyPairGenerator.generateKeyPair();
+
+		StopWatch watch = new StopWatch();
+		watch.start();
+		int operationCount = 100;
+		for (int i = 0; i < operationCount; i++) {
+			Signature signature = Signature.getInstance("SHA1withRSA");
+			signature.initSign(keyPair.getPrivate());
+
+			signature.update(data);
+
+			byte signedChecksum[] = signature.sign();
+
+			Signature verifierSignature = Signature.getInstance("SHA1withRSA");
+			verifierSignature.initVerify(keyPair.getPublic());
+
+			verifierSignature.update(data);
+			assertTrue(verifierSignature.verify(signedChecksum));
+		}
+		watch.stop();
+		System.out.println("time to sign and verify: "
+				+ (watch.getTime() / operationCount) + " ms");
+	}
+
 }

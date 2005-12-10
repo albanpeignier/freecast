@@ -22,10 +22,10 @@
  */
 package org.kolaka.freecast.resource.test;
 
-import junit.framework.TestCase;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
+import junit.framework.TestCase;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
@@ -33,7 +33,8 @@ import java.text.SimpleDateFormat;
 public class HttpResourceLocatorTest extends TestCase {
 
 	public void testDateParsing() throws ParseException {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
+		SimpleDateFormat dateFormat = new SimpleDateFormat(
+				"EEE, dd MMM yyyy HH:mm:ss zzz");
 		dateFormat.parse("Sat, 16 Apr 2005 14:04:50 GMT");
 	}
 

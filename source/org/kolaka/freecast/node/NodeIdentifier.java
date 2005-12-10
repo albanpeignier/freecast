@@ -34,18 +34,18 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  */
 public abstract class NodeIdentifier implements Comparable, Serializable {
 
-    static final long serialVersionUID = -4121852123565706283L;
+	static final long serialVersionUID = -4121852123565706283L;
 
-    public boolean equals(Object o) {
-        return o instanceof NodeIdentifier && equals((NodeIdentifier) o);
-    }
+	public boolean equals(Object o) {
+		return o instanceof NodeIdentifier && equals((NodeIdentifier) o);
+	}
 
-    public abstract boolean equals(NodeIdentifier identifier);
+	public abstract boolean equals(NodeIdentifier identifier);
 
-    public abstract int hashCode();
+	public abstract int hashCode();
 
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
 
 }

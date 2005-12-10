@@ -36,143 +36,143 @@ import org.kolaka.freecast.timer.Task;
  */
 public class TimerTest extends TestCase {
 
-    private static final long LATENCY = 50;
+	private static final long LATENCY = 50;
 
-    public void testExecuteLater() throws InterruptedException {
-        TestRunnable testRunnable = new TestRunnable();
-        DefaultTimer.getInstance().executeLater(testRunnable);
+	public void testExecuteLater() throws InterruptedException {
+		TestRunnable testRunnable = new TestRunnable();
+		DefaultTimer.getInstance().executeLater(testRunnable);
 
-        Thread.sleep(LATENCY);
+		Thread.sleep(LATENCY);
 
-        assertNotNull("runnable not executed", testRunnable.getThread());
-        assertNotSame("same thread used", Thread.currentThread(), testRunnable
-                .getThread());
-    }
+		assertNotNull("runnable not executed", testRunnable.getThread());
+		assertNotSame("same thread used", Thread.currentThread(), testRunnable
+				.getThread());
+	}
 
-    static class TestRunnable implements Runnable {
+	static class TestRunnable implements Runnable {
 
-        private Thread thread;
+		private Thread thread;
 
-        public void run() {
-            thread = Thread.currentThread();
-        }
+		public void run() {
+			thread = Thread.currentThread();
+		}
 
-        public Thread getThread() {
-            return thread;
-        }
-    }
+		public Thread getThread() {
+			return thread;
+		}
+	}
 
-    public void testExecuteAt() throws InterruptedException {
-        final long delay = DateUtils.MILLIS_PER_SECOND / 4;
-        final long timeLength = DateUtils.MILLIS_PER_SECOND / 4;
+	public void testExecuteAt() throws InterruptedException {
+		final long delay = DateUtils.MILLIS_PER_SECOND / 4;
+		final long timeLength = DateUtils.MILLIS_PER_SECOND / 4;
 
-        PausedRunnable runnable = new PausedRunnable(timeLength);
-        DefaultTimer.getInstance().executeAfterDelay(delay, runnable);
+		PausedRunnable runnable = new PausedRunnable(timeLength);
+		DefaultTimer.getInstance().executeAfterDelay(delay, runnable);
 
-        assertEquals("runnable shouldn't be started", PausedRunnable.CREATED,
-                runnable.getStatus());
+		assertEquals("runnable shouldn't be started", PausedRunnable.CREATED,
+				runnable.getStatus());
 
-        Thread.sleep(delay + LATENCY);
+		Thread.sleep(delay + LATENCY);
 
-        assertEquals("runnable should be started", PausedRunnable.STARTED,
-                runnable.getStatus());
+		assertEquals("runnable should be started", PausedRunnable.STARTED,
+				runnable.getStatus());
 
-        Thread.sleep(timeLength + LATENCY);
+		Thread.sleep(timeLength + LATENCY);
 
-        assertEquals("runnable should be done", PausedRunnable.DONE, runnable
-                .getStatus());
-    }
+		assertEquals("runnable should be done", PausedRunnable.DONE, runnable
+				.getStatus());
+	}
 
-    public void testExecuteAtConcurrency() throws InterruptedException {
-        final long delay = DateUtils.MILLIS_PER_SECOND / 4;
-        final long timeLength = DateUtils.MILLIS_PER_SECOND / 4;
+	public void testExecuteAtConcurrency() throws InterruptedException {
+		final long delay = DateUtils.MILLIS_PER_SECOND / 4;
+		final long timeLength = DateUtils.MILLIS_PER_SECOND / 4;
 
-        PausedRunnable firstRunnable = new PausedRunnable(timeLength);
-        PausedRunnable secondRunnable = new PausedRunnable(timeLength * 2);
+		PausedRunnable firstRunnable = new PausedRunnable(timeLength);
+		PausedRunnable secondRunnable = new PausedRunnable(timeLength * 2);
 
-        DefaultTimer.getInstance().executeAfterDelay(delay, firstRunnable);
-        DefaultTimer.getInstance().executeAfterDelay(delay, secondRunnable);
+		DefaultTimer.getInstance().executeAfterDelay(delay, firstRunnable);
+		DefaultTimer.getInstance().executeAfterDelay(delay, secondRunnable);
 
-        assertEquals("runnable shouldn't be started", PausedRunnable.CREATED,
-                firstRunnable.getStatus());
-        assertEquals("runnable shouldn't be started", PausedRunnable.CREATED,
-                secondRunnable.getStatus());
+		assertEquals("runnable shouldn't be started", PausedRunnable.CREATED,
+				firstRunnable.getStatus());
+		assertEquals("runnable shouldn't be started", PausedRunnable.CREATED,
+				secondRunnable.getStatus());
 
-        Thread.sleep(delay + LATENCY);
+		Thread.sleep(delay + LATENCY);
 
-        assertEquals("runnable should be started", PausedRunnable.STARTED,
-                firstRunnable.getStatus());
-        assertEquals("second runnable should be started",
-                PausedRunnable.STARTED, secondRunnable.getStatus());
+		assertEquals("runnable should be started", PausedRunnable.STARTED,
+				firstRunnable.getStatus());
+		assertEquals("second runnable should be started",
+				PausedRunnable.STARTED, secondRunnable.getStatus());
 
-        Thread.sleep(timeLength + LATENCY);
+		Thread.sleep(timeLength + LATENCY);
 
-        assertEquals("first runnable should be done", PausedRunnable.DONE,
-                firstRunnable.getStatus());
-        assertEquals("second runnable shouldn't be done",
-                PausedRunnable.STARTED, secondRunnable.getStatus());
+		assertEquals("first runnable should be done", PausedRunnable.DONE,
+				firstRunnable.getStatus());
+		assertEquals("second runnable shouldn't be done",
+				PausedRunnable.STARTED, secondRunnable.getStatus());
 
-        Thread.sleep(timeLength + LATENCY);
-        assertEquals("second runnable should be done", PausedRunnable.DONE,
-                secondRunnable.getStatus());
-    }
+		Thread.sleep(timeLength + LATENCY);
+		assertEquals("second runnable should be done", PausedRunnable.DONE,
+				secondRunnable.getStatus());
+	}
 
-    public void testExecuteAtCancel() throws InterruptedException {
-        final long delay = DateUtils.MILLIS_PER_SECOND / 4;
-        final long timeLength = DateUtils.MILLIS_PER_SECOND / 4;
+	public void testExecuteAtCancel() throws InterruptedException {
+		final long delay = DateUtils.MILLIS_PER_SECOND / 4;
+		final long timeLength = DateUtils.MILLIS_PER_SECOND / 4;
 
-        PausedRunnable runnable = new PausedRunnable(timeLength);
-        DefaultTimer.getInstance().executeAfterDelay(delay, runnable);
+		PausedRunnable runnable = new PausedRunnable(timeLength);
+		DefaultTimer.getInstance().executeAfterDelay(delay, runnable);
 
-        assertEquals("runnable shouldn't be started", PausedRunnable.CREATED,
-                runnable.getStatus());
+		assertEquals("runnable shouldn't be started", PausedRunnable.CREATED,
+				runnable.getStatus());
 
-        Thread.sleep(LATENCY);
+		Thread.sleep(LATENCY);
 
-        runnable.cancel();
+		runnable.cancel();
 
-        assertEquals("runnable should be canceled", PausedRunnable.CANCELED,
-                runnable.getStatus());
-    }
+		assertEquals("runnable should be canceled", PausedRunnable.CANCELED,
+				runnable.getStatus());
+	}
 
-    static class PausedRunnable extends Task {
+	static class PausedRunnable extends Task {
 
-        public static final int CREATED = 0;
+		public static final int CREATED = 0;
 
-        public static final int STARTED = 1;
+		public static final int STARTED = 1;
 
-        public static final int DONE = 2;
+		public static final int DONE = 2;
 
-        public static final int ABORTED = 3;
+		public static final int ABORTED = 3;
 
-        public static final int CANCELED = 4;
+		public static final int CANCELED = 4;
 
-        private final long timeLength;
+		private final long timeLength;
 
-        private int status = CREATED;
+		private int status = CREATED;
 
-        PausedRunnable(long timeLength) {
-            this.timeLength = timeLength;
-        }
+		PausedRunnable(long timeLength) {
+			this.timeLength = timeLength;
+		}
 
-        public void cancel() {
-            super.cancel();
-            status = CANCELED;
-        }
+		public void cancel() {
+			super.cancel();
+			status = CANCELED;
+		}
 
-        public void run() {
-            status = STARTED;
-            try {
-                Thread.sleep(timeLength);
-            } catch (InterruptedException e) {
-                status = ABORTED;
-            }
-            status = DONE;
-        }
+		public void run() {
+			status = STARTED;
+			try {
+				Thread.sleep(timeLength);
+			} catch (InterruptedException e) {
+				status = ABORTED;
+			}
+			status = DONE;
+		}
 
-        public int getStatus() {
-            return status;
-        }
-    }
+		public int getStatus() {
+			return status;
+		}
+	}
 
 }

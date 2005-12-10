@@ -23,45 +23,49 @@
 
 package org.kolaka.freecast.service.test;
 
+import junit.framework.TestCase;
+
 import org.easymock.MockControl;
 import org.kolaka.freecast.service.ControlException;
 import org.kolaka.freecast.service.OptionalStartable;
 import org.kolaka.freecast.service.Startable;
 
-import junit.framework.TestCase;
-
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class OptionalStartableTest extends TestCase {
 
-    public void testStart() throws ControlException {
-        MockControl startableControl = MockControl.createControl(Startable.class);
-        Startable startable = (Startable) startableControl.getMock();
-        
-        startable.start();
-        startableControl.replay();
-        
-        Startable optionalStartable = OptionalStartable.create(startable, Startable.class);
-        optionalStartable.start();
-        
-        startableControl.verify();
-    }
+	public void testStart() throws ControlException {
+		MockControl startableControl = MockControl
+				.createControl(Startable.class);
+		Startable startable = (Startable) startableControl.getMock();
 
-    public void testStartError() throws ControlException {
-        MockControl startableControl = MockControl.createControl(Startable.class);
-        Startable startable = (Startable) startableControl.getMock();
-        
-        startable.start();
-        startableControl.setThrowable(new ControlException("for test"));
-        startableControl.replay();
-        
-        Startable optionalStartable = OptionalStartable.create(startable, Startable.class);
-        optionalStartable.start();
-        
-        startableControl.verify();
-    }
+		startable.start();
+		startableControl.replay();
+
+		Startable optionalStartable = OptionalStartable.create(startable,
+				Startable.class);
+		optionalStartable.start();
+
+		startableControl.verify();
+	}
+
+	public void testStartError() throws ControlException {
+		MockControl startableControl = MockControl
+				.createControl(Startable.class);
+		Startable startable = (Startable) startableControl.getMock();
+
+		startable.start();
+		startableControl.setThrowable(new ControlException("for test"));
+		startableControl.replay();
+
+		Startable optionalStartable = OptionalStartable.create(startable,
+				Startable.class);
+		optionalStartable.start();
+
+		startableControl.verify();
+	}
 
 }

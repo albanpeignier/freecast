@@ -30,11 +30,11 @@ package org.kolaka.freecast.timer;
  */
 public class DefaultTimeBase implements TimeBase {
 
-    public long currentTimeMillis() {
-        return System.currentTimeMillis();
-    }
+	public long currentTimeMillis() {
+		return System.currentTimeMillis();
+	}
 
-    public void sleep(long delay) throws InterruptedException {
-        Thread.sleep(delay);
-    }
+	public void sleep(long delay) throws InterruptedException {
+		Thread.sleep(delay);
+	}
 }

@@ -32,6 +32,6 @@ import org.kolaka.freecast.node.NodeStatus;
  */
 public interface NodeStatusListener {
 
-    public void nodeStatusChanged(NodeStatus status);
+	public void nodeStatusChanged(NodeStatus status);
 
 }

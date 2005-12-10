@@ -22,14 +22,14 @@
  */
 package org.kolaka.freecast.resource;
 
+import java.io.InputStream;
+import java.net.URI;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.LogFactory;
-
-import java.io.InputStream;
-import java.util.List;
-import java.util.LinkedList;
-import java.util.Iterator;
-import java.net.URI;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
@@ -45,12 +45,14 @@ public class CompositeResourceLocator implements ResourceLocator {
 	public InputStream openResource(URI uri) throws Exception {
 		Validate.notNull(uri, "No specified URI");
 
-		for (Iterator iterator = resourceLocators.iterator(); iterator.hasNext();) {
+		for (Iterator iterator = resourceLocators.iterator(); iterator
+				.hasNext();) {
 			ResourceLocator resourceLocator = (ResourceLocator) iterator.next();
 			try {
 				return resourceLocator.openResource(uri);
 			} catch (Exception e) {
-				LogFactory.getLog(getClass()).trace(resourceLocator + " can't open " + uri);
+				LogFactory.getLog(getClass()).trace(
+						resourceLocator + " can't open " + uri);
 				continue;
 			}
 		}

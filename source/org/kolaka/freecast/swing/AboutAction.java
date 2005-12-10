@@ -22,16 +22,21 @@
  */
 package org.kolaka.freecast.swing;
 
-import java.awt.*;
+import java.awt.Window;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public class AboutAction extends ShowHideAction {
 
-    public AboutAction(Window window) {
-        super(window, "About dialog");
-        putValue(SMALL_ICON, loadIcon("resources/about.png"));
-    }
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3491148410805189979L;
+
+	public AboutAction(Window window) {
+		super(window, "About dialog");
+		putValue(SMALL_ICON, loadIcon("resources/about.png"));
+	}
 
 }

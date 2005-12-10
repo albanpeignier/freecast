@@ -32,7 +32,8 @@ public class ResourceLocators {
 	static {
 		CompositeResourceLocator locator = new CompositeResourceLocator();
 
-		locator.add(new ClassLoaderResourceLocator(Thread.currentThread().getContextClassLoader()));
+		locator.add(new ClassLoaderResourceLocator(Thread.currentThread()
+				.getContextClassLoader()));
 		locator.add(new URLResourceLocator());
 		locator.add(new FileResourceLocator());
 

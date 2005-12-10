@@ -32,16 +32,17 @@ import java.io.IOException;
  */
 public class NotOpenConnectionException extends IOException {
 
-    private static final long serialVersionUID = 3258411716303007792L;
-    private PeerConnection.Status status;
+	private static final long serialVersionUID = 3258411716303007792L;
 
-    public NotOpenConnectionException(PeerConnection.Status status) {
-        super("the connection isn't opened (" + status.getName() + ")");
-        this.status = status;
-    }
+	private PeerConnection.Status status;
 
-    public PeerConnection.Status getStatus() {
-        return status;
-    }
+	public NotOpenConnectionException(PeerConnection.Status status) {
+		super("the connection isn't opened (" + status.getName() + ")");
+		this.status = status;
+	}
+
+	public PeerConnection.Status getStatus() {
+		return status;
+	}
 
 }

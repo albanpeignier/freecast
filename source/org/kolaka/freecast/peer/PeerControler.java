@@ -23,30 +23,30 @@
 
 package org.kolaka.freecast.peer;
 
+import java.beans.PropertyChangeListener;
+
 import org.kolaka.freecast.peer.event.PeerConnectionStatusListener;
 import org.kolaka.freecast.service.Controler;
-
-import java.beans.PropertyChangeListener;
 
 /**
  * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public interface PeerControler extends Controler {
-    public PeerConnectionSource getPeerConnectionSource();
+	public PeerConnectionSource getPeerConnectionSource();
 
-    public Peer getBestPeer() throws NoPeerAvailableException;
+	public Peer getBestPeer() throws NoPeerAvailableException;
 
-    public void addPeerListener(PropertyChangeListener listener);
+	public void addPeerListener(PropertyChangeListener listener);
 
-    public void removePeerListener(PropertyChangeListener listener);
+	public void removePeerListener(PropertyChangeListener listener);
 
-    public void add(PeerConnectionStatusListener listener);
+	public void add(PeerConnectionStatusListener listener);
 
-    public void remove(PeerConnectionStatusListener listener);
+	public void remove(PeerConnectionStatusListener listener);
 
 	interface Auditor extends org.kolaka.freecast.auditor.Auditor {
-		
+
 		public void acceptConnection(PeerReference reference);
 
 		public void closeConnection(PeerReference reference);

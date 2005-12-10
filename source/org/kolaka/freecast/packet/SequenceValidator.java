@@ -34,35 +34,35 @@ import org.apache.commons.logging.LogFactory;
  */
 public class SequenceValidator implements Cloneable {
 
-    private long previousSequenceNumber = -1;
+	private long previousSequenceNumber = -1;
 
-    public boolean validate(SequenceElement element) {
-        long sequenceNumber = element.getSequenceNumber();
+	public boolean validate(SequenceElement element) {
+		long sequenceNumber = element.getSequenceNumber();
 
-        boolean valid = previousSequenceNumber == -1
-                || sequenceNumber == previousSequenceNumber + 1;
+		boolean valid = previousSequenceNumber == -1
+				|| sequenceNumber == previousSequenceNumber + 1;
 
-        if (!valid) {
-            String msg = "sequence broken: " + previousSequenceNumber + " -> "
-                    + sequenceNumber;
-            LogFactory.getLog(getClass()).warn(msg);
-        }
+		if (!valid) {
+			String msg = "sequence broken: " + previousSequenceNumber + " -> "
+					+ sequenceNumber;
+			LogFactory.getLog(getClass()).warn(msg);
+		}
 
-        previousSequenceNumber = sequenceNumber;
+		previousSequenceNumber = sequenceNumber;
 
-        return valid;
-    }
+		return valid;
+	}
 
-    public Object clone() {
-        try {
-            return super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new UnhandledException(e);
-        }
-    }
-    
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this); 
-    }
+	public Object clone() {
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new UnhandledException(e);
+		}
+	}
+
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
 
 }

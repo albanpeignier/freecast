@@ -32,7 +32,7 @@ import org.kolaka.freecast.peer.PeerConnection;
  */
 public interface VetoablePeerConnectionOpeningListener {
 
-    public void vetoableConnectionOpening(PeerConnection connection)
-            throws VetoPeerConnectionOpeningException;
+	public void vetoableConnectionOpening(PeerConnection connection)
+			throws VetoPeerConnectionOpeningException;
 
 }

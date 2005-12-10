@@ -32,8 +32,8 @@ import junit.framework.TestCase;
  */
 public class SocketPeerConnectionSourceTest extends TestCase {
 
-    public void testAccept() {
+	public void testAccept() {
 
-    }
+	}
 
 }

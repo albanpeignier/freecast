@@ -40,139 +40,139 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  */
 public class StreamMessageWriter implements MessageWriter {
 
-    private final DataOutputStream output;
+	private final DataOutputStream output;
 
-    private final CountingOutputStream countingOutput;
+	private final CountingOutputStream countingOutput;
 
-    public synchronized int write(Message message) throws IOException {
-        if (message == null) {
-            throw new IllegalArgumentException("No specified message");
-        }
+	public synchronized int write(Message message) throws IOException {
+		if (message == null) {
+			throw new IllegalArgumentException("No specified message");
+		}
 
-        int before = countingOutput.getCount();
-        output.write(Message.CAPTURE_PATTERN);
-        output.writeByte(message.getType().getValue());
-        message.write(output);
-        int length = countingOutput.getCount() - before;
+		int before = countingOutput.getCount();
+		output.write(Message.CAPTURE_PATTERN);
+		output.writeByte(message.getType().getValue());
+		message.write(output);
+		int length = countingOutput.getCount() - before;
 
-        addWrite(length);
+		addWrite(length);
 
-				output.flush();
+		output.flush();
 
-        return length;
-    }
+		return length;
+	}
 
-    protected void addWrite(int length) {
-        writes.add(new Write(length));
-        trim();
-    }
+	protected void addWrite(int length) {
+		writes.add(new Write(length));
+		trim();
+	}
 
-    protected void trim() {
-        long now = System.currentTimeMillis();
+	protected void trim() {
+		long now = System.currentTimeMillis();
 
-        for (Iterator iter = writes.iterator(); iter.hasNext();) {
-            Write current = (Write) iter.next();
-            long age = current.getAge(now);
-            if (age > maximumWriteAge) {
-                iter.remove();
-            } else {
-                break;
-            }
-        }
-    }
+		for (Iterator iter = writes.iterator(); iter.hasNext();) {
+			Write current = (Write) iter.next();
+			long age = current.getAge(now);
+			if (age > maximumWriteAge) {
+				iter.remove();
+			} else {
+				break;
+			}
+		}
+	}
 
-    public int getBandwith() {
-        return getBandwidth(maximumWriteAge);
-    }
+	public int getBandwith() {
+		return getBandwidth(maximumWriteAge);
+	}
 
-    protected int getBandwidth(long interval) {
-        trim();
+	protected int getBandwidth(long interval) {
+		trim();
 
-        if (writes.isEmpty()) {
-            return 0;
-        }
+		if (writes.isEmpty()) {
+			return 0;
+		}
 
-        Write oldest = (Write) writes.get(0);
-        if (writes.size() == 1) {
-            return oldest.getLength() * 8;
-        }
+		Write oldest = (Write) writes.get(0);
+		if (writes.size() == 1) {
+			return oldest.getLength() * 8;
+		}
 
-        long timeLength = oldest.getAge();
-        long writeLength = getWriteLength(interval);
+		long timeLength = oldest.getAge();
+		long writeLength = getWriteLength(interval);
 
-        double secondTimeLength = timeLength / 1000.0;
-        long bitWriteLength = writeLength * 8;
+		double secondTimeLength = timeLength / 1000.0;
+		long bitWriteLength = writeLength * 8;
 
-        return (int) (bitWriteLength / secondTimeLength);
-    }
+		return (int) (bitWriteLength / secondTimeLength);
+	}
 
-    public int getWriteLength() {
-        return getWriteLength(maximumWriteAge);
-    }
+	public int getWriteLength() {
+		return getWriteLength(maximumWriteAge);
+	}
 
-    public int getWriteLength(long timeLength) {
-        long oldest = System.currentTimeMillis() - timeLength;
+	public int getWriteLength(long timeLength) {
+		long oldest = System.currentTimeMillis() - timeLength;
 
-        int writeLength = 0;
-        for (Iterator iterator = writes.iterator(); iterator.hasNext();) {
-            Write current = (Write) iterator.next();
-            if (current.getTimestamp() > oldest) {
-                writeLength += current.getLength();
-            }
-        }
-        return writeLength;
-    }
+		int writeLength = 0;
+		for (Iterator iterator = writes.iterator(); iterator.hasNext();) {
+			Write current = (Write) iterator.next();
+			if (current.getTimestamp() > oldest) {
+				writeLength += current.getLength();
+			}
+		}
+		return writeLength;
+	}
 
-    public int getAverageLength() {
-        trim();
-        return getWriteLength() / writes.size();
-    }
+	public int getAverageLength() {
+		trim();
+		return getWriteLength() / writes.size();
+	}
 
-    public StreamMessageWriter(final OutputStream output) {
-        this.countingOutput = new CountingOutputStream(output);
-        this.output = new DataOutputStream(countingOutput);
-    }
+	public StreamMessageWriter(final OutputStream output) {
+		this.countingOutput = new CountingOutputStream(output);
+		this.output = new DataOutputStream(countingOutput);
+	}
 
-    private long maximumWriteAge = 30 * 1000;
+	private long maximumWriteAge = 30 * 1000;
 
-    private List writes = new LinkedList();
+	private List writes = new LinkedList();
 
-    static class Write {
+	static class Write {
 
-        private final long timestamp;
+		private final long timestamp;
 
-        private final int length;
+		private final int length;
 
-        public Write(int length) {
-            this.timestamp = System.currentTimeMillis();
-            this.length = length;
-        }
+		public Write(int length) {
+			this.timestamp = System.currentTimeMillis();
+			this.length = length;
+		}
 
-        public long getTimestamp() {
-            return timestamp;
-        }
+		public long getTimestamp() {
+			return timestamp;
+		}
 
-        public int getLength() {
-            return length;
-        }
+		public int getLength() {
+			return length;
+		}
 
-        public long getAge() {
-            return getAge(System.currentTimeMillis());
-        }
+		public long getAge() {
+			return getAge(System.currentTimeMillis());
+		}
 
-        public long getAge(long now) {
-            return now - timestamp;
-        }
+		public long getAge(long now) {
+			return now - timestamp;
+		}
 
-        public String toString() {
-            return ToStringBuilder.reflectionToString(this);
-        }
+		public String toString() {
+			return ToStringBuilder.reflectionToString(this);
+		}
 
-    }
+	}
 
-    public String toString() {
-        return new ToStringBuilder(this).append("bandwidth", getBandwith())
-                .toString();
-    }
+	public String toString() {
+		return new ToStringBuilder(this).append("bandwidth", getBandwith())
+				.toString();
+	}
 
 }

@@ -22,24 +22,36 @@
  */
 package org.kolaka.freecast.swing;
 
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import javax.swing.Action;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.Validate;
 import org.apache.log4j.Appender;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.Validate;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.ActionEvent;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public class ToolbarPane extends JPanel {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3197243213538241226L;
 
 	private final JPanel buttonsPanel;
 
@@ -88,7 +100,8 @@ public class ToolbarPane extends JPanel {
 		messageLabel.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				if (SwingUtilities.isLeftMouseButton(e)) {
-					ActionEvent actionEvent = new ActionEvent(ToolbarPane.this, ActionEvent.ACTION_PERFORMED, "message");
+					ActionEvent actionEvent = new ActionEvent(ToolbarPane.this,
+							ActionEvent.ACTION_PERFORMED, "message");
 					messageAction.actionPerformed(actionEvent);
 				}
 			}
@@ -99,7 +112,7 @@ public class ToolbarPane extends JPanel {
 				Level level = event.getLevel();
 				if (level.isGreaterOrEqual(Level.INFO)) {
 					String truncatedMessage = StringUtils.abbreviate(String
-					                .valueOf(event.getMessage()), 35);
+							.valueOf(event.getMessage()), 35);
 					messageLabel.setText(truncatedMessage);
 				}
 			}

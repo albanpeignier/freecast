@@ -31,8 +31,13 @@ import javax.net.SocketFactory;
 
 import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.LogFactory;
-import org.kolaka.freecast.peer.*;
-import sun.rmi.runtime.Log;
+import org.kolaka.freecast.peer.InetPeerReference;
+import org.kolaka.freecast.peer.MultiplePeerReference;
+import org.kolaka.freecast.peer.Peer;
+import org.kolaka.freecast.peer.PeerConnection;
+import org.kolaka.freecast.peer.PeerConnectionFactory;
+import org.kolaka.freecast.peer.PeerConnectionFactoryException;
+import org.kolaka.freecast.peer.PeerReference;
 
 /**
  * 
@@ -41,69 +46,70 @@ import sun.rmi.runtime.Log;
  */
 public class SocketPeerConnectionFactory extends PeerConnectionFactory {
 
-    private SocketFactory socketFactory = SocketFactory.getDefault();
+	private SocketFactory socketFactory = SocketFactory.getDefault();
 
-    public void setSocketFactory(SocketFactory socketFactory) {
-        Validate.notNull(socketFactory, "No specified SocketFactory");
-        this.socketFactory = socketFactory;
-    }
+	public void setSocketFactory(SocketFactory socketFactory) {
+		Validate.notNull(socketFactory, "No specified SocketFactory");
+		this.socketFactory = socketFactory;
+	}
 
-    protected PeerConnection createImpl(Peer peer, PeerReference reference)
-            throws PeerConnectionFactoryException {
-        if (reference instanceof InetPeerReference) {
-            return createImpl(peer, (InetPeerReference) reference);
-        }
+	protected PeerConnection createImpl(Peer peer, PeerReference reference)
+			throws PeerConnectionFactoryException {
+		if (reference instanceof InetPeerReference) {
+			return createImpl(peer, (InetPeerReference) reference);
+		}
 
-        if (reference instanceof MultiplePeerReference) {
-            return createImpl(peer, (MultiplePeerReference) reference);
-        }
+		if (reference instanceof MultiplePeerReference) {
+			return createImpl(peer, (MultiplePeerReference) reference);
+		}
 
-        throw new PeerConnectionFactoryException("Unsupported PeerReference type: " + reference);
-    }
+		throw new PeerConnectionFactoryException(
+				"Unsupported PeerReference type: " + reference);
+	}
 
-    protected PeerConnection createImpl(Peer peer, MultiplePeerReference reference)
-            throws PeerConnectionFactoryException
-    {
-        PeerConnectionFactoryException lastException = null;
-        for (Iterator iterator = reference.references().iterator(); iterator.hasNext();) {
-            PeerReference peerReference = (PeerReference) iterator.next();
-            try {
-                return createImpl(peer, peerReference);
-            } catch (PeerConnectionFactoryException e) {
-                LogFactory.getLog(getClass()).debug("Can't connect to " + peerReference + ", try next");
-                lastException = e;
-            }
-        }
+	protected PeerConnection createImpl(Peer peer,
+			MultiplePeerReference reference)
+			throws PeerConnectionFactoryException {
+		PeerConnectionFactoryException lastException = null;
+		for (Iterator iterator = reference.references().iterator(); iterator
+				.hasNext();) {
+			PeerReference peerReference = (PeerReference) iterator.next();
+			try {
+				return createImpl(peer, peerReference);
+			} catch (PeerConnectionFactoryException e) {
+				LogFactory.getLog(getClass()).debug(
+						"Can't connect to " + peerReference + ", try next");
+				lastException = e;
+			}
+		}
 
-        if (lastException == null) {
-            throw new PeerConnectionFactoryException("No reference provided by MultiplePeerReference " + reference);
-        }
-        throw lastException;
-    }
+		if (lastException == null) {
+			throw new PeerConnectionFactoryException(
+					"No reference provided by MultiplePeerReference "
+							+ reference);
+		}
+		throw lastException;
+	}
 
-    protected PeerConnection createImpl(Peer peer, InetPeerReference reference)
-            throws PeerConnectionFactoryException
-    {
-        Socket socket;
-        try {
-            socket = socketFactory.createSocket();
-            socket.setSoTimeout(10000);
-			socket.setReceiveBufferSize(1024);
-            socket.connect(reference.getSocketAddress(), 10000);
+	protected PeerConnection createImpl(Peer peer, InetPeerReference reference)
+			throws PeerConnectionFactoryException {
+		Socket socket;
+		try {
+			socket = connectSocket(reference);
+			return new SocketPeerConnection(PeerConnection.Type.SOURCE, socket);
+		} catch (IOException e) {
+			throw new PeerConnectionFactoryException(
+					"Can't create a PeerConnection to " + reference, e);
+		}
+	}
 
-            return new SocketPeerConnection(PeerConnection.Type.SOURCE, socket);
-        } catch (IOException e) {
-            throw new PeerConnectionFactoryException(
-                    "Can't create a PeerConnection to " + reference, e);
-        }
-    }
-
-    private Socket connectSocket(InetPeerReference reference) throws IOException {
-        Socket socket = socketFactory.createSocket();
-        socket.setSoTimeout(10000);
-        socket.setReceiveBufferSize(1024);
-        socket.connect(reference.getSocketAddress(), 10000);
-        return socket;
-    }
+	private Socket connectSocket(InetPeerReference reference)
+			throws IOException {
+		Socket socket = socketFactory.createSocket();
+		socket.setSoTimeout(10000);
+		socket.setReceiveBufferSize(1024);
+		socket.connect(reference.getSocketAddress(), 10000);
+		return socket;
+	}
 
 }

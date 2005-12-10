@@ -56,7 +56,8 @@ public class TimestampBandwidthControler implements BandwidthControler {
 				+ initialTimeMillis;
 		long delay = expectedPageTimeMillis - now;
 		if (delay > (DateUtils.MILLIS_PER_SECOND * 10)) {
-			throw new IllegalStateException("Delay shouldn't be so high (" + delay + ")");
+			throw new IllegalStateException("Delay shouldn't be so high ("
+					+ delay + ")");
 		}
 		return delay;
 	}

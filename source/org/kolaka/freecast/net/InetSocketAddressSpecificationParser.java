@@ -22,47 +22,51 @@
  */
 package org.kolaka.freecast.net;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.IntRange;
-
-import java.util.StringTokenizer;
-import java.text.ParseException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.text.ParseException;
+import java.util.StringTokenizer;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.IntRange;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public class InetSocketAddressSpecificationParser {
 
-	public InetSocketAddressSpecification parse(String address, String definition)
-	        throws ParseException, UnknownHostException {
+	public InetSocketAddressSpecification parse(String address,
+			String definition) throws ParseException, UnknownHostException {
 		return parse(InetAddress.getByName(address), definition);
 	}
 
-	public InetSocketAddressSpecification parse(InetAddress address, String definition) throws ParseException {
+	public InetSocketAddressSpecification parse(InetAddress address,
+			String definition) throws ParseException {
 		if (StringUtils.contains(definition, ",")) {
-			StringTokenizer chainParts = new StringTokenizer(definition, ",", false);
+			StringTokenizer chainParts = new StringTokenizer(definition, ",",
+					false);
 			InetSocketAddressSpecificationChain chain = new InetSocketAddressSpecificationChain();
 			while (chainParts.hasMoreTokens()) {
-				chain.add(parse(address, chainParts.nextToken() ));
+				chain.add(parse(address, chainParts.nextToken()));
 			}
 			return chain;
 		}
 		StringTokenizer rangeParts = new StringTokenizer(definition, "-", true);
-        switch (rangeParts.countTokens()) {
-                case 1:
-					return InetSocketAddressSpecifications.singleton(address, parsePort(rangeParts.nextToken()));
-				case 3:
-					int firstPort = parsePort(rangeParts.nextToken());
-					if (!rangeParts.nextToken().equals("-")) {
-						throw new ParseException("Invalid port range: " + definition,0);
-					}
-					int secondPort = parsePort(rangeParts.nextToken());
-					IntRange range = new IntRange(firstPort,secondPort);
-					return InetSocketAddressSpecifications.portRange(address, range);
-				default:
-					throw new ParseException("Invalid specification: " + definition, definition.length());
+		switch (rangeParts.countTokens()) {
+		case 1:
+			return InetSocketAddressSpecifications.singleton(address,
+					parsePort(rangeParts.nextToken()));
+		case 3:
+			int firstPort = parsePort(rangeParts.nextToken());
+			if (!rangeParts.nextToken().equals("-")) {
+				throw new ParseException("Invalid port range: " + definition, 0);
+			}
+			int secondPort = parsePort(rangeParts.nextToken());
+			IntRange range = new IntRange(firstPort, secondPort);
+			return InetSocketAddressSpecifications.portRange(address, range);
+		default:
+			throw new ParseException("Invalid specification: " + definition,
+					definition.length());
 		}
 	}
 

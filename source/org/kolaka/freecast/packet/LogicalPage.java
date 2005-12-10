@@ -27,23 +27,23 @@ import java.util.List;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public interface LogicalPage extends SequenceElement {
 
-    public boolean isFirstPage();
-    
-    public LogicalPageDescriptor getDescriptor();
-    
-    public List packets();
-    
-    public byte[] getBytes();
-    
-    public int getLength();
-    
-    public boolean isComplete();
-    
-    public long getTimestamp();
-        
+	public boolean isFirstPage();
+
+	public LogicalPageDescriptor getDescriptor();
+
+	public List packets();
+
+	public byte[] getBytes();
+
+	public int getLength();
+
+	public boolean isComplete();
+
+	public long getTimestamp();
+
 }

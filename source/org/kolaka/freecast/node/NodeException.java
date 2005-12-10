@@ -30,14 +30,14 @@ package org.kolaka.freecast.node;
  */
 public class NodeException extends Exception {
 
-    private static final long serialVersionUID = 3618981182960580664L;
+	private static final long serialVersionUID = 3618981182960580664L;
 
-    /**
-     * @param message
-     * @param cause
-     */
-    public NodeException(String message, Throwable cause) {
-        super(message, cause);
-    }
+	/**
+	 * @param message
+	 * @param cause
+	 */
+	public NodeException(String message, Throwable cause) {
+		super(message, cause);
+	}
 
 }

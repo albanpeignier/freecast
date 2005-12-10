@@ -34,15 +34,15 @@ import org.apache.commons.lang.Validate;
  */
 public class ProxyMessageWriter implements MessageWriter {
 
-    private final MessageWriter writer;
+	private final MessageWriter writer;
 
-    public int write(Message message) throws IOException {
-        return writer.write(message);
-    }
+	public int write(Message message) throws IOException {
+		return writer.write(message);
+	}
 
-    public ProxyMessageWriter(final MessageWriter writer) {
-        Validate.notNull(writer, "No specified MessageWriter");
-        this.writer = writer;
-    }
+	public ProxyMessageWriter(final MessageWriter writer) {
+		Validate.notNull(writer, "No specified MessageWriter");
+		this.writer = writer;
+	}
 
 }

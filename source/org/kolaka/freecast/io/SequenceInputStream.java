@@ -29,38 +29,39 @@ import java.util.Iterator;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class SequenceInputStream extends InputStream {
 
-    private Iterator iterator;
-    private InputStream current;
-    
-    public SequenceInputStream(Iterator iterator) {
-        this.iterator = iterator;
-    }
+	private Iterator iterator;
 
-    public int read() throws IOException {
-        if (current == null) {
-            if (!iterator.hasNext()) {
-                return -1;
-            }
-            
-            current = (InputStream) iterator.next();
-        }
-        int read = current.read();
-        if (read == -1) {
-            current = null;
-            return read();
-        }
-        return read;
-    }
-    
-    public void close() throws IOException {
-        if (current != null) {
-            current.close();
-        }
-    }
-    
+	private InputStream current;
+
+	public SequenceInputStream(Iterator iterator) {
+		this.iterator = iterator;
+	}
+
+	public int read() throws IOException {
+		if (current == null) {
+			if (!iterator.hasNext()) {
+				return -1;
+			}
+
+			current = (InputStream) iterator.next();
+		}
+		int read = current.read();
+		if (read == -1) {
+			current = null;
+			return read();
+		}
+		return read;
+	}
+
+	public void close() throws IOException {
+		if (current != null) {
+			current.close();
+		}
+	}
+
 }

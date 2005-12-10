@@ -36,47 +36,47 @@ import org.kolaka.freecast.peer.PeerStatus;
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public class PeerStatusMessage extends BaseMessage {
-    private PeerStatus peerStatus;
+	private PeerStatus peerStatus;
 
-    public PeerStatusMessage() {
+	public PeerStatusMessage() {
 
-    }
+	}
 
-    public PeerStatusMessage(PeerStatus status) {
-        this.peerStatus = status;
-    }
+	public PeerStatusMessage(PeerStatus status) {
+		this.peerStatus = status;
+	}
 
-    public boolean equals(Message other) {
-        return other instanceof PeerStatusMessage
-                && equals((PeerStatusMessage) other);
-    }
+	public boolean equals(Message other) {
+		return other instanceof PeerStatusMessage
+				&& equals((PeerStatusMessage) other);
+	}
 
-    public boolean equals(PeerStatusMessage other) {
-        return peerStatus.equals(other.peerStatus);
-    }
+	public boolean equals(PeerStatusMessage other) {
+		return peerStatus.equals(other.peerStatus);
+	}
 
-    public MessageType getType() {
-        return MessageType.PEERSTATUS;
-    }
+	public MessageType getType() {
+		return MessageType.PEERSTATUS;
+	}
 
-    public int hashCode() {
-        return peerStatus.hashCode();
-    }
+	public int hashCode() {
+		return peerStatus.hashCode();
+	}
 
-    public void read(DataInputStream input) throws IOException {
-        int length = input.readInt();
-        byte bytes[] = new byte[length];
-        input.readFully(bytes);
-        peerStatus = (PeerStatus) SerializationUtils.deserialize(bytes);
-    }
+	public void read(DataInputStream input) throws IOException {
+		int length = input.readInt();
+		byte bytes[] = new byte[length];
+		input.readFully(bytes);
+		peerStatus = (PeerStatus) SerializationUtils.deserialize(bytes);
+	}
 
-    public void write(DataOutputStream output) throws IOException {
-        byte bytes[] = SerializationUtils.serialize(peerStatus);
-        output.writeInt(bytes.length);
-        output.write(bytes);
-    }
+	public void write(DataOutputStream output) throws IOException {
+		byte bytes[] = SerializationUtils.serialize(peerStatus);
+		output.writeInt(bytes.length);
+		output.write(bytes);
+	}
 
-    public PeerStatus getPeerStatus() {
-        return peerStatus;
-    }
+	public PeerStatus getPeerStatus() {
+		return peerStatus;
+	}
 }

@@ -33,22 +33,22 @@ import org.kolaka.freecast.service.ControlException;
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public class NullSenderControler implements SenderControler {
-    public void setPipe(Pipe pipe) {
-    }
+	public void setPipe(Pipe pipe) {
+	}
 
-    public void init() throws ControlException {
-    }
+	public void init() throws ControlException {
+	}
 
-    public void start() throws ControlException {
-    }
+	public void start() throws ControlException {
+	}
 
-    public void stop() throws ControlException {
-    }
+	public void stop() throws ControlException {
+	}
 
-    public void dispose() throws ControlException {
-    }
+	public void dispose() throws ControlException {
+	}
 
-    public void setNodeStatusProvider(NodeStatusProvider statusProvider) {
+	public void setNodeStatusProvider(NodeStatusProvider statusProvider) {
 
-    }
+	}
 }

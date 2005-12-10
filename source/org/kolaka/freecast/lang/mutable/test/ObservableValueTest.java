@@ -22,11 +22,12 @@
  */
 package org.kolaka.freecast.lang.mutable.test;
 
-import junit.framework.TestCase;
-import org.kolaka.freecast.lang.mutable.ObservableValue;
-import org.easymock.MockControl;
-
 import java.util.Observer;
+
+import junit.framework.TestCase;
+
+import org.easymock.MockControl;
+import org.kolaka.freecast.lang.mutable.ObservableValue;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
@@ -49,12 +50,11 @@ public class ObservableValueTest extends TestCase {
 
 		value.addObserver(observer);
 		assertEquals(1, value.countObservers());
-		
+
 		value.setValue(newValue);
 		assertEquals(newValue, value.getValue());
 
 		observerControl.verify();
 	}
-
 
 }

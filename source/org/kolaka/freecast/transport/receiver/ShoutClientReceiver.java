@@ -27,13 +27,13 @@ import java.net.URL;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class ShoutClientReceiver extends OggSourceFactoryReceiver {
 
-    public ShoutClientReceiver(URL url) {
-        super(new ShoutClientOggSourceFactory(url));
-    }
+	public ShoutClientReceiver(URL url) {
+		super(new ShoutClientOggSourceFactory(url));
+	}
 
 }

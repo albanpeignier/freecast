@@ -22,8 +22,8 @@
  */
 package org.kolaka.freecast.net;
 
-import java.net.ServerSocket;
 import java.io.IOException;
+import java.net.ServerSocket;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>

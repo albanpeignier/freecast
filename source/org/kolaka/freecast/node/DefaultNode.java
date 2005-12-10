@@ -23,11 +23,20 @@
 
 package org.kolaka.freecast.node;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Iterator;
+import java.util.Set;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.node.event.NodeStatusListener;
 import org.kolaka.freecast.node.event.NodeStatusSupport;
-import org.kolaka.freecast.peer.*;
+import org.kolaka.freecast.peer.ConfigurablePeerControler;
+import org.kolaka.freecast.peer.Peer;
+import org.kolaka.freecast.peer.PeerConnection;
+import org.kolaka.freecast.peer.PeerControler;
+import org.kolaka.freecast.peer.PeerReference;
 import org.kolaka.freecast.pipe.DefaultPipe;
 import org.kolaka.freecast.pipe.Pipe;
 import org.kolaka.freecast.player.DefaultPlayerControler;
@@ -41,276 +50,271 @@ import org.kolaka.freecast.transport.sender.NullSenderControler;
 import org.kolaka.freecast.transport.sender.PeerSenderControler;
 import org.kolaka.freecast.transport.sender.SenderControler;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.Iterator;
-import java.util.Set;
-
 /**
  * 
  * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public class DefaultNode implements ConfigurableNode {
-    
-    private PlayerControler playerControler;
 
-    private SenderControler senderControler;
+	private PlayerControler playerControler;
 
-    private ReceiverControler receiverControler;
+	private SenderControler senderControler;
 
-    private Order order = Order.UNKNOWN;
+	private ReceiverControler receiverControler;
 
-    private Pipe pipe;
+	private Order order = Order.UNKNOWN;
 
-    public DefaultNode() {
-        this(new DefaultPipe());
-    }
+	private Pipe pipe;
 
-    public DefaultNode(Pipe pipe) {
-        this.pipe = pipe;
+	public DefaultNode() {
+		this(new DefaultPipe());
+	}
 
-        senderControler = new NullSenderControler();
-        receiverControler = new NullReceiverControler();
-        playerControler = new DefaultPlayerControler();
-    }
+	public DefaultNode(Pipe pipe) {
+		this.pipe = pipe;
 
-    public void init() throws ControlException {
-        LogFactory.getLog(getClass()).debug("init " + this);
-        
-        if (peerControler == null) {
-            throw new ControlException("No defined PeerControler");
-        }
-        
-        nodeService.setNode(this);
-        nodeService.init();
+		senderControler = new NullSenderControler();
+		receiverControler = new NullReceiverControler();
+		playerControler = new DefaultPlayerControler();
+	}
 
-        if (receiverControler instanceof PeerReceiverControler) {
-            ((PeerReceiverControler) receiverControler)
-                    .setPeerControler(peerControler);
-        }
+	public void init() throws ControlException {
+		LogFactory.getLog(getClass()).debug("init " + this);
 
-        if (senderControler instanceof PeerSenderControler) {
-            ((PeerSenderControler) senderControler)
-                    .setPeerControler(peerControler);
-        }
+		if (peerControler == null) {
+			throw new ControlException("No defined PeerControler");
+		}
 
-        peerControler.addPeerListener(new PeerPropertyChangeListener());
+		nodeService.setNode(this);
+		nodeService.init();
 
-        receiverControler.setPipe(pipe);
-        senderControler.setPipe(pipe);
+		if (receiverControler instanceof PeerReceiverControler) {
+			((PeerReceiverControler) receiverControler)
+					.setPeerControler(peerControler);
+		}
 
-        peerControler.setNodeStatusProvider(nodeStatusProvider);
+		if (senderControler instanceof PeerSenderControler) {
+			((PeerSenderControler) senderControler)
+					.setPeerControler(peerControler);
+		}
 
-        receiverControler.init();
-        senderControler.init();
+		peerControler.addPeerListener(new PeerPropertyChangeListener());
 
-        LogFactory.getLog(getClass()).debug("init player");
-        playerControler.setPipe(pipe);
+		receiverControler.setPipe(pipe);
+		senderControler.setPipe(pipe);
 
-        playerControler.init();
+		peerControler.setNodeStatusProvider(nodeStatusProvider);
 
-        LogFactory.getLog(getClass()).debug("initialized");
-    }
+		receiverControler.init();
+		senderControler.init();
 
-    public void start() throws ControlException {
-        nodeService.start();
-        peerControler.start();
+		LogFactory.getLog(getClass()).debug("init player");
+		playerControler.setPipe(pipe);
 
-        receiverControler.start();
-        senderControler.start();
+		playerControler.init();
 
-        LogFactory.getLog(getClass()).debug("start player");
-        playerControler.start();
-    }
+		LogFactory.getLog(getClass()).debug("initialized");
+	}
 
-    public void stop() throws ControlException {
-        nodeService.stop();
-        peerControler.stop();
+	public void start() throws ControlException {
+		nodeService.start();
+		peerControler.start();
 
-        receiverControler.stop();
-        senderControler.stop();
+		receiverControler.start();
+		senderControler.start();
 
-        playerControler.stop();
-    }
+		LogFactory.getLog(getClass()).debug("start player");
+		playerControler.start();
+	}
 
-    public void dispose() throws ControlException {
-        nodeService.dispose();
+	public void stop() throws ControlException {
+		nodeService.stop();
+		peerControler.stop();
 
-        receiverControler.dispose();
-        senderControler.dispose();
+		receiverControler.stop();
+		senderControler.stop();
 
-        playerControler.dispose();
-    }
+		playerControler.stop();
+	}
 
-    public PlayerControler getPlayerControler() {
-        return playerControler;
-    }
+	public void dispose() throws ControlException {
+		nodeService.dispose();
 
-    public void setPlayerControler(PlayerControler playerControler) {
-        this.playerControler = playerControler;
-    }
+		receiverControler.dispose();
+		senderControler.dispose();
 
-    public ReceiverControler getReceiverControler() {
-        return receiverControler;
-    }
+		playerControler.dispose();
+	}
 
-    public void setReceiverControler(ReceiverControler receiverControler) {
-        if (receiverControler instanceof PeerReceiverControler) {
-            order = Order.UNKNOWN;
-        } else {
-            order = Order.ZERO;
-        }
+	public PlayerControler getPlayerControler() {
+		return playerControler;
+	}
 
-        this.receiverControler = receiverControler;
-    }
+	public void setPlayerControler(PlayerControler playerControler) {
+		this.playerControler = playerControler;
+	}
 
-    public SenderControler getSenderControler() {
-        return senderControler;
-    }
+	public ReceiverControler getReceiverControler() {
+		return receiverControler;
+	}
 
-    public void setSenderControler(SenderControler senderControler) {
-        this.senderControler = senderControler;
-    }
+	public void setReceiverControler(ReceiverControler receiverControler) {
+		if (receiverControler instanceof PeerReceiverControler) {
+			order = Order.UNKNOWN;
+		} else {
+			order = Order.ZERO;
+		}
 
-    private NodeIdentifier identifier;
+		this.receiverControler = receiverControler;
+	}
 
-    public void setIdentifier(NodeIdentifier identifier) {
-        this.identifier = identifier;
-    }
+	public SenderControler getSenderControler() {
+		return senderControler;
+	}
 
-    public NodeIdentifier getIdentifier() {
-        return identifier;
-    }
+	public void setSenderControler(SenderControler senderControler) {
+		this.senderControler = senderControler;
+	}
 
-    private PeerReference reference;
+	private NodeIdentifier identifier;
 
-    public PeerReference getPeerReference() {
-        return reference;
-    }
+	public void setIdentifier(NodeIdentifier identifier) {
+		this.identifier = identifier;
+	}
 
-    /**
-     * @param reference
-     *            The reference to set.
-     */
-    public void setPeerReference(PeerReference reference) {
-        this.reference = reference;
-    }
+	public NodeIdentifier getIdentifier() {
+		return identifier;
+	}
 
-    private NodeService nodeService = new NullNodeService();
+	private PeerReference reference;
 
-    /**
-     * @return Returns the nodeService.
-     */
-    public NodeService getNodeService() {
-        return nodeService;
-    }
+	public PeerReference getPeerReference() {
+		return reference;
+	}
 
-    /**
-     * @param nodeService
-     *            The nodeService to set.
-     */
-    public void setNodeService(NodeService nodeService) {
-        this.nodeService = nodeService;
-    }
+	/**
+	 * @param reference
+	 *            The reference to set.
+	 */
+	public void setPeerReference(PeerReference reference) {
+		this.reference = reference;
+	}
 
-    public Order getOrder() {
-        return order;
-    }
+	private NodeService nodeService = new NullNodeService();
 
-    protected void changeOrder(Order order) {
-        LogFactory.getLog(getClass()).debug("set order to " + order);
-        this.order = order;
-        nodeStatusProvider.fireNodeStatus();
-    }
+	/**
+	 * @return Returns the nodeService.
+	 */
+	public NodeService getNodeService() {
+		return nodeService;
+	}
 
-    private final StatusProvider nodeStatusProvider = new StatusProvider();
+	/**
+	 * @param nodeService
+	 *            The nodeService to set.
+	 */
+	public void setNodeService(NodeService nodeService) {
+		this.nodeService = nodeService;
+	}
 
-    class StatusProvider implements NodeStatusProvider {
+	public Order getOrder() {
+		return order;
+	}
 
-        private NodeStatusSupport support = new NodeStatusSupport();
+	protected void changeOrder(Order order) {
+		LogFactory.getLog(getClass()).debug("set order to " + order);
+		this.order = order;
+		nodeStatusProvider.fireNodeStatus();
+	}
 
-        public void add(NodeStatusListener listener) {
-            support.add(listener);
-        }
+	private final StatusProvider nodeStatusProvider = new StatusProvider();
 
-        public NodeStatus getNodeStatus() {
-            return new NodeStatus(identifier, order);
-        }
+	class StatusProvider implements NodeStatusProvider {
 
-        public void remove(NodeStatusListener listener) {
-            support.remove(listener);
-        }
+		private NodeStatusSupport support = new NodeStatusSupport();
 
-        public void fireNodeStatus() {
-            support.fireNodeStatusChange(getNodeStatus());
-        }
-    }
+		public void add(NodeStatusListener listener) {
+			support.add(listener);
+		}
 
-    public NodeStatus getNodeStatus() {
-        LogFactory.getLog(getClass()).trace("pipe: " + pipe);
+		public NodeStatus getNodeStatus() {
+			return new NodeStatus(identifier, order);
+		}
 
-        NodeStatus status = new NodeStatus(identifier, order);
-        status.setPlayStatus(getActivePlayerStatus());
-        return status;
-    }
-    
-    private PlayerStatus getActivePlayerStatus() {
-        Set statusSet = playerControler.playerStatusSet();
-        for (Iterator iter = statusSet.iterator(); iter.hasNext();) {
-            PlayerStatus status = (PlayerStatus) iter.next();
-            
-            // TODO use a Player type
-            if (!status.equals(PlayerStatus.INACTIVE)) {
-                return status;
-            }
-        }
-        return PlayerStatus.INACTIVE;
-    }
+		public void remove(NodeStatusListener listener) {
+			support.remove(listener);
+		}
 
-    public void checkQoS() {
-        PlayerStatus status = getActivePlayerStatus();
-        if (status.getPlayTimeLength() > 2 * 60000
-                && status.getMissingDataRate() > 0.3) {
-            LogFactory.getLog(getClass()).warn(
-                    "bad audio stream reception (" + status + ")");
-            /*
-             * if (receiverControler instanceof PeerReceiverControler) {
-             * ((PeerReceiverControler) receiverControler).resetReceivers(); }
-             */
-        }
-    }
+		public void fireNodeStatus() {
+			support.fireNodeStatusChange(getNodeStatus());
+		}
+	}
 
-    private ConfigurablePeerControler peerControler;
+	public NodeStatus getNodeStatus() {
+		LogFactory.getLog(getClass()).trace("pipe: " + pipe);
 
-    public void setPeerControler(ConfigurablePeerControler controler) {
-        this.peerControler = controler;
-    }
+		NodeStatus status = new NodeStatus(identifier, order);
+		status.setPlayStatus(getActivePlayerStatus());
+		return status;
+	}
 
-    public PeerControler getPeerControler() {
-        return peerControler;
-    }
+	private PlayerStatus getActivePlayerStatus() {
+		Set statusSet = playerControler.playerStatusSet();
+		for (Iterator iter = statusSet.iterator(); iter.hasNext();) {
+			PlayerStatus status = (PlayerStatus) iter.next();
 
-    public ConfigurablePeerControler getConfigurablePeerControler() {
-        return peerControler;
-    }
+			// TODO use a Player type
+			if (!status.equals(PlayerStatus.INACTIVE)) {
+				return status;
+			}
+		}
+		return PlayerStatus.INACTIVE;
+	}
 
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
+	public void checkQoS() {
+		PlayerStatus status = getActivePlayerStatus();
+		if (status.getPlayTimeLength() > 2 * 60000
+				&& status.getMissingDataRate() > 0.3) {
+			LogFactory.getLog(getClass()).warn(
+					"bad audio stream reception (" + status + ")");
+			/*
+			 * if (receiverControler instanceof PeerReceiverControler) {
+			 * ((PeerReceiverControler) receiverControler).resetReceivers(); }
+			 */
+		}
+	}
 
-    class PeerPropertyChangeListener implements PropertyChangeListener {
+	private ConfigurablePeerControler peerControler;
 
-        public void propertyChange(PropertyChangeEvent event) {
-            LogFactory.getLog(getClass()).debug("receive " + event);
-            Peer peer = (Peer) event.getSource();
-            if (peer.isConnected()
-                    && peer.getConnection().getType().equals(
-                            PeerConnection.Type.SOURCE)) {
-                changeOrder(peer.getOrder().lower());
-            }
-        }
+	public void setPeerControler(ConfigurablePeerControler controler) {
+		this.peerControler = controler;
+	}
 
-    }
+	public PeerControler getPeerControler() {
+		return peerControler;
+	}
+
+	public ConfigurablePeerControler getConfigurablePeerControler() {
+		return peerControler;
+	}
+
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
+
+	class PeerPropertyChangeListener implements PropertyChangeListener {
+
+		public void propertyChange(PropertyChangeEvent event) {
+			LogFactory.getLog(getClass()).debug("receive " + event);
+			Peer peer = (Peer) event.getSource();
+			if (peer.isConnected()
+					&& peer.getConnection().getType().equals(
+							PeerConnection.Type.SOURCE)) {
+				changeOrder(peer.getOrder().lower());
+			}
+		}
+
+	}
 
 }

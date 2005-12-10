@@ -27,30 +27,31 @@ import org.kolaka.freecast.service.ControlException;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
-public class AudioPlayerSource extends BasePlayerSource implements InteractivePlayerSource {
+public class AudioPlayerSource extends BasePlayerSource implements
+		InteractivePlayerSource {
 
-    private boolean autoPlayerCreation;
+	private boolean autoPlayerCreation;
 
-    public AudioPlayerSource(boolean autoPlayerCreation) {
-        this.autoPlayerCreation = autoPlayerCreation;
-    }
-    
-    public void createPlayer() {
-        AudioPlayer player = new AudioPlayer(); 
-        processPlayerCreated(player);
-    }
-    
-    public void start() throws ControlException {
-        if (autoPlayerCreation) {
-            createPlayer();
-        }
-    }
+	public AudioPlayerSource(boolean autoPlayerCreation) {
+		this.autoPlayerCreation = autoPlayerCreation;
+	}
 
-    public void stop() throws ControlException {
+	public void createPlayer() {
+		AudioPlayer player = new AudioPlayer();
+		processPlayerCreated(player);
+	}
 
-    }
+	public void start() throws ControlException {
+		if (autoPlayerCreation) {
+			createPlayer();
+		}
+	}
+
+	public void stop() throws ControlException {
+
+	}
 
 }

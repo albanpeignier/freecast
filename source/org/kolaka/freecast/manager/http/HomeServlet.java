@@ -22,6 +22,11 @@
  */
 package org.kolaka.freecast.manager.http;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringReader;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -32,40 +37,44 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.StringReader;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public class HomeServlet extends HttpServlet {
 
-	protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
-	        throws ServletException, IOException
-	{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1087374272834762127L;
+
+	protected void doGet(HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse) throws ServletException,
+			IOException {
 		httpServletResponse.setContentType("text/html");
 		PrintWriter out = httpServletResponse.getWriter();
 
 		Transformer transformer;
 
 		try {
-			InputStream input = getClass().getResourceAsStream("resources/home.xsl");
+			InputStream input = getClass().getResourceAsStream(
+					"resources/home.xsl");
 			TransformerFactory factory = TransformerFactory.newInstance();
 			transformer = factory.newTransformer(new StreamSource(input));
 		} catch (TransformerConfigurationException e) {
-			throw new ServletException("Can't configure the XSL transformer",e);
+			throw new ServletException("Can't configure the XSL transformer", e);
 		}
 
 		String host = httpServletRequest.getServerName();
 		transformer.setParameter("host", host);
 
 		String servername = getInitParameter("servername");
-		transformer.setParameter("descriptor", servername + ":" + httpServletRequest.getServerPort() + "/descriptor.xml");
+		transformer.setParameter("descriptor", servername + ":"
+				+ httpServletRequest.getServerPort() + "/descriptor.xml");
 
 		try {
-			transformer.transform(new StreamSource(new StringReader("<empty></empty>")), new StreamResult(out));
+			transformer.transform(new StreamSource(new StringReader(
+					"<empty></empty>")), new StreamResult(out));
 		} catch (TransformerException e) {
 			throw new ServletException("Can't create the descriptor content", e);
 		}

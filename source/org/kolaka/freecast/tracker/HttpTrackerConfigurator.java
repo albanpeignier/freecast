@@ -29,18 +29,18 @@ import org.apache.commons.configuration.Configuration;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class HttpTrackerConfigurator {
 
-    public void configure(HttpTracker tracker, Configuration configuration) {
-        Configuration listenAddressConfiguration = configuration.subset("connector.listenaddress");
-        InetSocketAddress listenAddress = new InetSocketAddress(
-            listenAddressConfiguration.getString("host"), 
-            listenAddressConfiguration.getInt("port"));
-        tracker.setListenAddress(listenAddress);
-    }
-    
+	public void configure(HttpTracker tracker, Configuration configuration) {
+		Configuration listenAddressConfiguration = configuration
+				.subset("connector.listenaddress");
+		InetSocketAddress listenAddress = new InetSocketAddress(
+				listenAddressConfiguration.getString("host"),
+				listenAddressConfiguration.getInt("port"));
+		tracker.setListenAddress(listenAddress);
+	}
 
 }

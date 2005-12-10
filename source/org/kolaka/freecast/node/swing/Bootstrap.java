@@ -31,8 +31,8 @@ package org.kolaka.freecast.node.swing;
  */
 public class Bootstrap {
 
-    public static void main(String[] args) throws Exception {
-        Main.main(args);
-    }
+	public static void main(String[] args) throws Exception {
+		Main.main(args);
+	}
 
 }

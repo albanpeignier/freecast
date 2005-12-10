@@ -35,34 +35,34 @@ import org.kolaka.freecast.timer.VirtualTimeBase;
  */
 public class VirtualTimeBaseTest extends TestCase {
 
-    public void testCurrentTimeMillis() throws InterruptedException {
-        final double ratio = 10;
-        final long base = System.currentTimeMillis();
+	public void testCurrentTimeMillis() throws InterruptedException {
+		final double ratio = 10;
+		final long base = System.currentTimeMillis();
 
-        TimeBase timeBase = new VirtualTimeBase(base, ratio);
+		TimeBase timeBase = new VirtualTimeBase(base, ratio);
 
-        final long realTimeLength = 1000;
-        Thread.sleep(realTimeLength);
+		final long realTimeLength = 1000;
+		Thread.sleep(realTimeLength);
 
-        long virtualTimeLength = timeBase.currentTimeMillis() - base;
+		long virtualTimeLength = timeBase.currentTimeMillis() - base;
 
-        assertTrue("wrong virtual time length: " + virtualTimeLength,
-                virtualTimeLength - (realTimeLength * ratio) < 100);
-    }
+		assertTrue("wrong virtual time length: " + virtualTimeLength,
+				virtualTimeLength - (realTimeLength * ratio) < 100);
+	}
 
-    public void testSleep() throws InterruptedException {
-        final double ratio = 10;
-        final long base = System.currentTimeMillis();
+	public void testSleep() throws InterruptedException {
+		final double ratio = 10;
+		final long base = System.currentTimeMillis();
 
-        TimeBase timeBase = new VirtualTimeBase(base, ratio);
+		TimeBase timeBase = new VirtualTimeBase(base, ratio);
 
-        final long virtualTimeLength = 5000;
-        timeBase.sleep(virtualTimeLength);
+		final long virtualTimeLength = 5000;
+		timeBase.sleep(virtualTimeLength);
 
-        long realTimeLength = System.currentTimeMillis() - base;
+		long realTimeLength = System.currentTimeMillis() - base;
 
-        assertTrue("wrong virtual time length: " + virtualTimeLength,
-                virtualTimeLength - (realTimeLength * ratio) < 100);
-    }
+		assertTrue("wrong virtual time length: " + virtualTimeLength,
+				virtualTimeLength - (realTimeLength * ratio) < 100);
+	}
 
 }

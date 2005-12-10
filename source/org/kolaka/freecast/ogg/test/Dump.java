@@ -35,34 +35,42 @@ import org.kolaka.freecast.ogg.OggStreamSource;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class Dump {
 
-    public static void main(String[] args) throws IOException {
-        PrintWriter writer = new PrintWriter(System.out);
-        OggSource source = new OggStreamSource(new FileInputStream(args[0]));
-        
-        Map absolutePositions = new TreeMap();
-        
-        for (int i=0; i < 20; i++) {
-            OggPage page = source.next();
-            
-            writer.println("page " + i);
-            writer.println("\tfirstpage: " + page.isFirstPage() + "\tlastpage: " + page.isLastPage());
-            long absolutePosition = page.getAbsoluteGranulePosition();
-            writer.println("\tabsolute granule position: " + absolutePosition);
-            String streamSerialNumberString = page.getStreamSerialNumberString();
-            writer.println("\tstream serial number: " + streamSerialNumberString);
-            
-            Long lastAbsolutePosition = (Long) absolutePositions.get(streamSerialNumberString);
-            if (lastAbsolutePosition != null) {
-                writer.println("\tabsolute position delta: " + (absolutePosition - lastAbsolutePosition.longValue()));
-            }
-            absolutePositions.put(streamSerialNumberString, new Long(absolutePosition));
-        }
-        writer.close();
-    }
+	public static void main(String[] args) throws IOException {
+		PrintWriter writer = new PrintWriter(System.out);
+		OggSource source = new OggStreamSource(new FileInputStream(args[0]));
+
+		Map absolutePositions = new TreeMap();
+
+		for (int i = 0; i < 20; i++) {
+			OggPage page = source.next();
+
+			writer.println("page " + i);
+			writer.println("\tfirstpage: " + page.isFirstPage()
+					+ "\tlastpage: " + page.isLastPage());
+			long absolutePosition = page.getAbsoluteGranulePosition();
+			writer.println("\tabsolute granule position: " + absolutePosition);
+			String streamSerialNumberString = page
+					.getStreamSerialNumberString();
+			writer.println("\tstream serial number: "
+					+ streamSerialNumberString);
+
+			Long lastAbsolutePosition = (Long) absolutePositions
+					.get(streamSerialNumberString);
+			if (lastAbsolutePosition != null) {
+				writer
+						.println("\tabsolute position delta: "
+								+ (absolutePosition - lastAbsolutePosition
+										.longValue()));
+			}
+			absolutePositions.put(streamSerialNumberString, new Long(
+					absolutePosition));
+		}
+		writer.close();
+	}
 
 }

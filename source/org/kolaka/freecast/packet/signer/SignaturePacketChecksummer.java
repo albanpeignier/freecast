@@ -36,42 +36,48 @@ import org.kolaka.freecast.packet.PacketData;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
-public class SignaturePacketChecksummer implements PacketChecksummer, SignaturePacketConstants {
+public class SignaturePacketChecksummer implements PacketChecksummer,
+		SignaturePacketConstants {
 
-    private final String algorithm;
-    private final PrivateKey privateKey;
-    
-    public SignaturePacketChecksummer(String algorithm, PrivateKey privateKey) {
-        Validate.notNull(algorithm,"No specified algorithm");
-        Validate.notNull(privateKey,"No specified PrivateKey");
-        
-        this.algorithm = algorithm;
-        this.privateKey = privateKey;
-    }
-    
-    public static SignaturePacketChecksummer getInstance(URL privateKeyURL) throws IOException {
-        PrivateKey privateKey = (PrivateKey) SerializationUtils.deserialize(privateKeyURL.openStream());
-        return new SignaturePacketChecksummer(DEFAULT_ALGORITHM, privateKey);
-    }
+	private final String algorithm;
 
-    public Checksum checksum(PacketData packetData) throws PacketChecksummerException {
-        try {
-            Signature signature = Signature.getInstance(algorithm);
-            signature.initSign(privateKey);
-            signature.update(packetData.getBytes());
-            return new Checksum(signature.sign());
-        } catch (Exception e) {
-            throw new PacketChecksummerException("Can't sign the PacketData " + packetData, e);
-        } 
-    }
-        
-    public String toString() {
-        ToStringBuilder builder = new ToStringBuilder(this);
-        builder.append("algorithm",algorithm);
-        return builder.toString();
-    }
+	private final PrivateKey privateKey;
+
+	public SignaturePacketChecksummer(String algorithm, PrivateKey privateKey) {
+		Validate.notNull(algorithm, "No specified algorithm");
+		Validate.notNull(privateKey, "No specified PrivateKey");
+
+		this.algorithm = algorithm;
+		this.privateKey = privateKey;
+	}
+
+	public static SignaturePacketChecksummer getInstance(URL privateKeyURL)
+			throws IOException {
+		PrivateKey privateKey = (PrivateKey) SerializationUtils
+				.deserialize(privateKeyURL.openStream());
+		return new SignaturePacketChecksummer(DEFAULT_ALGORITHM, privateKey);
+	}
+
+	public Checksum checksum(PacketData packetData)
+			throws PacketChecksummerException {
+		try {
+			Signature signature = Signature.getInstance(algorithm);
+			signature.initSign(privateKey);
+			signature.update(packetData.getBytes());
+			return new Checksum(signature.sign());
+		} catch (Exception e) {
+			throw new PacketChecksummerException("Can't sign the PacketData "
+					+ packetData, e);
+		}
+	}
+
+	public String toString() {
+		ToStringBuilder builder = new ToStringBuilder(this);
+		builder.append("algorithm", algorithm);
+		return builder.toString();
+	}
 
 }

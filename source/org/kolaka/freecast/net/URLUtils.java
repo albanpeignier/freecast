@@ -22,10 +22,10 @@
  */
 package org.kolaka.freecast.net;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
@@ -33,7 +33,8 @@ import java.net.URL;
 public class URLUtils {
 
 	public static URL getBaseURL(URL url) throws MalformedURLException {
-		String basePath = StringUtils.substringBeforeLast(url.getFile().toString(), "/");
+		String basePath = StringUtils.substringBeforeLast(url.getFile()
+				.toString(), "/");
 
 		if (url.getFile().equals(basePath)) {
 			// for something like file:relativefile

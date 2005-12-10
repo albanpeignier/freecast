@@ -41,85 +41,87 @@ import org.kolaka.freecast.packet.Packet;
  */
 public class PacketMessage extends BaseMessage {
 
-    private Packet packet;
+	private Packet packet;
 
-    public PacketMessage() {
+	public PacketMessage() {
 
-    }
+	}
 
-    protected PacketMessage(Packet packet) {
-        this.packet = packet;
-    }
+	protected PacketMessage(Packet packet) {
+		this.packet = packet;
+	}
 
-    public Packet getPacket() {
-        return packet;
-    }
+	public Packet getPacket() {
+		return packet;
+	}
 
-    public void read(DataInputStream input) throws IOException {
-        long pageSequenceNumber = input.readLong();
+	public void read(DataInputStream input) throws IOException {
+		long pageSequenceNumber = input.readLong();
 		byte pagePacketCount = input.readByte();
 		boolean isFirstPage = input.readBoolean();
-		
+
 		byte packetIndex = input.readByte();
-		
-        long packetSequenceNumber = input.readLong();
-        long pageTimestamp = input.readLong();
 
-        int packetLength = input.readInt();
-        byte packetBytes[] = new byte[packetLength];
-        input.readFully(packetBytes);
-        
-        Checksum checksum = Checksum.read(input);
+		long packetSequenceNumber = input.readLong();
+		long pageTimestamp = input.readLong();
 
-		DefaultLogicalPageDescriptor pageDescriptor = 
-            new DefaultLogicalPageDescriptor(pageSequenceNumber, pageTimestamp, pagePacketCount, isFirstPage);
-        LogicalPageDescriptor.Element elementDescriptor =
-            pageDescriptor.createElementDescriptor(packetIndex);
+		int packetLength = input.readInt();
+		byte packetBytes[] = new byte[packetLength];
+		input.readFully(packetBytes);
 
-        packet = 
-            new DefaultPacket(packetSequenceNumber, pageTimestamp, new DefaultPacketData(packetBytes), checksum, elementDescriptor); 
-    }
+		Checksum checksum = Checksum.read(input);
 
-    public void write(DataOutputStream output) throws IOException {
-        LogicalPageDescriptor.Element elementDescriptor = packet.getElementDescriptor();
-        LogicalPageDescriptor pageDescriptor = elementDescriptor.getPageDescriptor();   
-            
-        output.writeLong(pageDescriptor.getSequenceNumber());
-        output.writeByte(pageDescriptor.getCount());
-        output.writeBoolean(pageDescriptor.isFirstPage());
-        
-        output.writeByte(elementDescriptor.getIndex());
-        
-        output.writeLong(packet.getSequenceNumber());
-        // TODO to keep protocol unchanged, to be move up
-        output.writeLong(pageDescriptor.getTimestamp());
-        output.writeInt(packet.getBytes().length);
-        output.write(packet.getBytes());
-        packet.getChecksum().write(output);
-    }
+		DefaultLogicalPageDescriptor pageDescriptor = new DefaultLogicalPageDescriptor(
+				pageSequenceNumber, pageTimestamp, pagePacketCount, isFirstPage);
+		LogicalPageDescriptor.Element elementDescriptor = pageDescriptor
+				.createElementDescriptor(packetIndex);
 
-    public boolean equals(Message other) {
-        return other instanceof PacketMessage && equals((PacketMessage) other);
-    }
+		packet = new DefaultPacket(packetSequenceNumber, pageTimestamp,
+				new DefaultPacketData(packetBytes), checksum, elementDescriptor);
+	}
 
-    public boolean equals(PacketMessage other) {
-        return packet.equals(other.getPacket());
-    }
+	public void write(DataOutputStream output) throws IOException {
+		LogicalPageDescriptor.Element elementDescriptor = packet
+				.getElementDescriptor();
+		LogicalPageDescriptor pageDescriptor = elementDescriptor
+				.getPageDescriptor();
 
-    public int hashCode() {
-        return packet.hashCode();
-    }
+		output.writeLong(pageDescriptor.getSequenceNumber());
+		output.writeByte(pageDescriptor.getCount());
+		output.writeBoolean(pageDescriptor.isFirstPage());
 
-    protected void setPacket(Packet packet) {
-        this.packet = packet;
-    }
+		output.writeByte(elementDescriptor.getIndex());
 
-    public static PacketMessage getInstance(Packet packet) {
-        return new PacketMessage(packet);
-    }
+		output.writeLong(packet.getSequenceNumber());
+		// TODO to keep protocol unchanged, to be move up
+		output.writeLong(pageDescriptor.getTimestamp());
+		output.writeInt(packet.getBytes().length);
+		output.write(packet.getBytes());
+		packet.getChecksum().write(output);
+	}
 
-    public MessageType getType() {
-        return MessageType.PACKET;
-    }
+	public boolean equals(Message other) {
+		return other instanceof PacketMessage && equals((PacketMessage) other);
+	}
+
+	public boolean equals(PacketMessage other) {
+		return packet.equals(other.getPacket());
+	}
+
+	public int hashCode() {
+		return packet.hashCode();
+	}
+
+	protected void setPacket(Packet packet) {
+		this.packet = packet;
+	}
+
+	public static PacketMessage getInstance(Packet packet) {
+		return new PacketMessage(packet);
+	}
+
+	public MessageType getType() {
+		return MessageType.PACKET;
+	}
 
 }

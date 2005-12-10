@@ -35,104 +35,106 @@ import org.kolaka.freecast.lang.UnexpectedException;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class DefaultLogicalPage implements LogicalPage {
 
-    private final List packets;
-    private final LogicalPageDescriptor descriptor;
+	private final List packets;
 
-    public DefaultLogicalPage(LogicalPageDescriptor descriptor, List packets) {
-        Validate.notNull(packets,"No specified packets");
-        Validate.notNull(descriptor,"No specified LogicalPageDescriptor");
-        Validate.isTrue(descriptor.getCount() == packets.size());
-        
-        this.packets = Collections.unmodifiableList(packets);
-        this.descriptor = descriptor;
-    }
+	private final LogicalPageDescriptor descriptor;
 
-    public boolean isFirstPage() {
-        return descriptor.isFirstPage();
-    }
+	public DefaultLogicalPage(LogicalPageDescriptor descriptor, List packets) {
+		Validate.notNull(packets, "No specified packets");
+		Validate.notNull(descriptor, "No specified LogicalPageDescriptor");
+		Validate.isTrue(descriptor.getCount() == packets.size());
 
-    public LogicalPageDescriptor getDescriptor() {
-        return descriptor;
-    }
+		this.packets = Collections.unmodifiableList(packets);
+		this.descriptor = descriptor;
+	}
 
-    public List packets() {
-        return packets;
-    }
+	public boolean isFirstPage() {
+		return descriptor.isFirstPage();
+	}
 
-    private byte[] bytes;
-    
-    public byte[] getBytes() {
-        if (bytes == null) {
-            bytes = createBytes();
-        }
-        return bytes;
-    }
+	public LogicalPageDescriptor getDescriptor() {
+		return descriptor;
+	}
 
-    private byte[] createBytes() {
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        for (Iterator iter=packets.iterator(); iter.hasNext(); ) {
-            Packet packet = (Packet) iter.next();
-            try {
-                output.write(packet.getBytes());
-            } catch (IOException e) {
-                throw new UnexpectedException("IOException into a ByteArrayOutputStream",e);
-            }
-        }
-        return output.toByteArray();
-    }
+	public List packets() {
+		return packets;
+	}
 
-    private int length = -1;
-    
-    public int getLength() {
-        if (length == -1) {
-            length = computeLength();
-        }
-        return length;
-    }
+	private byte[] bytes;
 
-    private int computeLength() {
-        int length = 0;
-        for (Iterator iter=packets.iterator(); iter.hasNext(); ) {
-            Packet packet = (Packet) iter.next();
-            length += packet.getBytes().length;
-        }
-        return length;
-    }
+	public byte[] getBytes() {
+		if (bytes == null) {
+			bytes = createBytes();
+		}
+		return bytes;
+	}
 
-    public boolean isComplete() {
-        return true;
-    }
+	private byte[] createBytes() {
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		for (Iterator iter = packets.iterator(); iter.hasNext();) {
+			Packet packet = (Packet) iter.next();
+			try {
+				output.write(packet.getBytes());
+			} catch (IOException e) {
+				throw new UnexpectedException(
+						"IOException into a ByteArrayOutputStream", e);
+			}
+		}
+		return output.toByteArray();
+	}
 
-    public long getSequenceNumber() {
-        return descriptor.getSequenceNumber();
-    }
-    
-    public long getTimestamp() {
-	    	return descriptor.getTimestamp();
-    }
-    
-    public boolean equals(Object o) {
-        return o instanceof LogicalPage && equals((LogicalPage) o);
-    }
-    
-    public boolean equals(LogicalPage other) {
-        return descriptor.equals(other.getDescriptor());
-    }
+	private int length = -1;
 
-    public String toString() {
-        ToStringBuilder builder = new ToStringBuilder(this);
-        builder.append("descriptor",descriptor);
-        builder.append("packets.count",packets.size());
-        return builder.toString();
-    }
+	public int getLength() {
+		if (length == -1) {
+			length = computeLength();
+		}
+		return length;
+	}
 
-    public int hashCode() {
-        return descriptor.hashCode();
-    }
+	private int computeLength() {
+		int length = 0;
+		for (Iterator iter = packets.iterator(); iter.hasNext();) {
+			Packet packet = (Packet) iter.next();
+			length += packet.getBytes().length;
+		}
+		return length;
+	}
+
+	public boolean isComplete() {
+		return true;
+	}
+
+	public long getSequenceNumber() {
+		return descriptor.getSequenceNumber();
+	}
+
+	public long getTimestamp() {
+		return descriptor.getTimestamp();
+	}
+
+	public boolean equals(Object o) {
+		return o instanceof LogicalPage && equals((LogicalPage) o);
+	}
+
+	public boolean equals(LogicalPage other) {
+		return descriptor.equals(other.getDescriptor());
+	}
+
+	public String toString() {
+		ToStringBuilder builder = new ToStringBuilder(this);
+		builder.append("descriptor", descriptor);
+		builder.append("packets.count", packets.size());
+		return builder.toString();
+	}
+
+	public int hashCode() {
+		return descriptor.hashCode();
+	}
 
 }

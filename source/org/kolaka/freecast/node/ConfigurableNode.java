@@ -36,22 +36,22 @@ import org.kolaka.freecast.transport.sender.SenderControler;
  */
 public interface ConfigurableNode extends Node {
 
-    public void setPeerReference(PeerReference reference);
+	public void setPeerReference(PeerReference reference);
 
-    public void setIdentifier(NodeIdentifier identifier);
+	public void setIdentifier(NodeIdentifier identifier);
 
-    public PlayerControler getPlayerControler();
+	public PlayerControler getPlayerControler();
 
-    public void setPlayerControler(PlayerControler playerControler);
+	public void setPlayerControler(PlayerControler playerControler);
 
-    public void setReceiverControler(ReceiverControler controler);
+	public void setReceiverControler(ReceiverControler controler);
 
-    public void setSenderControler(SenderControler controler);
+	public void setSenderControler(SenderControler controler);
 
-    public void setNodeService(NodeService nodeService);
+	public void setNodeService(NodeService nodeService);
 
-    public void setPeerControler(ConfigurablePeerControler controler);
+	public void setPeerControler(ConfigurablePeerControler controler);
 
-    public ConfigurablePeerControler getConfigurablePeerControler();
+	public ConfigurablePeerControler getConfigurablePeerControler();
 
 }

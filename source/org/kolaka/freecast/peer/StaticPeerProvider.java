@@ -35,18 +35,18 @@ import org.apache.commons.collections.SetUtils;
  */
 public class StaticPeerProvider implements PeerProvider {
 
-    private Set references;
+	private Set references;
 
-    public StaticPeerProvider(PeerReference reference) {
-        this(Collections.singleton(reference));
-    }
+	public StaticPeerProvider(PeerReference reference) {
+		this(Collections.singleton(reference));
+	}
 
-    public StaticPeerProvider(Set references) {
-        this.references = SetUtils.typedSet(references, PeerReference.class);
-    }
+	public StaticPeerProvider(Set references) {
+		this.references = SetUtils.typedSet(references, PeerReference.class);
+	}
 
-    public Set getPeerReferences() {
-        return references;
-    }
+	public Set getPeerReferences() {
+		return references;
+	}
 
 }

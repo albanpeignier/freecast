@@ -28,14 +28,14 @@ import org.kolaka.freecast.packet.PacketData;
 
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class DummyPacketChecksummer implements PacketChecksummer {
 
-    public Checksum checksum(PacketData packetData)
-            throws PacketChecksummerException {
-        return Checksum.EMPTY;
-    }
+	public Checksum checksum(PacketData packetData)
+			throws PacketChecksummerException {
+		return Checksum.EMPTY;
+	}
 
 }

@@ -35,43 +35,43 @@ import org.kolaka.freecast.peer.PeerConnection;
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public class PeerConnectionStatusMessage extends BaseMessage {
-    private PeerConnection.Status connectionStatus;
+	private PeerConnection.Status connectionStatus;
 
-    public PeerConnectionStatusMessage() {
+	public PeerConnectionStatusMessage() {
 
-    }
+	}
 
-    public PeerConnectionStatusMessage(PeerConnection.Status status) {
-        this.connectionStatus = status;
-    }
+	public PeerConnectionStatusMessage(PeerConnection.Status status) {
+		this.connectionStatus = status;
+	}
 
-    public boolean equals(Message other) {
-        return other instanceof PeerConnectionStatusMessage
-                && equals((PeerConnectionStatusMessage) other);
-    }
+	public boolean equals(Message other) {
+		return other instanceof PeerConnectionStatusMessage
+				&& equals((PeerConnectionStatusMessage) other);
+	}
 
-    public boolean equals(PeerConnectionStatusMessage other) {
-        return connectionStatus.equals(other.connectionStatus);
-    }
+	public boolean equals(PeerConnectionStatusMessage other) {
+		return connectionStatus.equals(other.connectionStatus);
+	}
 
-    public MessageType getType() {
-        return MessageType.CONNECTIONSTATUS;
-    }
+	public MessageType getType() {
+		return MessageType.CONNECTIONSTATUS;
+	}
 
-    public int hashCode() {
-        return connectionStatus.hashCode();
-    }
+	public int hashCode() {
+		return connectionStatus.hashCode();
+	}
 
-    public void read(DataInputStream input) throws IOException {
-        int value = input.readInt();
-        connectionStatus = PeerConnection.Status.getStatus(value);
-    }
+	public void read(DataInputStream input) throws IOException {
+		int value = input.readInt();
+		connectionStatus = PeerConnection.Status.getStatus(value);
+	}
 
-    public void write(DataOutputStream output) throws IOException {
-        output.writeInt(connectionStatus.getValue());
-    }
+	public void write(DataOutputStream output) throws IOException {
+		output.writeInt(connectionStatus.getValue());
+	}
 
-    public PeerConnection.Status getStatus() {
-        return connectionStatus;
-    }
+	public PeerConnection.Status getStatus() {
+		return connectionStatus;
+	}
 }

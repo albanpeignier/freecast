@@ -30,10 +30,10 @@ package org.kolaka.freecast.pipe;
  */
 public class EmptyPipeException extends Exception {
 
-    private static final long serialVersionUID = 3834874684842979640L;
+	private static final long serialVersionUID = 3834874684842979640L;
 
-    public EmptyPipeException() {
+	public EmptyPipeException() {
 
-    }
+	}
 
 }

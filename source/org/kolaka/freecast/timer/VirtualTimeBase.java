@@ -30,25 +30,25 @@ package org.kolaka.freecast.timer;
  */
 public class VirtualTimeBase implements TimeBase {
 
-    private long baseTimeMillis;
+	private long baseTimeMillis;
 
-    private double timeRatio;
+	private double timeRatio;
 
-    public long currentTimeMillis() {
-        long now = System.currentTimeMillis();
-        return (long) ((now - baseTimeMillis) * (1 + timeRatio));
-    }
+	public long currentTimeMillis() {
+		long now = System.currentTimeMillis();
+		return (long) ((now - baseTimeMillis) * (1 + timeRatio));
+	}
 
-    public void sleep(long delay) throws InterruptedException {
-        Thread.sleep((long) (delay / timeRatio));
-    }
+	public void sleep(long delay) throws InterruptedException {
+		Thread.sleep((long) (delay / timeRatio));
+	}
 
-    public VirtualTimeBase(double timeRatio) {
-        this(System.currentTimeMillis(), timeRatio);
-    }
+	public VirtualTimeBase(double timeRatio) {
+		this(System.currentTimeMillis(), timeRatio);
+	}
 
-    public VirtualTimeBase(long baseTimeMillis, double timeRatio) {
-        this.baseTimeMillis = baseTimeMillis;
-        this.timeRatio = timeRatio;
-    }
+	public VirtualTimeBase(long baseTimeMillis, double timeRatio) {
+		this.baseTimeMillis = baseTimeMillis;
+		this.timeRatio = timeRatio;
+	}
 }

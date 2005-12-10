@@ -23,7 +23,18 @@
 
 package org.kolaka.freecast;
 
-import org.apache.commons.cli.*;
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.net.URI;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.SystemUtils;
@@ -32,12 +43,11 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.config.ConfigurationLoader;
 import org.kolaka.freecast.config.DefaultConfigurationLoader;
-import org.kolaka.freecast.resource.*;
-
-import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.net.URI;
+import org.kolaka.freecast.resource.ClassLoaderResourceLocator;
+import org.kolaka.freecast.resource.CompositeResourceLocator;
+import org.kolaka.freecast.resource.FileResourceLocator;
+import org.kolaka.freecast.resource.HttpResourceLocator;
+import org.kolaka.freecast.resource.ResourceLocator;
 
 /**
  * 
@@ -45,25 +55,29 @@ import java.net.URI;
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public abstract class Application {
-    
-    private final String name;
-	private final ResourceLocator resourceLocator;
-    private Configuration configuration;
 
-    protected Application(String name) {
-        this.name = name;
+	private final String name;
+
+	private final ResourceLocator resourceLocator;
+
+	private Configuration configuration;
+
+	protected Application(String name) {
+		this.name = name;
 		this.resourceLocator = createResourceLocator();
-    }
+	}
 
 	private ResourceLocator createResourceLocator() {
 		CompositeResourceLocator locator = new CompositeResourceLocator();
 
-		locator.add(new ClassLoaderResourceLocator(getClass().getClassLoader()));
+		locator
+				.add(new ClassLoaderResourceLocator(getClass().getClassLoader()));
 
 		File cacheDirectory = new File(SystemUtils.JAVA_IO_TMPDIR, "freecast");
 		cacheDirectory.mkdirs();
 
-		locator.add(new HttpResourceLocator(new HttpResourceLocator.PersistentFileCache(cacheDirectory)));
+		locator.add(new HttpResourceLocator(
+				new HttpResourceLocator.PersistentFileCache(cacheDirectory)));
 		locator.add(new FileResourceLocator());
 		locator.add(new FileResourceLocator(new File(SystemUtils.USER_HOME)));
 
@@ -75,126 +89,134 @@ public abstract class Application {
 	}
 
 	public String getName() {
-        return name;
-    }
+		return name;
+	}
 
-    public boolean init(String args[]) throws Exception {
-        if (!LogFactory.getLog(getClass()).isDebugEnabled()) {
-            StandardToStringStyle toStringStyle = new StandardToStringStyle();
-            toStringStyle.setUseShortClassName(true);
-            toStringStyle.setUseIdentityHashCode(false);
-            ToStringBuilder.setDefaultStyle(toStringStyle);
-        }
-        
-        Options options = new Options();
+	public boolean init(String args[]) throws Exception {
+		if (!LogFactory.getLog(getClass()).isDebugEnabled()) {
+			StandardToStringStyle toStringStyle = new StandardToStringStyle();
+			toStringStyle.setUseShortClassName(true);
+			toStringStyle.setUseIdentityHashCode(false);
+			ToStringBuilder.setDefaultStyle(toStringStyle);
+		}
 
-        Option help = new Option("help", "print this message");
-        options.addOption(help);
+		Options options = new Options();
 
-        Option configOption = new Option("config",true,"specifies the uri of the config file");
-        configOption.setArgName("uri");
-        options.addOption(configOption);
+		Option help = new Option("help", "print this message");
+		options.addOption(help);
 
-        Option dryrunOption = new Option("dryrun",false,"only load and test the configuration");
-        options.addOption(dryrunOption);
-        
-        Option propertyOption = new Option("D",true,"specifies a configuration property");
-        propertyOption.setArgName("value=property");
-        propertyOption.setValueSeparator('=');
-        propertyOption.setArgs(2);
-        options.addOption(propertyOption);
-        
-        CommandLineParser parser = new GnuParser();
-        CommandLine line;
-        try {
-            line = parser.parse(options, args);
-        } catch (ParseException e) {
-            help("Parsing failed.  " + e.getMessage(), options);
-            return false;
-        }
+		Option configOption = new Option("config", true,
+				"specifies the uri of the config file");
+		configOption.setArgName("uri");
+		options.addOption(configOption);
 
-        if (line.hasOption(help.getOpt())) {
-            help("", options);
-            return false;
-        }
-        
-        boolean dryrun = line.hasOption(dryrunOption.getOpt());
-        
-        ConfigurationLoader loader = createConfigurationLoader();
+		Option dryrunOption = new Option("dryrun", false,
+				"only load and test the configuration");
+		options.addOption(dryrunOption);
+
+		Option propertyOption = new Option("D", true,
+				"specifies a configuration property");
+		propertyOption.setArgName("value=property");
+		propertyOption.setValueSeparator('=');
+		propertyOption.setArgs(2);
+		options.addOption(propertyOption);
+
+		CommandLineParser parser = new GnuParser();
+		CommandLine line;
+		try {
+			line = parser.parse(options, args);
+		} catch (ParseException e) {
+			help("Parsing failed.  " + e.getMessage(), options);
+			return false;
+		}
+
+		if (line.hasOption(help.getOpt())) {
+			help("", options);
+			return false;
+		}
+
+		boolean dryrun = line.hasOption(dryrunOption.getOpt());
+
+		ConfigurationLoader loader = createConfigurationLoader();
 		loader.setResourceLocator(getResourceLocator());
-		
-        if (line.hasOption(configOption.getOpt())) {
+
+		if (line.hasOption(configOption.getOpt())) {
 			URI userURI = new URI(line.getOptionValue(configOption.getOpt()));
 			loader.setUserURI(userURI);
-        }
-        if (line.hasOption(propertyOption.getOpt())) {
-            String values[] = line.getOptionValues(propertyOption.getOpt());
-            for (int i = 0; i < values.length; i+=2) {
-                loader.addUserProperty(values[i], values[i+1]);    
-            }
-        }
-        
-        loader.load();
-        
-        this.configuration = loader.getRootConfiguration();
-        postInit(configuration);
-        
-        return !dryrun;
-    }
-    
+		}
+		if (line.hasOption(propertyOption.getOpt())) {
+			String values[] = line.getOptionValues(propertyOption.getOpt());
+			for (int i = 0; i < values.length; i += 2) {
+				loader.addUserProperty(values[i], values[i + 1]);
+			}
+		}
+
+		loader.load();
+
+		this.configuration = loader.getRootConfiguration();
+		postInit(configuration);
+
+		return !dryrun;
+	}
+
 	protected final ConfigurationLoader createConfigurationLoader() {
 		return new DefaultConfigurationLoader(getName());
 	}
 
-    protected abstract void postInit(Configuration configuration) throws Exception;
+	protected abstract void postInit(Configuration configuration)
+			throws Exception;
 
-    public final void run(String args[]) {
-        try {
-			LogFactory.getLog(getClass()).info("version " + Version.getInstance().getName());
-            LogFactory.getLog(getClass()).debug("init");
-            if (init(args)) {
-                LogFactory.getLog(getClass()).debug("start");
-                run();
-            }
-        } catch (Throwable e) {
-            displayFatalError(e);
-            System.exit(1);
-        }
+	public final void run(String args[]) {
+		try {
+			LogFactory.getLog(getClass()).info(
+					"version " + Version.getInstance().getName());
+			LogFactory.getLog(getClass()).debug("init");
+			if (init(args)) {
+				LogFactory.getLog(getClass()).debug("start");
+				run();
+			}
+		} catch (Throwable e) {
+			displayFatalError(e);
+			System.exit(1);
+		}
 
-        LogFactory.getLog(getClass()).debug("exit");
-        System.exit(0);
-    }
-    
-    protected void displayFatalError(Throwable cause) {
-        LogFactory.getLog(Application.class).fatal("Error in the main thread", cause);
-    }
-    
-    protected void displayHelper(String message, String usage) {
-        if (!StringUtils.isEmpty(message)) {
-            System.out.println(message);
-        }
-        System.out.println(usage);
-    }
-    
-    protected abstract void run() throws Exception;
+		LogFactory.getLog(getClass()).debug("exit");
+		System.exit(0);
+	}
 
-    /**
-     * @param options
-     */
-    protected void help(String message, Options options) {
-        HelpFormatter formatter = new HelpFormatter();
+	protected void displayFatalError(Throwable cause) {
+		LogFactory.getLog(Application.class).fatal("Error in the main thread",
+				cause);
+	}
 
-        String applicationName = System.getProperty("app.name", "freecast-" + name);
+	protected void displayHelper(String message, String usage) {
+		if (!StringUtils.isEmpty(message)) {
+			System.out.println(message);
+		}
+		System.out.println(usage);
+	}
 
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter writer = new PrintWriter(stringWriter);
-        
-        formatter.printHelp(writer, HelpFormatter.DEFAULT_WIDTH, applicationName, 
-                "", options, HelpFormatter.DEFAULT_LEFT_PAD, HelpFormatter.DEFAULT_DESC_PAD, "");
-        
-        writer.close();
-        
-        displayHelper(message, stringWriter.getBuffer().toString());
-    }
+	protected abstract void run() throws Exception;
+
+	/**
+	 * @param options
+	 */
+	protected void help(String message, Options options) {
+		HelpFormatter formatter = new HelpFormatter();
+
+		String applicationName = System.getProperty("app.name", "freecast-"
+				+ name);
+
+		StringWriter stringWriter = new StringWriter();
+		PrintWriter writer = new PrintWriter(stringWriter);
+
+		formatter.printHelp(writer, HelpFormatter.DEFAULT_WIDTH,
+				applicationName, "", options, HelpFormatter.DEFAULT_LEFT_PAD,
+				HelpFormatter.DEFAULT_DESC_PAD, "");
+
+		writer.close();
+
+		displayHelper(message, stringWriter.getBuffer().toString());
+	}
 
 }

@@ -37,94 +37,94 @@ import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
  */
 public class DefaultTimer implements Timer {
 
-    private static final long ONE_MINUTE = DateUtils.MILLIS_PER_MINUTE;
+	private static final long ONE_MINUTE = DateUtils.MILLIS_PER_MINUTE;
 
-    public static long minutes(int count) {
-        return ONE_MINUTE * count;
-    }
+	public static long minutes(int count) {
+		return ONE_MINUTE * count;
+	}
 
-    private static final long ONE_SECOND = DateUtils.MILLIS_PER_SECOND;
+	private static final long ONE_SECOND = DateUtils.MILLIS_PER_SECOND;
 
-    public static long seconds(int count) {
-        return ONE_SECOND * count;
-    }
+	public static long seconds(int count) {
+		return ONE_SECOND * count;
+	}
 
-    private static final long NO_DELAY = 1;
+	private static final long NO_DELAY = 1;
 
-    public static long nodelay() {
-        return NO_DELAY;
-    }
+	public static long nodelay() {
+		return NO_DELAY;
+	}
 
-    private static final Timer INSTANCE = new DefaultTimer();
+	private static final Timer INSTANCE = new DefaultTimer();
 
-    public static final Timer getInstance() {
-        return INSTANCE;
-    }
+	public static final Timer getInstance() {
+		return INSTANCE;
+	}
 
-    private final PooledExecutor pool;
+	private final PooledExecutor pool;
 
-    private final ClockDaemon clockDaemon;
+	private final ClockDaemon clockDaemon;
 
-    private DefaultTimer() {
-        pool = new PooledExecutor();
+	private DefaultTimer() {
+		pool = new PooledExecutor();
 
-        clockDaemon = new ClockDaemon();
-    }
+		clockDaemon = new ClockDaemon();
+	}
 
-    private void init(Runnable runnable, Object taskID) {
-        if (runnable instanceof Task) {
-            ((Task) runnable).setTaskID(taskID);
-        }
-    }
+	private void init(Runnable runnable, Object taskID) {
+		if (runnable instanceof Task) {
+			((Task) runnable).setTaskID(taskID);
+		}
+	}
 
-    private boolean isCanceled(Runnable runnable) {
-        return runnable instanceof Task && ((Task) runnable).isCanceled();
-    }
+	private boolean isCanceled(Runnable runnable) {
+		return runnable instanceof Task && ((Task) runnable).isCanceled();
+	}
 
-    public void executeLater(Runnable runnable) {
-        if (isCanceled(runnable)) {
-            LogFactory.getLog(getClass()).debug(
-                    "ignore canceled task: " + runnable);
-        }
+	public void executeLater(Runnable runnable) {
+		if (isCanceled(runnable)) {
+			LogFactory.getLog(getClass()).debug(
+					"ignore canceled task: " + runnable);
+		}
 
-        try {
-            pool.execute(runnable);
-        } catch (InterruptedException e) {
-            throw new NotImplementedException(
-                    "Unsupported InterruptedException", e);
-        }
-    }
+		try {
+			pool.execute(runnable);
+		} catch (InterruptedException e) {
+			throw new NotImplementedException(
+					"Unsupported InterruptedException", e);
+		}
+	}
 
-    public void executeAfterDelay(long delay, Runnable runnable) {
-        Object taskID = clockDaemon.executeAfterDelay(delay,
-                new PooledRunnable(runnable));
-        init(runnable, taskID);
-    }
+	public void executeAfterDelay(long delay, Runnable runnable) {
+		Object taskID = clockDaemon.executeAfterDelay(delay,
+				new PooledRunnable(runnable));
+		init(runnable, taskID);
+	}
 
-    public void executePeriodically(long delay, Runnable runnable,
-            boolean startsNow) {
-        Object taskID = clockDaemon.executePeriodically(delay, runnable,
-                startsNow);
-        init(runnable, taskID);
-    }
+	public void executePeriodically(long delay, Runnable runnable,
+			boolean startsNow) {
+		Object taskID = clockDaemon.executePeriodically(delay, runnable,
+				startsNow);
+		init(runnable, taskID);
+	}
 
-    public void execute(Loop loop) {
-        loop.setTimer(this);
-        loop.start();
-    }
+	public void execute(Loop loop) {
+		loop.setTimer(this);
+		loop.start();
+	}
 
-    class PooledRunnable implements Runnable {
+	class PooledRunnable implements Runnable {
 
-        private final Runnable decorated;
+		private final Runnable decorated;
 
-        public PooledRunnable(final Runnable decorated) {
-            this.decorated = decorated;
-        }
+		public PooledRunnable(final Runnable decorated) {
+			this.decorated = decorated;
+		}
 
-        public void run() {
-            executeLater(decorated);
-        }
+		public void run() {
+			executeLater(decorated);
+		}
 
-    }
+	}
 
 }

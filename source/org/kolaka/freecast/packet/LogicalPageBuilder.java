@@ -23,60 +23,64 @@
 
 package org.kolaka.freecast.packet;
 
+import java.util.List;
+
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.kolaka.freecast.collections.SortedList;
 
-import java.util.List;
-
 /**
  * 
- *
+ * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class LogicalPageBuilder {
 
-    private LogicalPageDescriptor descriptor;
-    private final List packets;
+	private LogicalPageDescriptor descriptor;
+
+	private final List packets;
 
 	public LogicalPageBuilder(LogicalPageDescriptor descriptor) {
-        Validate.notNull(descriptor, "No specified LogicalPageDescriptor");
-        this.descriptor = descriptor;
-        this.packets = new SortedList(Packets.compareElementIndex());
-    }
+		Validate.notNull(descriptor, "No specified LogicalPageDescriptor");
+		this.descriptor = descriptor;
+		this.packets = new SortedList(Packets.compareElementIndex());
+	}
 
-    public LogicalPageBuilder(long sequenceNumber, long timestamp, int packetCount, boolean firstPage) {
-        this(new DefaultLogicalPageDescriptor(sequenceNumber, timestamp, packetCount, firstPage));
-    }
+	public LogicalPageBuilder(long sequenceNumber, long timestamp,
+			int packetCount, boolean firstPage) {
+		this(new DefaultLogicalPageDescriptor(sequenceNumber, timestamp,
+				packetCount, firstPage));
+	}
 
-    public void add(Packet packet) {
-        packets.add(packet);
-    }
-    
-    public boolean isComplete() {
-        return packets.size() == descriptor.getCount();
-    }
+	public void add(Packet packet) {
+		packets.add(packet);
+	}
+
+	public boolean isComplete() {
+		return packets.size() == descriptor.getCount();
+	}
 
 	public LogicalPage create() {
-        if (!isComplete()) {
-            throw new IllegalStateException("incomplete packet list: " + this);
-        }
-        return new DefaultLogicalPage(descriptor, packets);
-    }
-    
-    public LogicalPageDescriptor.Element createElementDescriptor(final int index) {
-        return new LogicalPageDescriptor.Element() {
-            public LogicalPageDescriptor getPageDescriptor() {
-                return descriptor;
-            }
-            public int getIndex() {
-                return index;
-            }
-        };
-    }
-    
-    public String toString() {
-    		return ToStringBuilder.reflectionToString(this); 
-    }
-    
+		if (!isComplete()) {
+			throw new IllegalStateException("incomplete packet list: " + this);
+		}
+		return new DefaultLogicalPage(descriptor, packets);
+	}
+
+	public LogicalPageDescriptor.Element createElementDescriptor(final int index) {
+		return new LogicalPageDescriptor.Element() {
+			public LogicalPageDescriptor getPageDescriptor() {
+				return descriptor;
+			}
+
+			public int getIndex() {
+				return index;
+			}
+		};
+	}
+
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
+
 }
