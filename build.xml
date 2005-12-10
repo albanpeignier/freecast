@@ -111,7 +111,8 @@
 	</target>
 
 	<target name="prepare.track.optional.check">
-		<available file="${track.dir}" property="prepare.track.optional.notRequired" />
+		<!-- the last tracked directory is tested -->
+		<available file="${track.dir}/xmlreleasenotes" property="prepare.track.optional.notRequired" />
 	</target>
 
 	<target name="prepare.track.optional" depends="prepare.track.optional.check" unless="prepare.track.optional.notRequired">
