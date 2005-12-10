@@ -4,7 +4,7 @@
  * This code was developped by Alban Peignier (http://people.tryphon.org/~alban/) 
  * and contributors (their names can be found in the CONTRIBUTORS file).
  *
- * Copyright (C) 2004-2005 Alban Peignier
+ * Copyright (C) 2004 Alban Peignier
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -20,29 +20,20 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package org.kolaka.freecast.resource;
+
+package org.kolaka.freecast.transport.receiver;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
 import java.net.URL;
 
-/**
- * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
- */
-public class URLResourceLocator implements ResourceLocator {
+public class PlaylistEncoderReceiver extends OggSourceFactoryReceiver {
 
-	public InputStream openResource(URI uri) throws Exception {
-		if (!uri.isAbsolute()) {
-			throw new NoSuchResourceException(uri);
-		}
-			  
-		try {
-			URL url = uri.toURL();
-			return url.openStream();
-		} catch (IOException e) {
-			throw new UnavailableResourceException(uri,e);
-		}
+	public PlaylistEncoderReceiver(URL playlist, EncoderFormat format) throws IOException {
+		super(new PlaylistEncoderOggSourceFactory(playlist, format));
+	}
+
+	public PlaylistEncoderReceiver(Playlist playlist, EncoderFormat format) throws IOException {
+		super(new PlaylistEncoderOggSourceFactory(playlist, format));
 	}
 
 }

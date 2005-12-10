@@ -22,11 +22,18 @@
  */
 package org.kolaka.freecast.resource.test;
 
-import junit.framework.TestCase;
-import org.kolaka.freecast.resource.*;
-
 import java.io.File;
 import java.net.URI;
+
+import junit.framework.TestCase;
+
+import org.kolaka.freecast.resource.ClassLoaderResourceLocator;
+import org.kolaka.freecast.resource.FileResourceLocator;
+import org.kolaka.freecast.resource.HttpResourceLocator;
+import org.kolaka.freecast.resource.PrefixResourceLocator;
+import org.kolaka.freecast.resource.ResourceLocator;
+import org.kolaka.freecast.resource.ResourceLocators;
+import org.kolaka.freecast.resource.URLResourceLocator;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>

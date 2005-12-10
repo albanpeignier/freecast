@@ -24,6 +24,7 @@
 package org.kolaka.freecast.packet;
 
 import org.apache.commons.lang.Validate;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.kolaka.freecast.collections.SortedList;
 
 import java.util.List;
@@ -72,6 +73,10 @@ public class LogicalPageBuilder {
                 return index;
             }
         };
+    }
+    
+    public String toString() {
+    		return ToStringBuilder.reflectionToString(this); 
     }
     
 }

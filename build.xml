@@ -134,15 +134,19 @@
 
 	<target name="prepare.libraries" depends="prepare.track.optional, prepare.antlion">
 		<libraryDef>
+			<type>
+				<must-find/>
+				<default/>
+			</type>
 			<repository basedir="${track.dir}">
-				<format text="[groupid]/releases/[version]/[artifactid]-[version].[type]" />
-				<format text="[groupid]/releases/[version]/[artifactid].[type]" />
-				<format text="[groupid]/releases/[version]/[groupid]-[version].[type]" />
-				<format text="[groupid]/releases/[version]/[groupid].[type]" />
 				<format text="[groupid]/patches/[version]/[artifactid]-[version].[type]" />
 				<format text="[groupid]/patches/[version]/[artifactid].[type]" />
 				<format text="[groupid]/patches/[version]/[groupid]-[version].[type]" />
 				<format text="[groupid]/patches/[version]/[groupid].[type]" />
+				<format text="[groupid]/releases/[version]/[artifactid]-[version].[type]" />
+				<format text="[groupid]/releases/[version]/[artifactid].[type]" />
+				<format text="[groupid]/releases/[version]/[groupid]-[version].[type]" />
+				<format text="[groupid]/releases/[version]/[groupid].[type]" />
 				<!-- for log4j -->
 				<format text="[groupid]/releases/[version]/dist/lib/[groupid]-[version].[type]" />
 				<format text="[groupid]/releases/[version]/lib/[artifactid].[type]" />
@@ -162,47 +166,64 @@
 			</library>
 
 			<library id="lib.vorbisspi">
-				<lib-entry groupid="vorbisspi" version="1.0.1" artifactid="vorbisspi1.0.1" />
-				<lib-entry groupid="vorbisspi" version="1.0.1" artifactid="jogg-0.0.7" />
-				<lib-entry groupid="vorbisspi" version="1.0.1" artifactid="jorbis-0.0.13" />
-				<lib-entry groupid="vorbisspi" version="1.0.1" artifactid="tritonus_share" />
+				<lib-entry groupid="vorbisspi" version="1.0.2" artifactid="vorbisspi1.0.2" />
+				<lib-entry groupid="vorbisspi" version="1.0.2" artifactid="jogg-0.0.7" />
+				<lib-entry groupid="vorbisspi" version="1.0.2" artifactid="jorbis-0.0.15" />
+				<lib-entry groupid="tritonus" version="0.3.6" artifactid="tritonus_share" />
+				<lib-entry groupid="tritonus" version="0.3.6" artifactid="tritonus_core" />
 			</library>
 
-			<library id="lib.tritonus" groupid="tritonus" version="0.3.6">
-				<lib-entry artifactid="tritonus_core"/>
-				<lib-entry artifactid="tritonus_share"/>
-				<lib-entry artifactid="tritonus_vorbis"/>
+			<library id="lib.mp3spi">
+				<lib-entry groupid="mp3spi" version="1.9.4" artifactid="mp3spi1.9.4" />
+				<lib-entry groupid="mp3spi" version="1.9.4" artifactid="jl1.0" />
+				<lib-entry groupid="tritonus" version="0.3.6" artifactid="tritonus_share" />
+				<lib-entry groupid="tritonus" version="0.3.6" artifactid="tritonus_core" />
+			</library>
+
+			<library id="lib.tritonus">
+				<lib-entry artifactid="tritonus_core" groupid="tritonus" version="0.3.6" />
+				<lib-entry artifactid="tritonus_share" groupid="tritonus" version="0.3.6" />
+				<lib-entry artifactid="tritonus_vorbis" groupid="tritonus" version="0.3.6" />
+			</library>
+
+			<library id="lib.test">
+				<lib-entry groupid="junit" version="3.8.1" />
+				<lib-entry groupid="easymock" version="1.1" />
+				<lib-entry groupid="mockobjects" version="0.09" artifactid="mockobjects-core" />
 			</library>
 
 			<library id="core">
 				<lib-entry groupid="commons-collections" version="3.1" />
 				<lib-entry groupid="commons-logging" version="1.0.4" />
 				<lib-entry groupid="commons-cli" version="1.0" />
-				<lib-entry groupid="commons-httpclient" version="3.0-rc3" />
 				<lib-entry groupid="commons-codec" version="1.3" />
 				<lib-entry groupid="commons-io" version="1.0" />
 				<lib-entry groupid="log4j" version="1.2.9" />
 				<lib-entry groupid="commons-lang" version="nightly-20041229" artifactid="commons-lang-2.0" />
 				<lib-entry groupid="commons-configuration" version="nightly-20050307" artifactid="commons-configuration-1.1RC2" />
 				<lib-entry groupid="concurrent" version="kolaka" />
+			</library>
+
+			<library id="build">
+				<library refid="core" />
+				<lib-entry groupid="commons-httpclient" version="3.0-rc3" />
 				<lib-entry groupid="cortado" version="0.1.0" artifactid="cortado-ovt-0.1.0" />
 				<lib-entry groupid="jdic" version="0.9" />
 				<library refid="lib.hessian" />
 				<library refid="lib.jetty" />
 				<library refid="lib.tritonus" />
+				<library refid="lib.vorbisspi" />
 			</library>
 
 			<library id="runtime">
-				<library refid="lib.vorbisspi" />
-				<library refid="core" />
+				<library refid="build" />
 				<lib-entry groupid="commons-digester" version="1.7" />
 				<lib-entry groupid="commons-beanutils" version="1.7.0" />
+				<library refid="lib.mp3spi"/>
 			</library>
 
 			<library id="test">
-				<lib-entry groupid="junit" version="3.8.1" />
-				<lib-entry groupid="easymock" version="1.1" />
-				<lib-entry groupid="mockobjects" version="0.09" artifactid="mockobjects-core" />
+				<library refid="lib.test" />
 				<library refid="runtime" />
 			</library>
 
@@ -228,23 +249,25 @@
 		<v-sync src="virtual:${prepare.track.file}" destdir="track" />
 	</target>
 
-	<macrodef name="configvalidate">
-		<attribute name="file" />
-		<sequential>
-			<pathconvert dirsep="/" property="build.validate.xsd.file">
-				<path>
-					<pathelement location="source/org/kolaka/freecast/config/resources/config.xsd" />
-				</path>
-			</pathconvert>
-			<xmlvalidate lenient="false" failonerror="true" warn="true" file="@{file}">
-				<attribute name="http://apache.org/xml/features/validation/schema" value="true" />
-				<attribute name="http://xml.org/sax/features/namespaces" value="true" />
-				<property name="http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation" value="${build.validate.xsd.file}" />
-			</xmlvalidate>
-		</sequential>
-	</macrodef>
+
 
 	<target name="build.validate">
+		<macrodef name="configvalidate">
+			<attribute name="file" />
+			<sequential>
+				<pathconvert dirsep="/" property="build.validate.xsd.file">
+					<path>
+						<pathelement location="source/org/kolaka/freecast/config/resources/config.xsd" />
+					</path>
+				</pathconvert>
+				<xmlvalidate lenient="false" failonerror="true" warn="true" file="@{file}">
+					<attribute name="http://apache.org/xml/features/validation/schema" value="true" />
+					<attribute name="http://xml.org/sax/features/namespaces" value="true" />
+					<property name="http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation" value="${build.validate.xsd.file}" />
+				</xmlvalidate>
+			</sequential>
+		</macrodef>
+
 		<!--
 		<configvalidate file="source/org/kolaka/freecast/config/resources/defaults-node.xml"/>
 		<configvalidate file="source/org/kolaka/freecast/config/resources/defaults-node-swing.xml"/>
@@ -257,7 +280,7 @@
 		<property name="build.core.classes.dir" value="build/core/classes" />
 		<mkdir dir="${build.core.classes.dir}" />
 		<javac target="1.4" source="1.4" srcdir="source" destdir="${build.core.classes.dir}" debug="true">
-			<classpath refid="path.core" />
+			<classpath refid="path.build" />
 			<exclude name="**/test/*.java" />
 		</javac>
 	</target>
@@ -309,7 +332,7 @@
 			<classpath refid="path.test" />
 			<include name="**/test/*.java" />
 		</javac>
-		<copy file="build/etc/console-only/log4j.xml" tofile="${build.test.classes.dir}/log4j.xml" />
+		<copy file="source/org/kolaka/freecast/test/log4j.xml" tofile="${build.test.classes.dir}/log4j.xml" />
 		<copy todir="${build.test.classes.dir}">
 			<fileset dir="source">
 				<include name="**/test/resources/*" />
@@ -555,19 +578,7 @@
 		<touch file="build/docs/coverage/.touch" />
 	</target>
 
-	<macrodef name="thumbnails">
-		<attribute name="dest" />
-		<element name="filesets" />
-		<sequential>
-			<apply executable="convert" dest="@{dest}" failonerror="true" verbose="true">
-				<arg line="-geometry 200x200" />
-				<srcfile />
-				<targetfile />
-				<filesets />
-				<mapper type="regexp" from="^(.*)\.([^.]*)" to="\1-thumb.\2" />
-			</apply>
-		</sequential>
-	</macrodef>
+
 
 	<target name="build.www">
 		<property name="build.www.dir" location="build/www" />
@@ -617,6 +628,20 @@
 			</fileset>
 		</copy>
 
+		<macrodef name="thumbnails">
+			<attribute name="dest" />
+			<element name="filesets" />
+			<sequential>
+				<apply executable="convert" dest="@{dest}" failonerror="true" verbose="true">
+					<arg line="-geometry 200x200" />
+					<srcfile />
+					<targetfile />
+					<filesets />
+					<mapper type="regexp" from="^(.*)\.([^.]*)" to="\1-thumb.\2" />
+				</apply>
+			</sequential>
+		</macrodef>
+
 		<thumbnails dest="${build.www.dir}">
 			<filesets>
 				<fileset dir="${source.www.dir}">
@@ -655,8 +680,71 @@
 				<pathelement path="build/test/classes" />
 				<path refid="path.test" />
 			</classpath>
-			<sysproperty key="java.library.path" path="${track.tritonus.dir}"/>
+			<sysproperty key="java.library.path" path="${track.tritonus.dir}" />
 		</junit>
+	</target>
+
+	<target name="test.oggdecoders" depends="build.test">
+		<property name="build.test.results.dir" value="build/test/results" />
+		<mkdir dir="${build.test.results.dir}" />
+		<property name="test.oggdecoders.resource" value="default" />
+
+		<macrodef name="junit.oggdecoders">
+			<attribute name="name" />
+			<element name="paths" optional="false" />
+			<element name="properties" optional="true" />
+			<sequential>
+				<path id="path.test.oggdecoders.@{name}">
+					<pathelement path="build/core/classes" />
+					<pathelement path="build/test/classes" />
+					<path refid="path.core" />
+					<paths />
+				</path>
+				<pathconvert property="path.test.oggdecoders.@{name}" 
+					refid="path.test.oggdecoders.@{name}">
+					<map from="${basedir}/" to=""/>
+				</pathconvert>
+				<!-- <echo message="path ${path.test.oggdecoders.@{name}}"/> -->
+				<junit printsummary="yes" haltonfailure="${test.haltonfailure}" includeantruntime="yes" fork="yes" showoutput="true">
+					<formatter type="plain" />
+					<test name="org.kolaka.freecast.ogg.test.OggDecoderTest" todir="${build.test.results.dir}" outfile="TEST-OggProviders-@{name}" />
+					<classpath refid="path.test.oggdecoders.@{name}"/>
+					<sysproperty key="log4.configuration" value="org/kolaka/freecast/test/log4j.xml" />
+					<sysproperty key="java.library.path" path="${track.tritonus.dir}" />
+					<sysproperty key="org.kolaka.freecast.ogg.test.OggProviderTest.resource" value="${test.oggdecoders.resource}" />
+					<properties />
+				</junit>
+			</sequential>
+		</macrodef>
+
+		<junit.oggdecoders name="all">
+			<paths>
+				<path refid="path.lib.vorbisspi" />
+				<path refid="path.lib.tritonus" />
+			</paths>
+		</junit.oggdecoders>
+		<junit.oggdecoders name="javazoom">
+			<paths>
+				<path refid="path.lib.vorbisspi" />
+			</paths>
+			<properties>
+				<sysproperty key="org.kolaka.freecast.ogg.test.OggDecoderTest.tritonus" value="false" />
+			</properties>
+		</junit.oggdecoders>
+		<junit.oggdecoders name="tritonus">
+			<paths>
+				<path refid="path.lib.tritonus" />
+			</paths>
+			<properties>
+				<sysproperty key="org.kolaka.freecast.ogg.test.OggDecoderTest.javazoom" value="false" />
+			</properties>
+		</junit.oggdecoders>
+		<junit.oggdecoders name="all-reverse">
+			<paths>
+				<path refid="path.lib.tritonus" />
+				<path refid="path.lib.vorbisspi" />
+			</paths>
+		</junit.oggdecoders>
 	</target>
 
 	<target name="dist" depends="dist.jar, dist.bin, dist.etc, dist.lib" description="Create the binaries distribution" />
@@ -800,7 +888,7 @@
 		</copy>
 		<copy todir="dist/lib/linux/x86">
 			<fileset dir="${track.tritonus.dir}">
-				<include name="*.so"/>
+				<include name="*.so" />
 			</fileset>
 		</copy>
 	</target>

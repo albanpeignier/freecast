@@ -74,6 +74,12 @@ public class NodeConfigurator {
 		this.resourceLocator = resourceLocator;
 	}
 
+	/**
+	 * @param node
+	 * @param configuration
+	 * @throws ConfigurationException
+	 * @throws IOException
+	 */
 	public void configure(ConfigurableNode node, Configuration configuration)
         throws ConfigurationException, IOException
     {
@@ -128,7 +134,7 @@ public class NodeConfigurator {
         String receiverClass = receiverConfiguration.getString("class");
         if (receiverClass.equals("shoutclient")) {
             receiver = new ShoutClientReceiver(receiverConfiguration.getURL("url"));
-        } else if (receiverClass.equals("playlist")) {
+        } else if (receiverClass.equals("playlist") || receiverClass.equals("encoder-playlist")) {
 			String playlistURIString = receiverConfiguration.getString("url");
 			URI playlistURI = null;
 			try {
@@ -136,12 +142,22 @@ public class NodeConfigurator {
 			} catch (URISyntaxException e) {
 				throw new ConfigurationException("invalid playlist url: '" + playlistURIString,e);
 			}
-			receiver = new PlaylistReceiver(new ResourcePlaylist(resourceLocator, playlistURI));
-            // TODO remove this StaticBandwidthControler usage 
-            LogFactory.getLog(getClass()).warn("the playlist receiver uses a static bandwidth controler");
-			int bandwidth = receiverConfiguration.getInt("bandwidth",35);
-            BandwidthControler bandwidthControler = new StaticBandwidthControler((int) (bandwidth * FileUtils.ONE_KB));
-            ((PlaylistReceiver) receiver).setBandwidthControler(bandwidthControler);
+			
+			Playlist playlist = ResourcePlaylist.getInstance(resourceLocator, playlistURI);
+			
+			if (receiverClass.equals("playlist")) {
+				receiver = new PlaylistReceiver(playlist);
+				int bandwidth = receiverConfiguration.getInt("bandwidth",35);
+	            LogFactory.getLog(getClass()).warn("the playlist receiver uses a static bandwidth controler at " + bandwidth);
+	            BandwidthControler bandwidthControler = new StaticBandwidthControler((int) (bandwidth * FileUtils.ONE_KB));
+	            ((PlaylistReceiver) receiver).setBandwidthControler(bandwidthControler);
+			} else {
+				int channels = receiverConfiguration.getInt("channels",2);
+				int sampleRate = receiverConfiguration.getInt("sampleRate",44100);
+				float quality = receiverConfiguration.getFloat("quality",0);
+				EncoderFormat format = new EncoderFormat(channels, sampleRate, quality);
+				receiver = new PlaylistEncoderReceiver(playlist, format);
+			}
         } else if (receiverClass.equals("shoutserver")) {
             InetSocketAddress listenAddress = loadInetSocketAddress(receiverConfiguration.subset("listenaddress"));
             receiver = new ShoutServerReceiver(listenAddress);

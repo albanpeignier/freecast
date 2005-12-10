@@ -35,6 +35,7 @@ import javax.sound.sampled.AudioInputStream;
 
 import org.apache.commons.lang.UnhandledException;
 import org.apache.commons.lang.Validate;
+import org.apache.commons.logging.LogFactory;
 import org.tritonus.lowlevel.ogg.Packet;
 import org.tritonus.lowlevel.ogg.Page;
 import org.tritonus.lowlevel.ogg.StreamState;
@@ -88,6 +89,7 @@ public class EncoderOggSource implements OggSource {
 
 	private void init() throws IOException {
 		AudioFormat inputFormat = audioInput.getFormat();
+		LogFactory.getLog(getClass()).debug("initialize ogg encoder to encode " + inputFormat);
 
 		readBuffer = new byte[READ * audioInput.getFormat().getFrameSize()];
 
@@ -168,12 +170,13 @@ public class EncoderOggSource implements OggSource {
 			init();
 		}
 
-		if (endOfStream) {
-			throw new EOFException();
-		}
-
 		if (pages.isEmpty()) {
+			if (endOfStream) {
+				throw new EOFException();
+			}
+
 			fillCache();
+			
 			if (pages.isEmpty()) {
 				throw new EOFException();
 			}
@@ -225,7 +228,7 @@ public class EncoderOggSource implements OggSource {
 		}
 
 	}
-
+	
 	private void fillCache() throws IOException {
 		boolean cacheFilled = false;
 		while (!cacheFilled) {
@@ -233,6 +236,7 @@ public class EncoderOggSource implements OggSource {
 
 			if (read == 0 || read == -1) {
 				dspState.write(null, 0);
+				LogFactory.getLog(getClass()).debug("end of the read stream");
 				endOfStream = true;
 			} else {
 				int frames = read / audioInput.getFormat().getFrameSize();

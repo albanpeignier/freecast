@@ -50,7 +50,7 @@ public class CompositeResourceLocator implements ResourceLocator {
 			try {
 				return resourceLocator.openResource(uri);
 			} catch (Exception e) {
-				LogFactory.getLog(getClass()).trace("inner ResourceLocator can't open " + uri, e);
+				LogFactory.getLog(getClass()).trace(resourceLocator + " can't open " + uri);
 				continue;
 			}
 		}

@@ -20,12 +20,11 @@
 	<classpathentry kind="lib" path="track/jetty/releases/5.1.4rc0/lib/javax.servlet.jar"/>
 	<classpathentry kind="lib" path="track/jetty/releases/5.1.4rc0/lib/org.mortbay.jetty.jar"/>
 	<classpathentry kind="lib" path="track/commons-httpclient/releases/3.0-rc3/commons-httpclient-3.0-rc3.jar"/>
-	<classpathentry kind="lib" path="track/vorbisspi/releases/1.0.1/lib/jogg-0.0.7.jar"/>
-	<classpathentry kind="lib" path="track/vorbisspi/releases/1.0.1/lib/jorbis-0.0.13.jar"/>
-	<classpathentry kind="lib" path="track/vorbisspi/releases/1.0.1/lib/tritonus_share.jar"/>
-	<classpathentry kind="lib" path="track/vorbisspi/releases/1.0.1/vorbisspi1.0.1.jar"/>
 	<classpathentry kind="lib" path="track/tritonus/releases/0.3.6/tritonus_core-0.3.6.jar"/>
 	<classpathentry kind="lib" path="track/tritonus/releases/0.3.6/tritonus_share-0.3.6.jar"/>
 	<classpathentry sourcepath="/tritonus/src/classes" kind="lib" path="track/tritonus/releases/0.3.6/tritonus_vorbis-0.3.6.jar"/>
+	<classpathentry kind="lib" path="track/vorbisspi/releases/1.0.2/lib/jogg-0.0.7.jar"/>
+	<classpathentry kind="lib" path="track/vorbisspi/releases/1.0.2/lib/jorbis-0.0.15.jar"/>
+	<classpathentry kind="lib" path="track/vorbisspi/patches/1.0.2/vorbisspi1.0.2.jar"/>
 	<classpathentry kind="output" path=".eclipse"/>
 </classpath>

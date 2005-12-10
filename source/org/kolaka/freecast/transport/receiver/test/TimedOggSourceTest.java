@@ -44,12 +44,13 @@ public class TimedOggSourceTest extends TestCase {
 
 	private TimedOggSource timedSource;
 
-	private int sampleRate = 44100;
-
+	private int frameRate = 44100;
+	private int channels = 2;
+	
 	protected void setUp() throws Exception {
 		sourceControl = MockControl.createControl(OggSource.class);
 		source = (OggSource) sourceControl.getMock();
-		timedSource = new TimedOggSource(source, sampleRate);
+		timedSource = new TimedOggSource(source, frameRate);
 	}
 
 	/**
@@ -78,7 +79,7 @@ public class TimedOggSourceTest extends TestCase {
 		assertEquals(secondSourcePage, secondResultPage);
 
 		long expectedTimestamp = (secondResultPage.getAbsoluteGranulePosition() - firstResultPage
-				.getAbsoluteGranulePosition()) / sampleRate * DateUtils.MILLIS_PER_SECOND;
+				.getAbsoluteGranulePosition()) / frameRate * DateUtils.MILLIS_PER_SECOND;
 		assertEquals(expectedTimestamp, secondResultPage.getTimestamp());
 
 		sourceControl.verify();

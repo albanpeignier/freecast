@@ -26,6 +26,8 @@ package org.kolaka.freecast.transport.receiver;
 import java.io.EOFException;
 import java.io.IOException;
 
+import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang.time.StopWatch;
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.ogg.OggSource;
 import org.kolaka.freecast.service.ControlException;
@@ -68,30 +70,41 @@ public class OggSourceFactoryReceiver extends OggSourceReceiver {
                 try {
                     oggSource = factory.next();
                 } catch (IOException e) {
-                    String message = "Can't create next OggSource with " + factory + ", wait 10 secondes before retrying";
+                    String message = "can't create next OggSource with " + factory + ", wait 10 secondes before retrying";
                     LogFactory.getLog(getClass()).error(message,e);
-                    return DefaultTimer.seconds(30);
+                    return DefaultTimer.seconds(10);
                 }
                 
                 LogFactory.getLog(getClass()).debug("change source for " + oggSource);
 
+                StopWatch receivingWatch = new StopWatch();
+                receivingWatch.start();
+                
+                long delay = DefaultTimer.nodelay();
+                
                 try {
                     receive(oggSource);
                 } catch (EOFException e) {
-                	LogFactory.getLog(getClass()).debug("end of source " + oggSource);
+                		LogFactory.getLog(getClass()).debug("end of source " + oggSource, e);
                 } catch (IOException e) {
-                    LogFactory.getLog(getClass()).error("Stream reception failed with  " + oggSource, e);
-                    return DefaultTimer.seconds(3);
+                    LogFactory.getLog(getClass()).error("stream reception failed with  " + oggSource, e);
                 } finally {
-                	try {
+                		try {
 						oggSource.close();
 					} catch (IOException e) {
-	                    LogFactory.getLog(getClass()).debug("Can't close properly the OggSource " + oggSource, e);
-	                    return DefaultTimer.nodelay();
+	                    LogFactory.getLog(getClass()).debug("can't close properly the OggSource " + oggSource, e);
 					}
-                }
+					
+					/*
+					 * to avoid crazy loops, mark a pause if needed
+					 */
+					receivingWatch.stop();
+					if (receivingWatch.getTime() < 3 * DateUtils.MILLIS_PER_SECOND) {
+						delay = DefaultTimer.seconds(3);					
+					}
+                	}
 
-                return DefaultTimer.nodelay();
+                return delay;
             }
         };
     }

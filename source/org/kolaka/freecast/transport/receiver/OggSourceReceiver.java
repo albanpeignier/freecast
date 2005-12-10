@@ -49,11 +49,7 @@ public abstract class OggSourceReceiver extends LoopService implements SourceRec
     }
     
     private OggLogicalPageFactory pageFactory = new OggLogicalPageFactory();
-    private BandwidthControler bandwidthControler = new BandwidthControler() {
-        public long getTimeDelay(LogicalPage page) {
-            return 0;
-        }
-    };
+    private BandwidthControler bandwidthControler = new TimestampBandwidthControler();
     
     public void setPacketChecksummer(PacketChecksummer checksummer) {
         pageFactory.setPacketChecksummer(checksummer);
@@ -80,8 +76,6 @@ public abstract class OggSourceReceiver extends LoopService implements SourceRec
                 LogFactory.getLog(getClass()).debug("new stream header created: " + logicalPage);        
             }
             
-            Producers.pushAll(producer, logicalPage);
-            
             long delay = bandwidthControler.getTimeDelay(logicalPage);
             if (delay > 10) {
                 try {
@@ -92,6 +86,8 @@ public abstract class OggSourceReceiver extends LoopService implements SourceRec
                     throw exception;
                 }
             }
+
+            Producers.pushAll(producer, logicalPage);
         }
     }
     

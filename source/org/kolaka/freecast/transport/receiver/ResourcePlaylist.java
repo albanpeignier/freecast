@@ -22,19 +22,23 @@
  */
 package org.kolaka.freecast.transport.receiver;
 
-import org.kolaka.freecast.resource.ResourceLocator;
-import org.kolaka.freecast.io.URLTextFile;
-import org.kolaka.freecast.io.TextFile;
-import org.apache.commons.lang.Validate;
-import org.apache.commons.logging.LogFactory;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.apache.commons.lang.Validate;
+import org.apache.commons.logging.LogFactory;
+import org.kolaka.freecast.io.TextFile;
+import org.kolaka.freecast.io.URLTextFile;
+import org.kolaka.freecast.resource.ResourceLocator;
+import org.kolaka.freecast.resource.URIParser;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
@@ -43,10 +47,20 @@ public class ResourcePlaylist implements Playlist {
 
 	private ResourceLocator locator;
 	private final List uris = new ArrayList();
+	
+	public ResourcePlaylist(ResourceLocator locator, List uris) {
+		Validate.allElementsOfType(uris, URI.class);
+		Validate.notEmpty(uris);
+		
+		this.locator = locator;
+		this.uris.addAll(uris);
+	}
+	
+	private static final URIParser PARSER = new URIParser();
 
-	public ResourcePlaylist(ResourceLocator locator, URI playlist) throws IOException {
+	public static ResourcePlaylist getInstance(ResourceLocator locator, URI playlist) throws IOException {
 		Validate.notNull(locator,"No specified ResourceLocator");
-        this.locator = locator;
+        List uris = new LinkedList();
 
 		TextFile textFile = new TextFile();
 		textFile.load(locator.openResource(playlist));
@@ -58,26 +72,28 @@ public class ResourcePlaylist implements Playlist {
 			if (content.startsWith("#") || content.length() == 0) {
 				continue;
 			}
-
+			
 			try {
-				URI lineURI = playlist.resolve(new URI(content));
+				URI lineURI = playlist.resolve(PARSER.parse(content));
 				uris.add(lineURI);
 			} catch (URISyntaxException e) {
 				String message = "invalid uri at " + playlist + ":" + line.getNumber();
-				LogFactory.getLog(getClass()).warn(message,e);
+				LogFactory.getLog(ResourcePlaylist.class).warn(message,e);
 			}
 		}
 
 		if (uris.isEmpty()) {
 			throw new IOException("invalid empty playlist at " + playlist);
 		}
+		
+		return new ResourcePlaylist(locator, uris);
 	}
 
 	public Entry get(int index) throws IOException {
 		final URI uri = (URI) uris.get(index);
 		return new Entry(uri.toString()) {
 				public InputStream openStream() throws IOException {
-					return locator.openResource(uri);
+					return new BufferedInputStream(locator.openResource(uri));
 				}
 		};
 		

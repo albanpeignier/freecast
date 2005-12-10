@@ -23,6 +23,7 @@
 
 package org.kolaka.freecast.transport.receiver;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.kolaka.freecast.ogg.OggPage;
 
 public class DefaultTimedOggPage implements TimedOggPage {
@@ -65,6 +66,10 @@ public class DefaultTimedOggPage implements TimedOggPage {
 
 	public int getLength() {
 		return page.getLength();
+	}
+	
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
 	}
 
 }

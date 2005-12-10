@@ -23,37 +23,33 @@
 
 package org.kolaka.freecast.transport.receiver.test;
 
-import java.io.IOException;
-import java.net.URL;
+
+import java.net.URI;
 
 import junit.framework.TestCase;
 
-import org.kolaka.freecast.transport.receiver.FilePlaylist;
-import org.kolaka.freecast.transport.receiver.Playlist;
+import org.kolaka.freecast.resource.URIParser;
 
-/**
- * 
- *
- * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
- */
-public class PlaylistOggSourceFactoryTest extends TestCase {
-    
-    public void testFilePlaylist() throws IOException {
-        URL resource = getClass().getResource("resources/playlist.m3u");
-        assertNotNull("Can't find the playlist test file", resource);
-        
-        FilePlaylist playlist = new FilePlaylist(resource);
-        URL baseURL = playlist.getBaseURL();
-        
-        URL expectedURLs[] = new URL[] {
-           new URL(baseURL, "relative file"), new URL("file:///absolute file")     
-        };
-        assertEquals(expectedURLs.length, playlist.size());
+public class URIParserTest extends TestCase {
 
-        for (int i=0; i < playlist.size(); i++) {
-            Playlist.Entry entry = playlist.get(i);
-            // TODO to be continue
-        }
-    }
+	public void testPathURIParsing() throws Exception {
+		testPathURIParsing("/directory/file with spaces.ogg", "/directory/file with spaces.ogg");
+		testPathURIParsing("/directory/filewithquote'.ogg","/directory/filewithquote'.ogg");
+		testPathURIParsing("file:\\c\\directory\\file.ogg", "/c/directory/file.ogg");
+	}
 
+	private void testPathURIParsing(String string, String expectedPath) throws Exception {
+		URI uri = new URIParser().parse(string);
+		assertEquals("wrong path into " + uri, expectedPath, uri.getPath());
+	}
+
+	public void testURIParsing() throws Exception {
+		testURIParsing("http://host/path",new URI("http","host","/path",null));
+	}
+	
+	private void testURIParsing(String string, URI expectedURI) throws Exception {
+		URI uri = new URIParser().parse(string);
+		assertEquals(expectedURI, uri);
+	}
+	
 }

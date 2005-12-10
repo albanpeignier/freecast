@@ -28,12 +28,13 @@ import java.net.URL;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.apache.commons.lang.Validate;
+import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.ogg.EncoderOggSource;
 import org.kolaka.freecast.ogg.OggSource;
+import org.kolaka.freecast.sound.AudioSystem;
 import org.kolaka.freecast.transport.receiver.Playlist.Entry;
 
 /**
@@ -72,14 +73,16 @@ public class PlaylistEncoderOggSourceFactory implements OggSourceFactory {
 
 		AudioInputStream audioInput;
 		try {
-			audioInput = AudioSystem.getAudioInputStream(readFormat,
-					AudioSystem.getAudioInputStream(entry.openStream()));
+			AudioInputStream originalAudioInput = AudioSystem.getAudioInputStream(entry.openStream());
+			audioInput = AudioSystem.getAudioInputStream(readFormat,originalAudioInput);
 		} catch (UnsupportedAudioFileException e) {
 			IOException exception = new IOException("Can't read "
 					+ entry.getDescription());
 			exception.initCause(e);
 			throw exception;
 		}
+		
+		LogFactory.getLog(getClass()).info("play " + entry.getDescription() + " [" + nextPlayedIndex + "]");
 
 		nextPlayedIndex = (nextPlayedIndex + 1) % playlist.size();
 		return new TimedOggSource(new EncoderOggSource(audioInput, format.getQuality()), format.getSampleRate());

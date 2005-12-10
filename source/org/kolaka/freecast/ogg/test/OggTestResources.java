@@ -4,7 +4,7 @@
  * This code was developped by Alban Peignier (http://people.tryphon.org/~alban/) 
  * and contributors (their names can be found in the CONTRIBUTORS file).
  *
- * Copyright (C) 2004-2005 Alban Peignier
+ * Copyright (C) 2004 Alban Peignier
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -20,29 +20,26 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package org.kolaka.freecast.resource;
 
-import java.io.IOException;
+package org.kolaka.freecast.ogg.test;
+
 import java.io.InputStream;
-import java.net.URI;
 import java.net.URL;
 
-/**
- * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
- */
-public class URLResourceLocator implements ResourceLocator {
+import org.apache.commons.lang.Validate;
 
-	public InputStream openResource(URI uri) throws Exception {
-		if (!uri.isAbsolute()) {
-			throw new NoSuchResourceException(uri);
-		}
-			  
-		try {
-			URL url = uri.toURL();
-			return url.openStream();
-		} catch (IOException e) {
-			throw new UnavailableResourceException(uri,e);
-		}
+public class OggTestResources {
+
+	public static URL getResource(String name) {
+		URL url = OggTestResources.class.getResource("resources/" + name);
+		Validate.notNull(url, "unknown test resource: " + name);
+		return url;
+	}
+
+	public static InputStream getResourceAsStream(String name) {
+		InputStream input = OggTestResources.class.getResourceAsStream("resources/" + name);
+		Validate.notNull(input, "unknown test resource: " + name);
+		return input;
 	}
 
 }

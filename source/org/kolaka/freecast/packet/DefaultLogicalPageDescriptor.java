@@ -23,6 +23,8 @@
 
 package org.kolaka.freecast.packet;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 /**
  * 
  *
@@ -79,6 +81,10 @@ public class DefaultLogicalPageDescriptor implements LogicalPageDescriptor {
     
     public int hashCode() {
         return (int) sequenceNumber;
+    }
+    
+    public String toString() {
+    		return ToStringBuilder.reflectionToString(this); 
     }
     
 }

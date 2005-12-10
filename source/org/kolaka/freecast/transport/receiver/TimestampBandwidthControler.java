@@ -23,44 +23,42 @@
 
 package org.kolaka.freecast.transport.receiver;
 
-import java.io.IOException;
-
+import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.time.DateUtils;
-import org.kolaka.freecast.ogg.OggPage;
-import org.kolaka.freecast.ogg.OggSource;
+import org.kolaka.freecast.packet.LogicalPage;
+import org.kolaka.freecast.timer.TimeBase;
 
-public class TimedOggSource implements OggSource {
+public class TimestampBandwidthControler implements BandwidthControler {
 
-	private static final int UNDEFINED = -1;
-	private long initialAbsoluteGranulePosition = UNDEFINED;
-	private final OggSource source;
-	private final int frameRate;
-	
-	public TimedOggSource(OggSource source, int frameRate) {
-		this.source = source;
-		this.frameRate = frameRate;
+	private TimeBase timeBase = TimeBase.DEFAULT;
+
+	public void setTimerBase(TimeBase timeBase) {
+		Validate.notNull(timeBase);
+		this.timeBase = timeBase;
 	}
 
-	public OggPage next() throws IOException {
-		OggPage sourcePage = source.next();
-		long timestamp = getTimestamp(sourcePage);
-		return new DefaultTimedOggPage(timestamp, sourcePage);
-	}
-	
-	private long getTimestamp(OggPage sourcePage) {
-		long absoluteGranulePosition = sourcePage.getAbsoluteGranulePosition();
-		
-		if (initialAbsoluteGranulePosition == UNDEFINED) {
-			initialAbsoluteGranulePosition = absoluteGranulePosition;
+	private static final long UNDEFINED = -1;
+
+	private long initialTimeMillis = UNDEFINED,
+			initialPageTimestamp = UNDEFINED;
+
+	public long getTimeDelay(LogicalPage page) {
+		long now = timeBase.currentTimeMillis();
+
+		if (initialPageTimestamp == UNDEFINED) {
+			initialPageTimestamp = page.getTimestamp();
+			initialTimeMillis = now;
+
 			return 0;
 		}
-		
-		long relativePosition = absoluteGranulePosition - initialAbsoluteGranulePosition;
-		return ((relativePosition * DateUtils.MILLIS_PER_SECOND) / frameRate);
-	}
 
-	public void close() throws IOException {
-		source.close();
+		long expectedPageTimeMillis = (page.getTimestamp() - initialPageTimestamp)
+				+ initialTimeMillis;
+		long delay = expectedPageTimeMillis - now;
+		if (delay > (DateUtils.MILLIS_PER_SECOND * 10)) {
+			throw new IllegalStateException("Delay shouldn't be so high (" + delay + ")");
+		}
+		return delay;
 	}
 
 }

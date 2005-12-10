@@ -23,14 +23,22 @@
 
 package org.kolaka.freecast.player;
 
+import java.util.Date;
+
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.SourceDataLine;
+
 import org.apache.commons.logging.LogFactory;
+import org.kolaka.freecast.ogg.OggDecoder;
 import org.kolaka.freecast.pipe.Consumer;
 import org.kolaka.freecast.pipe.ConsumerInputStreamFactory;
 import org.kolaka.freecast.service.BaseService;
 import org.kolaka.freecast.service.ControlException;
-
-import javax.sound.sampled.*;
-import java.util.Date;
+import org.kolaka.freecast.sound.AudioSystem;
+import org.kolaka.freecast.sound.StereoPCMAudioInputStream;
 
 /**
  * 
@@ -69,12 +77,12 @@ public class AudioPlayer extends BaseService implements InteractivePlayer {
         DataLine.Info info = new DataLine.Info(SourceDataLine.class,
                 OUTPUT_FORMAT);
 
-        if (!AudioSystem.isLineSupported(info)) {
+        if (!javax.sound.sampled.AudioSystem.isLineSupported(info)) {
             throw new ControlException("Can't find a compatible sound ouput");
         }
 
         try {
-            line = (SourceDataLine) AudioSystem.getLine(info);
+            line = (SourceDataLine) javax.sound.sampled.AudioSystem.getLine(info);
         } catch (LineUnavailableException e) {
             throw new ControlException("Can't obtain a sound ouput", e);
         }
@@ -162,23 +170,8 @@ public class AudioPlayer extends BaseService implements InteractivePlayer {
 
                 while (!stopped) {
                     if (audioInput == null) {
-                        AudioInputStream oggAudioInputStream = AudioSystem
-                                                .getAudioInputStream(consumerInputStreamFactory
-                                                        .next());
-                        AudioFormat oggFormat = oggAudioInputStream.getFormat();
-                        LogFactory.getLog(getClass()).debug(
-                        "sound stream started (format: " + oggFormat + ")");
-                        
-                        if (oggFormat.getChannels() == 1) {
-                            AudioFormat pcmFormat = 
-                                new AudioFormat(OUTPUT_FORMAT.getSampleRate(), OUTPUT_FORMAT.getSampleSizeInBits(), oggFormat.getChannels(),true, false);
-                            audioInput = new StereoPCMAudioInputStream(AudioSystem
-                                    .getAudioInputStream(
-                                            pcmFormat,
-                                            oggAudioInputStream));
-                        } else {
-                            audioInput = AudioSystem.getAudioInputStream(OUTPUT_FORMAT, oggAudioInputStream);
-                        }
+                        audioInput = OggDecoder.getInstance().decode(OUTPUT_FORMAT, consumerInputStreamFactory
+                                .next()); 
                     }
 
                     int read = audioInput.read(buffer, 0, buffer.length);

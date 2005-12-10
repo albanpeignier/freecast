@@ -26,7 +26,6 @@ package org.kolaka.freecast.ogg;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.kolaka.freecast.player.StereoPCMAudioInputStream;
 
 /**
  * 

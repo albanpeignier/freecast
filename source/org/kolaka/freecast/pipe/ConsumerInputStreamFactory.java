@@ -75,7 +75,7 @@ public class ConsumerInputStreamFactory {
         private int readIndex;
 
         Stream(LogicalPage readPage) {
-            Validate.isTrue(readPage.isFirstPage());
+            Validate.isTrue(readPage.isFirstPage(), "Read page isn't first page: " + readPage);
             this.readPage = readPage;
         }
 

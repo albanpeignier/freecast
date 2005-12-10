@@ -22,51 +22,116 @@
  */
 package org.kolaka.freecast.resource;
 
-import org.apache.commons.lang.SystemUtils;
-import org.apache.commons.lang.Validate;
-
-import java.io.InputStream;
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.net.URI;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.apache.commons.lang.SystemUtils;
+import org.apache.commons.lang.Validate;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public class FileResourceLocator implements ResourceLocator {
 
-	private final File baseDirectory;
+	private final FileResolver fileResolver;
 
 	public FileResourceLocator() {
-		this(new File(SystemUtils.USER_DIR));
+		fileResolver = new DefautFileResolver();
 	}
 
 	public FileResourceLocator(File baseDirectory) {
-		this.baseDirectory = baseDirectory;
+		fileResolver = new BasedFileResolver(baseDirectory);
 	}
 
 	public InputStream openResource(URI uri) throws Exception {
 		Validate.notNull(uri, "No specified URI");
 		if (uri.getScheme() != null) {
-			MalformedURIException.checkScheme(uri,"file");
+			MalformedURIException.checkScheme(uri, "file");
 		}
 
-		File file = findFile(uri);
-
+		File file = fileResolver.resolve(uri);
+		LogFactory.getLog(getClass()).debug("open " + file);
 		try {
-            return new FileInputStream(file);
-        } catch (FileNotFoundException e) {
-            throw new NoSuchResourceException(uri);
-        }
-    }
-
-	private File findFile(URI uri) {
-		if (uri.isAbsolute()) {
-			return new File(uri.getPath());
-		} else {
-			return new File(baseDirectory, uri.getPath());
+			return new FileInputStream(file);
+		} catch (FileNotFoundException e) {
+			throw new NoSuchResourceException(uri);
 		}
+	}
+
+	public static interface FileResolver {
+
+		File resolve(URI uri);
+
+	}
+	
+	public static class DefautFileResolver implements FileResolver {
+
+		/**
+		 * @param uri
+		 * @param path
+		 * @return
+		 */
+		private boolean isAbsolutePath(URI uri) {
+			String path = uri.getPath();
+			return path.startsWith(SystemUtils.FILE_SEPARATOR)
+					|| path.startsWith("/");
+		}
+
+		protected void listPossibleFiles(List candidates, String path) {
+
+		}
+		
+		protected String getPath(URI uri) {
+			String path = uri.getPath();
+			
+			return path;
+		}
+
+		public File resolve(URI uri) {
+			String path = uri.getPath();
+
+			if (isAbsolutePath(uri)) {
+				return new File(path);
+			}
+
+			List candidates = new LinkedList();
+			listPossibleFiles(candidates, path);
+
+			for (Iterator iter = candidates.iterator(); iter.hasNext();) {
+				File candidate = (File) iter.next();
+				if (candidate.exists()) {
+					return candidate;
+				}
+			}
+
+			return new File(path);
+		}
+
+	}
+
+	public static class BasedFileResolver extends DefautFileResolver {
+
+		private final File baseDirectory;
+
+		/**
+		 * @param baseDirectory
+		 */
+		public BasedFileResolver(File baseDirectory) {
+			this.baseDirectory = baseDirectory;
+		}
+
+		protected void listPossibleFiles(List candidates, String path) {
+			candidates.add(0, new File(baseDirectory, path));
+		}
+
 	}
 
 }
