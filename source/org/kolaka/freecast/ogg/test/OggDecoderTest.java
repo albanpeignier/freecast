@@ -65,11 +65,13 @@ public class OggDecoderTest extends TestCase {
 		}
 	}
 
+	/*
 	public void testTritonus() throws Exception {
 		if (isEnabled("tritonus")) {
 			testProvider(OggDecoder.createOggDecoder("tritonus"));
 		}
 	}
+	*/
 
 	public void testDefault() throws Exception {
 		testProvider(OggDecoder.getInstance());

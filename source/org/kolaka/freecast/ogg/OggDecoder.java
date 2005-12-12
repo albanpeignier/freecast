@@ -43,7 +43,7 @@ import org.kolaka.freecast.sound.StereoPCMAudioInputStream;
 public abstract class OggDecoder {
 
 	private static final List INSTANCE_NAMES = Arrays.asList(new String[] {
-			"javazoom", "tritonus" });
+			"javazoom" });
 
 	private static OggDecoder instance;
 
@@ -232,6 +232,7 @@ public abstract class OggDecoder {
 
 	}
 
+	/*
 	public static class Tritonus extends Direct {
 
 		public Tritonus() {
@@ -241,5 +242,6 @@ public abstract class OggDecoder {
 		}
 
 	}
+	*/
 
 }

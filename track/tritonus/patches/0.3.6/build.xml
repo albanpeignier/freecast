@@ -1,0 +1,100 @@
+<project default="dist">
+
+	<property name="dist.dir" value="${basedir}" />
+
+	<patternset id="libraries.natives">
+		<include name="*.so" />
+		<include name="*.dll" />
+	</patternset>
+
+	<target name="clean">
+		<delete dir="build" />
+		<delete>
+			<fileset dir="${dist.dir}">
+				<include name="*.jar" />
+				<patternset refid="libraries.natives" />
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="build" depends="build.classes, build.natives" />
+
+
+	<target name="build.classes">
+		<mkdir dir="build/classes" />
+		<javac destdir="build/classes" srcdir="source" />
+	</target>
+
+	<target name="build.natives" depends="build.classes">
+		<mkdir dir="build/natives/vorbis" />
+		<javah destdir="build/natives/vorbis" classpath="build/classes">
+			<class name="org.tritonus.lowlevel.ogg.Buffer" />
+			<class name="org.tritonus.lowlevel.ogg.Packet" />
+			<class name="org.tritonus.lowlevel.ogg.Page" />
+			<class name="org.tritonus.lowlevel.ogg.StreamState" />
+			<class name="org.tritonus.lowlevel.ogg.SyncState" />
+			<class name="org.tritonus.lowlevel.vorbis.Block" />
+			<class name="org.tritonus.lowlevel.vorbis.Comment" />
+			<class name="org.tritonus.lowlevel.vorbis.DspState" />
+			<class name="org.tritonus.lowlevel.vorbis.Info" />
+		</javah>
+		<copy todir="build/natives/vorbis" flatten="true">
+			<fileset dir="source">
+				<include name="**/ogg/native/*" />
+				<include name="**/vorbis/native/*" />
+			</fileset>
+		</copy>
+		<copy todir="build/natives/common" flatten="true">
+			<fileset dir="source">
+				<include name="**/tritonus/native/*" />
+			</fileset>
+		</copy>
+		<taskdef resource="cpptasks.tasks">
+			<classpath>
+				<pathelement location="lib/cpptasks.jar" />
+			</classpath>
+		</taskdef>
+
+		<dirname file="${java.home}" property="jdk.home" />
+		<property name="jdk.include.dir" value="${jdk.home}/include" />
+		<available property="jdk.include.dir.available" file="${jdk.include.dir}" type="dir" />
+		<fail unless="jdk.include.dir.available" message="Can't find ${jdk.include.dir}, use -Djdk.home to define JDK home" />
+
+		<cc debug="true" outtype="shared" objdir="build/natives/vorbis" outfile="tritonusvorbis">
+			<fileset dir="build/natives">
+				<include name="**/*.c" />
+			</fileset>
+			<includepath>
+				<pathelement path="${jdk.home}/include" />
+				<pathelement path="${jdk.home}/include/linux" />
+			</includepath>
+			<libset libs="ogg,vorbis,vorbisenc" />
+		</cc>
+		<move todir="build/natives/vorbis">
+			<fileset dir="${basedir}">
+				<patternset refid="libraries.natives" />
+			</fileset>
+		</move>
+		<delete file="history.xml" />
+	</target>
+
+	<target name="dist" depends="build">
+		<copy todir="${dist.dir}">
+			<fileset dir="build/natives/vorbis">
+				<patternset refid="libraries.natives" />
+			</fileset>
+		</copy>
+		<jar destfile="${dist.dir}/tritonus-vorbis.jar">
+			<fileset dir="build/classes">
+				<include name="org/tritonus/lowlevel/ogg/**" />
+				<include name="org/tritonus/lowlevel/vorbis/**" />
+			</fileset>
+		</jar>
+		<jar destfile="${dist.dir}/tritonus-share.jar">
+			<fileset dir="build/classes">
+				<include name="org/tritonus/share/**" />
+			</fileset>
+		</jar>
+	</target>
+
+</project>

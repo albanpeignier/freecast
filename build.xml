@@ -170,21 +170,18 @@
 				<lib-entry groupid="vorbisspi" version="1.0.2" artifactid="vorbisspi1.0.2" />
 				<lib-entry groupid="vorbisspi" version="1.0.2" artifactid="jogg-0.0.7" />
 				<lib-entry groupid="vorbisspi" version="1.0.2" artifactid="jorbis-0.0.15" />
-				<lib-entry groupid="tritonus" version="0.3.6" artifactid="tritonus_share" />
-				<lib-entry groupid="tritonus" version="0.3.6" artifactid="tritonus_core" />
+				<lib-entry groupid="vorbisspi" version="1.0.2" artifactid="tritonus_share" />
 			</library>
 
 			<library id="lib.mp3spi">
 				<lib-entry groupid="mp3spi" version="1.9.4" artifactid="mp3spi1.9.4" />
 				<lib-entry groupid="mp3spi" version="1.9.4" artifactid="jl1.0" />
-				<lib-entry groupid="tritonus" version="0.3.6" artifactid="tritonus_share" />
-				<lib-entry groupid="tritonus" version="0.3.6" artifactid="tritonus_core" />
+				<lib-entry groupid="mp3spi" version="1.9.4" artifactid="tritonus_share" />
 			</library>
 
 			<library id="lib.tritonus">
-				<lib-entry artifactid="tritonus_core" groupid="tritonus" version="0.3.6" />
-				<lib-entry artifactid="tritonus_share" groupid="tritonus" version="0.3.6" />
-				<lib-entry artifactid="tritonus_vorbis" groupid="tritonus" version="0.3.6" />
+				<lib-entry artifactid="tritonus-share" groupid="tritonus" version="0.3.6" />
+				<lib-entry artifactid="tritonus-vorbis" groupid="tritonus" version="0.3.6" />
 			</library>
 
 			<library id="lib.test">
@@ -235,7 +232,7 @@
 		</libraryDef>
 
 		<property name="track.docbook.dir" value="${track.dir}/docbook-xsl/releases/1.69.1" />
-		<property name="track.tritonus.dir" value="${track.dir}/tritonus/releases/0.3.6" />
+		<property name="track.tritonus.dir" value="${track.dir}/tritonus/patches/0.3.6" />
 	</target>
 
 	<target name="clean">
@@ -683,69 +680,6 @@
 			</classpath>
 			<sysproperty key="java.library.path" path="${track.tritonus.dir}" />
 		</junit>
-	</target>
-
-	<target name="test.oggdecoders" depends="build.test">
-		<property name="build.test.results.dir" value="build/test/results" />
-		<mkdir dir="${build.test.results.dir}" />
-		<property name="test.oggdecoders.resource" value="default" />
-
-		<macrodef name="junit.oggdecoders">
-			<attribute name="name" />
-			<element name="paths" optional="false" />
-			<element name="properties" optional="true" />
-			<sequential>
-				<path id="path.test.oggdecoders.@{name}">
-					<pathelement path="build/core/classes" />
-					<pathelement path="build/test/classes" />
-					<path refid="path.core" />
-					<paths />
-				</path>
-				<pathconvert property="path.test.oggdecoders.@{name}" 
-					refid="path.test.oggdecoders.@{name}">
-					<map from="${basedir}/" to=""/>
-				</pathconvert>
-				<!-- <echo message="path ${path.test.oggdecoders.@{name}}"/> -->
-				<junit printsummary="yes" haltonfailure="${test.haltonfailure}" includeantruntime="yes" fork="yes" showoutput="true">
-					<formatter type="plain" />
-					<test name="org.kolaka.freecast.ogg.test.OggDecoderTest" todir="${build.test.results.dir}" outfile="TEST-OggProviders-@{name}" />
-					<classpath refid="path.test.oggdecoders.@{name}"/>
-					<sysproperty key="log4.configuration" value="org/kolaka/freecast/test/log4j.xml" />
-					<sysproperty key="java.library.path" path="${track.tritonus.dir}" />
-					<sysproperty key="org.kolaka.freecast.ogg.test.OggProviderTest.resource" value="${test.oggdecoders.resource}" />
-					<properties />
-				</junit>
-			</sequential>
-		</macrodef>
-
-		<junit.oggdecoders name="all">
-			<paths>
-				<path refid="path.lib.vorbisspi" />
-				<path refid="path.lib.tritonus" />
-			</paths>
-		</junit.oggdecoders>
-		<junit.oggdecoders name="javazoom">
-			<paths>
-				<path refid="path.lib.vorbisspi" />
-			</paths>
-			<properties>
-				<sysproperty key="org.kolaka.freecast.ogg.test.OggDecoderTest.tritonus" value="false" />
-			</properties>
-		</junit.oggdecoders>
-		<junit.oggdecoders name="tritonus">
-			<paths>
-				<path refid="path.lib.tritonus" />
-			</paths>
-			<properties>
-				<sysproperty key="org.kolaka.freecast.ogg.test.OggDecoderTest.javazoom" value="false" />
-			</properties>
-		</junit.oggdecoders>
-		<junit.oggdecoders name="all-reverse">
-			<paths>
-				<path refid="path.lib.tritonus" />
-				<path refid="path.lib.vorbisspi" />
-			</paths>
-		</junit.oggdecoders>
 	</target>
 
 	<target name="dist" depends="dist.jar, dist.bin, dist.etc, dist.lib" description="Create the binaries distribution" />
