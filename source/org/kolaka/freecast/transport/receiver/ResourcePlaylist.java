@@ -45,8 +45,17 @@ import org.kolaka.freecast.resource.URIParser;
 public class ResourcePlaylist implements Playlist {
 
 	private ResourceLocator locator;
+	private URI definitionURI = URI.create("memory:/");
 
 	private final List uris = new ArrayList();
+	
+	public void setDefinitionURI(URI definitionURI) {
+		this.definitionURI = definitionURI;
+	}
+	
+	public URI getDefinitionURI() {
+		return definitionURI;
+	}
 
 	public ResourcePlaylist(ResourceLocator locator, List uris) {
 		Validate.allElementsOfType(uris, URI.class);
@@ -88,7 +97,9 @@ public class ResourcePlaylist implements Playlist {
 			throw new IOException("invalid empty playlist at " + playlist);
 		}
 
-		return new ResourcePlaylist(locator, uris);
+		ResourcePlaylist resourcePlaylist = new ResourcePlaylist(locator, uris);
+		resourcePlaylist.setDefinitionURI(playlist);
+		return resourcePlaylist;
 	}
 
 	public Entry get(int index) throws IOException {

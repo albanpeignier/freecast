@@ -156,9 +156,11 @@ public abstract class BaseFrame extends JFrame {
 
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
+			
+			private ActionEventFactory factory = new ActionEventFactory(BaseFrame.this);
+			
 			public void windowClosing(WindowEvent event) {
-				ActionEvent actionEvent = new ActionEvent(BaseFrame.this,
-						ActionEvent.ACTION_PERFORMED, "quit");
+				ActionEvent actionEvent = factory.createActionEvent();
 				quitAction.actionPerformed(actionEvent);
 			}
 		});

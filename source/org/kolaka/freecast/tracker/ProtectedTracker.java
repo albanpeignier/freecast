@@ -25,6 +25,7 @@ package org.kolaka.freecast.tracker;
 
 import java.util.Set;
 
+import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.node.NodeIdentifier;
 import org.kolaka.freecast.node.NodeStatus;
 import org.kolaka.freecast.peer.PeerReference;
@@ -58,7 +59,7 @@ public class ProtectedTracker implements Tracker {
 		} catch (TrackerException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new TrackerException(
+			throw createTrackerException(
 					"Unexpected exception, unable to register " + reference, e);
 		}
 	}
@@ -69,7 +70,7 @@ public class ProtectedTracker implements Tracker {
 		} catch (TrackerException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new TrackerException(
+			throw createTrackerException(
 					"Unexpected exception, unable to unregister " + identifier,
 					e);
 		}
@@ -81,7 +82,7 @@ public class ProtectedTracker implements Tracker {
 		} catch (TrackerException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new TrackerException(
+			throw createTrackerException(
 					"Unexpected exception, unable to refresh status" + status,
 					e);
 		}
@@ -93,10 +94,15 @@ public class ProtectedTracker implements Tracker {
 		} catch (TrackerException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new TrackerException(
-					"Unexpected exception, unable to retrive peer references "
+			throw createTrackerException(
+					"Unexpected exception, unable to retrieve peer references "
 							+ node, e);
 		}
+	}
+	
+	private TrackerException createTrackerException(String message, Throwable cause) {
+		LogFactory.getLog(getClass()).debug("create tracker exception with " + cause, cause);
+		return new TrackerException(message, cause);
 	}
 
 }

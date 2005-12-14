@@ -36,7 +36,7 @@ public class OggSocketSource extends OggStreamSource {
 	private final Socket socket;
 
 	public OggSocketSource(Socket socket) throws IOException {
-		super(socket.getInputStream());
+		super(socket.getInputStream(), socket.getRemoteSocketAddress().toString());
 		this.socket = socket;
 	}
 

@@ -31,4 +31,21 @@ import org.kolaka.freecast.service.ProducerService;
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public interface Receiver extends ProducerService {
+	
+	interface Auditor extends org.kolaka.freecast.auditor.Auditor {
+
+		public void receive(Source source);
+		
+		public void disconnected();
+		
+	}
+	
+	interface Source {
+		
+		public String getDescription();
+		
+	}
+	
+	public ReceiverConfiguration getReceiverConfiguration();
+	
 }

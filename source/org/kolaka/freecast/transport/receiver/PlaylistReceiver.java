@@ -34,11 +34,11 @@ import java.net.URL;
 public class PlaylistReceiver extends OggSourceFactoryReceiver {
 
 	public PlaylistReceiver(URL playlist) throws IOException {
-		super(new PlaylistOggSourceFactory(playlist));
+		super(new PlaylistOggSourceFactory(playlist), PlaylistReceiverConfiguration.getInstance(playlist));
 	}
 
 	public PlaylistReceiver(Playlist playlist) {
-		super(new PlaylistOggSourceFactory(playlist));
+		super(new PlaylistOggSourceFactory(playlist), PlaylistReceiverConfiguration.getInstance(playlist));
 	}
 
 }

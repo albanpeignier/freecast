@@ -194,4 +194,9 @@ public class PeerReceiverControler implements ReceiverControler, TimerUser,
 	public PeerReceiverControler(PeerControler peerControler) {
 		this.peerControler = peerControler;
 	}
+	
+	public ReceiverConfiguration getReceiverConfiguration() {
+		return receiver.getReceiverConfiguration();
+	}
+	
 }

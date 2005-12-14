@@ -33,9 +33,9 @@ import org.kolaka.freecast.packet.LogicalPage;
  */
 public class StaticBandwidthControler implements BandwidthControler {
 
-	private int bandwidth;
+	private long bandwidth;
 
-	public StaticBandwidthControler(int bandwidth) {
+	public StaticBandwidthControler(long bandwidth) {
 		Validate.isTrue(bandwidth > 0, "Invalid bandwidth: " + bandwidth);
 		this.bandwidth = bandwidth;
 	}

@@ -31,6 +31,8 @@ import java.io.IOException;
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public interface OggSource {
+	
+	public String getDescription();
 
 	public OggPage next() throws IOException;
 

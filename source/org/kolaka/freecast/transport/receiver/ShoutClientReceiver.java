@@ -33,7 +33,7 @@ import java.net.URL;
 public class ShoutClientReceiver extends OggSourceFactoryReceiver {
 
 	public ShoutClientReceiver(URL url) {
-		super(new ShoutClientOggSourceFactory(url));
+		super(new ShoutClientOggSourceFactory(url), new ShoutClientReceiverConfiguration(url));
 	}
 
 }

@@ -32,6 +32,7 @@ import org.kolaka.freecast.service.ControlException;
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public class NullReceiverControler implements ReceiverControler {
+	
 	public void setPipe(Pipe pipe) {
 	}
 
@@ -46,4 +47,9 @@ public class NullReceiverControler implements ReceiverControler {
 
 	public void dispose() throws ControlException {
 	}
+	
+	public ReceiverConfiguration getReceiverConfiguration() {
+		throw new UnsupportedOperationException();
+	}
+	
 }

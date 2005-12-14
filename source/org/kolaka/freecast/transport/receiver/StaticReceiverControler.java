@@ -63,4 +63,8 @@ public class StaticReceiverControler implements ReceiverControler {
 		return receiver;
 	}
 
+	public ReceiverConfiguration getReceiverConfiguration() {
+		return receiver.getReceiverConfiguration();
+	}
+
 }

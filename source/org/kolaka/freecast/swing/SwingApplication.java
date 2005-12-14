@@ -52,19 +52,7 @@ public abstract class SwingApplication extends Application {
 
 	protected void displayFatalError(Throwable cause) {
 		super.displayFatalError(cause);
-
-		String stackTrace = ExceptionUtils.getFullStackTrace(cause).replaceAll(
-				"\n", "<br>");
-
-		String message = "<html><p>FreeCast can't start because of the following error:</p>&nbsp;"
-				+ "<p><b>"
-				+ cause.getMessage()
-				+ "</b><br>"
-				+ stackTrace
-				+ "</p>&nbsp;"
-				+ "<p>If needed, visit http://www.freecast.org/support</p>&nbsp;";
-		JOptionPane.showMessageDialog(null, message,
-				"FreeCast Node can't start", JOptionPane.ERROR_MESSAGE);
+		new ErrorPane(null).show("FreeCast Node can't start", cause);
 	}
 
 	protected void displayHelper(String message, String usage) {

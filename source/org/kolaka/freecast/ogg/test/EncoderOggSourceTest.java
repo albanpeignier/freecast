@@ -47,7 +47,7 @@ public class EncoderOggSourceTest extends TestCase {
 		AudioInputStream audioInput = AudioSystem.getAudioInputStream(
 				pcmFormat, AudioSystem.getAudioInputStream(inputResources));
 
-		OggSource oggSource = new EncoderOggSource(audioInput, 0);
+		OggSource oggSource = new EncoderOggSource(audioInput, "test", 0);
 
 		ByteArrayOutputStream testOutput = new ByteArrayOutputStream();
 

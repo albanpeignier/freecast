@@ -35,25 +35,20 @@ public abstract class LoopService extends BaseService {
 
 	private Loop loop;
 
-	public void init() throws ControlException {
-		super.init();
-
-		loop = createLoop();
-	}
-
 	private static int threadIdentifier = 1;
 
 	public void start() throws ControlException {
 		super.start();
 
+		loop = createLoop();
+		if (loop == null) {
+			throw new ControlException("the created loop is null");
+		}
+
 		String threadName = ClassUtils.getShortClassName(getClass()) + "-"
 				+ threadIdentifier;
 		Thread thread = new Thread(new LoopRunnable(), threadName);
 		thread.start();
-	}
-
-	public void dispose() throws ControlException {
-		super.dispose();
 	}
 
 	protected abstract Loop createLoop();

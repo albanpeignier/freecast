@@ -33,7 +33,7 @@ import java.net.InetSocketAddress;
 public class ShoutServerReceiver extends OggSourceFactoryReceiver {
 
 	public ShoutServerReceiver(InetSocketAddress listenAddress) {
-		super(new ShoutServerOggSourceFactory(listenAddress));
+		super(new ShoutServerOggSourceFactory(listenAddress), new ShoutServerReceiverConfiguration(listenAddress));
 	}
 
 }

@@ -61,6 +61,10 @@ public class ConfigurableResources implements Resources {
 
 		setResourceLocator(ResourceLocators.getDefaultInstance());
 	}
+	
+	public Resources subset(String name) {
+		return new ConfigurableResources(configuration.subset(name));
+	}
 
 	public void setResourceLocator(ResourceLocator resourceLocator) {
 		Validate.notNull(resourceLocator);

@@ -26,7 +26,9 @@ package org.kolaka.freecast.transport.receiver;
 import java.io.IOException;
 
 import org.apache.commons.lang.Validate;
+import org.apache.commons.logging.LogConfigurationException;
 import org.apache.commons.logging.LogFactory;
+import org.kolaka.freecast.auditor.AuditorFactory;
 import org.kolaka.freecast.ogg.OggSource;
 import org.kolaka.freecast.packet.LogicalPage;
 import org.kolaka.freecast.packet.signer.PacketChecksummer;
@@ -43,6 +45,13 @@ import org.kolaka.freecast.service.LoopService;
 public abstract class OggSourceReceiver extends LoopService implements
 		SourceReceiver {
 
+	private final Auditor auditor;
+
+	OggSourceReceiver() {
+		auditor = (Auditor) AuditorFactory.getInstance().get(Auditor.class,
+				this);
+	}
+	
 	private Producer producer;
 
 	public void setProducer(Producer producer) {
@@ -67,31 +76,40 @@ public abstract class OggSourceReceiver extends LoopService implements
 		super.stop();
 	}
 
-	protected void receive(OggSource source) throws IOException {
-		LogFactory.getLog(getClass()).debug("start to receive Ogg stream");
+	protected void receive(final OggSource source) throws IOException {
+		LogFactory.getLog(getClass()).debug("start to receive Ogg stream " + source.getDescription());
 		pageFactory.setSource(source);
-
-		while (true) {
-			LogicalPage logicalPage = pageFactory.next();
-
-			if (logicalPage.isFirstPage()) {
-				LogFactory.getLog(getClass()).debug(
-						"new stream header created: " + logicalPage);
+		auditor.receive(new Source() {
+			public String getDescription() {
+				return source.getDescription();
 			}
+		});
+		
+		try {
+			while (!isStopped()) {
+				LogicalPage logicalPage = pageFactory.next();
 
-			long delay = bandwidthControler.getTimeDelay(logicalPage);
-			if (delay > 10) {
-				try {
-					Thread.sleep(delay);
-				} catch (InterruptedException e) {
-					IOException exception = new IOException(
-							"Can't make sleep the thread");
-					exception.initCause(e);
-					throw exception;
+				if (logicalPage.isFirstPage()) {
+					LogFactory.getLog(getClass()).debug(
+							"new stream header created: " + logicalPage);
 				}
-			}
 
-			Producers.pushAll(producer, logicalPage);
+				long delay = bandwidthControler.getTimeDelay(logicalPage);
+				if (delay > 10) {
+					try {
+						Thread.sleep(delay);
+					} catch (InterruptedException e) {
+						IOException exception = new IOException(
+								"Can't make sleep the thread");
+						exception.initCause(e);
+						throw exception;
+					}
+				}
+
+				Producers.pushAll(producer, logicalPage);
+			}
+		} finally {
+			auditor.disconnected();
 		}
 	}
 

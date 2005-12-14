@@ -50,7 +50,7 @@ public class DefaultNodeService extends LoopService implements NodeService {
 	/**
 	 * 
 	 */
-	protected Loop createLoop() {
+protected Loop createLoop() {
 		return new Loop() {
 			private int loopCount = 0;
 
@@ -64,10 +64,16 @@ public class DefaultNodeService extends LoopService implements NodeService {
 							"refresh node status " + status);
 
 					try {
-						tracker.refresh(status);
-					} catch (TrackerException e) {
+						try {
+							tracker.refresh(status);
+						} catch (TrackerException.UnknownNode e) {
+							LogFactory.getLog(getClass()).debug(
+									"the tracker forgot our existence, register again");
+							registerNode();
+						} 
+					} catch (Throwable t) {
 						LogFactory.getLog(getClass()).error(
-								"failed to refresh status", e);
+								"failed to refresh status", t);
 					}
 				}
 
@@ -75,7 +81,6 @@ public class DefaultNodeService extends LoopService implements NodeService {
 			}
 		};
 	}
-
 	private TrackerLocator trackerLocator = HttpTrackerLocator.getInstance();
 
 	private Tracker tracker;
@@ -116,11 +121,7 @@ public class DefaultNodeService extends LoopService implements NodeService {
 
 	public void start() throws ControlException {
 		try {
-			NodeIdentifier identifier = tracker.register(node
-					.getPeerReference());
-			LogFactory.getLog(getClass()).info(
-					"received node identifier " + identifier);
-			node.setIdentifier(identifier);
+			registerNode();
 		} catch (TrackerException e) {
 			throw new ControlException("Can't connect to the tracker "
 					+ trackerAddress, e);
@@ -134,6 +135,16 @@ public class DefaultNodeService extends LoopService implements NodeService {
 				createPeerProvider());
 
 		super.start();
+	}
+
+	/**
+	 * @throws TrackerException
+	 */
+	private void registerNode() throws TrackerException {
+		NodeIdentifier identifier = tracker.register(node.getPeerReference());
+		LogFactory.getLog(getClass()).info(
+				"received node identifier " + identifier);
+		node.setIdentifier(identifier);
 	}
 
 	protected PeerProvider createPeerProvider() {

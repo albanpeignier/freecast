@@ -90,7 +90,7 @@ public class PlaylistEncoderOggSourceFactory implements OggSourceFactory {
 								+ nextPlayedIndex + "]");
 
 		nextPlayedIndex = (nextPlayedIndex + 1) % playlist.size();
-		return new TimedOggSource(new EncoderOggSource(audioInput, format
+		return new TimedOggSource(new EncoderOggSource(audioInput, entry.getDescription(), format
 				.getQuality()), format.getSampleRate());
 	}
 

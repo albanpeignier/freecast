@@ -57,13 +57,15 @@ public class IconButton extends JLabel {
 	private void init() {
 		setOpaque(false);
 		addMouseListener(new MouseAdapter() {
+			
+			private ActionEventFactory factory = new ActionEventFactory(IconButton.this);
+			
 			public void mousePressed(MouseEvent event) {
 				if (action == null) {
 					return;
 				}
 				if (SwingUtilities.isLeftMouseButton(event)) {
-					action.actionPerformed(new ActionEvent(IconButton.this,
-							ActionEvent.ACTION_PERFORMED, "default"));
+					action.actionPerformed(factory.createActionEvent());
 					event.consume();
 				}
 			}

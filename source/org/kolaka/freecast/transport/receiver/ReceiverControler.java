@@ -32,4 +32,6 @@ import org.kolaka.freecast.transport.TransportControler;
  */
 public interface ReceiverControler extends TransportControler {
 
+	public ReceiverConfiguration getReceiverConfiguration();
+	
 }

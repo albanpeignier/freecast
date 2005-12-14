@@ -66,5 +66,9 @@ public class TimedOggSource implements OggSource {
 	public void close() throws IOException {
 		source.close();
 	}
+	
+	public String getDescription() {
+		return source.getDescription();
+	}
 
 }

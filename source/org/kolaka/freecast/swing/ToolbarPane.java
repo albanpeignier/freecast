@@ -98,10 +98,10 @@ public class ToolbarPane extends JPanel {
 		add(messageLabel, messageConstraints);
 
 		messageLabel.addMouseListener(new MouseAdapter() {
+			private ActionEventFactory factory = new ActionEventFactory(ToolbarPane.this);
 			public void mousePressed(MouseEvent e) {
 				if (SwingUtilities.isLeftMouseButton(e)) {
-					ActionEvent actionEvent = new ActionEvent(ToolbarPane.this,
-							ActionEvent.ACTION_PERFORMED, "message");
+					ActionEvent actionEvent = factory.createActionEvent();
 					messageAction.actionPerformed(actionEvent);
 				}
 			}

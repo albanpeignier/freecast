@@ -43,7 +43,7 @@ public class ConsumerInputStreamFactory {
 		this.consumer = consumer;
 	}
 
-	private long delayOnEmptyPipe = 5000;
+	private long delayOnEmptyPipe = 2000;
 
 	private Stream next = null;
 

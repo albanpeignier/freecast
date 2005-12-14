@@ -66,19 +66,13 @@ public class CompositeAuditorProvider implements AuditorProvider {
 				.getClassLoader(), new Class[] { auditorInterface }, handler);
 	}
 
-	private InvocationHandler handler = new InvocationHandler() {
-
-		public Object invoke(Object proxy, Method method, Object[] args)
-				throws Throwable {
-			if (method.getName().equals("toString")) {
-				return "CompositeAuditor" + auditors;
-			}
-
+	private InvocationHandler handler = new AuditInvocationHandler() {
+		
+		protected void invokeAuditMethod(Method method, Object[] args) throws Throwable {
 			for (Iterator iterator = auditors.iterator(); iterator.hasNext();) {
 				Auditor auditor = (Auditor) iterator.next();
 				method.invoke(auditor, args);
 			}
-			return null;
 		}
 
 	};

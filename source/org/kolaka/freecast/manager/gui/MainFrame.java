@@ -39,15 +39,21 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
+import org.apache.commons.lang.StringUtils;
 import org.kolaka.freecast.auditor.AuditorFactory;
 import org.kolaka.freecast.lang.mutable.ObservableValue;
+import org.kolaka.freecast.node.ConfigurableNode;
 import org.kolaka.freecast.node.Node;
 import org.kolaka.freecast.peer.PeerControler;
 import org.kolaka.freecast.peer.PeerReference;
+import org.kolaka.freecast.setup.SetupAction;
 import org.kolaka.freecast.swing.BaseFrame;
+import org.kolaka.freecast.swing.ConfigurableResources;
 import org.kolaka.freecast.swing.Resources;
 import org.kolaka.freecast.swing.ResourcesException;
 import org.kolaka.freecast.tracker.Tracker;
+import org.kolaka.freecast.transport.receiver.Receiver;
+import org.kolaka.freecast.transport.receiver.Receiver.Source;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
@@ -66,7 +72,9 @@ public class MainFrame extends BaseFrame {
 
 	private final Action emailHomepageAction;
 
-	public MainFrame(Resources resources, Tracker tracker, Node node,
+	private final Action setupAction;
+
+	public MainFrame(Resources resources, Tracker tracker, ConfigurableNode node,
 			InetSocketAddress publicHttpServer) throws ResourcesException {
 		super(resources);
 
@@ -76,6 +84,7 @@ public class MainFrame extends BaseFrame {
 		visitAction = new BrowseHomepageAction(resources, publicHttpServer);
 		emailHomepageAction = new EmailHomepageAction(resources,
 				publicHttpServer);
+		setupAction = new SetupAction(((ConfigurableResources) resources).subset("setup"), this, node);
 	}
 
 	protected JComponent createContentPane() {
@@ -94,7 +103,7 @@ public class MainFrame extends BaseFrame {
 	}
 
 	protected List createAdditionalActions() {
-		Action[] actions = new Action[] { visitAction, emailHomepageAction };
+		Action[] actions = new Action[] { visitAction, emailHomepageAction, setupAction };
 		return Arrays.asList(actions);
 	}
 
@@ -186,13 +195,31 @@ public class MainFrame extends BaseFrame {
 		 */
 		private static final long serialVersionUID = -7791975666622103751L;
 
+		private static final String UNCONNECTED = "waiting ..";
+		
 		public NodeControlPanel(Node node) {
 			super("Root Node");
+
+			final ObservableValue sourceReceiver = new ObservableValue(UNCONNECTED);
+			
+			Receiver.Auditor receiverAuditor = new Receiver.Auditor() {
+				public void receive(Source source) {
+					String sourceDescription = source.getDescription();
+					String sizedSourceDescription = StringUtils.abbreviate(sourceDescription, sourceDescription.length(), 15); 
+					sourceReceiver.setValue(sizedSourceDescription);
+				}
+				public void disconnected() {
+					sourceReceiver.setValue(UNCONNECTED);
+				}
+			};
+			AuditorFactory.getInstance().register(Receiver.Auditor.class, receiverAuditor);
+			
+			add("Receiving from", sourceReceiver);
 
 			final ObservableValue connectedPeers = new ObservableValue(
 					new Integer(0));
 
-			PeerControler.Auditor auditor = new PeerControler.Auditor() {
+			PeerControler.Auditor peerAuditor = new PeerControler.Auditor() {
 				public void acceptConnection(PeerReference reference) {
 
 				}
@@ -206,9 +233,10 @@ public class MainFrame extends BaseFrame {
 				}
 			};
 			AuditorFactory.getInstance().register(PeerControler.Auditor.class,
-					auditor);
+					peerAuditor);
 
 			add("Connected peers", connectedPeers);
+			
 		}
 
 	}

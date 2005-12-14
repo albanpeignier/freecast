@@ -60,5 +60,9 @@ public class MemoryOggSource implements OggSource {
 
 	public void close() throws IOException {
 	}
+	
+	public String getDescription() {
+		return "in-memory pages";
+	}
 
 }

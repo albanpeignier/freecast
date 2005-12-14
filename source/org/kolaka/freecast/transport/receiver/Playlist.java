@@ -24,6 +24,7 @@ package org.kolaka.freecast.transport.receiver;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 
 import org.apache.commons.lang.Validate;
 
@@ -35,6 +36,8 @@ public interface Playlist {
 	public Entry get(int index) throws IOException;
 
 	public int size();
+	
+	public URI getDefinitionURI();
 
 	public static abstract class Entry {
 

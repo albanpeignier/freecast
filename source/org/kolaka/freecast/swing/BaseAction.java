@@ -49,13 +49,18 @@ public abstract class BaseAction extends AbstractAction {
 	protected BaseAction(String name, Icon icon) {
 		super(name, icon);
 	}
-
-	/**
-	 * Defines an <code>BaseAction</code> object with the specified
-	 * description string and a default icon.
-	 */
+	
 	protected BaseAction(String name) {
 		super(name);
+		try {
+			init();
+		} catch (ResourcesException e) {
+			LogFactory.getLog(getClass()).error("Can't load action resources", e);
+		}
+	}
+	
+	protected void init() throws ResourcesException {
+		
 	}
 
 	protected Icon loadIcon(String resourceName) {

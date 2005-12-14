@@ -158,5 +158,11 @@ public class PeerReceiver extends LoopService implements Receiver {
 	public boolean isStopped() {
 		return super.isStopped();
 	}
+	
+	private static final ReceiverConfiguration CONFIGURATION = new PeerReceiverConfiguration();
+	
+	public ReceiverConfiguration getReceiverConfiguration() {
+		return CONFIGURATION;
+	}
 
 }

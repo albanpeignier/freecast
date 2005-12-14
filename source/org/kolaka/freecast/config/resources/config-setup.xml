@@ -1,0 +1,4 @@
+<configuration>
+  <xml fileName="defaults-setup.xml"/>
+  <xml fileName="defaults-gui.xml"/>
+</configuration>

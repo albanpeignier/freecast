@@ -23,6 +23,8 @@
 
 package org.kolaka.freecast.tracker;
 
+import org.kolaka.freecast.node.NodeIdentifier;
+
 /**
  * 
  * 
@@ -32,8 +34,25 @@ public class TrackerException extends Exception {
 
 	private static final long serialVersionUID = 3258417235302626101L;
 
+	protected TrackerException(String message) {
+		super(message);
+	}
+	
 	public TrackerException(String message, Throwable cause) {
 		super(message, cause);
+	}
+	
+	public static class UnknownNode extends TrackerException {
+		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -4938913796425309289L;
+
+		public UnknownNode(NodeIdentifier nodeIdentifier) {
+			super("Unknown node: " + nodeIdentifier);
+		}
+		
 	}
 
 }

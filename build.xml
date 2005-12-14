@@ -761,6 +761,20 @@
 				<filter token="app.mainclass" value="org.kolaka.freecast.manager.gui.Main" />
 			</filterset>
 		</copy>
+		
+		<copy tofile="dist/bin/freecast-setup" file="source/org/kolaka/freecast/freecast-template.sh">
+			<filterset>
+				<filter token="app.name" value="freecast" />
+				<filter token="app.mainclass" value="org.kolaka.freecast.setup.Main" />
+			</filterset>
+		</copy>
+		
+		<copy tofile="dist/bin/freecast-setup.bat" file="source/org/kolaka/freecast/freecast-template.bat">
+			<filterset>
+				<filter token="app.name" value="freecast" />
+				<filter token="app.mainclass" value="org.kolaka.freecast.setup.Main" />
+			</filterset>
+		</copy>
 
 		<copy todir="dist/bin" file="source/org/kolaka/freecast/classpath.bat" />
 

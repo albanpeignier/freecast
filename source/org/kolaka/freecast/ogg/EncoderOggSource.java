@@ -59,14 +59,23 @@ public class EncoderOggSource implements OggSource {
 
 	private final Uninterleaver uninterleaver;
 
-	public EncoderOggSource(AudioInputStream audioInput, float quality) {
+	private final String description;
+
+	public EncoderOggSource(AudioInputStream audioInput, String description, float quality) {
 		Validate.notNull(audioInput, "No specified AudioInputStream");
 		this.audioInput = audioInput;
+		
+		Validate.notEmpty(description, "No specified description");
+		this.description = description;
 
 		Validate.isTrue(quality >= 0, "quality can be be negative");
 		this.quality = quality;
 
 		this.uninterleaver = new Uninterleaver(audioInput.getFormat());
+	}
+	
+	public String getDescription() {
+		return description;
 	}
 
 	private boolean initialized;

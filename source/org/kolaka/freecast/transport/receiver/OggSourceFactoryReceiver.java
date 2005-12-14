@@ -26,6 +26,7 @@ package org.kolaka.freecast.transport.receiver;
 import java.io.EOFException;
 import java.io.IOException;
 
+import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang.time.StopWatch;
 import org.apache.commons.logging.LogFactory;
@@ -41,10 +42,19 @@ import org.kolaka.freecast.timer.DefaultTimer;
  */
 public class OggSourceFactoryReceiver extends OggSourceReceiver {
 
-	private OggSourceFactory factory;
+	private final OggSourceFactory factory;
 
-	public OggSourceFactoryReceiver(OggSourceFactory factory) {
+	private final ReceiverConfiguration configuration;
+	
+	public ReceiverConfiguration getReceiverConfiguration() {
+		return configuration;
+	}
+
+	public OggSourceFactoryReceiver(OggSourceFactory factory, ReceiverConfiguration configuration) {
+		Validate.notNull(factory, "No specified OggSourceFactory");
 		this.factory = factory;
+		Validate.notNull(configuration, "No specified ReceiverConfiguration");
+		this.configuration = configuration;
 	}
 
 	public void start() throws ControlException {
@@ -89,7 +99,7 @@ public class OggSourceFactoryReceiver extends OggSourceReceiver {
 				} catch (EOFException e) {
 					LogFactory.getLog(getClass()).debug(
 							"end of source " + oggSource, e);
-				} catch (IOException e) {
+				} catch (Exception e) {
 					LogFactory.getLog(getClass()).error(
 							"stream reception failed with  " + oggSource, e);
 				} finally {
@@ -114,5 +124,5 @@ public class OggSourceFactoryReceiver extends OggSourceReceiver {
 			}
 		};
 	}
-
+	
 }

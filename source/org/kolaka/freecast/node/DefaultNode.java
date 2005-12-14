@@ -28,6 +28,7 @@ import java.beans.PropertyChangeListener;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.node.event.NodeStatusListener;
@@ -101,7 +102,7 @@ public class DefaultNode implements ConfigurableNode {
 
 		peerControler.addPeerListener(new PeerPropertyChangeListener());
 
-		receiverControler.setPipe(pipe);
+		
 		senderControler.setPipe(pipe);
 
 		peerControler.setNodeStatusProvider(nodeStatusProvider);
@@ -160,6 +161,8 @@ public class DefaultNode implements ConfigurableNode {
 	}
 
 	public void setReceiverControler(ReceiverControler receiverControler) {
+		Validate.notNull(receiverControler, "No specified ReceiverControler");
+
 		if (receiverControler instanceof PeerReceiverControler) {
 			order = Order.UNKNOWN;
 		} else {
@@ -167,6 +170,7 @@ public class DefaultNode implements ConfigurableNode {
 		}
 
 		this.receiverControler = receiverControler;
+		receiverControler.setPipe(pipe);
 	}
 
 	public SenderControler getSenderControler() {

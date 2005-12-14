@@ -175,11 +175,11 @@ public class DefaultTracker implements Tracker {
 		return inetReference;
 	}
 
-	public void refresh(NodeStatus status) {
+	public void refresh(NodeStatus status) throws TrackerException.UnknownNode {
 		NodeEntry entry = (NodeEntry) entries.get(status.getIdentifier());
 
 		if (entry == null) {
-			throw new NotImplementedException("Unknown node " + status);
+			throw new TrackerException.UnknownNode(status.getIdentifier());
 		}
 
 		LogFactory.getLog(getClass()).trace("refresh " + status);
