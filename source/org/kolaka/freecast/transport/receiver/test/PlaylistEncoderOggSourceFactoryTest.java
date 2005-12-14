@@ -32,6 +32,7 @@ import junit.framework.TestCase;
 import org.kolaka.freecast.ogg.OggSource;
 import org.kolaka.freecast.ogg.test.OggTestResources;
 import org.kolaka.freecast.resource.ResourceLocators;
+import org.kolaka.freecast.resource.URIs;
 import org.kolaka.freecast.transport.receiver.EncoderFormat;
 import org.kolaka.freecast.transport.receiver.PlaylistEncoderOggSourceFactory;
 import org.kolaka.freecast.transport.receiver.ResourcePlaylist;
@@ -41,7 +42,7 @@ public class PlaylistEncoderOggSourceFactoryTest extends TestCase {
 
 	public void testPlay() throws Exception {
 		// experienced many problems with javazoom and sample.ogg ?!
-		URI resource = OggTestResources.getResource("sample.wav").toURI();
+		URI resource = URIs.toURI(OggTestResources.getResource("sample.wav"));
 
 		ResourcePlaylist playlist = new ResourcePlaylist(ResourceLocators
 				.getDefaultInstance(), Collections.singletonList(resource));

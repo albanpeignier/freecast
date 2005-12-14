@@ -29,6 +29,7 @@ import java.net.URL;
 
 import org.apache.commons.lang.UnhandledException;
 import org.apache.commons.lang.Validate;
+import org.kolaka.freecast.resource.URIs;
 
 public class PlaylistEncoderReceiverConfiguration extends ReceiverConfiguration {
 	
@@ -51,12 +52,7 @@ public class PlaylistEncoderReceiverConfiguration extends ReceiverConfiguration 
 	}
 
 	public static PlaylistEncoderReceiverConfiguration getInstance(URL url) {
-		URI uri;
-		try {
-			uri = url.toURI();
-		} catch (URISyntaxException e) {
-			throw new UnhandledException("Can't convert URL to URI", e);
-		}
+		URI uri = URIs.toURI(url);
 		return new PlaylistEncoderReceiverConfiguration(uri);
 	}
 	

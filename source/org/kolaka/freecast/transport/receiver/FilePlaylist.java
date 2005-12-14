@@ -25,7 +25,6 @@ package org.kolaka.freecast.transport.receiver;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -33,6 +32,7 @@ import java.util.List;
 
 import org.kolaka.freecast.io.URLTextFile;
 import org.kolaka.freecast.net.URLUtils;
+import org.kolaka.freecast.resource.URIs;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
@@ -48,13 +48,7 @@ public class FilePlaylist implements Playlist {
 	}
 
 	public FilePlaylist(URL playlist) throws IOException {
-		try {
-			definitionURI = playlist.toURI();
-		} catch (URISyntaxException e) {
-			IOException exception = new IOException("Can't determinate the URI of " + playlist);
-			exception.initCause(e);
-			throw exception;
-		}
+		definitionURI = URIs.toURI(playlist);
 		
 		URLTextFile textFile = new URLTextFile(playlist);
 		textFile.load();

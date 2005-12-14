@@ -21,35 +21,15 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.kolaka.freecast.tracker.test;
+package org.kolaka.freecast.resource;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
+import java.net.URI;
+import java.net.URL;
 
-import junit.framework.TestCase;
+public class URIs {
 
-import org.kolaka.freecast.peer.InetPeerReference;
-import org.kolaka.freecast.tracker.RMITracker;
-import org.kolaka.freecast.tracker.RemoteTracker;
-import org.kolaka.freecast.tracker.TrackerException;
-
-/**
- * 
- * 
- * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
- */
-public class RMITrackerTest extends TestCase {
-
-	public void testBindConnect() throws IOException, TrackerException {
-		InetSocketAddress address = new InetSocketAddress(50000 + (int) (Math
-				.random() * 1000));
-		RMITracker tracker = new RMITracker(address.getPort() + 1);
-
-		tracker.bind(address);
-
-		RemoteTracker remoteTracker = RMITracker.connect(address);
-		remoteTracker.register(InetPeerReference
-				.getInstance(new InetSocketAddress(4000)));
+	public static URI toURI(URL url) {
+		return URI.create(url.toExternalForm());
 	}
 
 }
