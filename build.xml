@@ -182,6 +182,7 @@
 			<library id="lib.tritonus">
 				<lib-entry artifactid="tritonus-share" groupid="tritonus" version="0.3.6" />
 				<lib-entry artifactid="tritonus-vorbis" groupid="tritonus" version="0.3.6" />
+				<lib-entry artifactid="tritonus-core" groupid="tritonus" version="0.3.6" />
 			</library>
 
 			<library id="lib.test">
