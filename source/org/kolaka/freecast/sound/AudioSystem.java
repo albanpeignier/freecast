@@ -41,7 +41,6 @@ import org.apache.commons.collections.Predicate;
 import org.apache.commons.logging.LogFactory;
 
 import sun.misc.Service;
-import sun.misc.ServiceConfigurationError;
 
 public class AudioSystem {
 
@@ -111,8 +110,7 @@ public class AudioSystem {
 	 * @return
 	 * @throws ServiceConfigurationError
 	 */
-	private static Iterator getProviders(Class providerClass)
-			throws ServiceConfigurationError {
+	private static Iterator getProviders(Class providerClass) {
 		List availables = new LinkedList();
 
 		for (Iterator iter = Service.providers(providerClass); iter.hasNext();) {

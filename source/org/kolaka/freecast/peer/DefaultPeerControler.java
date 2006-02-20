@@ -50,6 +50,7 @@ import org.kolaka.freecast.timer.Task;
 import org.kolaka.freecast.timer.Timer;
 import org.kolaka.freecast.timer.TimerUser;
 import org.kolaka.freecast.transport.PeerStatusMessage;
+import org.kolaka.freecast.peer.PeerControler.Auditor;
 
 /**
  * 

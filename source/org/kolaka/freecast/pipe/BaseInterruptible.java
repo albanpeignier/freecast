@@ -25,6 +25,7 @@ package org.kolaka.freecast.pipe;
 
 import java.util.HashSet;
 import java.util.Set;
+import org.kolaka.freecast.pipe.Interruptible.Listener;
 
 /**
  * 

@@ -45,10 +45,10 @@ import org.kolaka.freecast.service.LoopService;
 public abstract class OggSourceReceiver extends LoopService implements
 		SourceReceiver {
 
-	private final Auditor auditor;
+	private final Receiver.Auditor auditor;
 
 	OggSourceReceiver() {
-		auditor = (Auditor) AuditorFactory.getInstance().get(Auditor.class,
+		auditor = (Receiver.Auditor) AuditorFactory.getInstance().get(Receiver.Auditor.class,
 				this);
 	}
 	

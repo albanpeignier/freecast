@@ -34,6 +34,8 @@ import org.kolaka.freecast.ogg.OggSource;
 import org.kolaka.freecast.service.ControlException;
 import org.kolaka.freecast.service.Startable;
 import org.kolaka.freecast.timer.DefaultTimer;
+import org.kolaka.freecast.service.LoopService.Loop;
+import org.kolaka.freecast.service.LoopService.LoopInterruptedException;
 
 /**
  * 

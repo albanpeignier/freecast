@@ -102,9 +102,9 @@ public class ResourcePlaylist implements Playlist {
 		return resourcePlaylist;
 	}
 
-	public Entry get(int index) throws IOException {
+	public Playlist.Entry get(int index) throws IOException {
 		final URI uri = (URI) uris.get(index);
-		return new Entry(uri.toString()) {
+		return new Playlist.Entry(uri.toString()) {
 			public InputStream openStream() throws IOException {
 				return new BufferedInputStream(locator.openResource(uri));
 			}

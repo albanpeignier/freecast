@@ -77,13 +77,13 @@ public abstract class LoopService extends BaseService {
 
 	}
 
-	protected static interface Loop {
+	public static interface Loop {
 
 		public long loop() throws LoopInterruptedException;
 
 	}
 
-	protected static class LoopInterruptedException extends Exception {
+	public static class LoopInterruptedException extends Exception {
 
 		private static final long serialVersionUID = 3258415044936217397L;
 
