@@ -79,11 +79,14 @@ public abstract class OggSourceReceiver extends LoopService implements
 	protected void receive(final OggSource source) throws IOException {
 		LogFactory.getLog(getClass()).debug("start to receive Ogg stream " + source.getDescription());
 		pageFactory.setSource(source);
-		auditor.receive(new Source() {
+
+		Receiver.Source receiverSource = new Receiver.Source() {
 			public String getDescription() {
 				return source.getDescription();
 			}
-		});
+		};
+
+		auditor.receive(receiverSource);
 		
 		try {
 			while (!isStopped()) {

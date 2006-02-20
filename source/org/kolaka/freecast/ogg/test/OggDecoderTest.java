@@ -26,6 +26,7 @@ package org.kolaka.freecast.ogg.test;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Iterator;
+import java.util.List;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
@@ -41,22 +42,22 @@ import org.kolaka.freecast.ogg.OggDecoder;
 import org.kolaka.freecast.resource.ResourceLocator;
 import org.kolaka.freecast.resource.ResourceLocators;
 
-import sun.misc.Service;
+import org.apache.commons.discovery.tools.Service;
 
 public class OggDecoderTest extends TestCase {
 
 	public void testConversionProviderAvailable() {
-		Iterator iterator = Service.providers(FormatConversionProvider.class);
-		assertTrue(iterator.hasNext());
-		LogFactory.getLog(getClass()).debug(
-				"converters: " + IteratorUtils.toList(iterator));
+	    testAvailable(FormatConversionProvider.class);
 	}
 
 	public void testFileReaderAvailable() {
-		Iterator iterator = Service.providers(AudioFileReader.class);
-		assertTrue(iterator.hasNext());
-		LogFactory.getLog(getClass()).debug(
-				"filereaders: " + IteratorUtils.toList(iterator));
+	    testAvailable(AudioFileReader.class);
+	}
+
+    private void testAvailable(Class spi) {
+		List providers = IteratorUtils.toList(IteratorUtils.asIterator(Service.providers(spi)));
+		assertFalse(providers.isEmpty());
+		LogFactory.getLog(getClass()).debug("implementation of " + spi + ": " + providers);
 	}
 
 	public void testJavaZoom() throws Exception {

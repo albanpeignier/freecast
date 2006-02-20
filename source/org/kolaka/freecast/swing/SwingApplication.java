@@ -117,11 +117,20 @@ public abstract class SwingApplication extends Application {
 
 	protected Action createQuitAction(Resources resources)
 			throws ResourcesException {
-		return new QuitAction(resources) {
-			protected void exit() {
-				SwingApplication.this.exit();
-			}
-		};
+		return new SwingQuitAction(resources);
+	}
+
+	class SwingQuitAction extends QuitAction {
+
+		SwingQuitAction(Resources resources) throws ResourcesException {
+		  super(resources);
+		}
+
+		protected void exit() {
+			SwingApplication.this.exit();
+		}
+
+
 	}
 
 }

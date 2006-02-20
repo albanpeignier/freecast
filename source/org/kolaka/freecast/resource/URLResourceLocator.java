@@ -32,16 +32,16 @@ import java.net.URL;
  */
 public class URLResourceLocator implements ResourceLocator {
 
-	public InputStream openResource(URI uri) throws Exception {
+	public InputStream openResource(URI uri) throws ResourceLocator.Exception {
 		if (!uri.isAbsolute()) {
-			throw new NoSuchResourceException(uri);
+			throw new ResourceLocator.NoSuchResourceException(uri);
 		}
 
 		try {
 			URL url = uri.toURL();
 			return url.openStream();
 		} catch (IOException e) {
-			throw new UnavailableResourceException(uri, e);
+			throw new ResourceLocator.UnavailableResourceException(uri, e);
 		}
 	}
 

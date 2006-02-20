@@ -30,3 +30,4 @@ commons-digester/releases/1.7=tgz:${mirror.apache}/jakarta/commons/digester/bina
 commons-beanutils/releases/1.7.0=tgz:${mirror.apache}/jakarta/commons/beanutils/binaries/commons-beanutils-1.7.0.tar.gz!commons-beanutils-1.7.0
 xalan/releases/2.7.0=tgz:${mirror.apache}/xml/xalan-j/binaries/xalan-j_2_7_0-bin.tar.gz!xalan-j_2_7_0
 jdic/releases/0.9=zip:${mirror.kolaka}/track/tray/jdic-0.9-bin-cross-platform.zip!jdic-0.9-bin-cross-platform
+commons-discovery/releases/0.2=tgz:${mirror.apache}/jakarta/commons/discovery/binaries/commons-discovery-0.2.tar.gz!commons-discovery-0.2

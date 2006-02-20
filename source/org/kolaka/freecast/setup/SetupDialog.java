@@ -292,9 +292,8 @@ public class SetupDialog extends JDialog {
 				modifiedReceiverConfiguration.setValue(configuration);
 			}
 		});
-		
-		Action chooseFileAction = new BaseAction("Choose file") {
-			private FileFilter filter = new FileFilter() {
+
+			final FileFilter filter = new FileFilter() {
 					public boolean accept(File f) {
 						String filename = f.getName().toLowerCase();
 					return filename.endsWith(".m3u");
@@ -303,6 +302,8 @@ public class SetupDialog extends JDialog {
 						return "M3U playlist file";
 					}
 			};
+		
+		Action chooseFileAction = new BaseAction("Choose file") {
 
 			public void actionPerformed(ActionEvent e) {
 				PlaylistEncoderReceiverConfiguration configuration =

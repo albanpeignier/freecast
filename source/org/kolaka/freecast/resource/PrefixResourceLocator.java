@@ -44,7 +44,7 @@ public class PrefixResourceLocator implements ResourceLocator {
 		this.locator = locator;
 	}
 
-	public InputStream openResource(URI uri) throws Exception {
+	public InputStream openResource(URI uri) throws ResourceLocator.Exception {
 		URI openedURI = prefix.resolve(uri);
 		return locator.openResource(openedURI);
 	}

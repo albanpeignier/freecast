@@ -50,10 +50,10 @@ public class FileResourceLocator implements ResourceLocator {
 		fileResolver = new BasedFileResolver(baseDirectory);
 	}
 
-	public InputStream openResource(URI uri) throws Exception {
+	public InputStream openResource(URI uri) throws ResourceLocator.Exception {
 		Validate.notNull(uri, "No specified URI");
 		if (uri.getScheme() != null) {
-			MalformedURIException.checkScheme(uri, "file");
+			ResourceLocator.MalformedURIException.checkScheme(uri, "file");
 		}
 
 		File file = fileResolver.resolve(uri);
@@ -61,7 +61,7 @@ public class FileResourceLocator implements ResourceLocator {
 		try {
 			return new FileInputStream(file);
 		} catch (FileNotFoundException e) {
-			throw new NoSuchResourceException(uri);
+			throw new ResourceLocator.NoSuchResourceException(uri);
 		}
 	}
 

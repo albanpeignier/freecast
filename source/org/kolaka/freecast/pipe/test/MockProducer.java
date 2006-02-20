@@ -27,6 +27,7 @@ import org.apache.commons.lang.NotImplementedException;
 import org.kolaka.freecast.pipe.Producer;
 
 import com.mockobjects.MockObject;
+import org.kolaka.freecast.service.Service;
 
 /**
  * 
@@ -35,7 +36,7 @@ import com.mockobjects.MockObject;
  */
 public abstract class MockProducer extends MockObject implements Producer {
 
-	public void add(Listener listener) {
+	public void add(Service.Listener listener) {
 		throw new NotImplementedException(getClass());
 	}
 
@@ -47,7 +48,7 @@ public abstract class MockProducer extends MockObject implements Producer {
 		throw new NotImplementedException(getClass());
 	}
 
-	public void remove(Listener listener) {
+	public void remove(Service.Listener listener) {
 		throw new NotImplementedException(getClass());
 	}
 

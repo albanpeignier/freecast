@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -40,7 +41,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.logging.LogFactory;
 
-import sun.misc.Service;
+import org.apache.commons.discovery.tools.Service;
 
 public class AudioSystem {
 
@@ -113,9 +114,9 @@ public class AudioSystem {
 	private static Iterator getProviders(Class providerClass) {
 		List availables = new LinkedList();
 
-		for (Iterator iter = Service.providers(providerClass); iter.hasNext();) {
+		for (Enumeration iter = Service.providers(providerClass); iter.hasMoreElements();) {
 			try {
-				availables.add(iter.next());
+				availables.add(iter.nextElement());
 			} catch (Throwable t) {
 				LogFactory.getLog(AudioSystem.class).error(
 						"can't load one of the provider for "

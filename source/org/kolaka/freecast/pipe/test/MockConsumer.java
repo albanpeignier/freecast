@@ -25,6 +25,7 @@ package org.kolaka.freecast.pipe.test;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.kolaka.freecast.pipe.Consumer;
+import org.kolaka.freecast.service.Service;
 
 /**
  * 
@@ -40,11 +41,11 @@ public abstract class MockConsumer implements Consumer {
 		throw new NotImplementedException(getClass());
 	}
 
-	public void add(Listener listener) {
+	public void add(Service.Listener listener) {
 		throw new NotImplementedException(getClass());
 	}
 
-	public void remove(Listener listener) {
+	public void remove(Service.Listener listener) {
 		throw new NotImplementedException(getClass());
 	}
 }

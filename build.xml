@@ -106,8 +106,9 @@
 	</target>
 
 	<target name="prepare.track" depends="prepare.track.commons-vfs, prepare.track.file">
-		<echo message="updating the track directory ..." />
-		<v-copy src="virtual:${prepare.track.file}" destdir="track" />
+		<property name="prepare.track.includes" value="**"/>
+		<echo message="updating the track directory ... (${prepare.track.includes})" />
+		<v-copy src="virtual:${prepare.track.file}" destdir="track" includes="${prepare.track.includes}" />
 	</target>
 
 	<target name="prepare.track.optional.check">
@@ -197,6 +198,7 @@
 				<lib-entry groupid="commons-cli" version="1.0" />
 				<lib-entry groupid="commons-codec" version="1.3" />
 				<lib-entry groupid="commons-io" version="1.0" />
+				<lib-entry groupid="commons-discovery" version="0.2" />
 				<lib-entry groupid="log4j" version="1.2.9" />
 				<lib-entry groupid="commons-lang" version="nightly-20041229" artifactid="commons-lang-2.0" />
 				<lib-entry groupid="commons-configuration" version="nightly-20050307" artifactid="commons-configuration-1.1RC2" />
@@ -205,6 +207,7 @@
 
 			<library id="build">
 				<library refid="core" />
+				<lib-entry groupid="commons-digester" version="1.7" />
 				<lib-entry groupid="commons-httpclient" version="3.0-rc3" />
 				<lib-entry groupid="cortado" version="0.1.0" artifactid="cortado-ovt-0.1.0" />
 				<lib-entry groupid="jdic" version="0.9" />
@@ -216,7 +219,6 @@
 
 			<library id="runtime">
 				<library refid="build" />
-				<lib-entry groupid="commons-digester" version="1.7" />
 				<lib-entry groupid="commons-beanutils" version="1.7.0" />
 				<library refid="lib.mp3spi"/>
 			</library>

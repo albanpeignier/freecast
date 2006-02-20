@@ -38,15 +38,15 @@ public class ClassLoaderResourceLocator implements ResourceLocator {
 		this.classLoader = classLoader;
 	}
 
-	public InputStream openResource(URI uri) throws Exception {
+	public InputStream openResource(URI uri) throws ResourceLocator.Exception {
 		String path = uri.getPath();
 		if (StringUtils.isEmpty(path)) {
-			throw new MalformedURIException(uri);
+			throw new ResourceLocator.MalformedURIException(uri);
 		}
 
 		InputStream input = classLoader.getResourceAsStream(path);
 		if (input == null) {
-			throw new NoSuchResourceException(uri);
+			throw new ResourceLocator.NoSuchResourceException(uri);
 		}
 		return input;
 	}

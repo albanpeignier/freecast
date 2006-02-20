@@ -85,14 +85,14 @@ public class HttpResourceLocator implements ResourceLocator {
 
 	private Set cachedURIs = new TreeSet();
 
-	public InputStream openResource(URI uri) throws Exception {
-		MalformedURIException.checkScheme(uri, "http");
+	public InputStream openResource(URI uri) throws ResourceLocator.Exception {
+		ResourceLocator.MalformedURIException.checkScheme(uri, "http");
 
 		URL url;
 		try {
 			url = uri.toURL();
 		} catch (MalformedURLException e) {
-			throw new MalformedURIException(uri);
+			throw new ResourceLocator.MalformedURIException(uri);
 		}
 
 		if (cachedURIs.contains(uri)) {
@@ -127,7 +127,7 @@ public class HttpResourceLocator implements ResourceLocator {
 		try {
 			statusCode = httpClient.executeMethod(httpRetrieve);
 		} catch (IOException e) {
-			throw new UnavailableResourceException(uri, e);
+			throw new ResourceLocator.UnavailableResourceException(uri, e);
 		}
 
 		LogFactory.getLog(getClass()).debug(
@@ -140,18 +140,18 @@ public class HttpResourceLocator implements ResourceLocator {
 		} else if (statusCode == HttpStatus.SC_NOT_MODIFIED) {
 			resourceInput = loadCachedResource(uri);
 		} else if (statusCode == HttpStatus.SC_NOT_FOUND) {
-			throw new NoSuchResourceException(uri);
+			throw new ResourceLocator.NoSuchResourceException(uri);
 		} else {
 			HttpException exception = new HttpException("Can't connect to "
 					+ url + " (" + httpRetrieve.getStatusLine() + ")");
-			throw new UnavailableResourceException(uri, exception);
+			throw new ResourceLocator.UnavailableResourceException(uri, exception);
 		}
 
 		return resourceInput;
 	}
 
 	private InputStream retrieveResource(URI uri, GetMethod httpRetrieve)
-			throws Exception {
+			throws ResourceLocator.Exception {
 		try {
 			InputStream httpRetrieveInput = httpRetrieve
 					.getResponseBodyAsStream();
@@ -172,13 +172,13 @@ public class HttpResourceLocator implements ResourceLocator {
 				return httpRetrieveInput;
 			}
 		} catch (IOException e) {
-			throw new UnavailableResourceException(uri, e);
+			throw new ResourceLocator.UnavailableResourceException(uri, e);
 		} catch (ParseException e) {
-			throw new UnavailableResourceException(uri, e);
+			throw new ResourceLocator.UnavailableResourceException(uri, e);
 		}
 	}
 
-	private InputStream loadCachedResource(URI uri) throws Exception {
+	private InputStream loadCachedResource(URI uri) throws ResourceLocator.Exception {
 		try {
 			LogFactory.getLog(getClass()).debug(
 					"use the cached content of " + uri);
@@ -186,7 +186,7 @@ public class HttpResourceLocator implements ResourceLocator {
 			cachedURIs.add(uri); // reminds that URI has been cached
 			return input;
 		} catch (IOException e) {
-			throw new UnavailableResourceException(uri, e);
+			throw new ResourceLocator.UnavailableResourceException(uri, e);
 		}
 	}
 

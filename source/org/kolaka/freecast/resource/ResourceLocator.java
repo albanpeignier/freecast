@@ -33,7 +33,7 @@ import org.apache.commons.lang.Validate;
  */
 public interface ResourceLocator {
 
-	public InputStream openResource(URI uri) throws Exception;
+	public InputStream openResource(URI uri) throws ResourceLocator.Exception;
 
 	abstract class Exception extends IOException {
 

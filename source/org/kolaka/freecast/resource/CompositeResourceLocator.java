@@ -42,7 +42,7 @@ public class CompositeResourceLocator implements ResourceLocator {
 		resourceLocators.add(resourceLocator);
 	}
 
-	public InputStream openResource(URI uri) throws Exception {
+	public InputStream openResource(URI uri) throws ResourceLocator.Exception {
 		Validate.notNull(uri, "No specified URI");
 
 		for (Iterator iterator = resourceLocators.iterator(); iterator
@@ -56,7 +56,7 @@ public class CompositeResourceLocator implements ResourceLocator {
 				continue;
 			}
 		}
-		throw new UnavailableResourceException(uri);
+		throw new ResourceLocator.UnavailableResourceException(uri);
 	}
 
 }
