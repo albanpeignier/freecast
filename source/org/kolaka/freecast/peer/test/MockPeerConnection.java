@@ -23,7 +23,8 @@
 
 package org.kolaka.freecast.peer.test;
 
-import org.kolaka.freecast.peer.PeerConnection;
+import org.kolaka.freecast.peer.BasePeerConnection;
+import org.kolaka.freecast.peer.PeerConnection.Type;
 import org.kolaka.freecast.transport.MessageReader;
 import org.kolaka.freecast.transport.MessageWriter;
 
@@ -36,7 +37,7 @@ import com.mockobjects.util.Verifier;
  * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
-public class MockPeerConnection extends PeerConnection implements Verifiable {
+public class MockPeerConnection extends BasePeerConnection implements Verifiable {
 
 	public MockPeerConnection(Type type) {
 		super(type);

@@ -26,15 +26,16 @@ package org.kolaka.freecast.transport;
 import java.io.IOException;
 import java.net.Socket;
 
-import org.kolaka.freecast.peer.PeerConnection;
+import org.kolaka.freecast.peer.BasePeerConnection;
 import org.kolaka.freecast.peer.PeerConnectionException;
+import org.kolaka.freecast.peer.PeerConnection.Type;
 
 /**
  * 
  * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
-public class SocketPeerConnection extends PeerConnection {
+public class SocketPeerConnection extends BasePeerConnection {
 
 	private Socket socket;
 
