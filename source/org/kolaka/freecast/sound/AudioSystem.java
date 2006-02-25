@@ -26,8 +26,8 @@ package org.kolaka.freecast.sound;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -39,9 +39,8 @@ import javax.sound.sampled.spi.FormatConversionProvider;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.apache.commons.logging.LogFactory;
-
 import org.apache.commons.discovery.tools.Service;
+import org.apache.commons.logging.LogFactory;
 
 public class AudioSystem {
 
@@ -109,7 +108,6 @@ public class AudioSystem {
 	 * @param providerClass
 	 *            TODO
 	 * @return
-	 * @throws ServiceConfigurationError
 	 */
 	private static Iterator getProviders(Class providerClass) {
 		List availables = new LinkedList();

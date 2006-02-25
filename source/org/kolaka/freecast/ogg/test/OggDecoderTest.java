@@ -25,7 +25,6 @@ package org.kolaka.freecast.ogg.test;
 
 import java.io.InputStream;
 import java.net.URI;
-import java.util.Iterator;
 import java.util.List;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
@@ -37,12 +36,11 @@ import javax.sound.sampled.spi.FormatConversionProvider;
 import junit.framework.TestCase;
 
 import org.apache.commons.collections.IteratorUtils;
+import org.apache.commons.discovery.tools.Service;
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.ogg.OggDecoder;
 import org.kolaka.freecast.resource.ResourceLocator;
 import org.kolaka.freecast.resource.ResourceLocators;
-
-import org.apache.commons.discovery.tools.Service;
 
 public class OggDecoderTest extends TestCase {
 

@@ -27,7 +27,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.lang.ClassUtils;
 import org.kolaka.freecast.lang.mutable.ObservableValue;
 import org.kolaka.freecast.swing.ConfigurableResources;
 import org.kolaka.freecast.swing.Resources;

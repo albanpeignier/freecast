@@ -25,8 +25,8 @@ package org.kolaka.freecast.player;
 
 import org.kolaka.freecast.pipe.Consumer;
 import org.kolaka.freecast.service.ControlException;
-import org.kolaka.freecast.service.Service.Listener;
-import org.kolaka.freecast.service.Startable.Status;
+import org.kolaka.freecast.service.Service;
+import org.kolaka.freecast.service.Startable;
 
 /**
  * 
@@ -39,11 +39,11 @@ public class NullPlayer implements Player {
 		consumer.close();
 	}
 
-	public void add(Listener listener) {
+	public void add(Service.Listener listener) {
 
 	}
 
-	public void remove(Listener listener) {
+	public void remove(Service.Listener listener) {
 
 	}
 
@@ -63,8 +63,8 @@ public class NullPlayer implements Player {
 
 	}
 
-	public Status getStatus() {
-		return Status.CREATED;
+	public Startable.Status getStatus() {
+		return Startable.Status.CREATED;
 	}
 
 	public PlayerStatus getPlayerStatus() {

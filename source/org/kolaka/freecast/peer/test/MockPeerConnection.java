@@ -24,7 +24,6 @@
 package org.kolaka.freecast.peer.test;
 
 import org.kolaka.freecast.peer.BasePeerConnection;
-import org.kolaka.freecast.peer.PeerConnection.Type;
 import org.kolaka.freecast.transport.MessageReader;
 import org.kolaka.freecast.transport.MessageWriter;
 

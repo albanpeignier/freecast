@@ -25,8 +25,6 @@ package org.kolaka.freecast.service;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.logging.LogFactory;
-import org.kolaka.freecast.service.Service.Listener;
-import org.kolaka.freecast.service.Startable.Status;
 
 /**
  * 
@@ -35,7 +33,7 @@ import org.kolaka.freecast.service.Startable.Status;
  */
 public class BaseService implements Service {
 
-	private Status status = Status.CREATED;
+	private Startable.Status status = Startable.Status.CREATED;
 
 	public BaseService() {
 
@@ -43,11 +41,11 @@ public class BaseService implements Service {
 
 	private ServiceListenerSupport support = new ServiceListenerSupport(this);
 
-	public void add(Listener listener) {
+	public void add(Service.Listener listener) {
 		support.add(listener);
 	}
 
-	public void remove(Listener listener) {
+	public void remove(Service.Listener listener) {
 		support.remove(listener);
 	}
 
@@ -62,21 +60,21 @@ public class BaseService implements Service {
 
 	public void start() throws ControlException {
 		LogFactory.getLog(getClass()).debug("started");
-		status = Status.STARTED;
+		status = Startable.Status.STARTED;
 		support.fireStarted();
 	}
 
-	public Status getStatus() {
+	public Startable.Status getStatus() {
 		return status;
 	}
 
 	protected boolean isStopped() {
-		return status.equals(Status.STOPPED);
+		return status.equals(Startable.Status.STOPPED);
 	}
 
 	public void stop() throws ControlException {
 		LogFactory.getLog(getClass()).debug("stopped");
-		status = Status.STOPPED;
+		status = Startable.Status.STOPPED;
 		support.fireStopped();
 	}
 

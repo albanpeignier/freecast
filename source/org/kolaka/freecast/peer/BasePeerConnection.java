@@ -31,8 +31,6 @@ import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.NDC;
-import org.kolaka.freecast.peer.PeerConnection.Status;
-import org.kolaka.freecast.peer.PeerConnection.Type;
 import org.kolaka.freecast.peer.event.PeerConnectionStatusListener;
 import org.kolaka.freecast.peer.event.PeerConnectionStatusSupport;
 import org.kolaka.freecast.timer.DefaultTimer;
@@ -56,23 +54,23 @@ public abstract class BasePeerConnection implements PeerConnection {
 	private PeerStatus lastPeerStatus;
 
 	// private PeerReference peerReference;
-	private final Type type;
+	private final PeerConnection.Type type;
 
-	private Status status = Status.OPENING;
+	private PeerConnection.Status status = PeerConnection.Status.OPENING;
 
 	private MessageWriter writer;
 
 	private MessageReader reader;
 
-	protected BasePeerConnection(Type type) {
+	protected BasePeerConnection(PeerConnection.Type type) {
 		this.type = type;
 	}
 
-	public Type getType() {
+	public PeerConnection.Type getType() {
 		return type;
 	}
 
-	public Status getStatus() {
+	public PeerConnection.Status getStatus() {
 		return status;
 	}
 
@@ -82,14 +80,14 @@ public abstract class BasePeerConnection implements PeerConnection {
 	 * 
 	 * @param status
 	 */
-	protected void changeStatus(Status status) {
+	protected void changeStatus(PeerConnection.Status status) {
 		Validate.notNull(status, "No specified Status");
 
 		setStatus(status);
 		sendStatus(status);
 	}
 
-	protected void setStatus(Status status) {
+	protected void setStatus(PeerConnection.Status status) {
 		if (ObjectUtils.equals(status, this.status)) {
 			return;
 		}
@@ -100,7 +98,7 @@ public abstract class BasePeerConnection implements PeerConnection {
 		support.fireStatus(status);
 	}
 
-	private void sendStatus(Status status) {
+	private void sendStatus(PeerConnection.Status status) {
 		SendStatusTask sendStatus = new SendStatusTask(status);
 		timer.executeLater(sendStatus);
 
@@ -196,13 +194,13 @@ public abstract class BasePeerConnection implements PeerConnection {
 	 * <code>PeerConnection</code> is accepting.
 	 */
 	public void open() {
-		changeStatus(Status.OPENED);
+		changeStatus(PeerConnection.Status.OPENED);
 
 		/*
 		 * When the connection is a Type.RELAY, start a loop to read the control
 		 * messages
 		 */
-		if (type.equals(Type.RELAY)) {
+		if (type.equals(PeerConnection.Type.RELAY)) {
 			receiveLoop = new ReceiveLoop();
 			timer.execute(receiveLoop);
 
@@ -214,12 +212,12 @@ public abstract class BasePeerConnection implements PeerConnection {
 
 	public void close() {
 		LogFactory.getLog(getClass()).debug("close");
-		if (status.equals(Status.CLOSING) || status.equals(Status.CLOSED)) {
+		if (status.equals(PeerConnection.Status.CLOSING) || status.equals(PeerConnection.Status.CLOSED)) {
 			return;
 		}
 
 		// TODO asynchronous status sending can be problematic
-		changeStatus(Status.CLOSED);
+		changeStatus(PeerConnection.Status.CLOSED);
 		try {
 			Thread.sleep(200);
 		} catch (InterruptedException e) {
@@ -232,7 +230,7 @@ public abstract class BasePeerConnection implements PeerConnection {
 
 	protected void dispose() {
 		LogFactory.getLog(getClass()).debug("dispose");
-		setStatus(Status.CLOSED);
+		setStatus(PeerConnection.Status.CLOSED);
 
 		if (receiveLoop != null) {
 			receiveLoop.cancel();
@@ -275,7 +273,7 @@ public abstract class BasePeerConnection implements PeerConnection {
 		}
 
 		public int write(Message message) throws IOException {
-			if (status.equals(Status.CLOSED)) {
+			if (status.equals(PeerConnection.Status.CLOSED)) {
 				throw new NotOpenConnectionException(status);
 			}
 
@@ -292,7 +290,7 @@ public abstract class BasePeerConnection implements PeerConnection {
 	class FilterReader extends ProxyMessageReader {
 
 		private void checkClosed() throws EOFException {
-			if (status.equals(Status.CLOSED)) {
+			if (status.equals(PeerConnection.Status.CLOSED)) {
 				throw new EOFException("connection is closed");
 			}
 		}
@@ -320,11 +318,11 @@ public abstract class BasePeerConnection implements PeerConnection {
 			}
 
 			if (message instanceof PeerConnectionStatusMessage) {
-				Status status = ((PeerConnectionStatusMessage) message)
+				PeerConnection.Status status = ((PeerConnectionStatusMessage) message)
 						.getStatus();
 				LogFactory.getLog(getClass()).debug(
 						"receive new connection status: " + status);
-				if (status.equals(Status.CLOSED)) {
+				if (status.equals(PeerConnection.Status.CLOSED)) {
 					dispose();
 				} else {
 					setStatus(status);
@@ -342,7 +340,7 @@ public abstract class BasePeerConnection implements PeerConnection {
 
 	class SendStatusTask extends Task {
 
-		private final Status status;
+		private final PeerConnection.Status status;
 
 		private final Object lock = new Object();
 
@@ -360,7 +358,7 @@ public abstract class BasePeerConnection implements PeerConnection {
 					messageSent = true;
 				} catch (IOException e) {
 					String msg = "Can't send new status " + status;
-					if (status.equals(Status.CLOSED)) {
+					if (status.equals(PeerConnection.Status.CLOSED)) {
 						// when the transport layer can be already stopped
 						LogFactory.getLog(getClass()).warn(msg, e);
 					} else {
@@ -375,7 +373,7 @@ public abstract class BasePeerConnection implements PeerConnection {
 			}
 		}
 
-		public SendStatusTask(Status status) {
+		public SendStatusTask(PeerConnection.Status status) {
 			this.status = status;
 		}
 
@@ -403,7 +401,7 @@ public abstract class BasePeerConnection implements PeerConnection {
 	 * 
 	 */
 	public void activate() {
-		changeStatus(Status.ACTIVATED);
+		changeStatus(PeerConnection.Status.ACTIVATED);
 	}
 
 	private TimeBase timeBase = TimeBase.DEFAULT;
@@ -425,7 +423,7 @@ public abstract class BasePeerConnection implements PeerConnection {
 			try {
 				message = getReader().read();
 			} catch (EOFException e) {
-				if (status.equals(Status.CLOSED)) {
+				if (status.equals(PeerConnection.Status.CLOSED)) {
 					LogFactory.getLog(getClass()).debug(
 							"reader stopped for " + this, e);
 					return DefaultTimer.seconds(2);
@@ -434,7 +432,7 @@ public abstract class BasePeerConnection implements PeerConnection {
 				throw new LoopInterruptedException(
 						"connection read stream ended", e);
 			} catch (IOException e) {
-				if (status.equals(Status.CLOSED)) {
+				if (status.equals(PeerConnection.Status.CLOSED)) {
 					LogFactory.getLog(getClass()).debug(
 							"reader stopped for " + this, e);
 				} else {

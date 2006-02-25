@@ -32,10 +32,9 @@ import org.apache.commons.lang.time.StopWatch;
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.ogg.OggSource;
 import org.kolaka.freecast.service.ControlException;
+import org.kolaka.freecast.service.LoopService;
 import org.kolaka.freecast.service.Startable;
 import org.kolaka.freecast.timer.DefaultTimer;
-import org.kolaka.freecast.service.LoopService.Loop;
-import org.kolaka.freecast.service.LoopService.LoopInterruptedException;
 
 /**
  * 
@@ -73,8 +72,8 @@ public class OggSourceFactoryReceiver extends OggSourceReceiver {
 		super.stop();
 	}
 
-	protected Loop createLoop() {
-		return new Loop() {
+	protected LoopService.Loop createLoop() {
+		return new LoopService.Loop() {
 
 			public long loop() throws LoopInterruptedException {
 				OggSource oggSource;

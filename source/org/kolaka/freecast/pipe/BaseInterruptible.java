@@ -25,7 +25,6 @@ package org.kolaka.freecast.pipe;
 
 import java.util.HashSet;
 import java.util.Set;
-import org.kolaka.freecast.pipe.Interruptible.Listener;
 
 /**
  * 
@@ -48,11 +47,11 @@ public abstract class BaseInterruptible implements Interruptible {
 
 	private final Set listeners = new HashSet();
 
-	public void add(Listener listener) {
+	public void add(Interruptible.Listener listener) {
 		listeners.add(listener);
 	}
 
-	public void remove(Listener listener) {
+	public void remove(Interruptible.Listener listener) {
 		listeners.remove(listener);
 	}
 }

@@ -27,8 +27,8 @@ import java.io.IOException;
 import java.net.Socket;
 
 import org.kolaka.freecast.peer.BasePeerConnection;
+import org.kolaka.freecast.peer.PeerConnection;
 import org.kolaka.freecast.peer.PeerConnectionException;
-import org.kolaka.freecast.peer.PeerConnection.Type;
 
 /**
  * 
@@ -43,7 +43,7 @@ public class SocketPeerConnection extends BasePeerConnection {
 
 	private MessageReader reader;
 
-	public SocketPeerConnection(Type type, Socket socket) throws IOException {
+	public SocketPeerConnection(PeerConnection.Type type, Socket socket) throws IOException {
 		super(type);
 		this.socket = socket;
 

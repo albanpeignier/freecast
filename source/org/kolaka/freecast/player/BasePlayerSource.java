@@ -28,7 +28,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.kolaka.freecast.service.ControlException;
-import org.kolaka.freecast.player.PlayerSource.Listener;
 
 /**
  * 
@@ -39,17 +38,17 @@ public abstract class BasePlayerSource implements PlayerSource {
 
 	private Set listeners = new HashSet();
 
-	public void addListener(Listener listener) {
+	public void addListener(PlayerSource.Listener listener) {
 		listeners.add(listener);
 	}
 
-	public void removeListener(Listener listener) {
+	public void removeListener(PlayerSource.Listener listener) {
 		listeners.remove(listener);
 	}
 
 	protected void processPlayerCreated(Player player) {
 		for (Iterator iter = listeners.iterator(); iter.hasNext();) {
-			Listener listener = (Listener) iter.next();
+			PlayerSource.Listener listener = (PlayerSource.Listener) iter.next();
 			listener.playerCreated(player);
 		}
 	}

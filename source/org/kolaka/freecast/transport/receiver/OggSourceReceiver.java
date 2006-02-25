@@ -26,7 +26,6 @@ package org.kolaka.freecast.transport.receiver;
 import java.io.IOException;
 
 import org.apache.commons.lang.Validate;
-import org.apache.commons.logging.LogConfigurationException;
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.auditor.AuditorFactory;
 import org.kolaka.freecast.ogg.OggSource;

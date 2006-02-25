@@ -35,7 +35,6 @@ import javax.swing.plaf.FontUIResource;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.Application;
 import org.kolaka.freecast.timer.DefaultTimer;
@@ -121,6 +120,8 @@ public abstract class SwingApplication extends Application {
 	}
 
 	class SwingQuitAction extends QuitAction {
+
+		private static final long serialVersionUID = -2721404560256860837L;
 
 		SwingQuitAction(Resources resources) throws ResourcesException {
 		  super(resources);

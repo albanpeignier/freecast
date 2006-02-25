@@ -54,7 +54,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileFilter;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.lang.mutable.ObservableValue;
 import org.kolaka.freecast.resource.URIParser;
@@ -226,6 +225,8 @@ public class SetupDialog extends JDialog {
 		
 		Action defaultReceiverAction = new BaseAction("Default test stream") {
 			
+			private static final long serialVersionUID = 4298288501819093946L;
+
 			protected void init() throws ResourcesException {
 				loadIcons(resources, "receiver.default");
 			}
@@ -244,6 +245,8 @@ public class SetupDialog extends JDialog {
 		});
 		
 		JFormattedTextField.AbstractFormatter uriFormatter = new JFormattedTextField.AbstractFormatter() {
+
+			private static final long serialVersionUID = 6327979522079637751L;
 			private URIParser parser = new URIParser();
 			public Object stringToValue(String text) throws ParseException {
 				try {
@@ -305,6 +308,8 @@ public class SetupDialog extends JDialog {
 		
 		Action chooseFileAction = new BaseAction("Choose file") {
 
+			private static final long serialVersionUID = -1643278453196884836L;
+
 			public void actionPerformed(ActionEvent e) {
 				PlaylistEncoderReceiverConfiguration configuration =
 					(PlaylistEncoderReceiverConfiguration) modifiedReceiverConfiguration.getValue();
@@ -334,6 +339,8 @@ public class SetupDialog extends JDialog {
 
 		Action playlistReceiverAction = new BaseAction("My own playlist") {
 			
+			private static final long serialVersionUID = -2774872036934599284L;
+
 			protected void init() throws ResourcesException {
 				loadIcons(resources, "receiver.playlist");
 			}

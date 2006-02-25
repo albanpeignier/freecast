@@ -28,7 +28,6 @@ import java.net.URL;
 import junit.framework.TestCase;
 
 import org.kolaka.freecast.resource.URIs;
-import org.kolaka.freecast.transport.receiver.PlaylistEncoderReceiver;
 import org.kolaka.freecast.transport.receiver.PlaylistEncoderReceiverConfiguration;
 import org.kolaka.freecast.transport.receiver.PlaylistEncoderReceiverConfigurator;
 import org.kolaka.freecast.transport.receiver.ReceiverConfigurator;
@@ -45,8 +44,7 @@ public class PlaylistEncoderReceiverTest extends TestCase {
 
 		PlaylistEncoderReceiverConfigurator configurator = (PlaylistEncoderReceiverConfigurator) ReceiverConfigurator
 				.getInstance(configuration);
-		PlaylistEncoderReceiver receiver = (PlaylistEncoderReceiver) configurator
-				.configure(configuration);
+		configurator.configure(configuration);
 	}
 
 }

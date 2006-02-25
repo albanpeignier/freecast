@@ -50,7 +50,6 @@ import org.kolaka.freecast.timer.Task;
 import org.kolaka.freecast.timer.Timer;
 import org.kolaka.freecast.timer.TimerUser;
 import org.kolaka.freecast.transport.PeerStatusMessage;
-import org.kolaka.freecast.peer.PeerControler.Auditor;
 
 /**
  * 
@@ -62,7 +61,7 @@ public class DefaultPeerControler implements ConfigurablePeerControler,
 
 	private final PeerStorage storage;
 
-	private final Auditor auditor;
+	private final PeerControler.Auditor auditor;
 
 	public DefaultPeerControler() {
 		ComparatorChain comparator = new ComparatorChain();
@@ -70,7 +69,7 @@ public class DefaultPeerControler implements ConfigurablePeerControler,
 		comparator.addComparator(Peers.compareOrder());
 
 		storage = new PeerStorage(comparator);
-		auditor = (Auditor) AuditorFactory.getInstance().get(Auditor.class,
+		auditor = (PeerControler.Auditor) AuditorFactory.getInstance().get(PeerControler.Auditor.class,
 				this);
 	}
 

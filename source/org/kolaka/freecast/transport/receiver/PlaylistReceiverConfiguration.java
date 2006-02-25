@@ -24,10 +24,8 @@
 package org.kolaka.freecast.transport.receiver;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 
-import org.apache.commons.lang.UnhandledException;
 import org.apache.commons.lang.Validate;
 import org.kolaka.freecast.resource.URIs;
 

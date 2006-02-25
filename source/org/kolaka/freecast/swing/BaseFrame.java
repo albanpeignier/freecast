@@ -108,6 +108,8 @@ public abstract class BaseFrame extends JFrame {
 		toolbar.setVisible(false); // toolbar is hidden by default
 
 		showHideToolbarAction = new ShowHideAction(toolbar, "Toolbar") {
+			private static final long serialVersionUID = 7508283130422886553L;
+
 			public void actionPerformed(ActionEvent e) {
 				super.actionPerformed(e);
 				pack();
@@ -191,6 +193,8 @@ public abstract class BaseFrame extends JFrame {
 	private JPopupMenu createPopupMenu() throws ResourcesException {
 		final Color background = resources.getColor("background");
 		JPopupMenu popMenu = new JPopupMenu() {
+			private static final long serialVersionUID = 8550805039345504434L;
+
 			public JMenuItem add(Action a) {
 				JMenuItem item = super.add(a);
 				item.setOpaque(false);

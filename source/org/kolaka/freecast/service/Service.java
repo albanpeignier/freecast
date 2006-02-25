@@ -23,7 +23,6 @@
 
 package org.kolaka.freecast.service;
 
-import org.kolaka.freecast.service.Startable.Status;
 
 /**
  * 
@@ -68,6 +67,6 @@ public interface Service extends Controlable {
 
 	public void remove(Listener listener);
 
-	public Status getStatus();
+	public Startable.Status getStatus();
 
 }

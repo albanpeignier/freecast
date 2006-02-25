@@ -32,7 +32,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.auditor.AuditorFactory;
@@ -42,7 +41,6 @@ import org.kolaka.freecast.node.Order;
 import org.kolaka.freecast.peer.InetPeerReference;
 import org.kolaka.freecast.peer.PeerReference;
 import org.kolaka.freecast.service.ControlException;
-import org.kolaka.freecast.tracker.Tracker.Auditor;
 
 /**
  * 
@@ -53,14 +51,14 @@ public class DefaultTracker implements Tracker {
 
 	private Map entries = new HashMap();
 
-	private final Auditor auditor;
+	private final Tracker.Auditor auditor;
 
 	private final ClientInfoProvider clientInfoProvider;
 
 	public DefaultTracker(ClientInfoProvider clientInfoProvider) {
 		this.clientInfoProvider = clientInfoProvider;
-		this.auditor = (Auditor) AuditorFactory.getInstance().get(
-				Auditor.class, this);
+		this.auditor = (Tracker.Auditor) AuditorFactory.getInstance().get(
+				Tracker.Auditor.class, this);
 	}
 
 	public Set getPeerReferences(NodeIdentifier identifier) {

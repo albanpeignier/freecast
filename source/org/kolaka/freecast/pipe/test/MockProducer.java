@@ -25,9 +25,9 @@ package org.kolaka.freecast.pipe.test;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.kolaka.freecast.pipe.Producer;
+import org.kolaka.freecast.service.Service;
 
 import com.mockobjects.MockObject;
-import org.kolaka.freecast.service.Service;
 
 /**
  * 
