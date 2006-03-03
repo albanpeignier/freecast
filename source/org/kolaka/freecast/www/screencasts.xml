@@ -1,0 +1,63 @@
+<page>
+  <title>
+   <i18n>
+    <text lang="en">Screencast</text>
+    <text lang="fr">Démos</text>
+   </i18n>
+  </title>
+
+ <content>
+    <h1>
+     <i18n>
+      <text lang="en">FreeCast in action</text>
+      <text lang="fr">FreeCast en action</text>
+      <text lang="es">FreeCast en acción</text>     
+		 </i18n>
+    </h1>
+
+	<h3 id="manager">
+	  FreeCast Manager
+	</h3>
+	<div class="screenshots">
+	  <screencast-thumb id="broadcast-step1" caption="Start FreeCast Manager">
+			<i18n>
+			  <text lang="en">Start FreeCast Manager</text>
+			  <text lang="fr">Démarrer FreeCast Manager</text>
+    	</i18n>
+	  </screencast-thumb>
+	  <screencast-thumb id="broadcast-step2" caption="Start a first FreeCast listener">
+			<i18n>
+			  <text lang="en">Start a first FreeCast listener</text>
+			  <text lang="fr">Démarrer un premier client FreeCast</text>
+    	</i18n>
+	  </screencast-thumb>
+	  <screencast-thumb id="broadcast-step3" caption="Send email">
+			<i18n>
+			  <text lang="en">Invite your listeners</text>
+			  <text lang="fr">Inviter vos auditeurs</text>
+    	</i18n>
+	  </screencast-thumb>
+	  <screencast-thumb id="java-install" caption="FreeCast Manager">
+			<i18n>
+			  <text lang="en">Java install</text>
+			  <text lang="fr">Java installation</text>
+    	</i18n>
+	  </screencast-thumb>
+	</div>
+	
+	<h3 id="development">
+		<i18n>
+		  <text lang="en">Under Development</text>
+		  <text lang="fr">En cours de développement</text>
+   	</i18n>
+	</h3>
+	<div class="screenshots">
+		<screencast-thumb id="freecast-manager-setup" caption="FreeCast Manager setup">
+			<i18n>
+			  <text lang="en">FreeCast Manager setup</text>
+			  <text lang="fr">Configurer FreeCast Manager</text>
+    	</i18n>
+	  </screencast-thumb>	
+	</div>
+ </content>
+</page>

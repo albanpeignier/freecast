@@ -300,3 +300,7 @@ img.step {
 .nojava { 
     display: inline;
 }
+
+.screencast {
+text-align: center; 
+}

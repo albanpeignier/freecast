@@ -93,6 +93,7 @@
 		  <img alt="" src="images/nav/list.png"/>
 		  <xsl:apply-templates select="/page/title"/>
 		</h3>
+		<xsl:if test="/page/content/h3">
 		<ul>
 		  <xsl:for-each select="/page/content/h3">
 			<li>
@@ -103,6 +104,7 @@
 			</li>
 		  </xsl:for-each>
 		</ul>
+		</xsl:if>
 		
 		<h3><img src="images/nav/newsletters.png" alt=""/> Lists</h3>
 		<ul>
@@ -167,5 +169,35 @@
 	</div>
   </xsl:template>
 
+  <xsl:template match="screencast-thumb" mode="copy">
+	<div class="screenshot">
+	  <p>
+		<xsl:apply-templates mode="copy"/>
+	  </p>
+
+	  <a>
+		<xsl:attribute name="href">
+			<xsl:text>screencast-</xsl:text>
+			<xsl:value-of select="@id"/>
+		</xsl:attribute>
+		<img>
+		  <xsl:attribute name="src"><xsl:text>images/screencasts/</xsl:text><xsl:value-of select="@id"/><xsl:text>.png</xsl:text></xsl:attribute>
+		  <xsl:attribute name="alt"><xsl:value-of select="@caption"/></xsl:attribute>
+		</img>
+	  </a>
+	</div>
+  </xsl:template>
+  
+  <xsl:template match="screencast" mode="copy">
+	<div class="screencast">
+  	<embed width="800" height="625">
+  		<xsl:attribute name="src">
+				<xsl:text>http://resources.tryphon.org/kolaka/freecast/screencasts/</xsl:text>
+				<xsl:value-of select="@id"/>
+				<xsl:text>.avi</xsl:text>
+			</xsl:attribute>
+		</embed>
+  </div>
+  </xsl:template>
 </xsl:stylesheet>
 

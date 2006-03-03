@@ -1,0 +1,20 @@
+<page>
+  <title>
+   <i18n>
+    <text lang="en">Screencast - Invite your listeners</text>
+    <text lang="fr">Démo - Inviter vos auditeurs</text>
+   </i18n>
+  </title>
+
+ <content>
+    <h1>
+     <i18n>
+      <text lang="en">Invite your listeners</text>
+      <text lang="fr">Inviter vos auditeurs</text>
+		 </i18n>
+    </h1>
+    
+    <screencast id="broadcast-step3"/>
+
+ </content>
+</page>

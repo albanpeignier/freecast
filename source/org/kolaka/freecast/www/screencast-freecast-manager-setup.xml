@@ -1,0 +1,33 @@
+<page>
+  <title>
+   <i18n>
+    <text lang="en">Screencast - FreeCast Manager Setup</text>
+    <text lang="fr">Démo - Configuration du FreeCast Manager</text>
+   </i18n>
+  </title>
+
+ <content>
+    <h1>
+     <i18n>
+      <text lang="en">FreeCast Manager Setup</text>
+      <text lang="fr">Configuration du FreeCast Manager</text>
+		 </i18n>
+    </h1>
+    
+    <p>
+    	<i18n>
+    	<text lang="en">Change the FreeCast Manager broadcast content, choose your own playlist</text>
+    	<text lang="fr">Choisir le contenu diffusé par FreeCast Manager, comme sa propre playliste</text>
+    	</i18n>
+    	<em>
+    	<i18n>
+    	<text lang="en">(under development)</text>
+    	<text lang="fr">(en cours de développement)</text>
+    	</i18n>
+    	</em>
+    </p>
+    
+    <screencast id="freecast-manager-setup"/>
+
+ </content>
+</page>

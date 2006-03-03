@@ -38,6 +38,15 @@
   <navitem>
    <title>
     <i18n>
+     <text lang="en">Screencasts</text>
+     <text lang="fr">Démos</text>
+    </i18n>
+   </title>
+   <link href="screencasts"/>
+  </navitem>
+  <navitem>
+   <title>
+    <i18n>
      <text lang="en">Support</text>
      <text lang="fr">Support</text>
     </i18n>

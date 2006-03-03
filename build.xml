@@ -984,6 +984,16 @@
 				<fileset dir="build/www">
 					<include name="*.html.*" />
 					<exclude name="start.html.*" />
+					<exclude name="screencast-*.html.*" />
+				</fileset>
+			</filesets>
+		</tidy>
+
+		<!-- screencast pages used an embed tag -->
+		<tidy dest="dist/www" failonerror="false">
+			<filesets>
+				<fileset dir="build/www">
+					<include name="screencast-*.html.*" />
 				</fileset>
 			</filesets>
 		</tidy>

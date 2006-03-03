@@ -10,12 +10,9 @@
  <content>
     <h1>
      <i18n>
-      <text lang="en">FreeCast in action</text>
-      <text lang="fr">FreeCast en action</text>
-      <text lang="es">FreeCast en acción</text>     
-
-
-</i18n>
+      <text lang="en">FreeCast preview</text>
+      <text lang="fr">aperçu de FreeCast</text>
+		 </i18n>
     </h1>
 
 	<h3 id="swing">

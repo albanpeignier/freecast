@@ -1,0 +1,20 @@
+<page>
+  <title>
+   <i18n>
+    <text lang="en">Screencast - Start FreeCast Manager</text>
+    <text lang="fr">Démo - Démarrer FreeCast Manager</text>
+   </i18n>
+  </title>
+
+ <content>
+    <h1>
+     <i18n>
+      <text lang="en">Start FreeCast Manager</text>
+      <text lang="fr">Démarrer FreeCast Manager</text>
+		 </i18n>
+    </h1>
+    
+    <screencast id="broadcast-step1"/>
+
+ </content>
+</page>

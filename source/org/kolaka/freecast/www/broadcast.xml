@@ -83,16 +83,17 @@
 	  <p>
 		<i18n>
 		  <text lang="en">
-			With Java installed, you only need to 
+			With <a href="http://java.com">Java installed</a>, you only need to 
 			<a href="http://download.freecast.org/jws/libfreecast/freecast-manager.jnlp">click to broacast</a>.
 			All the needed components of your FreeCast network are started into the FreeCast Manager.
 		  </text>
 		  <text lang="fr">
-			Avec Java installé, vous avez juste besoin de
+			Avec <a href="http://java.com">Java installé</a>, vous avez juste besoin de
 			<a href="http://download.freecast.org/jws/libfreecast/freecast-manager.jnlp">cliquer pour diffuser</a>.
 		  </text>
 		<text lang="es">
-			Con Java instalado usted sólo necesita ir <a href="http://download.freecast.org/jws/libfreecast/freecast-manager.jnlp">click comienzo de difusion </a>.
+			Con <a href="http://java.com">Java instalado</a> usted sólo necesita ir 
+			<a href="http://download.freecast.org/jws/libfreecast/freecast-manager.jnlp">click comienzo de difusion </a>.
 		  </text>
 		
 

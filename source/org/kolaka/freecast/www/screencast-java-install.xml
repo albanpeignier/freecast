@@ -1,0 +1,20 @@
+<page>
+  <title>
+   <i18n>
+    <text lang="en">Screencast - Java Install</text>
+    <text lang="fr">Démo - Installer Java</text>
+   </i18n>
+  </title>
+
+ <content>
+    <h1>
+     <i18n>
+      <text lang="en">Java install</text>
+      <text lang="fr">Installation de Java</text>
+		 </i18n>
+    </h1>
+    
+    <screencast id="java-install"/>
+
+ </content>
+</page>
