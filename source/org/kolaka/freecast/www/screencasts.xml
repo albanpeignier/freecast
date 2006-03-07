@@ -37,10 +37,58 @@
 			  <text lang="fr">Inviter vos auditeurs</text>
     	</i18n>
 	  </screencast-thumb>
+	</div>
+	<div class="screenshots">
 	  <screencast-thumb id="java-install" caption="FreeCast Manager">
 			<i18n>
 			  <text lang="en">Java install</text>
 			  <text lang="fr">Java installation</text>
+    	</i18n>
+	  </screencast-thumb>
+	</div>
+	
+	<h3 id="freecast-bin">
+	  FreeCast
+	</h3>
+	<p>
+		<i18n>
+			<text lang="en">The following screens show about install your own FreeCast network.</text>
+			<text lang="fr">The vidéos suivants montrent comment installer votre propre réseau FreeCast</text>
+		</i18n>			
+	</p>
+	<div class="screenshots">
+	  <screencast-thumb id="freecast-bin-w32-install">
+			<i18n>
+			  <text lang="en">Install FreeCast distribution</text>
+			  <text lang="fr">Installer la distributation de FreeCast</text>
+    	</i18n>
+	  </screencast-thumb>
+	  <screencast-thumb id="freecast-bin-w32-audio-example">
+			<i18n>
+			  <text lang="en">Start configuration example</text>
+			  <text lang="fr">Démarrer l'exemple de configuration</text>
+    	</i18n>
+	  </screencast-thumb>
+	</div>
+	
+	<div class="screenshots">
+	  <screencast-thumb id="oddcast-install">
+			<i18n>
+			  <text lang="en">Install</text>
+			  <text lang="fr">Installer</text>
+    	</i18n>
+    	<a href="http://www.oddsock.org/tools/oddcastv3/">Oddcast</a>
+	  </screencast-thumb>
+	  <screencast-thumb id="freecast-bin-w32-config">
+			<i18n>
+			  <text lang="en">Setup your own configuration</text>
+			  <text lang="fr">Mettre en place sa propre configuration</text>
+    	</i18n>
+	  </screencast-thumb>
+	  <screencast-thumb id="freecast-bin-w32-start">
+			<i18n>
+			  <text lang="en">Start your own network</text>
+			  <text lang="fr">Démarrer son propre réseau</text>
     	</i18n>
 	  </screencast-thumb>
 	</div>
@@ -59,5 +107,26 @@
     	</i18n>
 	  </screencast-thumb>	
 	</div>
+	
+	<h3 id="codec">
+		Video codec		
+	</h3>
+	<p>
+		<i18n>
+			<text lang="en">
+				These screencasts are video files encoded with the free <a href="http://www.xvid.org">XviD</a> video codec.
+				For Windows users, the codec is available <a href="http://www.koepi.org/xvid.shtml">here</a>.
+				For Linux/Unix users, you can use the <a href="http://mplayerplug-in.sf.net">mplayerplug-in</a> for Mozilla. 
+				If your browser has some troubles to display the video, just download it and enjoy.
+			</text>
+			<text lang="fr">
+				Les démonstrations sont des fichiers vidéo encodés grâce au codec video libre <a href="http://www.xvid.org">XviD</a>.
+				Pour les utilisateurs de Windows, le codec est disponible <a href="http://www.koepi.org/xvid.shtml">ici</a>.
+				Pour les utilisateurs de Linux/Unix, vous pouvez utiliser le <a href="http://mplayerplug-in.sf.net">mplayerplug-in</a>
+				pour Mozilla.
+				Si votre navigateur a quelques problèmes pour afficher la vidéo, téléchargez là et appréciez.
+			</text>
+		</i18n>
+	</p>
  </content>
 </page>

@@ -9,12 +9,12 @@
  <content>
     <h1>
      <i18n>
-      <text lang="en">Start FreeCast Manager</text>
-      <text lang="fr">Démarrer FreeCast Manager</text>
+      <text lang="en">Install FreeCast Windows distribution</text>
+      <text lang="fr">Installer la distributation Windows de FreeCast</text>
 		 </i18n>
     </h1>
     
-    <screencast id="broadcast-step1"/>
+    <screencast id="freecast-bin-w32-install"/>
 
  </content>
 </page>

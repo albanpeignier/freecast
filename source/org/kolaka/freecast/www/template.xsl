@@ -190,6 +190,7 @@
   
   <xsl:template match="screencast" mode="copy">
 	<div class="screencast">
+
   	<embed width="800" height="625">
   		<xsl:attribute name="src">
 				<xsl:text>http://resources.tryphon.org/kolaka/freecast/screencasts/</xsl:text>
@@ -197,6 +198,15 @@
 				<xsl:text>.avi</xsl:text>
 			</xsl:attribute>
 		</embed>
+
+		<a title="Download">
+  		<xsl:attribute name="href">
+				<xsl:text>http://resources.tryphon.org/kolaka/freecast/screencasts/</xsl:text>
+				<xsl:value-of select="@id"/>
+				<xsl:text>.avi</xsl:text>
+			</xsl:attribute>
+			Download
+		</a>				
   </div>
   </xsl:template>
 </xsl:stylesheet>

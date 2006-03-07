@@ -1,0 +1,27 @@
+<page>
+  <title>
+   <i18n>
+    <text lang="en">Screencast</text>
+    <text lang="fr">Démo</text>
+   </i18n>
+  </title>
+
+ <content>
+    <h1>
+     <i18n>
+      <text lang="en">Setup your own configuration</text>
+      <text lang="fr">Mettre en place sa propre configuration</text>
+		 </i18n>
+    </h1>
+
+		<p>
+     <i18n>
+      <text lang="en">Setup your FreeCast root node to receive Ogg stream from oddcast</text>
+      <text lang="fr">Configurer votre root node FreeCast pour recevoir le flux Ogg envoyé par oddcast</text>
+		 </i18n>
+		</p>
+		    
+    <screencast id="freecast-bin-w32-config"/>
+
+ </content>
+</page>

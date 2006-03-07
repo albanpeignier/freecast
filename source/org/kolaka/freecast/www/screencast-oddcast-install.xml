@@ -9,12 +9,12 @@
  <content>
     <h1>
      <i18n>
-      <text lang="en">Start FreeCast Manager</text>
-      <text lang="fr">Démarrer FreeCast Manager</text>
+      <text lang="en">Install Oddcast</text>
+      <text lang="fr">Installer Oddcast</text>
 		 </i18n>
     </h1>
     
-    <screencast id="broadcast-step1"/>
+    <screencast id="oddcast-install"/>
 
  </content>
 </page>

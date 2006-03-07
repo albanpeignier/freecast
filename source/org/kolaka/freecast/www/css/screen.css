@@ -258,7 +258,8 @@ img.screenshot {
 /* for /screenshot page */
 
 div.screenshots { 
-    width: 700px;
+clear: both;
+width: 700px;
 }
 
 #content div.screenshot { 

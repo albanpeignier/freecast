@@ -1,0 +1,27 @@
+<page>
+  <title>
+   <i18n>
+    <text lang="en">Screencast</text>
+    <text lang="fr">Démo</text>
+   </i18n>
+  </title>
+
+ <content>
+    <h1>
+     <i18n>
+      <text lang="en">Start configuration example</text>
+      <text lang="fr">Démarrer l'exemple de configuration</text>
+		 </i18n>
+    </h1>
+    
+    <p>
+     <i18n>
+      <text lang="en">Start a first FreeCast network with the audio configuration example</text>
+      <text lang="fr">Démarrer un premier réseau FreeCast avec l'exemple de configuration audio</text>
+		 </i18n>
+    </p>
+    
+    <screencast id="freecast-bin-w32-audio-example"/>
+
+ </content>
+</page>

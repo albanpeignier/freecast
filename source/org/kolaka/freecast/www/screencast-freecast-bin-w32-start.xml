@@ -1,0 +1,27 @@
+<page>
+  <title>
+   <i18n>
+    <text lang="en">Screencast</text>
+    <text lang="fr">Démo</text>
+   </i18n>
+  </title>
+
+ <content>
+    <h1>
+    	<i18n>
+    		<text lang="en">Start your own network</text>
+    		<text lang="fr">Démarrer son propre réseau</text>
+    	</i18n>
+    </h1>
+
+		<p>
+     <i18n>
+      <text lang="en">Start your FreeCast network with oddcast ogg stream</text>
+      <text lang="fr">Démarrer votre réseau FreeCast avec le flux Ogg d'oddcast</text>
+		 </i18n>
+		</p>    
+		
+    <screencast id="freecast-bin-w32-start"/>
+
+ </content>
+</page>
