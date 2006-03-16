@@ -45,7 +45,7 @@ public abstract class PeerConnectionSource implements Startable {
 
 	private NodeStatusProvider statusProvider;
 
-	protected void accept(PeerConnection connection) {
+	protected void accept(PeerConnection1 connection) {
 		LogFactory.getLog(getClass()).trace("connection acceptation begins");
 
 		try {
@@ -54,12 +54,12 @@ public abstract class PeerConnectionSource implements Startable {
 			if (!connection.getStatus().equals(PeerConnection.Status.OPENED)) {
 				LogFactory.getLog(getClass()).debug(
 						"connection closed " + connection);
-				connection.close();
+				PeerConnections.closeQuietly(connection);
 			}
 		}
 	}
 
-	private void acceptImpl(PeerConnection connection) {
+	private void acceptImpl(PeerConnection1 connection) {
 		if (statusProvider == null) {
 			throw new IllegalStateException("No defined NodeStatusProvider");
 		}

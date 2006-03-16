@@ -28,10 +28,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.easymock.MockControl;
+import org.kolaka.freecast.peer.BasePeerConnection1Factory;
 import org.kolaka.freecast.peer.InetPeerReference;
 import org.kolaka.freecast.peer.Peer;
-import org.kolaka.freecast.peer.PeerConnection;
-import org.kolaka.freecast.peer.PeerConnectionFactory;
+import org.kolaka.freecast.peer.PeerConnection1;
 import org.kolaka.freecast.peer.PeerReference;
 import org.kolaka.freecast.transport.Message;
 import org.kolaka.freecast.transport.MessageReader;
@@ -64,7 +64,7 @@ public class PeerConnectionFactoryTest extends PeerConnectionFactoryBaseTest {
 		mockReaderControl = MockControl.createControl(MessageReader.class);
 		mockReader = (MessageReader) mockReaderControl.getMock();
 
-		mockConnection = new MockPeerConnection(PeerConnection.Type.SOURCE);
+		mockConnection = new MockPeerConnection(PeerConnection1.Type.SOURCE);
 		mockConnection.setupCreateReader(mockReader);
 		mockConnection.setupCreateWriter(mockWriter);
 	}
@@ -95,9 +95,9 @@ public class PeerConnectionFactoryTest extends PeerConnectionFactoryBaseTest {
 		return InetPeerReference.getInstance("nowhere", 1000, false);
 	}
 
-	protected PeerConnectionFactory createFactory() {
-		return new PeerConnectionFactory() {
-			protected PeerConnection createImpl(Peer peer,
+	protected BasePeerConnection1Factory createFactory() {
+		return new BasePeerConnection1Factory() {
+			protected PeerConnection1 createImpl(Peer peer,
 					PeerReference reference) {
 				return mockConnection;
 			}

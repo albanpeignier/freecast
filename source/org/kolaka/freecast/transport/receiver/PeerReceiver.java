@@ -23,25 +23,24 @@
 
 package org.kolaka.freecast.transport.receiver;
 
-import java.io.EOFException;
-import java.io.IOException;
-
 import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.NDC;
 import org.kolaka.freecast.packet.Packet;
 import org.kolaka.freecast.packet.signer.DummyPacketValidator;
 import org.kolaka.freecast.packet.signer.PacketValidator;
 import org.kolaka.freecast.packet.signer.PacketValidatorException;
 import org.kolaka.freecast.peer.PeerConnection;
+import org.kolaka.freecast.peer.PeerConnections;
+import org.kolaka.freecast.peer.PeerReceivingConnection;
+import org.kolaka.freecast.peer.event.PeerConnectionStatusAdapter;
 import org.kolaka.freecast.peer.event.PeerConnectionStatusEvent;
 import org.kolaka.freecast.peer.event.PeerConnectionStatusListener;
 import org.kolaka.freecast.pipe.Producer;
+import org.kolaka.freecast.service.BaseService;
 import org.kolaka.freecast.service.ControlException;
 import org.kolaka.freecast.service.Controlables;
-import org.kolaka.freecast.service.LoopService;
-import org.kolaka.freecast.timer.DefaultTimer;
 import org.kolaka.freecast.transport.Message;
+import org.kolaka.freecast.transport.MessageHandler;
 import org.kolaka.freecast.transport.PacketMessage;
 
 /**
@@ -51,9 +50,9 @@ import org.kolaka.freecast.transport.PacketMessage;
  * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
-public class PeerReceiver extends LoopService implements Receiver {
+public class PeerReceiver extends BaseService implements Receiver {
 
-	private final PeerConnection connection;
+	private final PeerReceivingConnection connection;
 
 	private Producer producer;
 
@@ -68,50 +67,6 @@ public class PeerReceiver extends LoopService implements Receiver {
 		this.packetValidator = packetValidator;
 	}
 
-	protected Loop createLoop() {
-		return new Loop() {
-
-			public long loop() {
-				NDC.push(connection.toString());
-				try {
-					readMessage();
-				} finally {
-					NDC.pop();
-				}
-				return DefaultTimer.nodelay();
-			}
-
-		};
-	}
-
-	private void readMessage() {
-		Message message;
-
-		try {
-			message = connection.getReader().read();
-		} catch (EOFException e) {
-			LogFactory.getLog(getClass()).debug(
-					"end of stream for " + connection, e);
-			stopQuietly();
-			return;
-		} catch (IOException e) {
-			stopOnError("can't read next message from " + connection, e);
-			return;
-		}
-
-		if (message instanceof PacketMessage) {
-			Packet packet = ((PacketMessage) message).getPacket();
-			if (validatePacket(packet)) {
-				producer.push(packet);
-			} else {
-				LogFactory.getLog(getClass()).error(
-						"unvalidate packet: " + packet);
-			}
-		} else {
-			LogFactory.getLog(getClass()).debug("ignore " + message);
-		}
-	}
-
 	private boolean validatePacket(Packet packet) {
 		try {
 			return packetValidator.validate(packet);
@@ -122,41 +77,42 @@ public class PeerReceiver extends LoopService implements Receiver {
 		}
 	}
 
-	private void stopOnError(String message, Throwable cause) {
-		LogFactory.getLog(getClass()).warn("stop on error, " + message, cause);
-		stopQuietly();
-	}
-
 	public void stop() throws ControlException {
 		producer.close();
 
 		super.stop();
 
 		if (!connection.getStatus().equals(PeerConnection.Status.CLOSED)) {
-			connection.close();
+			PeerConnections.closeQuietly(connection);
 		}
 	}
 
-	private final PeerConnectionStatusListener listener = new PeerConnectionStatusListener() {
-		public void peerConnectionStatusChanged(PeerConnectionStatusEvent event) {
-			if (event.getStatus().equals(PeerConnection.Status.CLOSED)) {
-				Controlables.stopQuietly(PeerReceiver.this);
+	private final PeerConnectionStatusListener listener = new PeerConnectionStatusAdapter() {
+		protected void connectionClosed(PeerConnection connection) {
+			Controlables.stopQuietly(PeerReceiver.this);
+		}
+	};
+	
+	private final MessageHandler messageHandler = new MessageHandler() {
+		public void messageReceived(Message message) {
+			if (message instanceof PacketMessage) {
+				Packet packet = ((PacketMessage) message).getPacket();
+				if (validatePacket(packet)) {
+					producer.push(packet);
+				} else {
+					LogFactory.getLog(getClass()).error(
+							"unvalidate packet: " + packet);
+				}
+			} else {
+				LogFactory.getLog(getClass()).trace("ignore " + message);
 			}
 		}
 	};
 
-	public PeerReceiver(final PeerConnection connection) {
-		Validate.isTrue(
-				connection.getType().equals(PeerConnection.Type.SOURCE),
-				"connection type must be " + PeerConnection.Type.SOURCE,
-				connection);
-
+	public PeerReceiver(final PeerReceivingConnection connection) {
 		this.connection = connection;
 		connection.add(listener);
-	}
-
-	public boolean isStopped() {
-		return super.isStopped();
+		connection.setMessageHandler(messageHandler);
 	}
 	
 	private static final ReceiverConfiguration CONFIGURATION = new PeerReceiverConfiguration();

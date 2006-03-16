@@ -29,10 +29,15 @@ import java.util.Set;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.peer.PeerConnection;
-import org.kolaka.freecast.peer.PeerControler;
+import org.kolaka.freecast.peer.PeerConnections;
+import org.kolaka.freecast.peer.PeerSendingConnection;
+import org.kolaka.freecast.peer.PeerSendingConnectionFactory;
+import org.kolaka.freecast.peer.event.PeerConnectionOpeningListener;
+import org.kolaka.freecast.peer.event.PeerConnectionStatusAdapter;
 import org.kolaka.freecast.peer.event.PeerConnectionStatusEvent;
 import org.kolaka.freecast.peer.event.PeerConnectionStatusListener;
-import org.kolaka.freecast.peer.event.VetoPeerConnectionOpeningException;
+import org.kolaka.freecast.peer.event.VetoPeerConnectionStatusChangeException;
+import org.kolaka.freecast.peer.event.VetoablePeerConnectionStatusListener;
 import org.kolaka.freecast.pipe.Pipe;
 import org.kolaka.freecast.service.ControlException;
 import org.kolaka.freecast.service.Controlables;
@@ -45,8 +50,8 @@ import org.kolaka.freecast.service.Service;
  */
 public class PeerSenderControler implements SenderControler {
 
-	private PeerControler peerControler;
-
+	private final PeerSendingConnectionFactory connectionFactory;
+	
 	private Pipe pipe;
 
 	public void setPipe(Pipe pipe) {
@@ -61,17 +66,46 @@ public class PeerSenderControler implements SenderControler {
 	public void dispose() throws ControlException {
 		// deprecated
 	}
+	
+	private int maximunRelayCount = 3;
 
-	private final PeerConnectionStatusListener connectionListener = new PeerConnectionStatusListener() {
-
-		public void peerConnectionStatusChanged(PeerConnectionStatusEvent event) {
-			if (event.getStatus().equals(PeerConnection.Status.ACTIVATED)
-					&& event.getConnection().getType().equals(
-							PeerConnection.Type.RELAY)) {
-				createSender(event.getConnection());
+	/**
+	 * @param maximunRelayCount
+	 *            The maximunRelayCount to set.
+	 */
+	public void setMaximunRelayCount(int maximunRelayCount) {
+		this.maximunRelayCount = maximunRelayCount;
+	}
+	
+	private final PeerConnectionOpeningListener openingConnectionListener = new PeerConnectionOpeningListener() {
+		
+		public void connectionOpening(PeerConnection connection) {
+			connection.add(connectionListener);
+			connection.add(vetoStatusConnectionListener);
+		};
+		
+	};
+	
+	private final VetoablePeerConnectionStatusListener vetoStatusConnectionListener = new VetoablePeerConnectionStatusListener() {
+		
+		public void vetoablePeerConnectionStatusChange(PeerConnectionStatusEvent event) throws VetoPeerConnectionStatusChangeException {
+			if (event.getStatus().equals(PeerConnection.Status.ACTIVATED)) {
+				int relayCount = senders.size();
+				if (relayCount >= maximunRelayCount) {
+					String msg = "Maximum relay count reachable";
+					throw new VetoPeerConnectionStatusChangeException(msg);
+				}
 			}
 		}
+		
+	};
 
+	private final PeerConnectionStatusListener connectionListener = new PeerConnectionStatusAdapter() {
+		
+		protected void connectionActivated(PeerConnection connection) {
+			createSender((PeerSendingConnection) connection);
+		};
+				
 	};
 
 	private Service.Listener senderListener = new Service.Adapter() {
@@ -85,17 +119,13 @@ public class PeerSenderControler implements SenderControler {
 
 	private Set senders = new HashSet();
 
-	/**
-	 * @todo find a better Exception
-	 * @param connection
-	 * @throws VetoPeerConnectionOpeningException
-	 */
-	private void createSender(PeerConnection connection) {
+	private int senderIdentifier = 0;
+	
+	private void createSender(PeerSendingConnection connection) {
 		LogFactory.getLog(getClass()).debug("create sender for " + connection);
 		PeerSender sender = new PeerSender(connection);
 
-		String consumerName = "sender-"
-				+ connection.getLastPeerStatus().getIdentifier().toString();
+		String consumerName = "sender-" + senderIdentifier++;
 		sender.setConsumer(pipe.createConsumer(consumerName));
 
 		sender.add(senderListener);
@@ -106,7 +136,7 @@ public class PeerSenderControler implements SenderControler {
 					+ ", stop connection";
 			LogFactory.getLog(getClass()).error(msg, e);
 
-			connection.close();
+			PeerConnections.closeQuietly(connection);
 
 			return;
 		}
@@ -115,19 +145,17 @@ public class PeerSenderControler implements SenderControler {
 	}
 
 	public void start() throws ControlException {
-		if (peerControler == null) {
-			throw new IllegalStateException("No defined PeerConnectionSource");
-		}
-
-		peerControler.add(connectionListener);
+		connectionFactory.add(openingConnectionListener);
+		connectionFactory.start();
 	}
 
 	public void stop() throws ControlException {
-		peerControler.remove(connectionListener);
+		connectionFactory.remove(openingConnectionListener);
 	}
 
-	public void setPeerControler(PeerControler peerControler) {
-		this.peerControler = peerControler;
+	public PeerSenderControler(final PeerSendingConnectionFactory connectionFactory) {
+		Validate.notNull(connectionFactory);
+		this.connectionFactory = connectionFactory;
 	}
 
 }

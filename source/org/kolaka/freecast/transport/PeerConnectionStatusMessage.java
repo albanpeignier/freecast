@@ -35,6 +35,7 @@ import org.kolaka.freecast.peer.PeerConnection;
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public class PeerConnectionStatusMessage extends BaseMessage {
+	
 	private PeerConnection.Status connectionStatus;
 
 	public PeerConnectionStatusMessage() {
@@ -62,16 +63,17 @@ public class PeerConnectionStatusMessage extends BaseMessage {
 		return connectionStatus.hashCode();
 	}
 
-	public void read(DataInputStream input) throws IOException {
+	protected void readImpl(DataInputStream input) throws IOException {
 		int value = input.readInt();
 		connectionStatus = PeerConnection.Status.getStatus(value);
 	}
 
-	public void write(DataOutputStream output) throws IOException {
+	protected void writeImpl(DataOutputStream output) throws IOException {
 		output.writeInt(connectionStatus.getValue());
 	}
 
 	public PeerConnection.Status getStatus() {
 		return connectionStatus;
 	}
+	
 }

@@ -27,20 +27,52 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.kolaka.freecast.node.DefaultNodeIdentifier;
+import org.kolaka.freecast.node.NodeIdentifier;
 
 /**
  * 
  * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
-public abstract class BaseMessage implements Message {
+public abstract class BaseMessage implements IdentifiableMessage {
 
-	public abstract MessageType getType();
+	private NodeIdentifier sender;
+	
+	protected BaseMessage() {
+		
+	}
+	
+	public NodeIdentifier getSenderIdentifier() {
+		return sender;
+	}
 
-	public abstract void write(DataOutputStream output) throws IOException;
+	/* (non-Javadoc)
+	 * @see org.kolaka.freecast.transport.IdentifiableMessage#setSenderIdentifier(org.kolaka.freecast.node.NodeIdentifier)
+	 */
+	public void setSenderIdentifier(NodeIdentifier sender) {
+		Validate.notNull(sender);
+		this.sender = sender;
+	}
+	
+	public void write(DataOutputStream output) throws IOException {
+		if (sender == null) {
+			throw new IllegalStateException("No defined sender NodeIdentifier");
+		}
+		output.writeLong(sender.longValue());
+		writeImpl(output);
+	}
+	
+	protected abstract void writeImpl(DataOutputStream output) throws IOException;
 
-	public abstract void read(DataInputStream input) throws IOException;
+	public void read(DataInputStream input) throws IOException {
+		sender = new DefaultNodeIdentifier(input.readLong());
+		readImpl(input);
+	}
+	
+	protected abstract void readImpl(DataInputStream input) throws IOException;
 
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
@@ -51,7 +83,5 @@ public abstract class BaseMessage implements Message {
 	}
 
 	public abstract boolean equals(Message other);
-
-	public abstract int hashCode();
 
 }

@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.peer.PeerConnection;
 
 /**
@@ -44,6 +45,7 @@ public class PeerConnectionStatusSupport {
 	}
 
 	private final Set listeners = new HashSet();
+	private final Set vetoListeners = new HashSet();
 
 	public void add(PeerConnectionStatusListener listener) {
 		listeners.add(listener);
@@ -53,17 +55,45 @@ public class PeerConnectionStatusSupport {
 		listeners.remove(listener);
 	}
 
+	public void add(VetoablePeerConnectionStatusListener listener) {
+		vetoListeners.add(listener);
+	}
+
+	public void remove(VetoablePeerConnectionStatusListener listener) {
+		vetoListeners.remove(listener);
+	}
+	
+	public void checkVetoStatus(PeerConnection.Status status) throws VetoPeerConnectionStatusChangeException {
+		fireVetoable(new PeerConnectionStatusEvent(source, status));
+	}
+
 	public void fireStatus(PeerConnection.Status status) {
 		fire(new PeerConnectionStatusEvent(source, status));
 	}
 
 	public void fire(PeerConnectionStatusEvent event) {
+		LogFactory.getLog(getClass()).debug("fire " + event);
 		for (Iterator iter = new ArrayList(listeners).iterator(); iter
 				.hasNext();) {
 			PeerConnectionStatusListener listener = (PeerConnectionStatusListener) iter
 					.next();
 			listener.peerConnectionStatusChanged(event);
 		}
+	}
+
+	public void fireVetoable(PeerConnectionStatusEvent event) throws VetoPeerConnectionStatusChangeException {
+		LogFactory.getLog(getClass()).debug("fire " + event);
+		for (Iterator iter = new ArrayList(vetoListeners).iterator(); iter
+				.hasNext();) {
+			VetoablePeerConnectionStatusListener listener = (VetoablePeerConnectionStatusListener) iter
+					.next();
+			listener.vetoablePeerConnectionStatusChange(event);
+		}
+	}
+	
+	public void clear() {
+		listeners.clear();
+		vetoListeners.clear();
 	}
 
 }

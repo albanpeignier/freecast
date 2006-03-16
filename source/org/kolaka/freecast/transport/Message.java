@@ -27,6 +27,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import org.kolaka.freecast.node.NodeIdentifier;
+
 /**
  * 
  * 
@@ -35,9 +37,11 @@ import java.io.IOException;
 public interface Message {
 	public static final byte[] CAPTURE_PATTERN = new byte[] { 'F', 'C', 'M' };
 
-	public abstract MessageType getType();
+	MessageType getType();
 
-	public abstract void write(DataOutputStream output) throws IOException;
+	void write(DataOutputStream output) throws IOException;
 
-	public abstract void read(DataInputStream input) throws IOException;
+	void read(DataInputStream input) throws IOException;
+	
+	NodeIdentifier getSenderIdentifier();
 }

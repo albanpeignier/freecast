@@ -23,8 +23,6 @@
 
 package org.kolaka.freecast.node;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -34,10 +32,13 @@ import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.node.event.NodeStatusListener;
 import org.kolaka.freecast.node.event.NodeStatusSupport;
 import org.kolaka.freecast.peer.ConfigurablePeerControler;
-import org.kolaka.freecast.peer.Peer;
 import org.kolaka.freecast.peer.PeerConnection;
 import org.kolaka.freecast.peer.PeerControler;
+import org.kolaka.freecast.peer.PeerReceivingConnection;
 import org.kolaka.freecast.peer.PeerReference;
+import org.kolaka.freecast.peer.PeerStatus;
+import org.kolaka.freecast.peer.event.PeerStatusEvent;
+import org.kolaka.freecast.peer.event.PeerStatusListener;
 import org.kolaka.freecast.pipe.DefaultPipe;
 import org.kolaka.freecast.pipe.Pipe;
 import org.kolaka.freecast.player.DefaultPlayerControler;
@@ -48,7 +49,6 @@ import org.kolaka.freecast.transport.receiver.NullReceiverControler;
 import org.kolaka.freecast.transport.receiver.PeerReceiverControler;
 import org.kolaka.freecast.transport.receiver.ReceiverControler;
 import org.kolaka.freecast.transport.sender.NullSenderControler;
-import org.kolaka.freecast.transport.sender.PeerSenderControler;
 import org.kolaka.freecast.transport.sender.SenderControler;
 
 /**
@@ -90,18 +90,7 @@ public class DefaultNode implements ConfigurableNode {
 		nodeService.setNode(this);
 		nodeService.init();
 
-		if (receiverControler instanceof PeerReceiverControler) {
-			((PeerReceiverControler) receiverControler)
-					.setPeerControler(peerControler);
-		}
-
-		if (senderControler instanceof PeerSenderControler) {
-			((PeerSenderControler) senderControler)
-					.setPeerControler(peerControler);
-		}
-
-		peerControler.addPeerListener(new PeerPropertyChangeListener());
-
+		peerControler.add(peerStatusListener);
 		
 		senderControler.setPipe(pipe);
 
@@ -227,16 +216,26 @@ public class DefaultNode implements ConfigurableNode {
 	}
 
 	protected void changeOrder(Order order) {
-		LogFactory.getLog(getClass()).debug("set order to " + order);
-		this.order = order;
-		nodeStatusProvider.fireNodeStatus();
+		if (!this.order.equals(order)) {
+			LogFactory.getLog(getClass()).debug("set order to " + order);
+			this.order = order;
+			nodeStatusProvider.fireNodeStatus();
+		}
 	}
 
 	private final StatusProvider nodeStatusProvider = new StatusProvider();
+	
+	public StatusProvider getNodeStatusProvider() {
+		return nodeStatusProvider;
+	}
 
 	class StatusProvider implements NodeStatusProvider {
 
-		private NodeStatusSupport support = new NodeStatusSupport();
+		private final NodeStatusSupport support = new NodeStatusSupport();
+		
+		public NodeIdentifier getNodeIdentifier() {
+			return identifier;
+		}
 
 		public void add(NodeStatusListener listener) {
 			support.add(listener);
@@ -306,19 +305,19 @@ public class DefaultNode implements ConfigurableNode {
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}
-
-	class PeerPropertyChangeListener implements PropertyChangeListener {
-
-		public void propertyChange(PropertyChangeEvent event) {
-			LogFactory.getLog(getClass()).debug("receive " + event);
-			Peer peer = (Peer) event.getSource();
-			if (peer.isConnected()
-					&& peer.getConnection().getType().equals(
-							PeerConnection.Type.SOURCE)) {
-				changeOrder(peer.getOrder().lower());
+	
+	private PeerStatusListener peerStatusListener = new  PeerStatusListener() {
+		
+		public void peerStatusChanged(PeerStatusEvent event) {
+			PeerStatus status = event.getStatus();
+			if (event.getSource() instanceof PeerReceivingConnection) {
+				PeerReceivingConnection connection = (PeerReceivingConnection) event.getSource();
+				if (connection.getStatus().equals(PeerConnection.Status.ACTIVATED)) {
+					changeOrder(status.getOrder().lower());
+				}
 			}
 		}
-
-	}
+		
+	};
 
 }

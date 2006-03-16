@@ -42,7 +42,7 @@ public abstract class NodeIdentifier implements Comparable, Serializable {
 
 	public abstract boolean equals(NodeIdentifier identifier);
 
-	public abstract int hashCode();
+	public abstract long longValue();
 
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);

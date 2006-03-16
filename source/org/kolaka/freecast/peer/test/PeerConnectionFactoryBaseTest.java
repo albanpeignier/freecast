@@ -38,9 +38,11 @@ import org.kolaka.freecast.packet.Checksum;
 import org.kolaka.freecast.packet.DefaultLogicalPageDescriptor;
 import org.kolaka.freecast.packet.DefaultPacket;
 import org.kolaka.freecast.packet.DefaultPacketData;
+import org.kolaka.freecast.peer.BasePeerConnection1Factory;
+import org.kolaka.freecast.peer.MutablePeer;
 import org.kolaka.freecast.peer.Peer;
 import org.kolaka.freecast.peer.PeerConnection;
-import org.kolaka.freecast.peer.PeerConnectionFactory;
+import org.kolaka.freecast.peer.PeerConnection1;
 import org.kolaka.freecast.peer.PeerReference;
 import org.kolaka.freecast.peer.PeerStatus;
 import org.kolaka.freecast.transport.Message;
@@ -113,14 +115,14 @@ public abstract class PeerConnectionFactoryBaseTest extends TestCase {
 		nodeStatusProviderControl.replay();
 
 		// Prepare Peer
-		peer.update(remoteNodeStatus);
+		((MutablePeer) peer).update(remoteNodeStatus);
 		peerControl.setMatcher(new PeerStatusMatcher());
 		peerControl.replay();
 
-		PeerConnectionFactory factory = createFactory();
+		BasePeerConnection1Factory factory = createFactory();
 		factory.setStatusProvider(nodeStatusProvider);
 
-		PeerConnection connection = factory.create(peer, reference);
+		PeerConnection1 connection = factory.create(peer, reference);
 		assertEquals("wrong read message", message, connection.getReader()
 				.read());
 
@@ -138,6 +140,6 @@ public abstract class PeerConnectionFactoryBaseTest extends TestCase {
 
 	protected abstract PeerReference createReference();
 
-	protected abstract PeerConnectionFactory createFactory();
+	protected abstract BasePeerConnection1Factory createFactory();
 
 }

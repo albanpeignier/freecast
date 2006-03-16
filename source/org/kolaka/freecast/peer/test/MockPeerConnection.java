@@ -23,7 +23,12 @@
 
 package org.kolaka.freecast.peer.test;
 
-import org.kolaka.freecast.peer.BasePeerConnection;
+import org.kolaka.freecast.node.NodeIdentifier;
+import org.kolaka.freecast.node.NodeStatusProvider;
+import org.kolaka.freecast.peer.BasePeerConnection1;
+import org.kolaka.freecast.peer.PeerStatus;
+import org.kolaka.freecast.peer.event.PeerConnectionStatusListener;
+import org.kolaka.freecast.peer.event.VetoablePeerConnectionStatusListener;
 import org.kolaka.freecast.transport.MessageReader;
 import org.kolaka.freecast.transport.MessageWriter;
 
@@ -36,10 +41,14 @@ import com.mockobjects.util.Verifier;
  * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
-public class MockPeerConnection extends BasePeerConnection implements Verifiable {
+public class MockPeerConnection extends BasePeerConnection1 implements Verifiable {
 
 	public MockPeerConnection(Type type) {
 		super(type);
+	}
+	
+	public NodeIdentifier getPeerIdentifier() {
+		throw new UnsupportedOperationException();
 	}
 
 	private final ReturnValue reader = new ReturnValue("reader");
@@ -77,5 +86,23 @@ public class MockPeerConnection extends BasePeerConnection implements Verifiable
 	public String toString() {
 		return "MockConnection";
 	}
-
+	
+	public void setNodeStatusProvider(NodeStatusProvider statusProvider) {
+		
+	}
+	
+	public void add(VetoablePeerConnectionStatusListener listener) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void remove(VetoablePeerConnectionStatusListener listener) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public PeerStatus getRemoteStatus() {
+		throw new UnsupportedOperationException();
+	}
+	
 }

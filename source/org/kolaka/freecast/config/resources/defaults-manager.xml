@@ -9,9 +9,6 @@
 			<class>playlist</class>
 			<url>http://download.freecast.org/jws/default/audio.m3u</url>
 			<bandwidth>40</bandwidth>
-			<checksummer>
-				<class>digest</class>
-			</checksummer>
   		</receiver>
         <sender>
             <reference>

@@ -55,7 +55,7 @@ public class PacketMessage extends BaseMessage {
 		return packet;
 	}
 
-	public void read(DataInputStream input) throws IOException {
+	protected void readImpl(DataInputStream input) throws IOException {
 		long pageSequenceNumber = input.readLong();
 		byte pagePacketCount = input.readByte();
 		boolean isFirstPage = input.readBoolean();
@@ -80,7 +80,7 @@ public class PacketMessage extends BaseMessage {
 				new DefaultPacketData(packetBytes), checksum, elementDescriptor);
 	}
 
-	public void write(DataOutputStream output) throws IOException {
+	protected void writeImpl(DataOutputStream output) throws IOException {
 		LogicalPageDescriptor.Element elementDescriptor = packet
 				.getElementDescriptor();
 		LogicalPageDescriptor pageDescriptor = elementDescriptor

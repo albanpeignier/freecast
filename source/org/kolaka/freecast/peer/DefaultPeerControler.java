@@ -23,13 +23,13 @@
 
 package org.kolaka.freecast.peer;
 
-import java.beans.PropertyChangeListener;
-import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.comparators.ComparatorChain;
 import org.apache.commons.lang.Validate;
@@ -39,17 +39,18 @@ import org.kolaka.freecast.node.NodeIdentifier;
 import org.kolaka.freecast.node.NodeStatusProvider;
 import org.kolaka.freecast.node.Order;
 import org.kolaka.freecast.peer.event.PeerConnectionOpeningListener;
+import org.kolaka.freecast.peer.event.PeerConnectionStatusAdapter;
 import org.kolaka.freecast.peer.event.PeerConnectionStatusEvent;
 import org.kolaka.freecast.peer.event.PeerConnectionStatusListener;
-import org.kolaka.freecast.peer.event.VetoPeerConnectionOpeningException;
-import org.kolaka.freecast.peer.event.VetoablePeerConnectionOpeningListener;
+import org.kolaka.freecast.peer.event.PeerStatusEvent;
+import org.kolaka.freecast.peer.event.PeerStatusListener;
+import org.kolaka.freecast.peer.event.VetoPeerConnectionStatusChangeException;
+import org.kolaka.freecast.peer.event.VetoablePeerConnectionStatusListener;
 import org.kolaka.freecast.service.ControlException;
 import org.kolaka.freecast.timer.DefaultTimer;
 import org.kolaka.freecast.timer.Loop;
-import org.kolaka.freecast.timer.Task;
 import org.kolaka.freecast.timer.Timer;
 import org.kolaka.freecast.timer.TimerUser;
-import org.kolaka.freecast.transport.PeerStatusMessage;
 
 /**
  * 
@@ -60,22 +61,15 @@ public class DefaultPeerControler implements ConfigurablePeerControler,
 		TimerUser {
 
 	private final PeerStorage storage;
-
 	private final PeerControler.Auditor auditor;
 
 	public DefaultPeerControler() {
 		ComparatorChain comparator = new ComparatorChain();
-		comparator.addComparator(Peers.compareConnectivityScoring());
 		comparator.addComparator(Peers.compareOrder());
 
 		storage = new PeerStorage(comparator);
 		auditor = (PeerControler.Auditor) AuditorFactory.getInstance().get(PeerControler.Auditor.class,
 				this);
-	}
-
-	public DefaultPeerControler(PeerProvider provider) {
-		this();
-		setPeerProvider(provider);
 	}
 
 	private PeerProvider provider;
@@ -90,20 +84,16 @@ public class DefaultPeerControler implements ConfigurablePeerControler,
 		this.statusProvider = statusProvider;
 	}
 
-	private PeerConnectionFactory factory;
-
-	private PeerConnectionSource source;
+	private PeerReceivingConnectionFactory factory;
+	private Set factories = new HashSet();
 
 	public void register(PeerConnectionFactory factory) {
-		this.factory = factory;
-	}
-
-	public void register(PeerConnectionSource source) {
-		this.source = source;
-	}
-
-	public PeerConnectionSource getPeerConnectionSource() {
-		return source;
+		LogFactory.getLog(getClass()).debug("register " + factory);
+		if (factory instanceof PeerReceivingConnectionFactory) {
+			this.factory = (PeerReceivingConnectionFactory) factory;
+		}
+		
+		this.factories.add(factory);
 	}
 
 	private Timer timer = DefaultTimer.getInstance();
@@ -117,29 +107,24 @@ public class DefaultPeerControler implements ConfigurablePeerControler,
 		public boolean evaluate(Object o) {
 			Peer peer = (Peer) o;
 
-			if (peer.getConnectivityScoring().compareTo(
-					ConnectivityScoring.UNREACHEABLE) <= 0) {
-				return false;
-			}
-
 			Order order = statusProvider.getNodeStatus().getOrder();
-			Order peerOrder = peer.getOrder();
+			Order peerOrder = peer.getStatus().getOrder();
 
-			return peerOrder.compareTo(order) <= 0;
+			return peerOrder != null && peerOrder.compareTo(order) <= 0;
 		}
 	};
 
-	public Peer getBestPeer() throws NoPeerAvailableException {
+	public List getBestPeers() throws NoPeerAvailableException {
 		if (storage.isEmpty()) {
 			updatePeers();
 		}
 
-		Peer peer = storage.first(orderPredicate);
-		if (peer == null) {
+		List peers = storage.find(orderPredicate);
+		if (peers.isEmpty()) {
 			throw new NoPeerAvailableException();
 		}
 
-		return peer;
+		return peers;
 	}
 
 	protected void updatePeers() {
@@ -156,43 +141,35 @@ public class DefaultPeerControler implements ConfigurablePeerControler,
 
 		for (Iterator iter = references.iterator(); iter.hasNext();) {
 			PeerReference reference = (PeerReference) iter.next();
-			updatePeer(reference);
+			PeerStatus status = getStatus(reference);
+			MutablePeer peer = updatePeer(status);
+			peer.setReference(reference);
 		}
 
 		storage.trim();
 
 		LogFactory.getLog(getClass()).debug(storage.size() + " peers known");
 	}
-
-	private void updatePeer(PeerReference reference) {
+	
+	private PeerStatus getStatus(PeerReference reference) {
 		NodeIdentifier identifier = (NodeIdentifier) reference
-				.getAttribute(PeerReference.IDENTIFIER_ATTRIBUTE);
-		Peer peer = storage.get(identifier);
+		.getAttribute(PeerReference.IDENTIFIER_ATTRIBUTE);
+		Order order = (Order) reference.getAttribute(PeerReference.ORDER_ATTRIBUTE);
+		return new PeerStatus(identifier, order);
+	}
+
+	private MutablePeer updatePeer(PeerStatus status) {
+		
+		MutablePeer peer = storage.get(status.getIdentifier());
 
 		if (peer == null) {
-			peer = createPeer(reference);
+			LogFactory.getLog(getClass()).debug("new known peer: " + status);
+			peer = new DefaultPeer(status);
+			storage.add(peer);
 		} else {
-			peer.update(reference);
+			peer.update(status);
 		}
-	}
-
-	private Peer createPeer(PeerReference reference) {
-		return initPeer(new DefaultPeer(reference));
-	}
-
-	private Peer createPeer(PeerStatus status) {
-		return initPeer(new DefaultPeer(status));
-	}
-
-	private Peer initPeer(DefaultPeer peer) {
-		LogFactory.getLog(getClass()).trace(
-				"init peer, add " + listeners.size() + " listeners");
-
-		peer.setConnectionFactory(factory);
-		for (Iterator iter = listeners.iterator(); iter.hasNext();) {
-			peer.add((PropertyChangeListener) iter.next());
-		}
-		storage.add(peer);
+		
 		return peer;
 	}
 
@@ -204,94 +181,28 @@ public class DefaultPeerControler implements ConfigurablePeerControler,
 		}
 	};
 
-	private final Task scoringLoop = new Task() {
-		public void run() {
-			LogFactory.getLog(getClass()).debug("update peer scoring");
-			for (Iterator iter = storage.peers(); iter.hasNext();) {
-				Peer peer = (Peer) iter.next();
-				peer.updateScoring();
-			}
-		}
-	};
-
-	private final Task sendStatusLoop = new Task() {
-		public void run() {
-			LogFactory.getLog(getClass()).debug("send local to peers");
-			for (Iterator iter = storage.peers(); iter.hasNext();) {
-				Peer peer = (Peer) iter.next();
-				if (peer.isConnected()) {
-					timer.executeLater(new SendStatusTask(peer));
-				}
-			}
-		}
-	};
-
 	public void start() throws ControlException {
 		if (statusProvider == null) {
 			throw new IllegalStateException("No defined PeerStatusProvider");
 		}
 
-		if (source != null) {
-			source.setStatusProvider(statusProvider);
-			source.setRegistry(new PeerConnectionSource.Registry() {
-				public void registry(PeerConnection connection) {
-					registerConnection(connection);
-				}
-			});
-			source.add((PeerConnectionOpeningListener) openingListener);
-			source.add((VetoablePeerConnectionOpeningListener) openingListener);
-
-			source.start();
+		for (Iterator iter=factories.iterator(); iter.hasNext(); ) {
+			PeerConnectionFactory factory = (PeerConnectionFactory) iter.next();
+			factory.add(openingListener);
 		}
 
 		if (factory != null) {
 			factory.setStatusProvider(statusProvider);
-			factory.add((PeerConnectionOpeningListener) openingListener);
 
 			LogFactory.getLog(getClass()).trace("start asynchronous tasks");
 			timer.execute(updateLoop);
-			timer.executePeriodically(DefaultTimer.seconds(30), scoringLoop,
-					false);
 		}
-
-		timer.executePeriodically(DefaultTimer.seconds(30), sendStatusLoop,
-				false);
-	}
-
-	private void registerConnection(PeerConnection connection) {
-		LogFactory.getLog(getClass()).debug(
-				"register connection: " + connection);
-
-		PeerStatus peerStatus = connection.getLastPeerStatus();
-		NodeIdentifier identifier = peerStatus.getIdentifier();
-
-		Peer peer = storage.get(identifier);
-		if (peer == null) {
-			LogFactory.getLog(getClass()).debug(
-					"create new peer for " + peerStatus);
-			peer = createPeer(peerStatus);
-		}
-
-		if (peer.isConnected()) {
-			LogFactory.getLog(getClass()).warn(
-					"Peer already connected: " + peer);
-			peer.disconnect();
-		}
-
-		connection.setPeer(peer);
-		peer.registerConnection(connection);
 	}
 
 	public void stop() throws ControlException {
 		LogFactory.getLog(getClass()).debug("stopped");
 
 		updateLoop.cancel();
-		scoringLoop.cancel();
-		sendStatusLoop.cancel();
-
-		if (source != null) {
-			source.stop();
-		}
 	}
 
 	/*
@@ -306,141 +217,110 @@ public class DefaultPeerControler implements ConfigurablePeerControler,
 
 	}
 
-	/**
-	 * @todo can be moved into an AsynchronousMessageWriter
-	 * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
-	 */
-	class SendStatusTask extends Task {
+	private Map peerConnections = new HashMap();
 
-		private final Peer peer;
-
-		public void run() {
-			if (peer.isConnected()) {
-				LogFactory.getLog(getClass()).debug(
-						"send local status to " + peer);
-
-				PeerStatusMessage message = new PeerStatusMessage(
-						statusProvider.getNodeStatus().createPeerStatus());
-				try {
-					peer.getConnection().getWriter().write(message);
-				} catch (IOException e) {
-					LogFactory.getLog(getClass()).error(
-							"failed to send local status to " + peer, e);
-				}
-			}
-		}
-
-		public SendStatusTask(final Peer peer) {
-			this.peer = peer;
-		}
-
-	}
-
-	private Set listeners = new HashSet();
-
-	public void addPeerListener(PropertyChangeListener listener) {
-		listeners.add(listener);
-
-		for (Iterator iter = storage.peers(); iter.hasNext();) {
-			Peer peer = (Peer) iter.next();
-			peer.add(listener);
-		}
-	}
-
-	public void removePeerListener(PropertyChangeListener listener) {
-		listeners.remove(listener);
-
-		for (Iterator iter = storage.peers(); iter.hasNext();) {
-			Peer peer = (Peer) iter.next();
-			peer.remove(listener);
-		}
-	}
-
-	private Set peerConnections = new HashSet();
-
-	private void addPeerConnection(PeerConnection connection) {
+	private void addPeerConnection(PeerConnection connection) throws VetoPeerConnectionStatusChangeException {
 		LogFactory.getLog(getClass()).debug(
 				"register the connection " + connection);
-		peerConnections.add(connection);
-		connection.add(connectionListener);
 
-		auditor.acceptConnection(connection.getPeer().getReference());
+		NodeIdentifier peerIdentifier = connection.getPeerIdentifier();
+		if (statusProvider.getNodeIdentifier().equals(peerIdentifier)) {
+			throw new VetoPeerConnectionStatusChangeException("Cant' open connection with myself");
+		}
+		if (peerConnections.containsKey(peerIdentifier)) {
+			throw new VetoPeerConnectionStatusChangeException("Connection already exists with " + peerIdentifier);
+		}
+
+		PeerStatus remoteStatus = connection.getRemoteStatus();
+		if (connection instanceof PeerReceivingConnection && 
+				remoteStatus.getOrder().isLower(statusProvider.getNodeStatus().getOrder())) {
+			throw new VetoPeerConnectionStatusChangeException("Cant' receive from lower order peer: " + remoteStatus);
+		}
+
+		
+		peerConnections.put(peerIdentifier, connection);
+		
+		auditor.acceptConnection(storage.get(peerIdentifier));
 		auditor.connectionCount(peerConnections.size());
 	}
 
 	private void removePeerConnection(PeerConnection connection) {
 		LogFactory.getLog(getClass()).debug(
 				"unregister the connection " + connection);
-		peerConnections.remove(connection);
-		connection.remove(connectionListener);
 
-		auditor.closeConnection(connection.getPeer().getReference());
+		NodeIdentifier peerIdentifier;
+		
+		try {
+			peerIdentifier = connection.getPeerIdentifier();
+		} catch (IllegalStateException e) {
+			// connection was never opened
+			return;
+		}
+
+		peerConnections.remove(peerIdentifier);
+
+		MutablePeer peer = storage.get(peerIdentifier);
+		peer.setLatency(Peer.INFINITE_LATENCY);
+		auditor.closeConnection(peer);
 		auditor.connectionCount(peerConnections.size());
 	}
 
-	private final SourceListener openingListener = new SourceListener();
-
-	class SourceListener implements PeerConnectionOpeningListener,
-			VetoablePeerConnectionOpeningListener {
+	private final PeerConnectionOpeningListener openingListener = new PeerConnectionOpeningListener() {
 
 		public void connectionOpening(PeerConnection connection) {
-			addPeerConnection(connection);
+			connection.add(vetoConnectionListener);
+			connection.add(connectionListener);
+			connection.add(statusListener);
 		}
-
-		public void vetoableConnectionOpening(PeerConnection connection)
-				throws VetoPeerConnectionOpeningException {
-			if (connection.getType().equals(PeerConnection.Type.RELAY)) {
-				int relayCount = CollectionUtils.countMatches(peerConnections,
-						PeerConnections.acceptType(PeerConnection.Type.RELAY));
-				if (relayCount >= maximunRelayCount) {
-					String msg = "Maximum relay count reachable";
-					throw new VetoPeerConnectionOpeningException(msg,
-							connection);
-				}
+		
+	};
+	
+	private final VetoablePeerConnectionStatusListener vetoConnectionListener = new VetoablePeerConnectionStatusListener() {
+		
+		public void vetoablePeerConnectionStatusChange(PeerConnectionStatusEvent event) throws VetoPeerConnectionStatusChangeException {
+			if (event.getStatus().equals(PeerConnection.Status.OPENED)) {
+				addPeerConnection(event.getConnection());				
 			}
 		}
+		
+	};
 
-	}
-
-	private final PeerConnectionStatusListener connectionListener = new PeerConnectionStatusListener() {
-
-		public void peerConnectionStatusChanged(PeerConnectionStatusEvent event) {
-			if (event.getStatus().equals(PeerConnection.Status.CLOSED)) {
-				PeerConnection connection = event.getConnection();
-				removePeerConnection(connection);
-			}
-
-			LogFactory.getLog(getClass()).trace(
-					"forward " + event + " to "
-							+ connectionStatusListeners.size() + " listeners");
-			for (Iterator iter = connectionStatusListeners.iterator(); iter
-					.hasNext();) {
-				PeerConnectionStatusListener listener = (PeerConnectionStatusListener) iter
-						.next();
-				listener.peerConnectionStatusChanged(event);
-			}
+	private final PeerConnectionStatusListener connectionListener = new PeerConnectionStatusAdapter() {
+		
+		protected void connectionClosed(PeerConnection connection) {
+			removePeerConnection(connection);
 		}
 
 	};
+	
+	private final PeerStatusListener statusListener = new PeerStatusListener() {
+		public void peerStatusChanged(PeerStatusEvent event) {
+			PeerStatus status = event.getStatus();
+			
+			MutablePeer peer = updatePeer(status);
+			
+			if (event.getSource() instanceof PeerReceivingConnection) {
+				PeerReceivingConnection connection = (PeerReceivingConnection) event.getSource();
+				peer.setLatency(connection.getLatency());
+			}
+			
+			LogFactory.getLog(getClass()).debug("updated peer: " + peer);
+		
+			for (Iterator iter = statusListeners.iterator(); iter.hasNext();) {
+				PeerStatusListener listener = (PeerStatusListener) iter.next();
+				listener.peerStatusChanged(event);
+			}
+		}
+	};
+	
+	private Set statusListeners = new HashSet();
 
-	private int maximunRelayCount = 3;
-
-	/**
-	 * @param maximunRelayCount
-	 *            The maximunRelayCount to set.
-	 */
-	public void setMaximunRelayCount(int maximunRelayCount) {
-		this.maximunRelayCount = maximunRelayCount;
+	public void add(PeerStatusListener listener) {
+		statusListeners.add(listener);
 	}
 
-	private Set connectionStatusListeners = new HashSet();
-
-	public void add(PeerConnectionStatusListener listener) {
-		connectionStatusListeners.add(listener);
-	}
-
-	public void remove(PeerConnectionStatusListener listener) {
-		connectionStatusListeners.remove(listener);
+	public void remove(PeerStatusListener listener) {
+		statusListeners.remove(listener);
 	}
 
 }

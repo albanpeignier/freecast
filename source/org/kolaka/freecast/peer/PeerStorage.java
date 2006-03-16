@@ -26,16 +26,20 @@ package org.kolaka.freecast.peer;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.time.DateUtils;
-import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.node.NodeIdentifier;
 import org.kolaka.freecast.timer.TimeBase;
 
@@ -52,27 +56,22 @@ public class PeerStorage {
 		this.peers = new TreeMap();
 	}
 
-	public Peer first(Predicate filter) {
-		Peer first = null;
-		for (Iterator iter = entries(); iter.hasNext();) {
-			Peer peer = ((Entry) iter.next()).getPeer();
-
-			if (!filter.evaluate(peer)) {
-				continue;
-			}
-
-			if (first == null || comparator.compare(first, peer) > 0) {
-				first = peer;
-			}
-		}
-		return first;
+	public List find(Predicate filter) {
+		List acceptables = new LinkedList();
+		CollectionUtils.select(IteratorUtils.toList(peers()), filter, acceptables);
+		Collections.sort(acceptables, comparator);
+		return acceptables;
+	}
+	
+	public void trim() {
+		// TODO no longer implemented
 	}
 
-	public void add(Peer peer) {
-		peers.put(peer.getIdentifier(), new Entry(peer));
+	public void add(MutablePeer peer) {
+		peers.put(peer.getStatus().getIdentifier(), new Entry(peer));
 	}
 
-	public Peer get(NodeIdentifier identifier) {
+	public MutablePeer get(NodeIdentifier identifier) {
 		Entry entry = (Entry) peers.get(identifier);
 
 		if (entry == null) {
@@ -106,24 +105,6 @@ public class PeerStorage {
 		return peers.iterator();
 	}
 
-	public void trim() {
-		long now = timeBase.currentTimeMillis();
-
-		for (Iterator iter = entries(); iter.hasNext();) {
-			Entry entry = (Entry) iter.next();
-
-			if (entry.getPeer().isConnected()) {
-				continue;
-			}
-
-			long age = entry.getAge(now);
-			if (age > peerTimeout) {
-				LogFactory.getLog(getClass()).debug("delete peer " + entry);
-				iter.remove();
-			}
-		}
-	}
-
 	public long getPeerTimeout() {
 		return peerTimeout;
 	}
@@ -141,20 +122,20 @@ public class PeerStorage {
 		this.timeBase = timeBase;
 	}
 
-	class Entry {
+	public class Entry {
 
 		private long timestamp;
 
-		private final Peer peer;
+		private final MutablePeer peer;
 
-		public Entry(Peer peer) {
+		Entry(MutablePeer peer) {
 			Validate.notNull(peer, "No specified Peer");
 			this.peer = peer;
 
 			touch();
 		}
 
-		public Peer getPeer() {
+		public MutablePeer getPeer() {
 			return peer;
 		}
 

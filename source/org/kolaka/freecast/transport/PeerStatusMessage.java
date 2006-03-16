@@ -63,14 +63,14 @@ public class PeerStatusMessage extends BaseMessage {
 		return peerStatus.hashCode();
 	}
 
-	public void read(DataInputStream input) throws IOException {
+	protected void readImpl(DataInputStream input) throws IOException {
 		int length = input.readInt();
 		byte bytes[] = new byte[length];
 		input.readFully(bytes);
 		peerStatus = (PeerStatus) SerializationUtils.deserialize(bytes);
 	}
 
-	public void write(DataOutputStream output) throws IOException {
+	protected void writeImpl(DataOutputStream output) throws IOException {
 		byte bytes[] = SerializationUtils.serialize(peerStatus);
 		output.writeInt(bytes.length);
 		output.write(bytes);

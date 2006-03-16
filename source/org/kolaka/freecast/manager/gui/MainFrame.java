@@ -44,6 +44,7 @@ import org.kolaka.freecast.auditor.AuditorFactory;
 import org.kolaka.freecast.lang.mutable.ObservableValue;
 import org.kolaka.freecast.node.ConfigurableNode;
 import org.kolaka.freecast.node.Node;
+import org.kolaka.freecast.peer.Peer;
 import org.kolaka.freecast.peer.PeerControler;
 import org.kolaka.freecast.peer.PeerReference;
 import org.kolaka.freecast.setup.SetupAction;
@@ -220,11 +221,11 @@ public class MainFrame extends BaseFrame {
 					new Integer(0));
 
 			PeerControler.Auditor peerAuditor = new PeerControler.Auditor() {
-				public void acceptConnection(PeerReference reference) {
+				public void acceptConnection(Peer peer) {
 
 				}
 
-				public void closeConnection(PeerReference reference) {
+				public void closeConnection(Peer peer) {
 
 				}
 

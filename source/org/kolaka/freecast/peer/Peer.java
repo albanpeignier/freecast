@@ -23,10 +23,8 @@
 
 package org.kolaka.freecast.peer;
 
-import java.beans.PropertyChangeListener;
+import org.kolaka.freecast.peer.event.PeerStatusListener;
 
-import org.kolaka.freecast.node.NodeIdentifier;
-import org.kolaka.freecast.node.Order;
 
 /**
  * 
@@ -37,39 +35,14 @@ public interface Peer {
 
 	PeerReference getReference();
 
-	/**
-	 * @return Returns the identifier.
-	 */
-	NodeIdentifier getIdentifier();
-
-	public static final String ORDER_PROPERTYNAME = "order";
-
-	Order getOrder();
-
-	ConnectivityScoring getConnectivityScoring();
-
-	void updateScoring();
-
 	PeerStatus getStatus();
+	
+	long INFINITE_LATENCY = Long.MAX_VALUE;
+	
+	long getLatency();
 
-	PeerConnection connect() throws PeerConnectionFactoryException;
-
-	public static final String CONNECTION_PROPERTYNAME = "connection";
-
-	public PeerConnection getConnection();
-
-	public boolean isConnected();
-
-	public void disconnect();
-
-	public void registerConnection(PeerConnection connection);
-
-	void update(PeerStatus peerStatus);
-
-	void update(PeerReference reference);
-
-	public void add(PropertyChangeListener listener);
-
-	public void remove(PropertyChangeListener listener);
+	void add(PeerStatusListener listener);
+	
+	void remove(PeerStatusListener listener);
 
 }

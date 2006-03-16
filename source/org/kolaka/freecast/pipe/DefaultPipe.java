@@ -134,31 +134,21 @@ public class DefaultPipe implements Pipe {
 			builder.add(packet);
 
 			if (pageBuilders.size() > (queueLength * 1.2)) {
-				int initialBuilderCount = pageBuilders.size();
 				for (Iterator iter = pageBuilders.values().iterator(); pageBuilders
 						.size() > queueLength
 						&& iter.hasNext();) {
-					LogicalPageBuilder removedBuilder = (LogicalPageBuilder) iter
-							.next();
+					LogicalPageBuilder removedBuilder = (LogicalPageBuilder) iter.next();
 					iter.remove();
 
 					if (removedBuilder.isComplete()) {
 						LogicalPage removedPage = removedBuilder.create();
 						if (removedPage.isFirstPage()) {
-							LogFactory.getLog(getClass()).debug(
-									"cache headerpage " + removedPage);
+							LogFactory.getLog(getClass()).debug("cache headerpage " + removedPage);
 							headerPage = removedPage;
 						}
 					} else {
-						LogFactory.getLog(getClass()).debug(
-								"remove incomplete builder " + removedBuilder);
+						LogFactory.getLog(getClass()).debug("purge incomplete builder " + removedBuilder);
 					}
-				}
-				if (this != nextConsumer) {
-					String message = "removed in " + name + " "
-							+ (initialBuilderCount - pageBuilders.size())
-							+ " builders";
-					LogFactory.getLog(getClass()).debug(message);
 				}
 			}
 		}
@@ -194,12 +184,10 @@ public class DefaultPipe implements Pipe {
 				iterator.remove();
 
 				if (!builder.isComplete()) {
-					LogFactory.getLog(getClass()).debug(
-							"incomplete page skipped: " + builder);
+					LogFactory.getLog(getClass()).trace("incomplete page skipped: " + builder);
 					builder = null;
 				} else if (builder.getLiveTimeLength() > 120000) {
-					LogFactory.getLog(getClass()).debug(
-							"obsolete page skipped: " + builder);
+					LogFactory.getLog(getClass()).debug("obsolete page skipped: " + builder);
 					builder = null;
 				}
 			} while (builder == null);

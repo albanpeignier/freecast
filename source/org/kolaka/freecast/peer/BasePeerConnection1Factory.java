@@ -27,10 +27,6 @@ import java.io.IOException;
 
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.node.NodeStatus;
-import org.kolaka.freecast.node.NodeStatusProvider;
-import org.kolaka.freecast.peer.event.PeerConnectionOpeningListener;
-import org.kolaka.freecast.peer.event.PeerConnectionOpeningSupport;
-import org.kolaka.freecast.peer.event.VetoablePeerConnectionOpeningListener;
 import org.kolaka.freecast.transport.Message;
 import org.kolaka.freecast.transport.PeerStatusMessage;
 
@@ -39,42 +35,14 @@ import org.kolaka.freecast.transport.PeerStatusMessage;
  * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
-public abstract class PeerConnectionFactory {
+public abstract class BasePeerConnection1Factory extends BasePeerConnectionFactory implements PeerConnectionFactory {
 
-	private NodeStatusProvider statusProvider;
-
-	public void setStatusProvider(NodeStatusProvider statusProvider) {
-		this.statusProvider = statusProvider;
-	}
-
-	private PeerConnectionOpeningSupport support = new PeerConnectionOpeningSupport();
-
-	public void add(PeerConnectionOpeningListener listener) {
-		support.add(listener);
-	}
-
-	public void remove(PeerConnectionOpeningListener listener) {
-		support.remove(listener);
-	}
-
-	public void add(VetoablePeerConnectionOpeningListener listener) {
-		support.add(listener);
-	}
-
-	public void remove(VetoablePeerConnectionOpeningListener listener) {
-		support.remove(listener);
-	}
-
-	public PeerConnection create(Peer peer, PeerReference reference)
+	public PeerConnection1 create(Peer peer, PeerReference reference)
 			throws PeerConnectionFactoryException {
-		if (statusProvider == null) {
-			throw new IllegalStateException("No defined NodeStatusProvider");
-		}
-
 		LogFactory.getLog(getClass()).trace(
 				"create a PeerConnection to " + peer + " by " + reference);
 
-		PeerConnection connection = createImpl(peer, reference);
+		PeerConnection1 connection = createImpl(peer, reference);
 		connection.setPeer(peer);
 
 		PeerConnectionFactoryException exception = null;
@@ -96,7 +64,7 @@ public abstract class PeerConnectionFactory {
 			if (exception != null) {
 				LogFactory.getLog(getClass()).debug(
 						"closed not opened connection " + connection);
-				connection.close();
+				PeerConnections.closeQuietly(connection);
 
 				throw exception;
 			}
@@ -105,7 +73,7 @@ public abstract class PeerConnectionFactory {
 		return connection;
 	}
 
-	private void init(PeerConnection connection)
+	private void init(PeerConnection1 connection)
 			throws PeerConnectionFactoryException {
 		LogFactory.getLog(getClass()).trace(
 				"receive peer status via " + connection);
@@ -123,7 +91,7 @@ public abstract class PeerConnectionFactory {
 		LogFactory.getLog(getClass()).debug(
 				"received " + peerStatus + " via " + connection);
 
-		NodeStatus nodeStatus = statusProvider.getNodeStatus();
+		NodeStatus nodeStatus = getStatusProvider().getNodeStatus();
 
 		try {
 			PeerStatus localStatus = nodeStatus.createPeerStatus();
@@ -150,7 +118,7 @@ public abstract class PeerConnectionFactory {
 			throw new PeerConnectionFactoryException(msg);
 		}
 
-		support.fireConnectionOpening(connection);
+		fireConnectionOpening(connection);
 
 		// The status is changed to OPENED by the PeerConnectionSource
 		try {
@@ -164,7 +132,7 @@ public abstract class PeerConnectionFactory {
 
 	}
 
-	protected abstract PeerConnection createImpl(Peer peer,
+	protected abstract PeerConnection1 createImpl(Peer peer,
 			PeerReference reference) throws PeerConnectionFactoryException;
 
 }

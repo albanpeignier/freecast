@@ -78,6 +78,10 @@ public class DefaultPacket implements Packet {
 	public boolean equals(DefaultPacket other) {
 		return other != null && sequenceNumber == other.sequenceNumber;
 	}
+	
+	public int hashCode() {
+		return (int) (sequenceNumber % Integer.MAX_VALUE);
+	}
 
 	public String toString() {
 		ToStringBuilder builder = new ToStringBuilder(this);

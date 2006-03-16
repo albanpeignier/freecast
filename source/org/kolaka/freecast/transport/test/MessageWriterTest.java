@@ -31,6 +31,8 @@ import junit.framework.TestCase;
 
 import org.apache.commons.io.output.NullOutputStream;
 import org.apache.commons.lang.NotImplementedException;
+import org.kolaka.freecast.node.DefaultNodeIdentifier;
+import org.kolaka.freecast.node.NodeIdentifier;
 import org.kolaka.freecast.transport.Message;
 import org.kolaka.freecast.transport.MessageType;
 import org.kolaka.freecast.transport.StreamMessageWriter;
@@ -61,6 +63,9 @@ public class MessageWriterTest extends TestCase {
 
 			public void read(DataInputStream input) throws IOException {
 				throw new NotImplementedException(getClass());
+			}
+			public NodeIdentifier getSenderIdentifier() {
+				return new DefaultNodeIdentifier(0);
 			}
 		};
 		writer.write(message);

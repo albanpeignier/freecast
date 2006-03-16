@@ -25,6 +25,8 @@ package org.kolaka.freecast.peer.event;
 
 import java.util.EventObject;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.kolaka.freecast.peer.PeerConnection;
 
@@ -55,6 +57,14 @@ public class PeerConnectionStatusEvent extends EventObject {
 
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
+	}
+	
+	public boolean equals(Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
+	}
+	
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
 	}
 
 }

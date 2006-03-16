@@ -65,6 +65,7 @@ public class SpecificationServerSocketBinder implements ServerSocketBinder {
 		throw lastException;
 	}
 
+	// TODO incompatible with UDP acceptor ...
 	public static InetSocketAddress select(
 			InetSocketAddressSpecification specification) throws IOException {
 		ServerSocket socket = new ServerSocket();

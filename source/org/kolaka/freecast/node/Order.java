@@ -79,6 +79,16 @@ public class Order implements Serializable, Comparable {
 
 		return new Order(value + 1);
 	}
+	
+	/**
+	 * Note that order:1 is lower than order:0 ..
+	 * 
+	 * @param other
+	 * @return
+	 */
+	public boolean isLower(Order other) {
+		return value > other.value;
+	}
 
 	public static Order getInstance(int value) {
 		return new Order(Math.max(0, Math.min(Order.UNKNOWN.value, value)));

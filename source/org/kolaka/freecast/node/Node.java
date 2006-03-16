@@ -23,6 +23,7 @@
 
 package org.kolaka.freecast.node;
 
+import org.kolaka.freecast.node.DefaultNode.StatusProvider;
 import org.kolaka.freecast.peer.PeerControler;
 import org.kolaka.freecast.peer.PeerReference;
 import org.kolaka.freecast.player.PlayerControler;
@@ -52,6 +53,8 @@ public interface Node extends Controlable {
 	public PeerControler getPeerControler();
 
 	public NodeStatus getNodeStatus();
+	
+	StatusProvider getNodeStatusProvider();
 
 	public void checkQoS();
 

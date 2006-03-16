@@ -35,6 +35,7 @@ import org.kolaka.freecast.node.NodeStatus;
 import org.kolaka.freecast.node.NodeStatusProvider;
 import org.kolaka.freecast.node.Order;
 import org.kolaka.freecast.peer.PeerConnection;
+import org.kolaka.freecast.peer.PeerConnection1;
 import org.kolaka.freecast.peer.PeerConnectionSource;
 import org.kolaka.freecast.peer.PeerStatus;
 import org.kolaka.freecast.peer.event.PeerConnectionOpeningListener;
@@ -69,7 +70,7 @@ public class PeerConnectionSourceTest extends TestCase {
 
 		// PeerConnection
 		MockPeerConnection connection = new MockPeerConnection(
-				PeerConnection.Type.RELAY);
+				PeerConnection1.Type.RELAY);
 
 		MockControl writerControl = MockControl
 				.createControl(MessageWriter.class);
@@ -153,7 +154,7 @@ public class PeerConnectionSourceTest extends TestCase {
 
 	class TestPeerConnectionSource extends PeerConnectionSource {
 
-		public void accept(PeerConnection connection) {
+		public void accept(PeerConnection1 connection) {
 			super.accept(connection);
 		}
 

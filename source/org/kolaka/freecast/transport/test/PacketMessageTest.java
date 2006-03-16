@@ -31,36 +31,14 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
-import org.kolaka.freecast.packet.Checksum;
-import org.kolaka.freecast.packet.DefaultLogicalPageDescriptor;
-import org.kolaka.freecast.packet.DefaultPacket;
-import org.kolaka.freecast.packet.DefaultPacketData;
-import org.kolaka.freecast.packet.LogicalPageDescriptor;
 import org.kolaka.freecast.packet.Packet;
+import org.kolaka.freecast.packet.test.PacketGenerator;
 import org.kolaka.freecast.transport.PacketMessage;
 
 public class PacketMessageTest extends TestCase {
 
 	public void testWriteRead() throws IOException {
-		byte[] expectedBytes = new byte[Packet.DEFAULT_SIZE];
-		for (int i = 0; i < expectedBytes.length; i++) {
-			expectedBytes[i] = (byte) (i % Byte.MAX_VALUE);
-		}
-
-		byte[] expectedChecksumContent = new byte[64];
-		for (int i = 0; i < expectedChecksumContent.length; i++) {
-			expectedChecksumContent[i] = (byte) (i % Byte.MAX_VALUE);
-		}
-		Checksum checksum = new Checksum(expectedChecksumContent);
-
-		DefaultLogicalPageDescriptor pageDescriptor = new DefaultLogicalPageDescriptor(
-				1, 0, 1, true);
-		LogicalPageDescriptor.Element elementDescriptor = pageDescriptor
-				.createElementDescriptor(1);
-
-		Packet packet = new DefaultPacket(1, System.currentTimeMillis(),
-				new DefaultPacketData(expectedBytes), checksum,
-				elementDescriptor);
+		Packet packet = new PacketGenerator().generate();
 
 		PacketMessage message = PacketMessage.getInstance(packet);
 

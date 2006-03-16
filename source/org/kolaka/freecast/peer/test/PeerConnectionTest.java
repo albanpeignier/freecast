@@ -31,6 +31,7 @@ import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 import org.kolaka.freecast.peer.PeerConnection;
+import org.kolaka.freecast.peer.PeerConnection1;
 import org.kolaka.freecast.transport.MessageReader;
 import org.kolaka.freecast.transport.PeerConnectionStatusMessage;
 import org.kolaka.freecast.transport.test.MockMessageWriter;
@@ -47,7 +48,7 @@ public class PeerConnectionTest extends TestCase {
 	private MockPeerConnection connection;
 
 	protected void setUp() {
-		connection = new MockPeerConnection(PeerConnection.Type.SOURCE);
+		connection = new MockPeerConnection(PeerConnection1.Type.SOURCE);
 	}
 
 	public void testOpen() throws InterruptedException {

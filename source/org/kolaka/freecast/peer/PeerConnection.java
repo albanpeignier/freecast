@@ -23,10 +23,14 @@
 
 package org.kolaka.freecast.peer;
 
-import org.apache.commons.lang.enums.Enum;
+import java.io.IOException;
+
 import org.apache.commons.lang.enums.ValuedEnum;
+import org.kolaka.freecast.node.NodeIdentifier;
+import org.kolaka.freecast.node.NodeStatusProvider;
 import org.kolaka.freecast.peer.event.PeerConnectionStatusListener;
-import org.kolaka.freecast.transport.MessageReader;
+import org.kolaka.freecast.peer.event.PeerStatusListener;
+import org.kolaka.freecast.peer.event.VetoablePeerConnectionStatusListener;
 import org.kolaka.freecast.transport.MessageWriter;
 
 /**
@@ -37,33 +41,35 @@ import org.kolaka.freecast.transport.MessageWriter;
  */
 public interface PeerConnection {
 
-	Type getType();
-
+	NodeIdentifier getPeerIdentifier();
+	
 	Status getStatus();
 
-	PeerStatus getLastPeerStatus();
-	
-	Peer getPeer();
-	
-	void setPeer(Peer peer);
-	
-	MessageReader getReader();
-	
 	MessageWriter getWriter();
-	
-	void activate();
-	
-	void open();
-	
-	void close();
+
+	void close() throws IOException;
 
 	void add(PeerConnectionStatusListener listener);
 	
 	void remove(PeerConnectionStatusListener listener);
+	
+	void add(VetoablePeerConnectionStatusListener listener);
+	
+	void remove(VetoablePeerConnectionStatusListener listener);
+
+	void add(PeerStatusListener listener);
+	
+	void remove(PeerStatusListener listener);
+	
+	void setNodeStatusProvider(NodeStatusProvider statusProvider);
+	
+	PeerStatus getRemoteStatus();
 
 	public static class Status extends ValuedEnum {
 
 		private static final long serialVersionUID = 3257846593196603700L;
+
+		public static final Status INITIAL = new Status("initial", 20);
 
 		public static final Status OPENING = new Status("opening", 0);
 
@@ -89,25 +95,5 @@ public interface PeerConnection {
 		}
 
 	}
-
-	public static class Type extends Enum {
-
-		private static final long serialVersionUID = 3258128072417883696L;
-
-		public static final Type SOURCE = new Type("source");
-
-		public static final Type RELAY = new Type("relay");
-
-		private Type(String name) {
-			super(name);
-		}
-
-	}
-
-	
-
-	
-
-	
 
 }

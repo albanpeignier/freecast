@@ -41,6 +41,7 @@ import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.net.InetSocketAddressSpecification;
 import org.kolaka.freecast.net.InetSocketAddressSpecificationParser;
+import org.kolaka.freecast.net.SpecificationDatagramSelector;
 import org.kolaka.freecast.net.SpecificationServerSocketBinder;
 import org.kolaka.freecast.node.ConfigurableNode;
 import org.kolaka.freecast.node.DefaultNodeService;
@@ -64,8 +65,8 @@ import org.kolaka.freecast.player.PlayerSource;
 import org.kolaka.freecast.player.VideoPlayerSource;
 import org.kolaka.freecast.resource.ResourceLocator;
 import org.kolaka.freecast.resource.ResourceLocators;
-import org.kolaka.freecast.transport.SocketPeerConnectionFactory;
-import org.kolaka.freecast.transport.SocketPeerConnectionSource;
+import org.kolaka.freecast.transport.MinaPeerReceivingConnectionFactory;
+import org.kolaka.freecast.transport.MinaPeerSendingConnectionFactory;
 import org.kolaka.freecast.transport.receiver.BandwidthControler;
 import org.kolaka.freecast.transport.receiver.EncoderFormat;
 import org.kolaka.freecast.transport.receiver.PeerReceiverControler;
@@ -131,15 +132,17 @@ public class NodeConfigurator {
 
 				InetSocketAddressSpecification listenAddressSpecification = loadInetSocketAddressSpecification(listenAddressConfiguration);
 
-				InetSocketAddress listenAddress = SpecificationServerSocketBinder
+				InetSocketAddress listenAddress = new SpecificationDatagramSelector()
 						.select(listenAddressSpecification);
 
 				LogFactory.getLog(getClass()).debug(
 						"install a PeerSenderControler which can accept other peers at "
 								+ listenAddress);
-				peerControler.register(new SocketPeerConnectionSource(
-						listenAddress));
-				node.setSenderControler(new PeerSenderControler());
+				MinaPeerSendingConnectionFactory sendingFactory = new MinaPeerSendingConnectionFactory(listenAddress);
+				peerControler.register(sendingFactory);
+				sendingFactory.setStatusProvider(node.getNodeStatusProvider());
+				
+				node.setSenderControler(new PeerSenderControler(sendingFactory));
 
 				PeerReferenceLoader peerReferenceLoader = new PeerReferenceLoader();
 				peerReferenceLoader.setListenAddress(listenAddress);
@@ -210,8 +213,10 @@ public class NodeConfigurator {
 					.subset("listenaddress"));
 			receiver = new ShoutServerReceiver(listenAddress);
 		} else if (receiverClass.equals("peer")) {
-			peerControler.register(new SocketPeerConnectionFactory());
-			receiverControler = new PeerReceiverControler(peerControler);
+			MinaPeerReceivingConnectionFactory connectionFactory = new MinaPeerReceivingConnectionFactory();
+			peerControler.register(connectionFactory);
+			connectionFactory.setStatusProvider(node.getNodeStatusProvider());
+			receiverControler = new PeerReceiverControler(peerControler, connectionFactory);
 		} else {
 			throw new ConfigurationException("Unknown receiver class: '"
 					+ receiverClass + "'");

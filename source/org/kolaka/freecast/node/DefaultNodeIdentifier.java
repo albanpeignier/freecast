@@ -58,6 +58,10 @@ public class DefaultNodeIdentifier extends NodeIdentifier {
 	public int hashCode() {
 		return new HashCodeBuilder().append(value).toHashCode();
 	}
+	
+	public long longValue() {
+		return value;
+	}
 
 	public String toString() {
 		return "#"

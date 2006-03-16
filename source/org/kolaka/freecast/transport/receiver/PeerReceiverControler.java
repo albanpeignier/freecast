@@ -23,17 +23,37 @@
 
 package org.kolaka.freecast.transport.receiver;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.comparators.ComparatorChain;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.LogFactory;
+import org.kolaka.freecast.node.Order;
 import org.kolaka.freecast.packet.signer.DummyPacketValidator;
 import org.kolaka.freecast.packet.signer.PacketValidator;
 import org.kolaka.freecast.packet.signer.PacketValidatorUser;
+import org.kolaka.freecast.peer.InetPeerReference;
+import org.kolaka.freecast.peer.MultiplePeerReference;
 import org.kolaka.freecast.peer.NoPeerAvailableException;
 import org.kolaka.freecast.peer.Peer;
 import org.kolaka.freecast.peer.PeerConnection;
 import org.kolaka.freecast.peer.PeerConnectionFactoryException;
+import org.kolaka.freecast.peer.PeerConnectionFuture;
+import org.kolaka.freecast.peer.PeerConnections;
 import org.kolaka.freecast.peer.PeerControler;
+import org.kolaka.freecast.peer.PeerReceivingConnection;
+import org.kolaka.freecast.peer.PeerReceivingConnectionFactory;
+import org.kolaka.freecast.peer.PeerReference;
+import org.kolaka.freecast.peer.Peers;
+import org.kolaka.freecast.peer.event.PeerConnectionStatusAdapter;
+import org.kolaka.freecast.peer.event.PeerConnectionStatusListener;
 import org.kolaka.freecast.pipe.Pipe;
 import org.kolaka.freecast.service.ControlException;
 import org.kolaka.freecast.service.Controlables;
@@ -59,10 +79,6 @@ public class PeerReceiverControler implements ReceiverControler, TimerUser,
 
 	private PeerControler peerControler;
 
-	public void setPeerControler(PeerControler peerControler) {
-		this.peerControler = peerControler;
-	}
-
 	private final Task startReceiverTask = new Task() {
 		public void run() {
 			long retryDelay = -1;
@@ -72,10 +88,6 @@ public class PeerReceiverControler implements ReceiverControler, TimerUser,
 			} catch (NoPeerAvailableException e) {
 				LogFactory.getLog(getClass()).debug("no peer available");
 				retryDelay = DefaultTimer.seconds(5);
-			} catch (PeerConnectionFactoryException e) {
-				LogFactory.getLog(getClass()).debug(
-						"error while establishing connection", e);
-				retryDelay = DefaultTimer.seconds(2);
 			} catch (Throwable e) {
 				LogFactory.getLog(getClass()).error("receiver creation failed",
 						e);
@@ -105,6 +117,58 @@ public class PeerReceiverControler implements ReceiverControler, TimerUser,
 		this.packetValidator = packetValidator;
 	}
 
+	private Map openedConnections = new HashMap();
+	
+	private final Task openConnectionsTask = new Task() {
+		public void run() {
+			openConnections();
+		}
+	};
+
+	private void openConnections() {
+		List peers;
+		try {
+			peers = peerControler.getBestPeers();
+		} catch (NoPeerAvailableException e) {
+			LogFactory.getLog(getClass()).debug("no peer available");
+			return;
+		}
+		
+		for (Iterator iter=peers.iterator(); iter.hasNext() && receiver == null; ) {
+			final Peer peer = (Peer) iter.next();
+			if (openedConnections.containsKey(peer)) {
+				continue;
+			}
+	
+			LogFactory.getLog(getClass()).debug(
+					"try to open a connection with " + peer);
+			
+			try {
+				PeerConnectionStatusListener listener = new PeerConnectionStatusAdapter() {
+					private boolean registered;
+					
+					protected void connectionClosed(PeerConnection connection) {
+						LogFactory.getLog(getClass()).debug("lost connection with " + peer);
+						openedConnections.remove(peer);
+					}
+					protected synchronized void connectionOpened(PeerConnection connection) {
+						if (registered) {
+							LogFactory.getLog(getClass()).warn("several connections opened with " + peer);
+							PeerConnections.closeQuietly(connection);
+							return;
+						}
+						registered = true;
+						LogFactory.getLog(getClass()).debug("new opened connection with " + peer);
+						openedConnections.put(peer, connection);
+					}
+				};
+				openConnections(peer, listener);
+			} catch (PeerConnectionFactoryException e) {
+				LogFactory.getLog(getClass()).debug("Can't open connection with " + peer, e);
+			}
+		}
+	}
+
 	private PeerReceiver receiver;
 
 	/**
@@ -114,34 +178,78 @@ public class PeerReceiverControler implements ReceiverControler, TimerUser,
 	 * @throws PeerConnectionFactoryException
 	 * @throws ControlException
 	 */
-	private void createReceiver() throws NoPeerAvailableException,
-			PeerConnectionFactoryException, ControlException {
+	private void createReceiver() throws NoPeerAvailableException {
 		if (receiver != null) {
 			throw new IllegalStateException("Receiver already exists: "
 					+ receiver);
 		}
+		
+		List bestConnectedPeers = new ArrayList(openedConnections.keySet());
+		Collections.sort(bestConnectedPeers, peerComparator);
 
-		Peer peer = peerControler.getBestPeer();
+		for (Iterator iter=bestConnectedPeers.iterator(); iter.hasNext() && receiver == null; ) {
+			Peer peer = (Peer) iter.next();
+	
+			LogFactory.getLog(getClass()).debug(
+					"try to activate connection with " + peer);
+			
+			try {
+				PeerReceivingConnection peerConnection = (PeerReceivingConnection) openedConnections.get(peer);
+				if  (peerConnection == null) {
+					continue;
+				}
+				
+				peerConnection.activate();
 
-		LogFactory.getLog(getClass()).debug(
-				"try to open a connection with " + peer);
-		PeerConnection peerConnection = peer.connect();
-		peerConnection.activate();
+				new PeerConnectionFuture(peerConnection).wait(PeerConnection.Status.ACTIVATED, 1000);
 
-		LogFactory.getLog(getClass()).debug(
-				"create a peer receiver for " + peerConnection);
-		PeerReceiver receiver = new PeerReceiver(peerConnection);
-		receiver.setPacketValidator(packetValidator);
-		receiver.setProducer(pipe.createProducer());
+				LogFactory.getLog(getClass()).debug(
+						"create a peer receiver for " + peerConnection);
+				PeerReceiver receiver = new PeerReceiver(peerConnection);
+				receiver.setPacketValidator(packetValidator);
+				receiver.setProducer(pipe.createProducer());
 
-		receiver.add(listener);
+				receiver.add(listener);
 
-		LogFactory.getLog(getClass()).debug("start peer receiver " + receiver);
-		Controlables.start(receiver);
-
-		this.receiver = receiver;
+				LogFactory.getLog(getClass()).debug("start peer receiver " + receiver);
+				Controlables.start(receiver);
+				
+				this.receiver = receiver;
+			} catch (Exception e) {
+				LogFactory.getLog(getClass()).debug("Can't open connection with " + peer, e);
+			}
+		}
+		
+		if (receiver == null) {
+			throw new NoPeerAvailableException();
+		}
+	}
+	
+	private void openConnections(Peer peer, PeerConnectionStatusListener listener) throws PeerConnectionFactoryException {
+		openConnections(peer, peer.getReference(), listener);
 	}
 
+	private void openConnections(Peer peer, PeerReference reference, PeerConnectionStatusListener listener) throws PeerConnectionFactoryException {
+		if (reference instanceof MultiplePeerReference) {
+			for (Iterator iter = ((MultiplePeerReference) reference).references().iterator(); iter.hasNext();) {
+				PeerReference subReference = (PeerReference) iter.next();
+				try {
+					openConnections(peer, subReference, listener);
+				} catch (PeerConnectionFactoryException e) {
+					LogFactory.getLog(getClass()).debug("Can't connection " + peer + " on " + reference, e);
+				}
+			}
+			throw new PeerConnectionFactoryException("No possible connection with " + peer);
+		} else if (reference instanceof InetPeerReference) {
+			PeerReceivingConnection peerConnection;
+			peerConnection = connectionFactory.create(peer, reference);
+			peerConnection.add(listener);
+			peerConnection.open();
+		} else { 
+			throw new IllegalArgumentException("Unsupport reference type: " + reference);
+		}
+	}
+	
 	private Timer timer = DefaultTimer.getInstance();
 
 	public void setTimer(Timer timer) {
@@ -172,9 +280,14 @@ public class PeerReceiverControler implements ReceiverControler, TimerUser,
 	public void start() throws ControlException {
 		LogFactory.getLog(getClass()).debug("start");
 		startReceiver();
+		timer.executePeriodically(DefaultTimer.seconds(30), openConnectionsTask, true);
 	}
 
 	private boolean stopped;
+
+	private PeerReceivingConnectionFactory connectionFactory;
+
+	private ComparatorChain peerComparator;
 
 	public void stop() throws ControlException {
 		stopped = true;
@@ -191,8 +304,15 @@ public class PeerReceiverControler implements ReceiverControler, TimerUser,
 
 	}
 
-	public PeerReceiverControler(PeerControler peerControler) {
+	public PeerReceiverControler(PeerControler peerControler, PeerReceivingConnectionFactory connectionFactory) {
 		this.peerControler = peerControler;
+		this.connectionFactory = connectionFactory;
+		
+		ComparatorChain comparator = new ComparatorChain();
+		comparator.addComparator(Peers.compareLatency());
+		comparator.addComparator(Peers.compareOrder());
+		this.peerComparator = comparator;
+
 	}
 	
 	public ReceiverConfiguration getReceiverConfiguration() {

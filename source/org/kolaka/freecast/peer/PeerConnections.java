@@ -23,7 +23,10 @@
 
 package org.kolaka.freecast.peer;
 
+import java.io.IOException;
+
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * 
@@ -42,15 +45,23 @@ public class PeerConnections {
 		};
 	}
 
-	public static Predicate acceptType(final PeerConnection.Type type) {
+	public static Predicate acceptType(final PeerConnection1.Type type) {
 		return new Predicate() {
 
 			public boolean evaluate(Object input) {
-				PeerConnection connection = (PeerConnection) input;
+				PeerConnection1 connection = (PeerConnection1) input;
 				return connection.getType().equals(type);
 			}
 
 		};
+	}
+	
+	public static void closeQuietly(PeerConnection connection) {
+		try {
+			connection.close();
+		} catch (IOException e) {
+			LogFactory.getLog(PeerConnections.class).debug("can't close connection " + connection, e);
+		}
 	}
 
 }

@@ -174,5 +174,9 @@ public class StreamMessageWriter implements MessageWriter {
 		return new ToStringBuilder(this).append("bandwidth", getBandwith())
 				.toString();
 	}
+	
+	public void close() throws IOException {
+		output.close();
+	}
 
 }

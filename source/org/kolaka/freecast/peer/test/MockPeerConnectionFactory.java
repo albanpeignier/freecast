@@ -23,10 +23,13 @@
 
 package org.kolaka.freecast.peer.test;
 
+import org.kolaka.freecast.peer.BasePeerConnectionFactory;
 import org.kolaka.freecast.peer.Peer;
 import org.kolaka.freecast.peer.PeerConnection;
-import org.kolaka.freecast.peer.PeerConnectionFactory;
+import org.kolaka.freecast.peer.PeerConnection1;
 import org.kolaka.freecast.peer.PeerConnectionFactoryException;
+import org.kolaka.freecast.peer.PeerReceivingConnection;
+import org.kolaka.freecast.peer.PeerReceivingConnectionFactory;
 import org.kolaka.freecast.peer.PeerReference;
 
 import com.mockobjects.ReturnValue;
@@ -38,18 +41,17 @@ import com.mockobjects.util.Verifier;
  * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
-public class MockPeerConnectionFactory extends PeerConnectionFactory implements
+public class MockPeerConnectionFactory extends BasePeerConnectionFactory implements PeerReceivingConnectionFactory,
 		Verifiable {
 
 	private ReturnValue returnConnection = new ReturnValue("connection");
 
-	public void setupReturnedConnection(PeerConnection connection) {
+	public void setupReturnedConnection(PeerReceivingConnection connection) {
 		this.returnConnection.setValue(connection);
 	}
 
-	protected PeerConnection createImpl(Peer peer, PeerReference reference)
-			throws PeerConnectionFactoryException {
-		return (PeerConnection) returnConnection.getValue();
+	public PeerReceivingConnection create(Peer peer, PeerReference reference) {
+		return (PeerReceivingConnection) returnConnection.getValue();
 	}
 
 	public void verify() {

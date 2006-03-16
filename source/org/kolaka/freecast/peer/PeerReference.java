@@ -63,5 +63,5 @@ public abstract class PeerReference implements Serializable {
 	public void setAttribute(String name, Object value) {
 		attributes.put(name, value);
 	}
-
+	
 }

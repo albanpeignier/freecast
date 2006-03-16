@@ -120,7 +120,7 @@ public class ConsumerInputStreamFactory {
 	private void sleep() {
 		String msg = "pipe is empty. Sleep " + delayOnEmptyPipe / 1000
 				+ " seconds";
-		LogFactory.getLog(getClass()).debug(msg);
+		LogFactory.getLog(getClass()).trace(msg);
 
 		try {
 			Thread.sleep(delayOnEmptyPipe);

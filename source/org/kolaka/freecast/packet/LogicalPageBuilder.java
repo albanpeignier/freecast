@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.collections.SortedList;
 
 /**
@@ -53,6 +54,10 @@ public class LogicalPageBuilder {
 	}
 
 	public void add(Packet packet) {
+		if (packets.contains(packet)) {
+			LogFactory.getLog(getClass()).debug("duplicate packet received: " + packet);
+			return;
+		}
 		packets.add(packet);
 	}
 

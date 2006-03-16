@@ -31,6 +31,7 @@ import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.packet.LogicalPage;
 import org.kolaka.freecast.packet.Packet;
 import org.kolaka.freecast.peer.PeerConnection;
+import org.kolaka.freecast.peer.PeerSendingConnection;
 import org.kolaka.freecast.peer.event.PeerConnectionStatusEvent;
 import org.kolaka.freecast.peer.event.PeerConnectionStatusListener;
 import org.kolaka.freecast.pipe.Consumer;
@@ -62,20 +63,16 @@ public class PeerSender extends BaseService implements Sender, TimerUser {
 		this.consumer = consumer;
 	}
 
-	private final PeerConnection connection;
+	private final PeerSendingConnection connection;
 
-	public PeerSender(PeerConnection connection) {
-		Validate.isTrue(connection.getType().equals(PeerConnection.Type.RELAY),
-				"connection type must be " + PeerConnection.Type.RELAY,
-				connection);
+	public PeerSender(PeerSendingConnection connection) {
 		this.connection = connection;
 	}
 
 	private final PeerConnectionStatusListener listener = new PeerConnectionStatusListener() {
 		public void peerConnectionStatusChanged(PeerConnectionStatusEvent event) {
-			if (event.getStatus().equals(PeerConnection.Status.CLOSED)) {
-				LogFactory.getLog(getClass()).debug(
-						"connection closed, stop the sender");
+			if (!event.getStatus().equals(PeerConnection.Status.ACTIVATED)) {
+				LogFactory.getLog(getClass()).debug("connection disactivated, stop the sender");
 				Controlables.stopQuietly(PeerSender.this);
 			}
 		}
@@ -108,7 +105,8 @@ public class PeerSender extends BaseService implements Sender, TimerUser {
 						"failed to send a packet via " + connection, e);
 			}
 
-			return DefaultTimer.nodelay();
+			// return DefaultTimer.nodelay();
+			return 100;
 		}
 
 	};

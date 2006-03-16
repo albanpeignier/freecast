@@ -37,6 +37,4 @@ public interface ConfigurablePeerControler extends PeerControler {
 
 	public void register(PeerConnectionFactory factory);
 
-	public void register(PeerConnectionSource source);
-
 }

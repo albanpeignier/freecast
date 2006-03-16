@@ -37,7 +37,7 @@ public class Peers {
 
 	private static final Transformer ORDER_TRANSFORMER = new Transformer() {
 		public Object transform(Object input) {
-			return ((Peer) input).getOrder();
+			return ((Peer) input).getStatus().getOrder();
 		}
 	};
 
@@ -48,17 +48,18 @@ public class Peers {
 		return ORDER_COMPARATOR;
 	}
 
-	private static final Transformer CONNECTIVITYSCORING_TRANSFORMER = new Transformer() {
+	private static final Transformer LATENCY_TRANSFORMER = new Transformer() {
 		public Object transform(Object input) {
-			return ((Peer) input).getConnectivityScoring();
+			return new Long(((Peer) input).getLatency());
 		}
 	};
 
-	private static final Comparator CONNECTIVITYSCORING_COMPARATOR = new TransformingComparator(
-			CONNECTIVITYSCORING_TRANSFORMER);
-
-	public static Comparator compareConnectivityScoring() {
-		return CONNECTIVITYSCORING_COMPARATOR;
+	private static final Comparator LATENCY_COMPARATOR = new TransformingComparator(
+			LATENCY_TRANSFORMER);
+	
+	public static Comparator compareLatency() {
+		return LATENCY_COMPARATOR;
 	}
+	
 
 }
