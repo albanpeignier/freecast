@@ -28,8 +28,6 @@ import java.io.IOException;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.LogFactory;
 import org.apache.mina.common.IoSession;
-import org.apache.mina.common.WriteFuture;
-import org.kolaka.freecast.node.NodeIdentifier;
 import org.kolaka.freecast.peer.BasePeerConnection2;
 import org.kolaka.freecast.peer.PeerConnection;
 import org.kolaka.freecast.peer.event.PeerConnectionStatusAdapter;
@@ -54,9 +52,13 @@ public abstract class BaseMinaPeerConnection extends BasePeerConnection2 {
 			protected void connectionOpened(PeerConnection connection) {
 				aliveTask = createAliveTask();
 				timer.executePeriodically(PING_DELAY, aliveTask, false);
+				timer.executePeriodically(AcknowledgmentProcessor.ACKNOWLEDGMENT_DELAY / 3, ackTask, false);
+				timer.executePeriodically(AcknowledgmentProcessor.ACKNOWLEDGMENT_DELAY, ackResentTask, false);
 			}
 			protected void connectionClosed(PeerConnection connection) {
 				if (aliveTask != null) {
+					ackTask.cancel();
+					ackResentTask.cancel();
 					aliveTask.cancel();
 				}
 			}
@@ -77,6 +79,33 @@ public abstract class BaseMinaPeerConnection extends BasePeerConnection2 {
 		return session;
 	}
 	
+	private AcknowledgmentProcessor ackProcessor = new AcknowledgmentProcessor();
+	
+	protected void processMessage(Message message) throws IOException {
+		super.processMessage(message);
+		ackProcessor.messageReceived(message);
+	}
+	
+	private Task ackResentTask = new Task() {
+		public void run() {
+			try {
+				ackProcessor.resend(writer);
+			} catch (IOException e) {
+				LogFactory.getLog(getClass()).error("can't resend some of unacknowledged messages", e);
+			}
+		}
+	};
+
+	private Task ackTask = new Task() {
+		public void run() {
+			try {
+				ackProcessor.acknowledge(writer);
+			} catch (IOException e) {
+				LogFactory.getLog(getClass()).error("can't acknowledge messages", e);
+			}
+		}
+	};
+
 	private MessageWriter writer = new MessageWriter() {
 		public int write(Message message) throws IOException {
 			if (getStatus().equals(PeerConnection.Status.CLOSED)) {
@@ -86,17 +115,11 @@ public abstract class BaseMinaPeerConnection extends BasePeerConnection2 {
 			if (message instanceof IdentifiableMessage) {
 				((IdentifiableMessage) message).setSenderIdentifier(getNodeStatusProvider().getNodeIdentifier());
 			}
+			
 			LogFactory.getLog(getClass()).trace("message sent " + message);
 
-			WriteFuture future = session.write(message);
-			/*
-			future.join(50);
-
-			if (!future.isWritten()) {
-				LogFactory.getLog(getClass()).trace("message not sent ??");
-				// throw new IOException("message not sent: " + message);
-			}
-			*/
+			session.write(message);
+			ackProcessor.messageSent(message);
 			
 			// TODO fake length, to be removed
 			return 1000;
@@ -117,6 +140,9 @@ public abstract class BaseMinaPeerConnection extends BasePeerConnection2 {
 	protected abstract Task createAliveTask();
 	
 	public void close() throws IOException {
+		if (session != null) {
+			session.close();
+		}
 		closeImpl();
 	}
 

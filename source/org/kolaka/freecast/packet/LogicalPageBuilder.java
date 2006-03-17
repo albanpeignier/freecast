@@ -64,7 +64,11 @@ public class LogicalPageBuilder {
 	public boolean isComplete() {
 		return packets.size() == descriptor.getCount();
 	}
-
+	
+	public boolean isFirstPage() {
+		return descriptor.isFirstPage();
+	}
+	
 	public LogicalPage create() {
 		if (!isComplete()) {
 			throw new IllegalStateException("incomplete packet list: " + this);

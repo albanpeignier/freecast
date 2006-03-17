@@ -152,6 +152,8 @@ public class DefaultPipe implements Pipe {
 				}
 			}
 		}
+		
+		private boolean nextMustBeFirstPage = true;
 
 		public synchronized LogicalPage consume() throws EmptyPipeException {
 			if (headerPage != null) {
@@ -166,13 +168,25 @@ public class DefaultPipe implements Pipe {
 			Iterator iterator = pageBuilders.values().iterator();
 
 			TimedLogicalPageBuilder builder = null;
-
+			
 			do {
 				if (!iterator.hasNext()) {
 					throw new EmptyPipeException();
 				}
 
 				builder = (TimedLogicalPageBuilder) iterator.next();
+				
+				if (!builder.isComplete() && builder.isFirstPage()) {
+					if (builder.getLiveTimeLength() < 30000) {
+						LogFactory.getLog(getClass()).debug(
+								"next first page incomplete kept: " + builder);
+						throw new EmptyPipeException();
+					}
+					
+					LogFactory.getLog(getClass()).warn("first page has been corrupted or lost");
+					// previous header has been lost .. need to wait the next header
+					nextMustBeFirstPage = true;
+				}
 
 				if (!builder.isComplete() && !iterator.hasNext()
 						&& builder.getLiveTimeLength() < 30000) {
@@ -189,9 +203,16 @@ public class DefaultPipe implements Pipe {
 				} else if (builder.getLiveTimeLength() > 120000) {
 					LogFactory.getLog(getClass()).debug("obsolete page skipped: " + builder);
 					builder = null;
+				} else if (nextMustBeFirstPage && !builder.isFirstPage()) {
+					LogFactory.getLog(getClass()).debug("remove builder waiting next first page: " + builder);
+					builder = null;
 				}
 			} while (builder == null);
 
+			if (builder.isFirstPage()) {
+				nextMustBeFirstPage = false;
+			}
+			
 			LogicalPage page = builder.create();
 			validator.validate(page);
 
@@ -244,10 +265,7 @@ public class DefaultPipe implements Pipe {
 
 	class DefaultProducer extends BaseProducer {
 
-		private SequenceValidator validator = new SequenceValidator();
-
 		public void push(Packet packet) {
-			validator.validate(packet);
 			for (Iterator iter = consumers.iterator(); iter.hasNext();) {
 				DefaultConsumer consumer = (DefaultConsumer) iter.next();
 				consumer.push(packet);

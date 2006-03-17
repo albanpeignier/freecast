@@ -65,6 +65,7 @@ public abstract class BaseMessage implements IdentifiableMessage {
 		writeImpl(output);
 	}
 	
+	
 	protected abstract void writeImpl(DataOutputStream output) throws IOException;
 
 	public void read(DataInputStream input) throws IOException {

@@ -50,6 +50,12 @@ public class MessageType extends ValuedEnum {
 			"connectionStatus", ID_CONNECTIONSTATUS,
 			PeerConnectionStatusMessage.class);
 
+	public static final int ID_ACKNOWLEDGMENT = 5;
+
+	public static final MessageType ACKNOWLEDGMENT = new MessageType(
+			"acknowledgment", ID_ACKNOWLEDGMENT,
+			AcknowledgmentMessage.class);
+
 	private final Class messageClass;
 
 	public MessageType(String value, int identifier, Class messageClass) {

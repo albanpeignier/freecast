@@ -33,7 +33,6 @@ import org.kolaka.freecast.peer.PeerConnection;
 import org.kolaka.freecast.peer.PeerConnections;
 import org.kolaka.freecast.peer.PeerReceivingConnection;
 import org.kolaka.freecast.peer.event.PeerConnectionStatusAdapter;
-import org.kolaka.freecast.peer.event.PeerConnectionStatusEvent;
 import org.kolaka.freecast.peer.event.PeerConnectionStatusListener;
 import org.kolaka.freecast.pipe.Producer;
 import org.kolaka.freecast.service.BaseService;
@@ -58,6 +57,7 @@ public class PeerReceiver extends BaseService implements Receiver {
 
 	public void setProducer(Producer producer) {
 		this.producer = producer;
+		connection.setMessageHandler(messageHandler);
 	}
 
 	private PacketValidator packetValidator = new DummyPacketValidator();
@@ -112,7 +112,6 @@ public class PeerReceiver extends BaseService implements Receiver {
 	public PeerReceiver(final PeerReceivingConnection connection) {
 		this.connection = connection;
 		connection.add(listener);
-		connection.setMessageHandler(messageHandler);
 	}
 	
 	private static final ReceiverConfiguration CONFIGURATION = new PeerReceiverConfiguration();

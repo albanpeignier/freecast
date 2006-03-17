@@ -23,26 +23,17 @@
 
 package org.kolaka.freecast.transport;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+public class AcknowledgableMessages {
 
-import org.kolaka.freecast.node.NodeIdentifier;
-
-/**
- * 
- * 
- * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
- */
-public interface Message {
-	public static final byte[] CAPTURE_PATTERN = new byte[] { 'F', 'C', 'M' };
-
-	MessageType getType();
-
-	void write(DataOutputStream output) throws IOException;
-
-	void read(DataInputStream input) throws IOException;
+	public static boolean requiresAcknowledgment(Message message) {
+		if (!(message instanceof AcknowledgableMessage)) {
+			return false;
+		}
+		AcknowledgableMessage acknowledgableMessage = (AcknowledgableMessage) message;
+		if (!acknowledgableMessage.isImportant()) {
+			return false;
+		}
+		return true;
+	}
 	
-	NodeIdentifier getSenderIdentifier();
-		
 }

@@ -39,7 +39,7 @@ import org.kolaka.freecast.packet.Packet;
  * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
-public class PacketMessage extends BaseMessage {
+public class PacketMessage extends BaseMessage implements AcknowledgableMessage {
 
 	private Packet packet;
 
@@ -48,13 +48,13 @@ public class PacketMessage extends BaseMessage {
 	}
 
 	protected PacketMessage(Packet packet) {
-		this.packet = packet;
+		setPacket(packet);
 	}
 
 	public Packet getPacket() {
 		return packet;
 	}
-
+	
 	protected void readImpl(DataInputStream input) throws IOException {
 		long pageSequenceNumber = input.readLong();
 		byte pagePacketCount = input.readByte();
@@ -76,8 +76,8 @@ public class PacketMessage extends BaseMessage {
 		LogicalPageDescriptor.Element elementDescriptor = pageDescriptor
 				.createElementDescriptor(packetIndex);
 
-		packet = new DefaultPacket(packetSequenceNumber, pageTimestamp,
-				new DefaultPacketData(packetBytes), checksum, elementDescriptor);
+		setPacket(new DefaultPacket(packetSequenceNumber, pageTimestamp,
+				new DefaultPacketData(packetBytes), checksum, elementDescriptor));
 	}
 
 	protected void writeImpl(DataOutputStream output) throws IOException {
@@ -112,8 +112,16 @@ public class PacketMessage extends BaseMessage {
 		return packet.hashCode();
 	}
 
-	protected void setPacket(Packet packet) {
+	private void setPacket(Packet packet) {
 		this.packet = packet;
+	}
+	
+	public boolean isImportant() {
+		return packet.getElementDescriptor().getPageDescriptor().isFirstPage();
+	}
+
+	public int getAcknowledgmentIdentifier() {
+		return (int) (packet.getSequenceNumber() % Integer.MAX_VALUE);
 	}
 
 	public static PacketMessage getInstance(Packet packet) {
