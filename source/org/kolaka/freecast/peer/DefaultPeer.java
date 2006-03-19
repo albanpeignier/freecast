@@ -98,7 +98,7 @@ public class DefaultPeer implements MutablePeer {
 	}
 
 	public void update(PeerStatus peerStatus) {
-		LogFactory.getLog(getClass()).debug("update " + peerStatus);
+		LogFactory.getLog(getClass()).trace("update " + peerStatus);
 
 		setIdentifier(peerStatus.getIdentifier());
 		setOrder(peerStatus.getOrder());

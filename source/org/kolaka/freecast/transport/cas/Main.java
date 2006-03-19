@@ -4,7 +4,7 @@
  * This code was developped by Alban Peignier (http://people.tryphon.org/~alban/) 
  * and contributors (their names can be found in the CONTRIBUTORS file).
  *
- * Copyright (C) 2004-2005 Alban Peignier
+ * Copyright (C) 2004 Alban Peignier
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -20,21 +20,35 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package org.kolaka.freecast.lang.math;
 
-import org.apache.commons.lang.math.IntRange;
+package org.kolaka.freecast.transport.cas;
 
-/**
- * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
- */
-public class IntRangeIterator extends NumberRangeIterator {
+import java.net.InetSocketAddress;
 
-	public IntRangeIterator(IntRange range) {
-		super(range);
-	}
+import org.apache.commons.logging.LogFactory;
+import org.apache.mina.common.IoAcceptor;
+import org.apache.mina.filter.LoggingFilter;
+import org.apache.mina.transport.socket.nio.SocketAcceptor;
 
-	protected Number increment(Number next) {
-		return new Integer(next.intValue() + 1);
+
+public class Main {
+
+	public static void main(String args[]) throws Exception {
+		int port = 20000;
+		if (args.length > 0) {
+			port = Integer.parseInt(args[0]);
+		}
+
+		LogFactory.getLog(Main.class).info(
+				"start the Connection Service on " + port);
+
+		ConnectionAssistantService connectionService = new DefaultConnectionAssistantService();
+		ConnectionAssistantServiceSkeleton skeleton = new ConnectionAssistantServiceSkeleton(
+				connectionService);
+		
+		IoAcceptor acceptor = new SocketAcceptor();
+		acceptor.getFilterChain().addFirst("log", new LoggingFilter());
+		acceptor.bind(new InetSocketAddress(port), skeleton);
 	}
 
 }

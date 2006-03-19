@@ -31,6 +31,7 @@ import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.lang.math.IntRange;
 import org.kolaka.freecast.lang.math.IntRangeIterator;
+import org.kolaka.freecast.lang.math.RandomRangeIterator;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
@@ -73,6 +74,11 @@ public final class InetSocketAddressSpecifications {
 	public static InetSocketAddressSpecification portRange(
 			final InetAddress address, final IntRange portRange) {
 		return iterator(address, new IntRangeIterator(portRange));
+	}
+
+	public static InetSocketAddressSpecification randomPortRange(
+			final InetAddress address, final IntRange portRange) {
+		return iterator(address, new RandomRangeIterator(new IntRangeIterator(portRange)));
 	}
 
 	public static InetSocketAddressSpecification portSet(

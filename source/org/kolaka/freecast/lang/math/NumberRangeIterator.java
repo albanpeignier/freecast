@@ -22,19 +22,42 @@
  */
 package org.kolaka.freecast.lang.math;
 
-import org.apache.commons.lang.math.IntRange;
+import java.util.Iterator;
+
+import org.apache.commons.lang.math.Range;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
-public class IntRangeIterator extends NumberRangeIterator {
+public abstract class NumberRangeIterator implements Iterator {
 
-	public IntRangeIterator(IntRange range) {
-		super(range);
+	private final Range range;
+
+	private Number next;
+
+	protected NumberRangeIterator(Range range) {
+		this.range = range;
+		this.next = range.getMinimumNumber();
+	}
+	
+	protected Range getRange() {
+		return range;
 	}
 
-	protected Number increment(Number next) {
-		return new Integer(next.intValue() + 1);
+	public boolean hasNext() {
+		return range.containsNumber(next);
+	}
+
+	public Object next() {
+		Number current = next;
+		next = increment(next);
+		return current;
+	}
+
+	protected abstract Number increment(Number next);
+
+	public void remove() {
+		throw new UnsupportedOperationException();
 	}
 
 }

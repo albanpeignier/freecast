@@ -6,11 +6,11 @@
     		</trackeraddress>
   		</peerprovider>
   		<sender>
-  			<class>socket</class>
-    		<listenaddress>
-    			<host>0.0.0.0</host>
-    			<port>1664-1670</port>
-    		</listenaddress>
+  			<class>udp</class>
+	    		<listenaddress>
+	    			<host>0.0.0.0</host>
+	    			<port>30000~31000</port>
+	    		</listenaddress>
   		</sender>
   		<receiver>	
   			<class>peer</class>

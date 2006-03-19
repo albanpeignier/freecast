@@ -24,138 +24,165 @@
 package org.kolaka.freecast.transport;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
 import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.NDC;
-import org.apache.mina.common.ConnectFuture;
 import org.apache.mina.common.IoConnector;
-import org.apache.mina.common.IoFuture;
 import org.apache.mina.common.IoHandler;
 import org.apache.mina.common.IoHandlerAdapter;
 import org.apache.mina.common.IoSession;
-import org.apache.mina.common.IoFuture.Callback;
 import org.apache.mina.transport.socket.nio.DatagramConnector;
 import org.kolaka.freecast.peer.PeerConnection;
 import org.kolaka.freecast.peer.PeerReceivingConnection;
 import org.kolaka.freecast.peer.PeerStatus;
 import org.kolaka.freecast.peer.event.VetoPeerConnectionStatusChangeException;
 import org.kolaka.freecast.timer.Task;
+import org.kolaka.freecast.transport.cas.ConnectionAssistantClient;
 
-public class MinaPeerReceivingConnection extends BaseMinaPeerConnection implements PeerReceivingConnection {
+public class MinaPeerReceivingConnection extends BaseMinaPeerConnection
+		implements PeerReceivingConnection {
 
 	private final SocketAddress address;
+
 	private final IoConnector connector;
 
 	public MinaPeerReceivingConnection(SocketAddress address) {
 		this(address, new DatagramConnector());
 	}
-	
-	public MinaPeerReceivingConnection(SocketAddress address, IoConnector connector) {
+
+	public MinaPeerReceivingConnection(SocketAddress address,
+			IoConnector connector) {
 		Validate.notNull(connector);
 		this.connector = connector;
 		this.address = address;
 	}
-	
+
 	private LatencyMonitor latencyMonitor = new LatencyMonitor();
-	
+
+	private ConnectionAssistantClient caClient;
+
 	public long getLatency() {
 		return latencyMonitor.getLatency();
 	}
-	
+
 	public void open() {
-		LogFactory.getLog(getClass()).debug("open " + this);
-		connector.getFilterChain().addFirst("freecast", MinaProtocolCodecFactory.getFilter());
+		LogFactory.getLog(getClass()).debug("open connection to " + address);
+		connector.getFilterChain().addFirst("freecast",
+				MinaProtocolCodecFactory.getFilter());
 
 		IoHandler ioHandler = new IoHandlerAdapter() {
 			
-			public void sessionCreated(IoSession session) throws Exception {
+			public void sessionCreated(final IoSession session) throws Exception {
 				LogFactory.getLog(getClass()).debug("session created");
+				
 				open(session);
-				sendNodeStatus();
+
+				if (caClient != null) {
+					final int localPort = ((InetSocketAddress) session.getLocalAddress()).getPort();
+					Runnable task = new TimedLoopSender("status from " + session.getLocalAddress() + " to " + address) {
+						protected void loopStarted() {
+							try {
+								caClient.assist(localPort, address);
+							} catch (Exception e) {
+								LogFactory.getLog(getClass()).error("Can't request assistance to connect " + address);
+							}
+						}
+						
+						protected void send() {
+							sendNodeStatus();
+						}
+					};
+					getTimer().executeLater(task);
+				} else {
+					sendNodeStatus();
+				}
 			}
-			
+
 			public void sessionClosed(IoSession session) throws Exception {
 				closeImpl();
 			}
-			
-			public void exceptionCaught(IoSession session, Throwable t) throws Exception {
-				LogFactory.getLog(getClass()).error("exception caught by handler", t);
-				closeImpl();
-			}
 
-			public void messageReceived(IoSession session, Object object) throws Exception {
-				Message message = (Message) object;
-
-				NDC.push(">" + address);
-
-				try {
-					processMessage(message);
-				} finally {
-					NDC.pop();
-				}
-			}
-			
-		};
-		ConnectFuture connectFuture = connector.connect(address, ioHandler);
-		Callback callback = new Callback() {
-
-			public void operationComplete(IoFuture future) {
-				try {
-					((ConnectFuture) future).getSession();
-				} catch (IOException e) {
-					LogFactory.getLog(getClass()).debug("Can't connect to " + address, e);
+			public void exceptionCaught(IoSession session, Throwable t)
+					throws Exception {
+				if (getStatus().equals(PeerConnection.Status.OPENING) || getStatus().equals(PeerConnection.Status.ACTIVATED)) {
+					LogFactory.getLog(getClass()).error(
+							"exception caught by handler", t);
 					closeImpl();
 				}
 			}
 
+			public void messageReceived(IoSession session, Object object)
+					throws Exception {
+				LogFactory.getLog(getClass()).trace("message received " + object + " from " + session.getRemoteAddress());
+				Message message = (Message) object;
+				processMessage(message);
+			}
+
 		};
-		connectFuture.setCallback(callback);
+
+		if (caClient != null) {
+			int localPort = (int) (30000 + Math.random() * 10000.0);
+			connector.connect(address, new InetSocketAddress(localPort), new NDCIoHandler(ioHandler));
+		} else {
+			connector.connect(address, new NDCIoHandler(ioHandler));
+		}
 	}
-	
+
 	protected void processMessage(Message message) throws IOException {
-		LogFactory.getLog(getClass()).trace("message received " + message);
-		
 		if (message instanceof PeerStatusMessage) {
-			PeerStatus remoteStatus = ((PeerStatusMessage) message).getPeerStatus();
-			latencyMonitor.statusReceived(remoteStatus);
+			PeerStatus remoteStatus = ((PeerStatusMessage) message)
+					.getPeerStatus();
+			if (!getStatus().equals(PeerConnection.Status.OPENING)) {
+				latencyMonitor.statusReceived(remoteStatus);
+			}
 			firePeerStatus(remoteStatus);
-			
+
 			if (getStatus().equals(PeerConnection.Status.OPENING)) {
 				try {
 					changeStatus(PeerConnection.Status.OPENED);
 				} catch (VetoPeerConnectionStatusChangeException e) {
-					LogFactory.getLog(getClass()).debug("can't open connection with " + remoteStatus.getIdentifier(), e);
+					LogFactory.getLog(getClass()).debug(
+							"can't open connection with "
+									+ remoteStatus.getIdentifier(), e);
 					closeImpl();
 					return;
 				}
 			}
 		} else if (message instanceof PeerConnectionStatusMessage) {
-			PeerConnection.Status status = ((PeerConnectionStatusMessage) message).getStatus();
+			PeerConnection.Status status = ((PeerConnectionStatusMessage) message)
+					.getStatus();
 			if (!status.equals(getStatus())) {
-				LogFactory.getLog(getClass()).debug("connection status accepted from remote: " + status);
+				LogFactory.getLog(getClass()).debug(
+						"connection status accepted from remote: " + status);
 				setStatus(status);
 			}
 		}
-		
+
 		super.processMessage(message);
 	}
-	
+
 	public void activate() throws IOException {
-		getWriter().write(new PeerConnectionStatusMessage(PeerConnection.Status.ACTIVATED));
+		getWriter()
+				.write(
+						new PeerConnectionStatusMessage(
+								PeerConnection.Status.ACTIVATED));
 	}
 
 	protected void sendNodeStatus(PeerStatus peerStatus) {
-		latencyMonitor.statusSent(peerStatus);
+		if (!getStatus().equals(PeerConnection.Status.OPENING)) {
+			latencyMonitor.statusSent(peerStatus);
+		}
 		super.sendNodeStatus(peerStatus);
 	}
-	
+
 	protected Task createAliveTask() {
 		return new Task() {
 			public void run() {
 				if (latencyMonitor.getMissingResponseCount() > 3) {
-					LogFactory.getLog(getClass()).info("No response from sender, connection closed");
+					LogFactory.getLog(getClass()).info(
+							"No response from sender, connection closed");
 					closeImpl();
 				}
 
@@ -165,40 +192,51 @@ public class MinaPeerReceivingConnection extends BaseMinaPeerConnection implemen
 	}
 
 	class LatencyMonitor {
-		
+
 		private final static long UNKNOWN_TIMESTAMP = -1;
+
 		private long latency = Long.MAX_VALUE;
+
 		private long sendingTimeStamp = UNKNOWN_TIMESTAMP;
+
 		private int missingResponseCount = 0;
-		
+
 		public void statusSent(PeerStatus status) {
 			if (sendingTimeStamp != UNKNOWN_TIMESTAMP) {
 				missingResponseCount++;
-				LogFactory.getLog(getClass()).debug("Missing response from sender (" + missingResponseCount + ")");
+				LogFactory.getLog(getClass()).debug(
+						"Missing response from sender (" + missingResponseCount
+								+ ")");
 			}
 			sendingTimeStamp = System.currentTimeMillis();
 		}
-		
+
 		public int getMissingResponseCount() {
 			return missingResponseCount;
 		}
-		
+
 		public void statusReceived(PeerStatus remoteStatus) {
 			if (sendingTimeStamp == UNKNOWN_TIMESTAMP) {
-				LogFactory.getLog(getClass()).debug("unexpected remote PeerStatus received: " + remoteStatus);
+				LogFactory.getLog(getClass()).debug(
+						"unexpected remote PeerStatus received: "
+								+ remoteStatus);
 				return;
 			}
 			long now = System.currentTimeMillis();
 			latency = now - sendingTimeStamp;
 			sendingTimeStamp = UNKNOWN_TIMESTAMP;
 			missingResponseCount = 0;
-			LogFactory.getLog(getClass()).debug("latency " + latency + " ms");
+			LogFactory.getLog(getClass()).trace("latency " + latency + " ms");
 		}
-		
+
 		public long getLatency() {
 			return latency;
 		}
-		
+
 	}
-	
+
+	public void setConnectionAssistantClient(ConnectionAssistantClient client) {
+		this.caClient = client;
+	}
+
 }

@@ -66,13 +66,13 @@ public class AcknowledgmentProcessor {
 				messages.remove(ackIdentifier);
 				ackCount++;
 			}
-			LogFactory.getLog(getClass()).debug("acknowledgment received for " + ackCount + " messages");
+			LogFactory.getLog(getClass()).trace("acknowledgment received for " + ackCount + " messages");
 		}
 	}
 	
 	public void acknowledge(MessageWriter writer) throws IOException {
 		if (!nextAcknowledgmentMessage.isEmpty()) {
-			LogFactory.getLog(getClass()).debug("send acknowledgment message");
+			LogFactory.getLog(getClass()).trace("send acknowledgment message");
 			LogFactory.getLog(getClass()).trace("send acknowledgment message: " + nextAcknowledgmentMessage);
 			writer.write(nextAcknowledgmentMessage);
 			nextAcknowledgmentMessage = new AcknowledgmentMessage();

@@ -4,7 +4,7 @@
  * This code was developped by Alban Peignier (http://people.tryphon.org/~alban/) 
  * and contributors (their names can be found in the CONTRIBUTORS file).
  *
- * Copyright (C) 2004-2005 Alban Peignier
+ * Copyright (C) 2004 Alban Peignier
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -20,21 +20,26 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package org.kolaka.freecast.lang.math;
 
-import org.apache.commons.lang.math.IntRange;
+package org.kolaka.freecast.transport.cas;
 
-/**
- * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
- */
-public class IntRangeIterator extends NumberRangeIterator {
+import org.apache.mina.filter.codec.ProtocolCodecFactory;
+import org.apache.mina.filter.codec.ProtocolCodecFilter;
+import org.apache.mina.filter.codec.ProtocolDecoder;
+import org.apache.mina.filter.codec.ProtocolEncoder;
 
-	public IntRangeIterator(IntRange range) {
-		super(range);
+public class ConnectionProtocolCodecFactory implements ProtocolCodecFactory {
+
+	public static final ProtocolCodecFactory INSTANCE = new ConnectionProtocolCodecFactory();
+
+	public static final ProtocolCodecFilter FILTER = new ProtocolCodecFilter(
+			INSTANCE);
+
+	public ProtocolDecoder getDecoder() {
+		return new ProtocolCodec();
 	}
 
-	protected Number increment(Number next) {
-		return new Integer(next.intValue() + 1);
+	public ProtocolEncoder getEncoder() {
+		return new ProtocolCodec();
 	}
-
 }

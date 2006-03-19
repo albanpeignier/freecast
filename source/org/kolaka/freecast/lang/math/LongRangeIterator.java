@@ -27,7 +27,7 @@ import org.apache.commons.lang.math.LongRange;
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
-public class LongRangeIterator extends RangeIterator {
+public class LongRangeIterator extends NumberRangeIterator {
 
 	public LongRangeIterator(LongRange range) {
 		super(range);

@@ -22,19 +22,37 @@
  */
 package org.kolaka.freecast.lang.math;
 
-import org.apache.commons.lang.math.IntRange;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.commons.collections.IteratorUtils;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
-public class IntRangeIterator extends NumberRangeIterator {
+public class RandomRangeIterator implements Iterator {
 
-	public IntRangeIterator(IntRange range) {
-		super(range);
+	private Iterator delegate;
+	
+	public RandomRangeIterator(Iterator initial) {
+		List elements = new ArrayList(IteratorUtils.toList(initial));
+		Collections.shuffle(elements);
+		delegate = elements.iterator();
+	}
+	
+	public boolean hasNext() {
+		return delegate.hasNext();
+	}
+	
+	public Object next() {
+		return delegate.next();
+	}
+	
+	public void remove() {
+		throw new UnsupportedOperationException();
 	}
 
-	protected Number increment(Number next) {
-		return new Integer(next.intValue() + 1);
-	}
 
 }

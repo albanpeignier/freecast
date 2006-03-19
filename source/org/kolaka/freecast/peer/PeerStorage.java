@@ -40,6 +40,7 @@ import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.node.NodeIdentifier;
 import org.kolaka.freecast.timer.TimeBase;
 
@@ -49,7 +50,7 @@ public class PeerStorage {
 
 	private final Comparator comparator;
 
-	private long peerTimeout = 5 * DateUtils.MILLIS_PER_MINUTE;
+	private long peerTimeout = 2 * DateUtils.MILLIS_PER_MINUTE;
 
 	public PeerStorage(Comparator comparator) {
 		this.comparator = comparator;
@@ -64,9 +65,22 @@ public class PeerStorage {
 	}
 	
 	public void trim() {
-		// TODO no longer implemented
-	}
+		long now = timeBase.currentTimeMillis();
 
+		for (Iterator iter = entries(); iter.hasNext();) {
+			Entry entry = (Entry) iter.next();
+
+			if (entry.getPeer().getLatency() != Peer.INFINITE_LATENCY) {
+				continue;
+			}
+
+			long age = entry.getAge(now);
+			if (age > peerTimeout) {
+				LogFactory.getLog(getClass()).debug("delete peer " + entry);
+				iter.remove();
+			}
+		}
+	}
 	public void add(MutablePeer peer) {
 		peers.put(peer.getStatus().getIdentifier(), new Entry(peer));
 	}

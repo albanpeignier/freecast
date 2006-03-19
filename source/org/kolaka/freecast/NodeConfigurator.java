@@ -42,7 +42,6 @@ import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.net.InetSocketAddressSpecification;
 import org.kolaka.freecast.net.InetSocketAddressSpecificationParser;
 import org.kolaka.freecast.net.SpecificationDatagramSelector;
-import org.kolaka.freecast.net.SpecificationServerSocketBinder;
 import org.kolaka.freecast.node.ConfigurableNode;
 import org.kolaka.freecast.node.DefaultNodeService;
 import org.kolaka.freecast.packet.signer.DigestPacketChecksummer;
@@ -67,6 +66,7 @@ import org.kolaka.freecast.resource.ResourceLocator;
 import org.kolaka.freecast.resource.ResourceLocators;
 import org.kolaka.freecast.transport.MinaPeerReceivingConnectionFactory;
 import org.kolaka.freecast.transport.MinaPeerSendingConnectionFactory;
+import org.kolaka.freecast.transport.cas.ConnectionAssistantClient;
 import org.kolaka.freecast.transport.receiver.BandwidthControler;
 import org.kolaka.freecast.transport.receiver.EncoderFormat;
 import org.kolaka.freecast.transport.receiver.PeerReceiverControler;
@@ -122,11 +122,27 @@ public class NodeConfigurator {
 
 		// PeerReference and Sender configuration
 		PeerReference peerReference = null;
+		ConnectionAssistantClient caClient = null;
+		
+		Configuration casConfiguration = configuration.subset("connection-assistant");
+		if (!casConfiguration.isEmpty()) {
+			InetSocketAddress casAddress = new InetSocketAddress(
+					casConfiguration.getString("host"),
+					casConfiguration.getInt("port"));
+			caClient = new ConnectionAssistantClient();
+			caClient.setServiceAddress(casAddress);
+			node.setConnectionAssistantClient(caClient);
+		}
 
 		Configuration senderConfiguration = configuration.subset("sender");
 		if (!senderConfiguration.isEmpty()) {
 			String senderClass = senderConfiguration.getString("class");
 			if (senderClass.equals("socket")) {
+				LogFactory.getLog(getClass()).warn("socket peer sender is deprecated, the node will use udp transport");
+				senderClass = "udp";
+			} 
+			
+			if (senderClass.equals("udp")) {
 				Configuration listenAddressConfiguration = senderConfiguration
 						.subset("listenaddress");
 
@@ -139,10 +155,14 @@ public class NodeConfigurator {
 						"install a PeerSenderControler which can accept other peers at "
 								+ listenAddress);
 				MinaPeerSendingConnectionFactory sendingFactory = new MinaPeerSendingConnectionFactory(listenAddress);
+				if (caClient != null) {
+					sendingFactory.setConnectionAssistantClient(caClient);
+				}
 				peerControler.register(sendingFactory);
 				sendingFactory.setStatusProvider(node.getNodeStatusProvider());
 				
-				node.setSenderControler(new PeerSenderControler(sendingFactory));
+				PeerSenderControler peerSenderControler = new PeerSenderControler(sendingFactory);
+				node.setSenderControler(peerSenderControler);
 
 				PeerReferenceLoader peerReferenceLoader = new PeerReferenceLoader();
 				peerReferenceLoader.setListenAddress(listenAddress);
@@ -163,6 +183,10 @@ public class NodeConfigurator {
 			LogFactory.getLog(getClass()).info(
 					"set the public reference to " + peerReference);
 			node.setPeerReference(peerReference);
+			
+			if (caClient != null) {
+				caClient.setNodeReference(peerReference);
+			}
 		}
 
 		DataConfiguration receiverConfiguration = new DataConfiguration(
@@ -216,6 +240,9 @@ public class NodeConfigurator {
 			MinaPeerReceivingConnectionFactory connectionFactory = new MinaPeerReceivingConnectionFactory();
 			peerControler.register(connectionFactory);
 			connectionFactory.setStatusProvider(node.getNodeStatusProvider());
+			if (caClient != null) {
+				connectionFactory.setConnectionAssistantClient(caClient);
+			}
 			receiverControler = new PeerReceiverControler(peerControler, connectionFactory);
 		} else {
 			throw new ConfigurationException("Unknown receiver class: '"

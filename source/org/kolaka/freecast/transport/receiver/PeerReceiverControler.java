@@ -29,13 +29,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.comparators.ComparatorChain;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.LogFactory;
-import org.kolaka.freecast.node.Order;
 import org.kolaka.freecast.packet.signer.DummyPacketValidator;
 import org.kolaka.freecast.packet.signer.PacketValidator;
 import org.kolaka.freecast.packet.signer.PacketValidatorUser;
@@ -133,10 +132,16 @@ public class PeerReceiverControler implements ReceiverControler, TimerUser,
 			LogFactory.getLog(getClass()).debug("no peer available");
 			return;
 		}
-		
-		for (Iterator iter=peers.iterator(); iter.hasNext() && receiver == null; ) {
+
+		LogFactory.getLog(getClass()).debug(
+				"try to open connections with " + peers.size() + " known peers");
+
+		for (Iterator iter=peers.iterator(); iter.hasNext(); ) {
 			final Peer peer = (Peer) iter.next();
 			if (openedConnections.containsKey(peer)) {
+				PeerConnection connection = (PeerConnection) openedConnections.get(peer);
+				LogFactory.getLog(getClass()).trace(
+						"keep existing connection " + connection);
 				continue;
 			}
 	
@@ -148,7 +153,7 @@ public class PeerReceiverControler implements ReceiverControler, TimerUser,
 					private boolean registered;
 					
 					protected void connectionClosed(PeerConnection connection) {
-						LogFactory.getLog(getClass()).debug("lost connection with " + peer);
+						LogFactory.getLog(getClass()).trace("lost connection with " + peer);
 						openedConnections.remove(peer);
 					}
 					protected synchronized void connectionOpened(PeerConnection connection) {
@@ -164,7 +169,7 @@ public class PeerReceiverControler implements ReceiverControler, TimerUser,
 				};
 				openConnections(peer, listener);
 			} catch (PeerConnectionFactoryException e) {
-				LogFactory.getLog(getClass()).debug("Can't open connection with " + peer, e);
+				LogFactory.getLog(getClass()).debug("can't open connection with " + peer, e);
 			}
 		}
 	}
@@ -231,7 +236,9 @@ public class PeerReceiverControler implements ReceiverControler, TimerUser,
 
 	private void openConnections(Peer peer, PeerReference reference, PeerConnectionStatusListener listener) throws PeerConnectionFactoryException {
 		if (reference instanceof MultiplePeerReference) {
-			for (Iterator iter = ((MultiplePeerReference) reference).references().iterator(); iter.hasNext();) {
+			Set references = ((MultiplePeerReference) reference).references();
+
+			for (Iterator iter = references.iterator(); iter.hasNext();) {
 				PeerReference subReference = (PeerReference) iter.next();
 				try {
 					openConnections(peer, subReference, listener);
@@ -239,7 +246,6 @@ public class PeerReceiverControler implements ReceiverControler, TimerUser,
 					LogFactory.getLog(getClass()).debug("Can't connection " + peer + " on " + reference, e);
 				}
 			}
-			throw new PeerConnectionFactoryException("No possible connection with " + peer);
 		} else if (reference instanceof InetPeerReference) {
 			PeerReceivingConnection peerConnection;
 			peerConnection = connectionFactory.create(peer, reference);
@@ -280,7 +286,7 @@ public class PeerReceiverControler implements ReceiverControler, TimerUser,
 	public void start() throws ControlException {
 		LogFactory.getLog(getClass()).debug("start");
 		startReceiver();
-		timer.executePeriodically(DefaultTimer.seconds(30), openConnectionsTask, true);
+		timer.executePeriodically(DefaultTimer.seconds(60), openConnectionsTask, true);
 	}
 
 	private boolean stopped;

@@ -128,7 +128,7 @@ public class DefaultPeerControler implements ConfigurablePeerControler,
 	}
 
 	protected void updatePeers() {
-		LogFactory.getLog(getClass()).debug("retrieve new peer references");
+		LogFactory.getLog(getClass()).trace("retrieve new peer references");
 		Set references;
 
 		try {
@@ -148,7 +148,7 @@ public class DefaultPeerControler implements ConfigurablePeerControler,
 
 		storage.trim();
 
-		LogFactory.getLog(getClass()).debug(storage.size() + " peers known");
+		LogFactory.getLog(getClass()).trace(storage.size() + " peers known");
 	}
 	
 	private PeerStatus getStatus(PeerReference reference) {
@@ -177,7 +177,7 @@ public class DefaultPeerControler implements ConfigurablePeerControler,
 		public long loop() {
 			updatePeers();
 			// TODO make the loop delay variable
-			return DefaultTimer.minutes(2);
+			return DefaultTimer.minutes(1);
 		}
 	};
 
@@ -245,7 +245,7 @@ public class DefaultPeerControler implements ConfigurablePeerControler,
 	}
 
 	private void removePeerConnection(PeerConnection connection) {
-		LogFactory.getLog(getClass()).debug(
+		LogFactory.getLog(getClass()).trace(
 				"unregister the connection " + connection);
 
 		NodeIdentifier peerIdentifier;
@@ -304,7 +304,7 @@ public class DefaultPeerControler implements ConfigurablePeerControler,
 				peer.setLatency(connection.getLatency());
 			}
 			
-			LogFactory.getLog(getClass()).debug("updated peer: " + peer);
+			LogFactory.getLog(getClass()).trace("updated peer: " + peer);
 		
 			for (Iterator iter = statusListeners.iterator(); iter.hasNext();) {
 				PeerStatusListener listener = (PeerStatusListener) iter.next();

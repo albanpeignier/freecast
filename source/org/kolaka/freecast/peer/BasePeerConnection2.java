@@ -27,7 +27,6 @@ import java.io.IOException;
 
 import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.LogFactory;
-import org.kolaka.freecast.node.NodeIdentifier;
 import org.kolaka.freecast.node.NodeStatusProvider;
 import org.kolaka.freecast.transport.Message;
 import org.kolaka.freecast.transport.MessageHandler;
@@ -65,7 +64,7 @@ public abstract class BasePeerConnection2 extends BasePeerConnection implements 
 	}
 
 	protected void sendNodeStatus(PeerStatus peerStatus) {
-		LogFactory.getLog(getClass()).debug("send peer status: " + peerStatus);
+		LogFactory.getLog(getClass()).trace("send peer status");
 		try {
 			getWriter().write(new PeerStatusMessage(peerStatus));
 		} catch (IOException e) {

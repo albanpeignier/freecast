@@ -45,6 +45,7 @@ import org.kolaka.freecast.player.DefaultPlayerControler;
 import org.kolaka.freecast.player.PlayerControler;
 import org.kolaka.freecast.player.PlayerStatus;
 import org.kolaka.freecast.service.ControlException;
+import org.kolaka.freecast.transport.cas.ConnectionAssistantClient;
 import org.kolaka.freecast.transport.receiver.NullReceiverControler;
 import org.kolaka.freecast.transport.receiver.PeerReceiverControler;
 import org.kolaka.freecast.transport.receiver.ReceiverControler;
@@ -111,6 +112,10 @@ public class DefaultNode implements ConfigurableNode {
 		nodeService.start();
 		peerControler.start();
 
+		if (caClient != null) {
+			caClient.start();
+		}
+
 		receiverControler.start();
 		senderControler.start();
 
@@ -126,6 +131,10 @@ public class DefaultNode implements ConfigurableNode {
 		senderControler.stop();
 
 		playerControler.stop();
+
+		if (caClient != null) {
+			caClient.stop();
+		}
 	}
 
 	public void dispose() throws ControlException {
@@ -279,7 +288,7 @@ public class DefaultNode implements ConfigurableNode {
 		PlayerStatus status = getActivePlayerStatus();
 		if (status.getPlayTimeLength() > 2 * 60000
 				&& status.getMissingDataRate() > 0.3) {
-			LogFactory.getLog(getClass()).warn(
+			LogFactory.getLog(getClass()).debug(
 					"bad audio stream reception (" + status + ")");
 			/*
 			 * if (receiverControler instanceof PeerReceiverControler) {
@@ -319,5 +328,12 @@ public class DefaultNode implements ConfigurableNode {
 		}
 		
 	};
+	
+	private ConnectionAssistantClient caClient;
+	
+	public void setConnectionAssistantClient(ConnectionAssistantClient client) {
+		Validate.notNull(client);
+		this.caClient = client;
+	}
 
 }

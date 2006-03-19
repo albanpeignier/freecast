@@ -24,6 +24,7 @@
 package org.kolaka.freecast.transport;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.Map;
 import java.util.TreeMap;
@@ -42,8 +43,14 @@ import org.kolaka.freecast.peer.PeerSendingConnectionFactory;
 import org.kolaka.freecast.peer.event.PeerConnectionStatusAdapter;
 import org.kolaka.freecast.peer.event.VetoPeerConnectionOpeningException;
 import org.kolaka.freecast.service.ControlException;
+import org.kolaka.freecast.timer.DefaultTimer;
+import org.kolaka.freecast.timer.Timer;
+import org.kolaka.freecast.transport.cas.ConnectionAssistantClient;
+import org.kolaka.freecast.transport.cas.ConnectionAssistantClientAware;
+import org.kolaka.freecast.transport.cas.ConnectionAssistantService.ConnectionHandler;
 
-public class MinaPeerSendingConnectionFactory extends BasePeerConnectionFactory implements PeerSendingConnectionFactory {
+public class MinaPeerSendingConnectionFactory extends BasePeerConnectionFactory 
+	implements PeerSendingConnectionFactory, ConnectionAssistantClientAware {
 
 	private final IoAcceptor acceptor;
 	
@@ -66,7 +73,7 @@ public class MinaPeerSendingConnectionFactory extends BasePeerConnectionFactory 
 			public void messageReceived(IoSession session, Object object) throws Exception {
 				Message message = (Message) object;
 				LogFactory.getLog(getClass()).debug("receive " + message);
-				
+
 				NodeIdentifier identifier = message.getSenderIdentifier();
 
 				MinaPeerSendingConnection connection = (MinaPeerSendingConnection) knownSessions.get(identifier);
@@ -90,12 +97,48 @@ public class MinaPeerSendingConnectionFactory extends BasePeerConnectionFactory 
 			}
 		};
 		try {
-			acceptor.bind(listenAddress, handler);
+			acceptor.bind(listenAddress, new NDCIoHandler(handler));
 		} catch (IOException e) {
 			throw new ControlException("Can't bind IoAcceptor on " + listenAddress, e);
 		}
+		
+		if (caClient != null) {
+			ConnectionHandler connection = new ConnectionHandler() {
+				public void connectionRequested(final InetSocketAddress sourceAddress, InetSocketAddress targetAddress) {
+					LogFactory.getLog(getClass()).debug("assist connection from " + sourceAddress);
+					
+					final IoSession session = acceptor.newSession(sourceAddress, listenAddress);
+					
+					final PeerStatusMessage message = new PeerStatusMessage(getStatusProvider().getNodeStatus().createPeerStatus());
+					message.setSenderIdentifier(getStatusProvider().getNodeIdentifier());
+					
+					Runnable task = new TimedLoopSender("status from " + session.getLocalAddress() +  " to " + sourceAddress) {
+						protected void send() {
+							session.write(message);
+						}
+						protected void loopEnded() {
+							session.close();
+						}
+					};
+					timer.executeLater(task);
+				}
+			};
+			try {
+				caClient.register(connection);
+			} catch (Exception e) {
+				LogFactory.getLog(getClass()).warn("Can't register to the ConnectionAssistant", e);
+			}
+		}
 	}
 	
+	private Timer timer = DefaultTimer.getInstance();
+	
+	private ConnectionAssistantClient caClient;
+	
+	public void setConnectionAssistantClient(ConnectionAssistantClient caClient) {
+		this.caClient = caClient;
+	}
+		
 	public void stop() throws ControlException {
 		acceptor.unbindAll();
 	}

@@ -28,6 +28,7 @@ import java.io.IOException;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.LogFactory;
 import org.apache.mina.common.IoSession;
+import org.apache.mina.common.WriteFuture;
 import org.kolaka.freecast.peer.BasePeerConnection2;
 import org.kolaka.freecast.peer.PeerConnection;
 import org.kolaka.freecast.peer.event.PeerConnectionStatusAdapter;
@@ -40,6 +41,7 @@ public abstract class BaseMinaPeerConnection extends BasePeerConnection2 {
 	private IoSession session;
 	private Task aliveTask;
 	public static final long PING_DELAY =  DefaultTimer.seconds(10);
+	public static final long OPEN_TIMEOUT =  DefaultTimer.seconds(10);
 
 	protected void open(IoSession session) {
 		Validate.notNull(session);
@@ -50,6 +52,7 @@ public abstract class BaseMinaPeerConnection extends BasePeerConnection2 {
 		
 		add(new PeerConnectionStatusAdapter() {
 			protected void connectionOpened(PeerConnection connection) {
+				openTimeout.cancel();
 				aliveTask = createAliveTask();
 				timer.executePeriodically(PING_DELAY, aliveTask, false);
 				timer.executePeriodically(AcknowledgmentProcessor.ACKNOWLEDGMENT_DELAY / 3, ackTask, false);
@@ -61,9 +64,21 @@ public abstract class BaseMinaPeerConnection extends BasePeerConnection2 {
 					ackResentTask.cancel();
 					aliveTask.cancel();
 				}
+				openTimeout.cancel();
 			}
 		});
+		
+		timer.executeAfterDelay(OPEN_TIMEOUT, openTimeout);
 	}
+	
+	private final Task openTimeout = new Task() {
+		public void run() {
+			if (getStatus().equals(PeerConnection.Status.OPENING)) {
+				LogFactory.getLog(getClass()).debug("open timeout, close connection");
+				closeImpl();
+			}
+		}
+	};
 	
 	protected void closeImpl() {
 		try {
@@ -116,9 +131,10 @@ public abstract class BaseMinaPeerConnection extends BasePeerConnection2 {
 				((IdentifiableMessage) message).setSenderIdentifier(getNodeStatusProvider().getNodeIdentifier());
 			}
 			
-			LogFactory.getLog(getClass()).trace("message sent " + message);
+			LogFactory.getLog(getClass()).trace("message sent " + message + " to " + session.getRemoteAddress());
 
-			session.write(message);
+			WriteFuture future = session.write(message);
+			// future.join();
 			ackProcessor.messageSent(message);
 			
 			// TODO fake length, to be removed
@@ -135,6 +151,10 @@ public abstract class BaseMinaPeerConnection extends BasePeerConnection2 {
 	public void setTimer(Timer timer) {
 		Validate.notNull(timer);
 		this.timer = timer;
+	}
+	
+	protected Timer getTimer() {
+		return timer;
 	}
 	
 	protected abstract Task createAliveTask();

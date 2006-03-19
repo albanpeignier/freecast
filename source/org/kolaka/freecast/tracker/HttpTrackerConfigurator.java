@@ -26,6 +26,7 @@ package org.kolaka.freecast.tracker;
 import java.net.InetSocketAddress;
 
 import org.apache.commons.configuration.Configuration;
+import org.kolaka.freecast.transport.cas.ConnectionAssistantServer;
 
 /**
  * 
@@ -41,6 +42,16 @@ public class HttpTrackerConfigurator {
 				listenAddressConfiguration.getString("host"),
 				listenAddressConfiguration.getInt("port"));
 		tracker.setListenAddress(listenAddress);
+		
+		Configuration casConfiguration = configuration.subset("connection-assistant.listenaddress");
+		if (!casConfiguration.isEmpty()) {
+			InetSocketAddress casListenAddress = new InetSocketAddress(
+					casConfiguration.getString("host"),
+					casConfiguration.getInt("port"));
+			ConnectionAssistantServer server = new ConnectionAssistantServer();
+			server.setListenAddress(casListenAddress);
+			tracker.setConnectionAssistantServer(server);
+		}
 	}
 
 }

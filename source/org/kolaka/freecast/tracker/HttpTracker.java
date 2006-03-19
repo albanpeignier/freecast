@@ -29,6 +29,7 @@ import org.kolaka.freecast.node.NodeIdentifier;
 import org.kolaka.freecast.node.NodeStatus;
 import org.kolaka.freecast.peer.PeerReference;
 import org.kolaka.freecast.service.ControlException;
+import org.kolaka.freecast.transport.cas.ConnectionAssistantServer;
 import org.mortbay.http.SocketListener;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.ServletHttpContext;
@@ -47,6 +48,12 @@ public class HttpTracker extends HessianServlet implements Tracker {
 	private InetSocketAddress listenAddress;
 
 	private Server server;
+	
+	private ConnectionAssistantServer caServer;
+	
+	public void setConnectionAssistantServer(ConnectionAssistantServer caServer) {
+		this.caServer = caServer;
+	}
 
 	public InetSocketAddress getListenAddress() {
 		return listenAddress;
@@ -78,6 +85,10 @@ public class HttpTracker extends HessianServlet implements Tracker {
 		} catch (Exception e) {
 			throw new ControlException("Can't start the http server", e);
 		}
+		
+		if (caServer != null) {
+			caServer.start();
+		}
 	}
 
 	public void stop() throws ControlException {
@@ -85,6 +96,10 @@ public class HttpTracker extends HessianServlet implements Tracker {
 			server.stop();
 		} catch (InterruptedException e) {
 			throw new ControlException("Can't stop the http server", e);
+		}
+
+		if (caServer != null) {
+			caServer.stop();
 		}
 	}
 

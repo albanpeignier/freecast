@@ -72,7 +72,7 @@ public class PeerConnectionStatusSupport {
 	}
 
 	public void fire(PeerConnectionStatusEvent event) {
-		LogFactory.getLog(getClass()).debug("fire " + event);
+		LogFactory.getLog(getClass()).trace("fire " + event);
 		for (Iterator iter = new ArrayList(listeners).iterator(); iter
 				.hasNext();) {
 			PeerConnectionStatusListener listener = (PeerConnectionStatusListener) iter
@@ -82,7 +82,7 @@ public class PeerConnectionStatusSupport {
 	}
 
 	public void fireVetoable(PeerConnectionStatusEvent event) throws VetoPeerConnectionStatusChangeException {
-		LogFactory.getLog(getClass()).debug("fire " + event);
+		LogFactory.getLog(getClass()).trace("fire " + event);
 		for (Iterator iter = new ArrayList(vetoListeners).iterator(); iter
 				.hasNext();) {
 			VetoablePeerConnectionStatusListener listener = (VetoablePeerConnectionStatusListener) iter

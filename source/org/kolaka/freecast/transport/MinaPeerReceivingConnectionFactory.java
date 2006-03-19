@@ -23,6 +23,8 @@
 
 package org.kolaka.freecast.transport;
 
+import java.net.InetSocketAddress;
+
 import org.kolaka.freecast.peer.BasePeerConnectionFactory;
 import org.kolaka.freecast.peer.InetPeerReference;
 import org.kolaka.freecast.peer.Peer;
@@ -31,14 +33,24 @@ import org.kolaka.freecast.peer.PeerReceivingConnection;
 import org.kolaka.freecast.peer.PeerReceivingConnectionFactory;
 import org.kolaka.freecast.peer.PeerReference;
 import org.kolaka.freecast.peer.event.VetoPeerConnectionOpeningException;
+import org.kolaka.freecast.transport.cas.ConnectionAssistantClient;
+import org.kolaka.freecast.transport.cas.ConnectionAssistantClientAware;
 
 public class MinaPeerReceivingConnectionFactory extends
-		BasePeerConnectionFactory implements PeerReceivingConnectionFactory {
+		BasePeerConnectionFactory implements PeerReceivingConnectionFactory, ConnectionAssistantClientAware {
 
 	public PeerReceivingConnection create(Peer peer, PeerReference reference) throws PeerConnectionFactoryException {
 		InetPeerReference inetReference = (InetPeerReference) reference;
+		
+		InetSocketAddress remoteAddress = inetReference.getSocketAddress();
+
 		MinaPeerReceivingConnection connection = new MinaPeerReceivingConnection(
-				inetReference.getSocketAddress());
+				remoteAddress);
+
+		if (client != null) {
+			connection.setConnectionAssistantClient(client);
+		}
+		
 		connection.setNodeStatusProvider(getStatusProvider());
 
 		try {
@@ -49,6 +61,12 @@ public class MinaPeerReceivingConnectionFactory extends
 
 		fireConnectionOpening(connection);
 		return connection;
+	}
+
+	private ConnectionAssistantClient client;
+
+	public void setConnectionAssistantClient(ConnectionAssistantClient client) {
+		this.client = client;
 	}
 
 }

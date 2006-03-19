@@ -51,19 +51,24 @@ public class InetSocketAddressSpecificationParser {
 			}
 			return chain;
 		}
-		StringTokenizer rangeParts = new StringTokenizer(definition, "-", true);
+		StringTokenizer rangeParts = new StringTokenizer(definition, "-~", true);
 		switch (rangeParts.countTokens()) {
 		case 1:
 			return InetSocketAddressSpecifications.singleton(address,
 					parsePort(rangeParts.nextToken()));
 		case 3:
 			int firstPort = parsePort(rangeParts.nextToken());
-			if (!rangeParts.nextToken().equals("-")) {
-				throw new ParseException("Invalid port range: " + definition, 0);
-			}
+			String separator = rangeParts.nextToken();
 			int secondPort = parsePort(rangeParts.nextToken());
 			IntRange range = new IntRange(firstPort, secondPort);
-			return InetSocketAddressSpecifications.portRange(address, range);
+
+			if (separator.equals("-")) {
+				return InetSocketAddressSpecifications.portRange(address, range);
+			} else if (separator.equals("~")) {
+				return InetSocketAddressSpecifications.randomPortRange(address, range);
+			} else {
+				throw new ParseException("Invalid port range: " + definition, 0);
+			}
 		default:
 			throw new ParseException("Invalid specification: " + definition,
 					definition.length());

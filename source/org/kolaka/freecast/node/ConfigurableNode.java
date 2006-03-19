@@ -26,6 +26,7 @@ package org.kolaka.freecast.node;
 import org.kolaka.freecast.peer.ConfigurablePeerControler;
 import org.kolaka.freecast.peer.PeerReference;
 import org.kolaka.freecast.player.PlayerControler;
+import org.kolaka.freecast.transport.cas.ConnectionAssistantClient;
 import org.kolaka.freecast.transport.receiver.ReceiverControler;
 import org.kolaka.freecast.transport.sender.SenderControler;
 
@@ -53,5 +54,7 @@ public interface ConfigurableNode extends Node {
 	public void setPeerControler(ConfigurablePeerControler controler);
 
 	public ConfigurablePeerControler getConfigurablePeerControler();
+
+	public void setConnectionAssistantClient(ConnectionAssistantClient client);
 
 }
