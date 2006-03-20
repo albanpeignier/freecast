@@ -22,6 +22,7 @@
  */
 package org.kolaka.freecast.peer;
 
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -58,15 +59,23 @@ public class PeerReferenceLoader {
 		return createReference(configuration);
 	}
 
-	private PeerReference createReference(Configuration configuration)
+	private PeerReference createReference(final Configuration configuration)
 			throws ConfigurationException {
-		PeerReference reference;
 		String referenceClass = configuration.getString("class", "inet");
+		
+		PeerReferenceFactory factory;
+		
 		if (referenceClass.equals("inet")) {
-			reference = InetPeerReference.getInstance(configuration
-					.getString("host"), configuration.getInt("port",
-					listenAddress.getPort()), true);
+			factory = new PeerReferenceFactory() {
+				public PeerReference create() throws PeerReferenceFactoryException {
+					return InetPeerReference.getInstance(configuration
+							.getString("host"), configuration.getInt("port",
+							listenAddress.getPort()), true);
+				};
+			};
 		} else if (referenceClass.equals("multiple")) {
+			factory = new PeerReferenceFactory() {
+				public PeerReference create() throws PeerReferenceFactoryException {
 			Set references = new HashSet();
 			// TODO horrible limitation of Commons Configuration ..
 			List hostNames = configuration.getList("reference.host");
@@ -75,22 +84,25 @@ public class PeerReferenceLoader {
 				references.add(InetPeerReference.getInstance(hostName,
 						listenAddress.getPort(), true));
 			}
-			reference = new MultiplePeerReference(references);
+			return new MultiplePeerReference(references);
+				}};
 		} else if (referenceClass.equals("auto")) {
-			AutomaticPeerReferenceFactory factory = new AutomaticPeerReferenceFactory();
-			factory.setDefaultPort(listenAddress.getPort());
-			try {
-				reference = factory.create();
-			} catch (PeerReferenceFactoryException e) {
-				throw new ConfigurationException(
-						"Can't create the automatic reference", e);
-			}
+			factory = new AutomaticPeerReferenceFactory(listenAddress.getPort());
+		} else if (referenceClass.equals("stun")) {
+			InetSocketAddress stunServer = new InetSocketAddress( 
+			configuration.getString("host"), configuration.getInt("port",3478));
+			factory = new StunPeerReferenceFactory(listenAddress.getPort(), stunServer);
 		} else {
 			throw new ConfigurationException("Unknow reference class: "
 					+ referenceClass);
 		}
-
-		return reference;
+		
+		try {
+			return factory.create();
+		} catch (PeerReferenceFactoryException e) {
+			throw new ConfigurationException(
+					"Can't create the automatic reference", e);
+		}
 	}
 
 }

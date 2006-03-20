@@ -27,6 +27,7 @@
 	<classpathentry kind="lib" path="track/slf4j/releases/1.0/slf4j-log4j12.jar"/>
 	<classpathentry kind="lib" path="track/commons-logging/releases/1.1.0/commons-logging-1.1-RC5.jar"/>
 	<classpathentry kind="lib" path="track/log4j/releases/1.2.13/dist/lib/log4j-1.2.13.jar"/>
+	<classpathentry sourcepath="track/jstun/releases/0.5.9.2/src" kind="lib" path="track/jstun/releases/0.5.9.2/jstun-0.5.9.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path=".eclipse"/>
 </classpath>

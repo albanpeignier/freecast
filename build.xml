@@ -197,6 +197,10 @@
 				<lib-entry groupid="slf4j" version="1.0" artifactid="slf4j-log4j12" />
 			</library>
 
+			<library id="lib.jstun">
+				<lib-entry groupid="jstun" version="0.5.9.2"/>
+			</library>
+
 			<library id="core">
 				<lib-entry groupid="commons-collections" version="3.1" />
 				<lib-entry groupid="commons-logging" version="1.1.0" artifactid="commons-logging-1.1-RC5" />
@@ -209,6 +213,7 @@
 				<lib-entry groupid="commons-configuration" version="nightly-20050307" artifactid="commons-configuration-1.1RC2" />
 				<lib-entry groupid="concurrent" version="kolaka" />
 				<library refid="lib.mina" />
+				<library refid="lib.jstun" />
 			</library>
 
 			<library id="build">

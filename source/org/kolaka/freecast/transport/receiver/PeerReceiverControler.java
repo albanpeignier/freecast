@@ -149,13 +149,15 @@ public class PeerReceiverControler implements ReceiverControler, TimerUser,
 					"try to open a connection with " + peer);
 			
 			try {
+				final PeerConnectionStatusListener closeListener = new PeerConnectionStatusAdapter() {
+					protected void connectionClosed(PeerConnection connection) {
+						LogFactory.getLog(getClass()).debug("lost connection with " + peer);
+						openedConnections.remove(peer);
+					}
+				};
 				PeerConnectionStatusListener listener = new PeerConnectionStatusAdapter() {
 					private boolean registered;
 					
-					protected void connectionClosed(PeerConnection connection) {
-						LogFactory.getLog(getClass()).trace("lost connection with " + peer);
-						openedConnections.remove(peer);
-					}
 					protected synchronized void connectionOpened(PeerConnection connection) {
 						if (registered) {
 							LogFactory.getLog(getClass()).warn("several connections opened with " + peer);
@@ -164,6 +166,7 @@ public class PeerReceiverControler implements ReceiverControler, TimerUser,
 						}
 						registered = true;
 						LogFactory.getLog(getClass()).debug("new opened connection with " + peer);
+						connection.add(closeListener);
 						openedConnections.put(peer, connection);
 					}
 				};
@@ -173,6 +176,9 @@ public class PeerReceiverControler implements ReceiverControler, TimerUser,
 			}
 		}
 	}
+	
+	
+
 
 	private PeerReceiver receiver;
 

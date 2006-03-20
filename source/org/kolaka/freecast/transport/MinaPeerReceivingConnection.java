@@ -171,7 +171,7 @@ public class MinaPeerReceivingConnection extends BaseMinaPeerConnection
 	}
 
 	protected void sendNodeStatus(PeerStatus peerStatus) {
-		if (!getStatus().equals(PeerConnection.Status.OPENING)) {
+		if (!getStatus().equals(PeerConnection.Status.OPENED)) {
 			latencyMonitor.statusSent(peerStatus);
 		}
 		super.sendNodeStatus(peerStatus);
@@ -217,9 +217,7 @@ public class MinaPeerReceivingConnection extends BaseMinaPeerConnection
 
 		public void statusReceived(PeerStatus remoteStatus) {
 			if (sendingTimeStamp == UNKNOWN_TIMESTAMP) {
-				LogFactory.getLog(getClass()).debug(
-						"unexpected remote PeerStatus received: "
-								+ remoteStatus);
+				LogFactory.getLog(getClass()).trace("unexpected remote PeerStatus received: " + remoteStatus);
 				return;
 			}
 			long now = System.currentTimeMillis();
