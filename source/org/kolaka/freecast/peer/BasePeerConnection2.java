@@ -28,6 +28,7 @@ import java.io.IOException;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.node.NodeStatusProvider;
+import org.kolaka.freecast.peer.PeerConnection.Status;
 import org.kolaka.freecast.transport.Message;
 import org.kolaka.freecast.transport.MessageHandler;
 import org.kolaka.freecast.transport.PeerConnectionStatusMessage;
@@ -64,6 +65,11 @@ public abstract class BasePeerConnection2 extends BasePeerConnection implements 
 	}
 
 	protected void sendNodeStatus(PeerStatus peerStatus) {
+		if (getStatus().equals(PeerConnection.Status.CLOSED)) {
+			LogFactory.getLog(getClass()).trace("ignore status sending on a closed connection");
+			return;
+		}
+		
 		LogFactory.getLog(getClass()).trace("send peer status");
 		try {
 			getWriter().write(new PeerStatusMessage(peerStatus));

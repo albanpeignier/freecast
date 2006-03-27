@@ -237,7 +237,11 @@ public class PeerReceiverControler implements ReceiverControler, TimerUser,
 	}
 	
 	private void openConnections(Peer peer, PeerConnectionStatusListener listener) throws PeerConnectionFactoryException {
-		openConnections(peer, peer.getReference(), listener);
+		if (peer.getReference() != null) {
+			openConnections(peer, peer.getReference(), listener);
+		} else {
+			LogFactory.getLog(getClass()).debug("ignore " + peer + " without known reference");
+		}
 	}
 
 	private void openConnections(Peer peer, PeerReference reference, PeerConnectionStatusListener listener) throws PeerConnectionFactoryException {
