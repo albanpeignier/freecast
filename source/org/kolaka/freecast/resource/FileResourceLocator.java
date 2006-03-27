@@ -55,6 +55,9 @@ public class FileResourceLocator implements ResourceLocator {
 		if (uri.getScheme() != null) {
 			ResourceLocator.MalformedURIException.checkScheme(uri, "file");
 		}
+		if (uri.getPath() == null) {
+			throw new ResourceLocator.UnavailableResourceException(uri);
+		}
 
 		File file = fileResolver.resolve(uri);
 		LogFactory.getLog(getClass()).debug("open " + file);
