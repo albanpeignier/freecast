@@ -23,7 +23,6 @@
 
 package org.kolaka.freecast.node.test;
 
-import org.kolaka.freecast.node.DefaultNodeIdentifier;
 import org.kolaka.freecast.node.NodeIdentifier;
 import org.kolaka.freecast.node.NodeStatus;
 import org.kolaka.freecast.node.NodeStatusProvider;
@@ -36,7 +35,7 @@ public class MockNodeStatusProvider implements NodeStatusProvider {
 	private final NodeStatus status;
 	
 	public MockNodeStatusProvider() {
-		this(new NodeStatus(new DefaultNodeIdentifier(0), Order.ZERO));
+		this(new NodeStatus(new NodeIdentifier(0), Order.ZERO));
 	}
 	
 	public MockNodeStatusProvider(NodeStatus status) {

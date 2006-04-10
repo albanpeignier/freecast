@@ -25,7 +25,7 @@ package org.kolaka.freecast.peer;
 
 import java.io.IOException;
 
-public interface PeerReceivingConnection extends PeerConnection2 {
+public interface PeerReceivingConnection extends PeerConnection {
 
 	void open();
 

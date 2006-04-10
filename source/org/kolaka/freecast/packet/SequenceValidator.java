@@ -45,7 +45,7 @@ public class SequenceValidator implements Cloneable {
 		if (!valid) {
 			String msg = "sequence broken: " + previousSequenceNumber + " -> "
 					+ sequenceNumber;
-			LogFactory.getLog(getClass()).warn(msg);
+			LogFactory.getLog(getClass()).debug(msg);
 		}
 
 		previousSequenceNumber = sequenceNumber;

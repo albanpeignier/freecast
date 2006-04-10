@@ -44,17 +44,6 @@ public class PeerConnections {
 
 		};
 	}
-
-	public static Predicate acceptType(final PeerConnection1.Type type) {
-		return new Predicate() {
-
-			public boolean evaluate(Object input) {
-				PeerConnection1 connection = (PeerConnection1) input;
-				return connection.getType().equals(type);
-			}
-
-		};
-	}
 	
 	public static void closeQuietly(PeerConnection connection) {
 		try {

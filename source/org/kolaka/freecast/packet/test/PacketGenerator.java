@@ -25,7 +25,6 @@ package org.kolaka.freecast.packet.test;
 
 import org.kolaka.freecast.packet.Checksum;
 import org.kolaka.freecast.packet.DefaultLogicalPageDescriptor;
-import org.kolaka.freecast.packet.DefaultPacket;
 import org.kolaka.freecast.packet.DefaultPacketData;
 import org.kolaka.freecast.packet.LogicalPageDescriptor;
 import org.kolaka.freecast.packet.Packet;
@@ -52,7 +51,7 @@ public class PacketGenerator {
 		LogicalPageDescriptor.Element elementDescriptor = pageDescriptor
 				.createElementDescriptor(1);
 
-		return new DefaultPacket(sequenceGenerator.next(), System.currentTimeMillis(),
+		return new Packet(sequenceGenerator.next(), System.currentTimeMillis(),
 				new DefaultPacketData(expectedBytes), checksum,
 				elementDescriptor);
 	}

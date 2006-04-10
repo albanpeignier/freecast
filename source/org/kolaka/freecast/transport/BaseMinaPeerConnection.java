@@ -29,14 +29,14 @@ import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.LogFactory;
 import org.apache.mina.common.IoSession;
 import org.apache.mina.common.WriteFuture;
-import org.kolaka.freecast.peer.BasePeerConnection2;
+import org.kolaka.freecast.peer.BasePeerConnection;
 import org.kolaka.freecast.peer.PeerConnection;
 import org.kolaka.freecast.peer.event.PeerConnectionStatusAdapter;
 import org.kolaka.freecast.timer.DefaultTimer;
 import org.kolaka.freecast.timer.Task;
 import org.kolaka.freecast.timer.Timer;
 
-public abstract class BaseMinaPeerConnection extends BasePeerConnection2 {
+public abstract class BaseMinaPeerConnection extends BasePeerConnection {
 	
 	private IoSession session;
 	private Task aliveTask;

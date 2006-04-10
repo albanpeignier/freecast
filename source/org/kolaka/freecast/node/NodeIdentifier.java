@@ -25,27 +25,54 @@ package org.kolaka.freecast.node;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.math.NumberUtils;
 
 /**
  * 
  * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
-public abstract class NodeIdentifier implements Comparable, Serializable {
+public final class NodeIdentifier implements Comparable, Serializable {
 
 	static final long serialVersionUID = -4121852123565706283L;
+
+	/**
+	 * <strong>Note: </strong> final fields are supported by the Hessian
+	 * serialization
+	 */
+	private long value;
+
+	public NodeIdentifier(long value) {
+		this.value = value;
+	}
 
 	public boolean equals(Object o) {
 		return o instanceof NodeIdentifier && equals((NodeIdentifier) o);
 	}
 
-	public abstract boolean equals(NodeIdentifier identifier);
+	public boolean equals(NodeIdentifier identifier) {
+		return identifier != null && value == identifier.value;
+	}
 
-	public abstract long longValue();
+	public int hashCode() {
+		return new HashCodeBuilder().append(value).toHashCode();
+	}
+	
+	public long longValue() {
+		return value;
+	}
 
 	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
+		return "#"
+				+ StringUtils.leftPad(Long.toHexString(value).toUpperCase(),
+						16, 'F');
+	}
+
+	public int compareTo(Object o) {
+		return NumberUtils.compare(value, ((NodeIdentifier) o).value);
 	}
 
 }

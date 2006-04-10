@@ -29,7 +29,6 @@ import java.io.IOException;
 
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.kolaka.freecast.node.DefaultNodeIdentifier;
 import org.kolaka.freecast.node.NodeIdentifier;
 
 /**
@@ -69,7 +68,7 @@ public abstract class BaseMessage implements IdentifiableMessage {
 	protected abstract void writeImpl(DataOutputStream output) throws IOException;
 
 	public void read(DataInputStream input) throws IOException {
-		sender = new DefaultNodeIdentifier(input.readLong());
+		sender = new NodeIdentifier(input.readLong());
 		readImpl(input);
 	}
 	

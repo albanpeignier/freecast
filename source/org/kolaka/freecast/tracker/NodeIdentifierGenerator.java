@@ -25,7 +25,6 @@ package org.kolaka.freecast.tracker;
 
 import java.util.Random;
 
-import org.kolaka.freecast.node.DefaultNodeIdentifier;
 import org.kolaka.freecast.node.NodeIdentifier;
 
 /**
@@ -42,7 +41,7 @@ public class NodeIdentifierGenerator {
 		long randomValue = random.nextInt();
 		long identifier = (timeBase << 32) + randomValue;
 
-		return new DefaultNodeIdentifier(identifier);
+		return new NodeIdentifier(identifier);
 	}
 
 }

@@ -29,7 +29,6 @@ import java.io.IOException;
 
 import org.kolaka.freecast.packet.Checksum;
 import org.kolaka.freecast.packet.DefaultLogicalPageDescriptor;
-import org.kolaka.freecast.packet.DefaultPacket;
 import org.kolaka.freecast.packet.DefaultPacketData;
 import org.kolaka.freecast.packet.LogicalPageDescriptor;
 import org.kolaka.freecast.packet.Packet;
@@ -76,7 +75,7 @@ public class PacketMessage extends BaseMessage implements AcknowledgableMessage 
 		LogicalPageDescriptor.Element elementDescriptor = pageDescriptor
 				.createElementDescriptor(packetIndex);
 
-		setPacket(new DefaultPacket(packetSequenceNumber, pageTimestamp,
+		setPacket(new Packet(packetSequenceNumber, pageTimestamp,
 				new DefaultPacketData(packetBytes), checksum, elementDescriptor));
 	}
 

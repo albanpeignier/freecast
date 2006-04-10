@@ -34,7 +34,6 @@ import org.apache.commons.lang.Validate;
 import org.kolaka.freecast.ogg.OggPage;
 import org.kolaka.freecast.ogg.OggSource;
 import org.kolaka.freecast.packet.Checksum;
-import org.kolaka.freecast.packet.DefaultPacket;
 import org.kolaka.freecast.packet.DefaultPacketData;
 import org.kolaka.freecast.packet.LogicalPage;
 import org.kolaka.freecast.packet.LogicalPageBuilder;
@@ -105,7 +104,7 @@ public class OggLogicalPageFactory {
 				exception.initCause(e);
 				throw exception;
 			}
-			Packet packet = new DefaultPacket(packetIdentifierGenerator.next(),
+			Packet packet = new Packet(packetIdentifierGenerator.next(),
 					timestamp, packetData, checksum, builder
 							.createElementDescriptor(index));
 			builder.add(packet);

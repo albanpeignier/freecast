@@ -31,6 +31,7 @@ import org.kolaka.freecast.node.NodeStatusProvider;
 import org.kolaka.freecast.peer.event.PeerConnectionStatusListener;
 import org.kolaka.freecast.peer.event.PeerStatusListener;
 import org.kolaka.freecast.peer.event.VetoablePeerConnectionStatusListener;
+import org.kolaka.freecast.transport.MessageHandler;
 import org.kolaka.freecast.transport.MessageWriter;
 
 /**
@@ -46,6 +47,8 @@ public interface PeerConnection {
 	Status getStatus();
 
 	MessageWriter getWriter();
+
+	void setMessageHandler(MessageHandler handler);
 
 	void close() throws IOException;
 

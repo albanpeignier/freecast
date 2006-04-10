@@ -23,6 +23,7 @@
 
 package org.kolaka.freecast.peer;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -33,12 +34,17 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.lang.UnexpectedException;
 import org.kolaka.freecast.node.NodeIdentifier;
+import org.kolaka.freecast.node.NodeStatusProvider;
 import org.kolaka.freecast.peer.event.PeerConnectionStatusListener;
 import org.kolaka.freecast.peer.event.PeerConnectionStatusSupport;
 import org.kolaka.freecast.peer.event.PeerStatusEvent;
 import org.kolaka.freecast.peer.event.PeerStatusListener;
 import org.kolaka.freecast.peer.event.VetoPeerConnectionStatusChangeException;
 import org.kolaka.freecast.peer.event.VetoablePeerConnectionStatusListener;
+import org.kolaka.freecast.transport.Message;
+import org.kolaka.freecast.transport.MessageHandler;
+import org.kolaka.freecast.transport.PeerConnectionStatusMessage;
+import org.kolaka.freecast.transport.PeerStatusMessage;
 
 public abstract class BasePeerConnection implements PeerConnection {
 
@@ -138,5 +144,52 @@ public abstract class BasePeerConnection implements PeerConnection {
 		}
 		return peerIdentifier;
 	}
+
+	private MessageHandler handler;
+
+	public void setMessageHandler(MessageHandler handler) {
+		Validate.notNull(handler);
+		this.handler = handler;
+	}
+
+	protected void processMessage(Message message) throws IOException {
+		if (handler != null) {
+			handler.messageReceived(message);
+		}
+	}
+
+	private NodeStatusProvider statusProvider;
 	
+	protected NodeStatusProvider getNodeStatusProvider() {
+		return statusProvider;
+	}
+	
+	public void setNodeStatusProvider(NodeStatusProvider statusProvider) {
+		this.statusProvider = statusProvider;
+	}
+	
+	protected void sendNodeStatus() {
+		PeerStatus peerStatus = statusProvider.getNodeStatus().createPeerStatus();
+		sendNodeStatus(peerStatus);
+	}
+
+	protected void sendNodeStatus(PeerStatus peerStatus) {
+		if (getStatus().equals(PeerConnection.Status.CLOSED)) {
+			LogFactory.getLog(getClass()).trace("ignore status sending on a closed connection");
+			return;
+		}
+		
+		LogFactory.getLog(getClass()).trace("send peer status");
+		try {
+			getWriter().write(new PeerStatusMessage(peerStatus));
+		} catch (IOException e) {
+			LogFactory.getLog(getClass()).error("can't send peer status", e);
+		}
+	}
+	
+	protected void sendConnectionStatus(PeerConnection.Status status) throws IOException {
+		LogFactory.getLog(getClass()).debug("notify connection status: " + status);
+		getWriter().write(new PeerConnectionStatusMessage(status));
+	}
+
 }
