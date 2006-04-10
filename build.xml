@@ -1,6 +1,6 @@
 <project name="freecast" default="test" basedir=".">
 
-	<defaultexcludes add="**/.arch-ids/**" />
+	<property file="build-user.properties" />
 	<property file="build.properties" />
 
 	<macrodef name="docbook">
@@ -9,6 +9,7 @@
 		<attribute name="style" />
 		<element name="arguments" optional="true" />
 		<sequential>
+
 			<java classname="org.apache.xalan.xslt.Process" fork="true" failonerror="true">
 				<jvmarg line="-Dorg.apache.xerces.xni.parser.XMLParserConfiguration=org.apache.xerces.parsers.XIncludeParserConfiguration" />
 				<jvmarg line="-Xbootclasspath/p:/usr/share/java/xercesImpl.jar" />
@@ -24,6 +25,7 @@
 				<arg line="-PARAM use.extensions 1" />
 				<arguments />
 			</java>
+
 		</sequential>
 	</macrodef>
 
@@ -452,7 +454,12 @@
 	</target>
 
 	<target name="build.docs.userguide.html.validate" depends="build.docs.userguide.html.check" unless="build.docs.userguide.html.notRequired">
-		<xmlvalidate failonerror="yes" lenient="yes" warn="yes" file="build/docs/userguide/userguide.xml" />
+		<xmlvalidate failonerror="yes" lenient="yes" warn="yes" file="build/docs/userguide/userguide.xml">
+		  <!--
+		  <dtd publicId="-//OASIS//DTD DocBook XML V4.1.2//EN"
+			   location="${track.docbook.dtd.dir}/docbookx.dtd"/>
+		  -->	   
+		</xmlvalidate>
 	</target>
 
 	<target name="build.docs.userguide.html.check">
@@ -463,7 +470,6 @@
 
 	<target name="build.docs.userguide.html" depends="build.docs.userguide.prepare, build.docs.userguide.html.check, build.docs.userguide.html.validate, build.docs.userguide.html.copy" unless="build.docs.userguide.html.notRequired">
 		<docbook in="build/docs/userguide/userguide.xml" out="build/docs/userguide/index.html" style="build/docs/userguide/userguide-html.xsl">
-			<!-- ${track.docbook.dir}/html/chunk.xsl -->
 			<arguments>
 				<arg line="-PARAM hunker.output.encoding UTF-8" />
 				<arg line="-PARAM chunk.tocs.and.lots 1" />
@@ -663,15 +669,18 @@
 		</thumbnails>
 	</target>
 
-	<target name="build.win32">
-		<mkdir dir="build/win32" />
-		<get dest="build/win32/jre-setup.exe" src="${export.win32.jresetup.url}" usetimestamp="true" />
+	<target name="build.win32" depends="build.win32.jre">
 		<copy todir="build/win32">
 			<fileset dir="source/org/kolaka/freecast/nsis" />
 			<filterset>
 				<filter token="project.version" value="${project.version}" />
 			</filterset>
 		</copy>
+	</target>
+
+	<target name="build.win32.jre" unless="build.win32.jre.notRequired">
+		<mkdir dir="build/win32" />
+		<get dest="build/win32/jre-setup.exe" src="${export.win32.jresetup.url}" usetimestamp="true" />
 	</target>
 
 	<target name="test" depends="build.test" description="Run the unit tests">
@@ -801,9 +810,12 @@
 	</target>
 
 	<target name="dist.etc" depends="build.etc">
-		<copy todir="dist/etc" flatten="true">
-			<fileset dir="build/etc/complete" />
-		</copy>
+	  <mkdir dir="dist/etc"/>
+	  <xmltidy dest="dist/etc">
+		<filesets>
+		  <fileset dir="build/etc/complete" />
+		</filesets>
+	  </xmltidy>
 	</target>
 
 	<target name="dist.docs" depends="build.docs, build.changelog">
@@ -825,17 +837,28 @@
 			</filesets>
 		</tidy>
 
-		<copy todir="dist/docs/examples">
+		<!-- TODO find a better way -->
+		<mkdir dir="dist/docs/examples/audio"/>
+		<mkdir dir="dist/docs/examples/video"/>
+		<mkdir dir="dist/docs/examples/tracker"/>
+
+		<xmltidy dest="dist/docs/examples">
+		  <filesets>
 			<fileset dir="source/org/kolaka/freecast/config/samples">
 				<include name="**/*.xml" />
 			</fileset>
-		</copy>
-		<copy todir="dist/docs/examples/jws">
+		  </filesets>
+		</xmltidy>
+
+		<mkdir dir="dist/docs/examples/jws"/>
+		<xmltidy dest="dist/docs/examples/jws">
+		  <filesets>
 			<fileset dir="source/org/kolaka/freecast/node/swing">
 				<include name="config.xml" />
 				<include name="descriptor.xml" />
 			</fileset>
-		</copy>
+		  </filesets>
+		</xmltidy>
 	</target>
 
 	<target name="dist.lib" depends="prepare.libraries">
@@ -852,6 +875,11 @@
 		<copy todir="dist/lib/linux/x86">
 			<fileset dir="${track.tritonus.dir}">
 				<include name="*.so" />
+			</fileset>
+		</copy>
+		<copy todir="dist/lib/linux/windows">
+			<fileset dir="${track.tritonus.dir}">
+				<include name="*.dll" />
 			</fileset>
 		</copy>
 	</target>
@@ -958,7 +986,7 @@
 	</target>
 
 	<target name="dist.win32" depends="dist.jar, dist.lib, dist.bin, dist.docs, dist.etc, build.win32">
-		<copy todir="${dist.win32.dir}/" includeemptydirs="false">
+		<copy todir="${dist.win32.dir}" includeemptydirs="false">
 			<fileset dir="dist">
 				<include name="lib/*.jar" />
 				<include name="lib/windows/**" />
@@ -969,7 +997,16 @@
 				<include name="docs/examples/**" />
 			</fileset>
 		</copy>
+		<copy todir="${dist.win32.dir}/etc">
+		  <fileset dir="dist/docs/examples/audio"/>
+		</copy>
 		<copy file="LICENSE" tofile="${dist.win32.dir}/LICENSE.txt" />
+        <fixcrlf srcdir="${dist.win32.dir}" eol="dos">
+		  <include name="**/*.xml"/>
+		  <include name="**/*.bat"/>
+		  <include name="**/*.txt"/>
+		  <include name="**/*.html"/>
+		</fixcrlf>
 	</target>
 
 	<macrodef name="tidy">
@@ -979,6 +1016,22 @@
 		<sequential>
 			<apply executable="tidy" dest="@{dest}" failonerror="@{failonerror}" verbose="true">
 				<arg line="-quiet -utf8 -wrap 100 -indent" />
+				<arg value="-o" />
+				<targetfile />
+				<srcfile />
+				<filesets />
+				<mapper type="identity" />
+			</apply>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="xmltidy">
+		<attribute name="dest" />
+		<attribute name="failonerror" default="true" />
+		<element name="filesets" optional="false" />
+		<sequential>
+			<apply executable="tidy" dest="@{dest}" failonerror="@{failonerror}" verbose="true">
+				<arg line="-xml -quiet -utf8 -wrap 100 -indent" />
 				<arg value="-o" />
 				<targetfile />
 				<srcfile />
