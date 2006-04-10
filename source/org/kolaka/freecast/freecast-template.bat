@@ -29,7 +29,8 @@ echo "Use the FREECAST_HOME variable"
 
 :libok
 
-set LOGDIR=%FREECAST%\log
+set LOGDIR=%FREECAST_HOME%\log
+if not exist %LOGDIR% md %LOGDIR%
 if not exist %LOGDIR% set LOGDIR=.
 
 rem create classpath
