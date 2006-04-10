@@ -186,7 +186,8 @@ Section "Start menu shortcuts" SecCreateShortcut
   CreateShortCut "$SMPROGRAMS\${AppName}\Broadcast\Start Listener Node - audio example.lnk" "$INSTDIR\bin\freecast-swing.bat" "-config docs/examples/audio/freecast-node-listener.xml"
   CreateShortCut "$SMPROGRAMS\${AppName}\Broadcast\Start Root Node - video example.lnk" "$INSTDIR\bin\freecast.bat" "-config docs/examples/video/freecast-node-root.xml"
   CreateShortCut "$SMPROGRAMS\${AppName}\Broadcast\Start Listener Node - video example.lnk" "$INSTDIR\bin\freecast-swing.bat" "-config docs/examples/video/freecast-node-listener.xml"
-
+  CreateShortCut "$SMPROGRAMS\${AppName}\Broadcast\Start Root Node - my network.lnk" "$INSTDIR\bin\freecast.bat" "-config etc/freecast-node-root.xml"
+  CreateShortCut "$SMPROGRAMS\${AppName}\Broadcast\Start Listener Node - my network.lnk" "$INSTDIR\bin\freecast-swing.bat" "-config etc/freecast-node-listener.xml"
 ; Etc
 SectionEnd
  
