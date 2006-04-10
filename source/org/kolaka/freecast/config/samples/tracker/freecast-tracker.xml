@@ -1,9 +1,12 @@
+<!-- 
+	 FreeCast configuration file
+	 visit http://www.freecast.org/userguide/tracker-configuration.html
+-->
 <freecast>
 	<tracker>
 		<connector>
 			<class>http</class>
 			<listenaddress>
-				<host>0.0.0.0</host>
 				<port>1665</port>
 			</listenaddress>
 		</connector>

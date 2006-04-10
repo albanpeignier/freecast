@@ -1,3 +1,7 @@
+<!-- 
+	 FreeCast configuration file
+	 visit http://www.freecast.org/userguide/node-configuration.html
+-->
 <freecast>
  	<node>
   		<peerprovider>
