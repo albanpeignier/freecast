@@ -27,7 +27,7 @@
    				<!-- accept http clients on the port 8001 -->
    				<class>http</class>
     			<listenaddress>
-    				<port>8001</port>
+    				<port>8002</port>
     			</listenaddress>
    			</player>
   		</players>
