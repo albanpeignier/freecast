@@ -46,7 +46,7 @@ public class MessageHeader implements MessageHeaderInterface {
 	MessageHeaderType type;
 	byte[] id = new byte[16];
 	
-	TreeMap<MessageAttribute.MessageAttributeType, MessageAttribute> ma = new TreeMap<MessageAttribute.MessageAttributeType, MessageAttribute>();
+	private final Map ma = new TreeMap();
 	
 	public MessageHeader() {
 		super();
@@ -108,14 +108,14 @@ public class MessageHeader implements MessageHeaderInterface {
 	}
 	
 	public MessageAttribute getMessageAttribute(MessageAttribute.MessageAttributeType type) {
-		return ma.get(type);
+		return (MessageAttribute) ma.get(type);
 	}
 	
 	public byte[] getBytes() throws UtilityException {
 		int length = 20;
-		Iterator<MessageAttribute.MessageAttributeType> it = ma.keySet().iterator();
+		Iterator it = ma.keySet().iterator();
 		while (it.hasNext()) {
-			MessageAttribute attri = ma.get(it.next());
+			MessageAttribute attri = (MessageAttribute) ma.get(it.next());
 			length += attri.getLength();
 		}
 		// add attribute size + attributes.getSize();
@@ -128,7 +128,7 @@ public class MessageHeader implements MessageHeaderInterface {
 		int offset = 20;
 		it = ma.keySet().iterator();
 		while (it.hasNext()) {
-			MessageAttribute attri = ma.get(it.next());
+			MessageAttribute attri = (MessageAttribute) ma.get(it.next());
 			System.arraycopy(attri.getBytes(), 0, result, offset, attri.getLength());
 			offset += attri.getLength();
 		}

@@ -20,8 +20,27 @@
 
 package de.javawi.jstun.header;
 
+import org.apache.commons.lang.enums.ValuedEnum;
+
 public interface MessageHeaderInterface {
-	public enum MessageHeaderType { BindingRequest, BindingResponse, BindingErrorResponse, SharedSecretRequest, SharedSecretResponse, SharedSecretErrorResponse };
+	public class MessageHeaderType extends ValuedEnum { 
+        public final static MessageHeaderType BindingRequest = 
+			   new MessageHeaderType("BindingRequest", BINDINGREQUEST);
+		public final static MessageHeaderType BindingResponse = 
+			   new MessageHeaderType("BindingResponse", BINDINGRESPONSE);
+		public final static MessageHeaderType BindingErrorResponse = 
+			   new MessageHeaderType("BindingErrorResponse", BINDINGERRORRESPONSE);
+		public final static MessageHeaderType SharedSecretRequest = 
+			   new MessageHeaderType("SharedSecretRequest", SHAREDSECRETREQUEST);
+		public final static MessageHeaderType SharedSecretResponse = 
+			   new MessageHeaderType("SharedSecretResponse", SHAREDSECRETRESPONSE);
+		public final static MessageHeaderType SharedSecretErrorResponse = 
+			   new MessageHeaderType("SharedSecretErrorResponse", SHAREDSECRETERRORRESPONSE);
+
+		private MessageHeaderType(String name, int value) {
+		    super(name, value);
+		}
+	};
 	final static int BINDINGREQUEST = 0x0001;
 	final static int BINDINGRESPONSE = 0x0101;
 	final static int BINDINGERRORRESPONSE = 0x0111;

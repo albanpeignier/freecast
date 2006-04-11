@@ -36,7 +36,7 @@ public class UnknownAttribute extends MessageAttribute {
 	 * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 	 */
 	
-	Vector<MessageAttributeType> unkown = new Vector<MessageAttributeType>();
+	private final List unkown = new ArrayList();
 	
 	public UnknownAttribute() {
 		super(MessageAttribute.MessageAttributeType.UnknownAttribute);
@@ -61,14 +61,14 @@ public class UnknownAttribute extends MessageAttribute {
 		System.arraycopy(Utility.IntegerToTwoBytes(length - 4), 0, result, 2, 2);
 		
 		// unkown attribute header
-		Iterator<MessageAttributeType> it = unkown.iterator();
+		Iterator it = unkown.iterator();
 		while(it.hasNext()) {
-			MessageAttributeType attri = it.next();
+			MessageAttributeType attri = (MessageAttributeType) it.next();
 			System.arraycopy(Utility.IntegerToTwoBytes(typeToInteger(attri)), 0, result, 4, 2);
 		}
 		// padding
 		if (unkown.size()%2 == 1) {
-			System.arraycopy(Utility.IntegerToTwoBytes(typeToInteger(unkown.elementAt(1))), 0, result, 4, 2);
+			System.arraycopy(Utility.IntegerToTwoBytes(typeToInteger((MessageAttributeType) unkown.get(1))), 0, result, 4, 2);
 		}
 		return result;
 	}

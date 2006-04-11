@@ -20,8 +20,39 @@
 
 package de.javawi.jstun.attribute;
 
+import org.apache.commons.lang.enums.ValuedEnum;
+
 public interface MessageAttributeInterface {
-	public enum MessageAttributeType { Dummy, MappedAddress, ResponseAddress, ChangeRequest, SourceAddress, ChangedAddress, Username, Password, MessageIntegrity, ErrorCode, UnknownAttribute, ReflectedFrom };
+	public class MessageAttributeType extends ValuedEnum { 
+	    public static final MessageAttributeType Dummy = 
+			   new MessageAttributeType("Dummy", DUMMY);
+		public static final MessageAttributeType MappedAddress = 
+			   new MessageAttributeType("MappedAddress", MAPPEDADDRESS);
+		public static final MessageAttributeType ResponseAddress = 
+			   new MessageAttributeType("ResponseAddress", RESPONSEADDRESS);
+		public static final MessageAttributeType ChangeRequest = 
+			   new MessageAttributeType("ChangeRequest", CHANGEREQUEST);
+		public static final MessageAttributeType SourceAddress = 
+			   new MessageAttributeType("SourceAddress", SOURCEADDRESS);
+		public static final MessageAttributeType ChangedAddress = 
+			   new MessageAttributeType("ChangedAddress", CHANGEDADDRESS);
+		public static final MessageAttributeType Username = 
+			   new MessageAttributeType("Username", USERNAME);
+		public static final MessageAttributeType Password = 
+			   new MessageAttributeType("Password", PASSWORD);
+		public static final MessageAttributeType MessageIntegrity = 
+			   new MessageAttributeType("MessageIntegrity", MESSAGEINTEGRITY);
+		public static final MessageAttributeType ErrorCode = 
+			   new MessageAttributeType("ErrorCode", ERRORCODE);
+		public static final MessageAttributeType UnknownAttribute = 
+			   new MessageAttributeType("UnknownAttribute", UNKNOWNATTRIBUTE);
+		public static final MessageAttributeType ReflectedFrom = 
+			   new MessageAttributeType("ReflectedFrom", REFLECTEDFROM);
+
+		private MessageAttributeType(String name, int value) {
+				super(name, value);
+		}
+	};
 	final static int DUMMY = 0x0000;
 	final static int MAPPEDADDRESS = 0x0001;
 	final static int RESPONSEADDRESS = 0x0002;

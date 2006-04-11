@@ -1,0 +1,5 @@
+2006-04-07  Alban Peignier  <alban.peignier@free.fr>
+
+	* enums: replaced enum by org.apache.commons.lang.enums.ValuedEnum to compile with 1.4
+	* collections: removed generic collections and iterators to compile with 1.4
+	* build: create a small build

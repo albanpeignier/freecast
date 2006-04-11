@@ -1,0 +1,24 @@
+<project>
+
+  <property name="version" value="0.5.9.2"/>
+
+  <target name="clean">
+	<delete dir="build"/>
+	<delete file="jstun-${version}.jar"/>
+  </target>
+
+  <target name="build">
+	<mkdir dir="build"/>
+	<javac target="1.4" source="1.4" srcdir="src" destdir="build" debug="true">
+	  <classpath>
+		<fileset dir="lib"/>
+	  </classpath>
+	</javac>
+  </target>
+
+  <target name="dist" depends="build">
+	<jar jarfile="jstun-${version}.jar">
+	  <fileset dir="build"/>
+	</jar>
+  </target>
+</project>
