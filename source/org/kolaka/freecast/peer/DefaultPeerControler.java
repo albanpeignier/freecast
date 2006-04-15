@@ -237,7 +237,7 @@ public class DefaultPeerControler implements ConfigurablePeerControler,
 			throw new VetoPeerConnectionStatusChangeException("Cant' receive from lower order peer: " + remoteStatus);
 		}
 
-		
+		connection.add(connectionListener);		
 		peerConnections.put(peerIdentifier, connection);
 		
 		auditor.acceptConnection(storage.get(peerIdentifier));
@@ -245,9 +245,6 @@ public class DefaultPeerControler implements ConfigurablePeerControler,
 	}
 
 	private void removePeerConnection(PeerConnection connection) {
-		LogFactory.getLog(getClass()).trace(
-				"unregister the connection " + connection);
-
 		NodeIdentifier peerIdentifier;
 		
 		try {
@@ -256,6 +253,20 @@ public class DefaultPeerControler implements ConfigurablePeerControler,
 			// connection was never opened
 			return;
 		}
+
+		PeerConnection registeredConnection = (PeerConnection) peerConnections.get(peerIdentifier);
+		if (!connection.equals(registeredConnection)) {
+			/* 
+			 * several connections with the same identifier can be OPENING to connect
+			 * the multiple reference of a same peer. 
+			 * Events from not registered connections must be ignored.   
+			 */ 
+			LogFactory.getLog(getClass()).debug("ignore closing of not registered connection: " + connection);
+			return;
+		}
+		
+		LogFactory.getLog(getClass()).trace(
+				"unregister the connection " + connection);
 
 		peerConnections.remove(peerIdentifier);
 
@@ -269,7 +280,6 @@ public class DefaultPeerControler implements ConfigurablePeerControler,
 
 		public void connectionOpening(PeerConnection connection) {
 			connection.add(vetoConnectionListener);
-			connection.add(connectionListener);
 			connection.add(statusListener);
 		}
 		
