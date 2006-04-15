@@ -1085,7 +1085,7 @@
 		</copy>
 	</target>
 
-	<target name="export" depends="prepare.version, build.changelog, dist, dist.docs" description="Packages binaries and sources distributions">
+	<target name="export.tar" depends="prepare.version, build.changelog, dist, dist.docs" description="Packages binaries and sources distributions">
 		<mkdir dir="export" />
 
 		<tar tarfile="export/${project.fullname}.tar.bz" compression="bzip2">
@@ -1124,13 +1124,6 @@
 				<include name="LICENSE" />
 			</tarfileset>
 		</tar>
-
-		<copy tofile="export/README.html" file="build/changelog/changelog.html" />
-		<copy todir="export">
-			<fileset dir="build/changelog">
-				<include name="*.css" />
-			</fileset>
-		</copy>
 	</target>
 
 	<target name="export.win32" depends="dist.win32">
@@ -1149,8 +1142,64 @@
 		</exec>
 	</target>
 
-	<target name="export.debian" depends="dist.debian">
+	<target name="export.debian" depends="export.debian.changelog">
+		<exec executable="fakeroot">
+			<arg line="./debian/rules binary"/>
+		</exec>
+		<exec executable="sed" outputproperty="export.debian.changelog.version">
+			<arg line="-n '1 s/freecast (\(.*\)).*/\1/p'"/>
+			<arg file="debian/changelog"/>
+		</exec>
+		<echo message="${export.debian.changelog.version}"/>
+		<move file="../freecast_${export.debian.changelog.version}_all.deb" todir="export"/>
+	</target>
+	
+	<target name="export.debian.changelog.check" depends="prepare.version">
+		<exec executable="sed" outputproperty="export.debian.changelog.currentversion">
+			<arg line="-n '1 s/freecast (\(.*\)).*/\1/p'"/>
+			<arg file="debian/changelog"/>
+		</exec>
+		
+		<condition property="export.debian.changelog.notRequired">
+			<contains string="${export.debian.changelog.currentversion}" substring="${project.version}"/>
+		</condition>
+	</target>
 
+	<target name="export.debian.changelog" unless="export.debian.changelog.notRequired" depends="export.debian.changelog.check">
+		<tempfile property="export.debian.changelog.append"/>
+		<tstamp>
+	      <format property="export.debian.changelog.date" pattern="EEE, dd MMM yyyy hh:mm:ss Z"/>
+		</tstamp>
+		<copy tofile="${export.debian.changelog.append}" file="debian/changelog.template">
+			<filterset>
+				<filter token="project.version" value="${project.version}" />
+				<filter token="date" value="${export.debian.changelog.date}" />
+			</filterset>
+		</copy>
+		
+		<exec executable="cat">
+			<arg value="${export.debian.changelog.append}"/>
+		</exec>
+
+		<tempfile property="export.debian.changelog.output"/>
+		<concat destfile="${export.debian.changelog.output}">
+			<fileset file="${export.debian.changelog.append}"/>
+			<filelist dir="${basedir}" files="debian/changelog"/>
+		</concat>
+		
+		<copy tofile="debian/changelog" file="${export.debian.changelog.output}"/>
+		
+		<delete file="${export.debian.changelog.output}"/>
+		<delete file="${export.debian.changelog.append}"/>
+	</target>
+	
+	<target name="export" depends="export.tar, export.debian, export.win32">
+		<copy tofile="export/README.html" file="build/changelog/changelog.html" />
+		<copy todir="export">
+			<fileset dir="build/changelog">
+				<include name="*.css" />
+			</fileset>
+		</copy>
 	</target>
 
 	<target name="ccontrol.loop" depends="clean, clean.track, export" />
