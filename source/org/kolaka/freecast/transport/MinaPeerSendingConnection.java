@@ -26,6 +26,7 @@ package org.kolaka.freecast.transport;
 import java.io.IOException;
 import java.util.Date;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.logging.LogFactory;
 import org.apache.mina.common.IoSession;
 import org.kolaka.freecast.peer.PeerConnection;
@@ -90,6 +91,11 @@ public class MinaPeerSendingConnection extends BaseMinaPeerConnection implements
 				}
 			}
 		};
+	}
+
+	protected void appendFields(ToStringBuilder builder) {
+		super.appendFields(builder);
+		builder.append("lastReceivedMessage", lastReceivedMessage);
 	}
 
 }

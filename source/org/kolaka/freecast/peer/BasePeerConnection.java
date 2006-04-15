@@ -96,8 +96,15 @@ public abstract class BasePeerConnection implements PeerConnection {
 	}
 
 	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
+		ToStringBuilder builder = new ToStringBuilder(this);
+		builder.append("peerIdentifier", peerIdentifier);
+		builder.append("status", status);
+		builder.append("remoteStatus", remoteStatus);
+		appendFields(builder);
+		return builder.toString();
 	}
+	
+	protected abstract void appendFields(ToStringBuilder builder);
 	
 	private Set peerStatusListeners = new HashSet();
 	

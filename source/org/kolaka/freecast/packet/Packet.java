@@ -86,7 +86,12 @@ public class Packet implements SequenceElement, PacketData {
 	}
 
 	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
+		ToStringBuilder builder = new ToStringBuilder(this);
+        builder.append("sequenceNumber", sequenceNumber);
+        builder.append("bytes.length", bytes.length);
+        builder.append("checksum", checksum);
+        builder.append("elementDescriptor", elementDescriptor);
+        return builder.toString();
 	}
 
 }

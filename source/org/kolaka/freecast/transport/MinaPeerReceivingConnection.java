@@ -28,6 +28,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
 import org.apache.commons.lang.Validate;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.logging.LogFactory;
 import org.apache.mina.common.IoConnector;
 import org.apache.mina.common.IoHandler;
@@ -254,6 +255,12 @@ public class MinaPeerReceivingConnection extends BaseMinaPeerConnection
 
 	public void setConnectionAssistantClient(ConnectionAssistantClient client) {
 		this.caClient = client;
+	}
+
+	protected void appendFields(ToStringBuilder builder) {
+		super.appendFields(builder);
+		builder.append("address", address);
+		builder.append("latency", latencyMonitor.getLatency());
 	}
 
 }

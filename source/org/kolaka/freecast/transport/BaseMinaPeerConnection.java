@@ -26,6 +26,7 @@ package org.kolaka.freecast.transport;
 import java.io.IOException;
 
 import org.apache.commons.lang.Validate;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.logging.LogFactory;
 import org.apache.mina.common.IoSession;
 import org.apache.mina.common.WriteFuture;
@@ -74,17 +75,19 @@ public abstract class BaseMinaPeerConnection extends BasePeerConnection {
 	private final Task openTimeout = new Task() {
 		public void run() {
 			if (getStatus().equals(PeerConnection.Status.OPENING)) {
-				LogFactory.getLog(getClass()).debug("open timeout, close connection");
+				LogFactory.getLog(getClass()).debug("open timeout, close connection: " + BaseMinaPeerConnection.this);
 				closeImpl();
 			}
 		}
 	};
 	
 	protected void closeImpl() {
-		try {
-			sendConnectionStatus(PeerConnection.Status.CLOSED);
-		} catch (IOException e) {
-			LogFactory.getLog(getClass()).error("Can't send close message");
+		if (!getStatus().equals(PeerConnection.Status.OPENING)) {
+			try {
+				sendConnectionStatus(PeerConnection.Status.CLOSED);
+			} catch (IOException e) {
+				LogFactory.getLog(getClass()).error("Can't send close message");
+			}
 		}
 		setStatus(PeerConnection.Status.CLOSED);
 		session.close();
@@ -164,6 +167,10 @@ public abstract class BaseMinaPeerConnection extends BasePeerConnection {
 			session.close();
 		}
 		closeImpl();
+	}
+	
+	protected void appendFields(ToStringBuilder builder) {
+		builder.append("session.remoteAddress", session.getRemoteAddress());
 	}
 
 }
