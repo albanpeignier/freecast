@@ -1153,6 +1153,12 @@
 		<echo message="${export.debian.changelog.version}"/>
 		<move file="../freecast_${export.debian.changelog.version}_all.deb" todir="export"/>
 	</target>
+
+	<target name="export.debian.clean">
+		<exec executable="fakeroot">
+			<arg line="./debian/rules clean"/>
+		</exec>
+	</target>
 	
 	<target name="export.debian.changelog.check" depends="prepare.version">
 		<exec executable="sed" outputproperty="export.debian.changelog.currentversion">
