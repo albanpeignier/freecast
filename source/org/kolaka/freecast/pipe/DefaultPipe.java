@@ -162,6 +162,7 @@ public class DefaultPipe implements Pipe {
 
 				LogicalPage returnedPage = headerPage;
 				headerPage = null;
+				nextMustBeFirstPage = false;
 				return returnedPage;
 			}
 
