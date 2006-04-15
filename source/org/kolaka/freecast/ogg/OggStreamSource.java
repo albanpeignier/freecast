@@ -23,12 +23,14 @@
 
 package org.kolaka.freecast.ogg;
 
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
+import org.apache.commons.io.HexDump;
 import org.apache.commons.io.input.SwappedDataInputStream;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -82,6 +84,7 @@ public class OggStreamSource implements OggSource {
 		dataInput.readFully(capturePatternBuffer, 0, 4);
 
 		if (!Arrays.equals(OggPage.CAPTURE_PATTERN, capturePatternBuffer)) {
+			LogFactory.getLog(getClass()).trace(createHexDump(capturePatternBuffer));
 			throw new IOException("Missing capture pattern");
 		}
 
@@ -96,6 +99,11 @@ public class OggStreamSource implements OggSource {
 
 		try {
 			int headerTypeFlag = dataInput.readUnsignedByte();
+			boolean continuedPacket = (headerTypeFlag & 0x01) != 0;
+			if (continuedPacket) {
+				throw new IOException("Continued packet not supported for the moment");
+			}
+			
 			page.setFirstPage((headerTypeFlag & 0x02) != 0);
 			page.setLastPage((headerTypeFlag & 0x04) != 0);
 
@@ -110,8 +118,11 @@ public class OggStreamSource implements OggSource {
 			for (int segmentIndex = 0; segmentIndex < pageSegments; segmentIndex++) {
 				pageSize += dataInput.readUnsignedByte();
 			}
-
-			dataInput.skip(pageSize);
+			
+			long skipped = dataInput.skip(pageSize);
+			if (skipped != pageSize) {
+				throw new IOException("Can't skip the required size (" + skipped + "/" + pageSize + ")");
+			}
 
 			page.setRawBytes(reminderInput.toByteArray());
 			reminderInput.resetByteArray();
@@ -120,10 +131,24 @@ public class OggStreamSource implements OggSource {
 			throw e;
 		}
 
-		// LogFactory.getLog(getClass()).trace("returns " + page);
-		endOfStream = page.isLastPage();
+		LogFactory.getLog(getClass()).trace("returns " + page);
+		LogFactory.getLog(getClass()).trace(createHexDump(page.getRawBytes()));
+		// endOfStream = page.isLastPage();
 		
 		return page;
+	}
+
+	/**
+	 * @param buffer TODO
+	 * @return
+	 * @throws IOException
+	 */
+	private String createHexDump(byte[] buffer) throws IOException {
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		HexDump.dump(buffer, 0, output, 0);
+		String hexdump = output.toString();
+		output.close();
+		return hexdump;
 	}
 
 	public void close() throws IOException {
