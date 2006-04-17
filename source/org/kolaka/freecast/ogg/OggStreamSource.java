@@ -29,6 +29,9 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.commons.io.HexDump;
 import org.apache.commons.io.input.SwappedDataInputStream;
@@ -75,7 +78,7 @@ public class OggStreamSource implements OggSource {
 	private final byte[] capturePatternBuffer = new byte[4];
 	
 	private boolean endOfStream;
-
+	
 	public OggPage next() throws IOException {
 		if (endOfStream) {
 			throw new EOFException("End of Stream has been detected");
@@ -85,13 +88,13 @@ public class OggStreamSource implements OggSource {
 
 		if (!Arrays.equals(OggPage.CAPTURE_PATTERN, capturePatternBuffer)) {
 			LogFactory.getLog(getClass()).trace(createHexDump(capturePatternBuffer));
-			throw new IOException("Missing capture pattern");
+			createIOException("Missing capture pattern");
 		}
 
 		int streamStructureVersion = dataInput.readUnsignedByte();
 		if (streamStructureVersion != 0 && streamStructureVersion != -1) {
 			// [Bug 52] the last page can use a streamStructureVersion at -1
-			throw new IOException("Bad stream structure version: "
+			createIOException("Bad stream structure version: "
 					+ streamStructureVersion);
 		}
 
@@ -99,10 +102,12 @@ public class OggStreamSource implements OggSource {
 
 		try {
 			int headerTypeFlag = dataInput.readUnsignedByte();
+			/*
 			boolean continuedPacket = (headerTypeFlag & 0x01) != 0;
 			if (continuedPacket) {
-				throw new IOException("Continued packet not supported for the moment");
+				LogFactory.getLog(getClass()).warn("continued packet not supported for the moment");
 			}
+			*/
 			
 			page.setFirstPage((headerTypeFlag & 0x02) != 0);
 			page.setLastPage((headerTypeFlag & 0x04) != 0);
@@ -121,21 +126,39 @@ public class OggStreamSource implements OggSource {
 			
 			long skipped = dataInput.skip(pageSize);
 			if (skipped != pageSize) {
-				throw new IOException("Can't skip the required size (" + skipped + "/" + pageSize + ")");
+				String message = "Can't skip the required size (" + skipped + "/" + pageSize + ")";
+				createIOException(message);
 			}
 
 			page.setRawBytes(reminderInput.toByteArray());
 			reminderInput.resetByteArray();
 		} catch (IOException e) {
 			LogFactory.getLog(getClass()).error("io error while reading " + page);
+			lastPages.log();
+			byte[] readData = reminderInput.toByteArray();
+			if (readData.length > 0) {
+				LogFactory.getLog(getClass()).trace("last bytes read");
+				LogFactory.getLog(getClass()).trace(createHexDump(readData));
+			}
 			throw e;
 		}
 
 		LogFactory.getLog(getClass()).trace("returns " + page);
-		LogFactory.getLog(getClass()).trace(createHexDump(page.getRawBytes()));
+		// LogFactory.getLog(getClass()).trace(createHexDump(page.getRawBytes()));
 		// endOfStream = page.isLastPage();
 		
+		lastPages.add(page);
+		
 		return page;
+	}
+
+	/**
+	 * @param message
+	 * @throws IOException
+	 */
+	private void createIOException(String message) throws IOException {
+		lastPages.log();
+		throw new IOException(message);
 	}
 
 	/**
@@ -153,6 +176,37 @@ public class OggStreamSource implements OggSource {
 
 	public void close() throws IOException {
 		dataInput.close();
+	}
+	
+	private final LastPages lastPages = new LastPages();
+	
+	class LastPages {
+		
+		private final int remaindedPages = 5;
+		private final List pages = new LinkedList();
+
+		public void add(OggPage page) {
+			pages.add(page);
+			while (pages.size() > remaindedPages) {
+				pages.remove(0);
+			}
+		}
+
+		public void log() {
+			LogFactory.getLog(getClass()).trace("last read pages:");
+			for (Iterator iter = pages.iterator(); iter.hasNext();) {
+				OggPage page = (OggPage) iter.next();
+				LogFactory.getLog(getClass()).trace(page);
+				try {
+					LogFactory.getLog(getClass()).trace(createHexDump(page.getRawBytes()));
+				} catch (IOException e) {
+					LogFactory.getLog(getClass()).error("can't dump " + page);
+				}
+			}
+		}
+		
+		
+		
 	}
 
 }
