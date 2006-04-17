@@ -106,7 +106,7 @@ public class PeerSender extends BaseService implements Sender, TimerUser {
 			}
 
 			// return DefaultTimer.nodelay();
-			return 100;
+			return 50;
 		}
 
 	};
