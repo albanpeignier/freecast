@@ -7,13 +7,20 @@
   		</peerprovider>
   		<sender>
   			<class>udp</class>
-	    		<listenaddress>
-	    			<host>0.0.0.0</host>
-	    			<port>30000~31000</port>
-	    		</listenaddress>
+    		<listenaddress>
+    			<port>30000~31000</port>
+    		</listenaddress>
+    		<reference>
+				<class>stun</class>
+				<host>stun.xten.net</host>
+			</reference>
   		</sender>
   		<receiver>	
   			<class>peer</class>
   		</receiver>
+  		<connection-assistant>
+ 			<host>unstable.freecast.org</host>
+			<port>10666</port>
+		</connection-assistant>
   	</node>
 </freecast>
