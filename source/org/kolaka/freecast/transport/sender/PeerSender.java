@@ -23,7 +23,6 @@
 
 package org.kolaka.freecast.transport.sender;
 
-import java.io.IOException;
 import java.util.Iterator;
 
 import org.apache.commons.lang.Validate;
@@ -94,19 +93,21 @@ public class PeerSender extends BaseService implements Sender, TimerUser {
 			} catch (EmptyPipeException e) {
 				return DefaultTimer.seconds(1);
 			}
+			
+			long delay = page.isFirstPage() ? 200 : 100;
 
 			try {
 				for (Iterator iter = page.packets().iterator(); iter.hasNext();) {
 					Packet packet = (Packet) iter.next();
 					writer.write(PacketMessage.getInstance(packet));
+					Thread.sleep(delay);
 				}
-			} catch (IOException e) {
+			} catch (Exception e) {
 				throw new LoopInterruptedException(
 						"failed to send a packet via " + connection, e);
 			}
 
-			// return DefaultTimer.nodelay();
-			return 50;
+			return DefaultTimer.nodelay();
 		}
 
 	};
