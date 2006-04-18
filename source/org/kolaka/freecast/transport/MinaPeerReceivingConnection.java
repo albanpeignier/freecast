@@ -24,6 +24,7 @@
 package org.kolaka.freecast.transport;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
@@ -47,6 +48,7 @@ public class MinaPeerReceivingConnection extends BaseMinaPeerConnection
 		implements PeerReceivingConnection {
 
 	private final SocketAddress address;
+	private final boolean localConnection;
 
 	private final IoConnector connector;
 
@@ -59,6 +61,16 @@ public class MinaPeerReceivingConnection extends BaseMinaPeerConnection
 		Validate.notNull(connector);
 		this.connector = connector;
 		this.address = address;
+		this.localConnection = 
+			isLocalAddress(address);  
+	}
+
+	private boolean isLocalAddress(SocketAddress address2) {
+		if (!(address instanceof InetSocketAddress)) {
+			return false;
+		}
+		InetAddress inetAddress = ((InetSocketAddress) address).getAddress();
+		return inetAddress.isLinkLocalAddress() || inetAddress.isSiteLocalAddress();
 	}
 
 	private LatencyMonitor latencyMonitor = new LatencyMonitor();
@@ -74,13 +86,13 @@ public class MinaPeerReceivingConnection extends BaseMinaPeerConnection
 	private InetSocketAddress publicAddress;
 
 	public void open() {
-		LogFactory.getLog(getClass()).debug("open connection to " + address);
+		LogFactory.getLog(getClass()).debug("open connection to " + address + " (local:" + localConnection + ")");
 		connector.getFilterChain().addFirst("freecast",
 				MinaProtocolCodecFactory.getFilter());
 
 		int localPort = (int) (30000 + Math.random() * 10000.0);
 
-		if (caClient != null) {
+		if (caClient != null && !localConnection) {
 			try {
 				publicAddress = stunClient.getPublicSocketAddress(localPort);
 			} catch (IOException e) {
@@ -96,7 +108,7 @@ public class MinaPeerReceivingConnection extends BaseMinaPeerConnection
 
 				open(session);
 
-				if (caClient != null && publicAddress != null) {
+				if (caClient != null && publicAddress != null &&  !localConnection) {
 					Runnable task = new TimedLoopSender("status from "
 							+ session.getLocalAddress() + " to " + address) {
 						protected void loopStarted() {
