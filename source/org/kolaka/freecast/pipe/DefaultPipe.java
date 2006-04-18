@@ -127,9 +127,7 @@ public class DefaultPipe implements Pipe {
 			}
 
 			if (this != nextConsumer) {
-				// LogFactory.getLog(getClass()).debug("push packet: " +
-				// sequenceNumber + "/" + packet.getSequenceNumber() + " - " +
-				// pageBuilders.size());
+				LogFactory.getLog(getClass()).trace("push " + sequenceNumber + "/" + packet.getSequenceNumber() + " (" + pageBuilders.size() + ")");
 			}
 			builder.add(packet);
 
@@ -158,7 +156,7 @@ public class DefaultPipe implements Pipe {
 		public synchronized LogicalPage consume() throws EmptyPipeException {
 			if (headerPage != null) {
 				LogFactory.getLog(getClass()).debug(
-						"Use cached first page: " + headerPage);
+						"use cached first page: " + headerPage);
 
 				LogicalPage returnedPage = headerPage;
 				headerPage = null;
@@ -215,6 +213,8 @@ public class DefaultPipe implements Pipe {
 			}
 			
 			LogicalPage page = builder.create();
+			LogFactory.getLog(getClass()).trace("consume " + page + " (" + pageBuilders.size() + ")");
+
 			validator.validate(page);
 
 			return page;
