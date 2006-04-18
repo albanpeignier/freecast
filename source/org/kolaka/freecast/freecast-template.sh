@@ -10,6 +10,9 @@ basedir=`cd $scriptdir; cd ..; pwd`
 
 libdir="$basedir/lib"
 
+appname=@app.name@
+[ -n "$FREECAST_APPNAME" ] && appname=$FREECAST_APPNAME
+
 #
 # log dir choose
 #
@@ -74,4 +77,4 @@ if [ $? != 0 ]; then
     exit 1
 fi
 
-exec $JAVA_CMD -cp $classpath -Djava.library.path=$libdir/linux/x86 -Dapp.name=@app.name@ -Dlog.dir=$logdir -Dlib.dir=$libdir @app.mainclass@ $*
+exec $JAVA_CMD -cp $classpath -Djava.library.path=$libdir/linux/x86 -Dapp.name=$appname -Dlog.dir=$logdir -Dlib.dir=$libdir @app.mainclass@ $*
