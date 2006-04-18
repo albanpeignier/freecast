@@ -43,7 +43,7 @@ public class ConsumerInputStreamFactory {
 		this.consumer = consumer;
 	}
 
-	private long delayOnEmptyPipe = 2000;
+	private long delayOnEmptyPipe = 5000;
 
 	private Stream next = null;
 
@@ -77,7 +77,7 @@ public class ConsumerInputStreamFactory {
 
 		Stream(LogicalPage readPage) {
 			Validate.isTrue(readPage.isFirstPage(),
-					"Read page isn't first page: " + readPage);
+					"read page isn't first page: " + readPage);
 			this.readPage = readPage;
 		}
 
@@ -85,10 +85,10 @@ public class ConsumerInputStreamFactory {
 			if (readPage == null) {
 				readPage = nextPage();
 				readIndex = 0;
+				LogFactory.getLog(getClass()).trace("read new page: " + readPage);
 
 				if (readPage.isFirstPage()) {
-					LogFactory.getLog(getClass()).debug(
-							"New header: " + readPage);
+					LogFactory.getLog(getClass()).trace("new input stream");
 					next = new Stream(readPage);
 					return -1;
 				}
