@@ -23,6 +23,7 @@
 
 package org.kolaka.freecast.player;
 
+import java.io.IOException;
 import java.util.Date;
 
 import javax.sound.sampled.AudioFormat;
@@ -163,9 +164,11 @@ public class AudioPlayer extends BaseService implements InteractivePlayer {
 			streamBytesLength = 0;
 
 			try {
-				byte buffer[] = new byte[1024];
+				int bufferLength = (int) (OUTPUT_FORMAT.getFrameRate() * OUTPUT_FORMAT.getFrameSize());
+				byte buffer[] = new byte[bufferLength];
 
 				AudioInputStream audioInput = null;
+				int emptyBufferCount = 0;
 
 				while (!stopped) {
 					if (audioInput == null) {
@@ -175,16 +178,30 @@ public class AudioPlayer extends BaseService implements InteractivePlayer {
 					}
 
 					int read = audioInput.read(buffer, 0, buffer.length);
+
 					if (read == -1) {
 						LogFactory.getLog(getClass()).debug(
 								"sound stream is ended");
+						audioInput.close();
 						audioInput = null;
 						continue;
 					}
 
+					if (read > 0) {
+						emptyBufferCount = 0;
+					} else {
+						emptyBufferCount++;
+						if (emptyBufferCount > 10) {
+							audioInput.close();
+							throw new IOException("sound stream is buggy");
+						}
+					}
+
 					streamBytesLength += read;
 
-					if (line != null) {
+					if (line != null && read > 0) {
+						LogFactory.getLog(getClass()).trace(
+								"send " + read + " bytes to sound card");
 						line.write(buffer, 0, read);
 					}
 				}

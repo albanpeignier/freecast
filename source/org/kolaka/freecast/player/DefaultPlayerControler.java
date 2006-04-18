@@ -79,6 +79,12 @@ public class DefaultPlayerControler implements PlayerControler {
 	private final Service.Listener playerListener = new Service.Adapter() {
 
 		public void serviceStopped(Service service) {
+			if (service instanceof AudioPlayer) {
+				AudioPlayer player = (AudioPlayer) service;
+				if (player.isStoppedOnError()) {
+					startPlayerImpl(player);
+				}
+			}
 			players.remove(service);
 		}
 
@@ -87,7 +93,16 @@ public class DefaultPlayerControler implements PlayerControler {
 	private int playerIdentifier = 1;
 
 	protected void startPlayer(Player player) {
-		LogFactory.getLog(getClass()).debug("start new player " + player);
+		startPlayerImpl(player);
+		player.add(playerListener);
+		players.add(player);
+	}
+
+	/**
+	 * @param player
+	 */
+	private void startPlayerImpl(Player player) {
+		LogFactory.getLog(getClass()).debug("start player " + player);
 		player.setConsumer(pipe.createConsumer("player-" + playerIdentifier++));
 
 		try {
@@ -97,8 +112,6 @@ public class DefaultPlayerControler implements PlayerControler {
 			LogFactory.getLog(getClass()).error(
 					"Can't start the new player " + player, e);
 		}
-		player.add(playerListener);
-		players.add(player);
 	}
 
 	public void start() throws ControlException {
