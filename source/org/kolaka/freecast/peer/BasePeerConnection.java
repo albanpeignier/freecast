@@ -152,17 +152,14 @@ public abstract class BasePeerConnection implements PeerConnection {
 		return peerIdentifier;
 	}
 
-	private MessageHandler handler;
+	private MessageHandlerSupport handlerSupport = new MessageHandlerSupport();
 
 	public void setMessageHandler(MessageHandler handler) {
-		Validate.notNull(handler);
-		this.handler = handler;
+		handlerSupport.setMessageHandler(handler);
 	}
 
 	protected void processMessage(Message message) throws IOException {
-		if (handler != null) {
-			handler.messageReceived(message);
-		}
+		handlerSupport.processMessage(message);
 	}
 
 	private NodeStatusProvider statusProvider;
