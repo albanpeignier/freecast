@@ -48,7 +48,7 @@ public class MinaPeerReceivingConnection extends BaseMinaPeerConnection
 		implements PeerReceivingConnection {
 
 	private final SocketAddress address;
-	private final boolean localConnection;
+	private boolean localConnection;
 
 	private final IoConnector connector;
 
@@ -65,13 +65,22 @@ public class MinaPeerReceivingConnection extends BaseMinaPeerConnection
 			isLocalAddress(address);  
 	}
 
-	private boolean isLocalAddress(SocketAddress address2) {
+	private boolean isLocalAddress(SocketAddress socketAddress) {
 		if (!(address instanceof InetSocketAddress)) {
 			return false;
 		}
 		InetAddress inetAddress = ((InetSocketAddress) address).getAddress();
 		return inetAddress.isLinkLocalAddress() || inetAddress.isSiteLocalAddress();
 	}
+	
+	private boolean isLocalAddress(SocketAddress socketAddress, InetSocketAddress localAddress) {
+		if (!(address instanceof InetSocketAddress)) {
+			return false;
+		}
+		InetAddress inetAddress = ((InetSocketAddress) address).getAddress();
+		return inetAddress.equals(localAddress.getAddress());
+	}
+
 
 	private LatencyMonitor latencyMonitor = new LatencyMonitor();
 
@@ -98,6 +107,7 @@ public class MinaPeerReceivingConnection extends BaseMinaPeerConnection
 			} catch (IOException e) {
 				LogFactory.getLog(getClass()).error("Can't perform STUN request", e);
 			}
+			localConnection = isLocalAddress(address, publicAddress);
 		}
 
 		IoHandler ioHandler = new IoHandlerAdapter() {
