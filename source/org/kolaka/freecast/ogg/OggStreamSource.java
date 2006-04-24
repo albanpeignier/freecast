@@ -25,6 +25,7 @@ package org.kolaka.freecast.ogg;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -121,7 +122,10 @@ public class OggStreamSource implements OggSource {
 
 			page.setRawBytes(reminderInput.toByteArray());
 			reminderInput.resetByteArray();
+		} catch (EOFException e) {
+			throw e;
 		} catch (IOException e) {
+		
 			LogFactory.getLog(getClass()).error("io error while reading " + page);
 			lastPages.log();
 			byte[] readData = reminderInput.toByteArray();
