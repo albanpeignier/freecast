@@ -73,7 +73,7 @@ public abstract class Application {
 		locator
 				.add(new ClassLoaderResourceLocator(getClass().getClassLoader()));
 
-		File cacheDirectory = new File(SystemUtils.JAVA_IO_TMPDIR, "freecast");
+		File cacheDirectory = HttpResourceLocator.PersistentFileCache.getDefaultCacheDirectory();
 		cacheDirectory.mkdirs();
 
 		locator.add(new HttpResourceLocator(

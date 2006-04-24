@@ -248,7 +248,7 @@ public class HttpResourceLocator implements ResourceLocator {
 			this(getDefaultCacheDirectory());
 		}
 
-		static File getDefaultCacheDirectory() {
+		public static File getDefaultCacheDirectory() {
 			File cacheDirectory = new File(SystemUtils.JAVA_IO_TMPDIR,
 					"freecast-" + SystemUtils.USER_NAME);
 			cacheDirectory.mkdirs();
