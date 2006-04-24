@@ -68,15 +68,19 @@ import org.kolaka.freecast.transport.receiver.ReceiverConfiguration;
 public class SetupDialog extends JDialog {
 
 	class FinishAction extends BaseAction {
-		
+
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = -5907250022544864467L;
+
 		private final ObservableValue configuration;
+
 		private final ObservableValue editConfiguration;
 
-		private FinishAction(Resources resources, ObservableValue publicConfiguration, ObservableValue editConfiguration) throws ResourcesException {
+		private FinishAction(Resources resources,
+				ObservableValue publicConfiguration,
+				ObservableValue editConfiguration) throws ResourcesException {
 			super("Finish");
 			this.configuration = publicConfiguration;
 			this.editConfiguration = editConfiguration;
@@ -90,21 +94,25 @@ public class SetupDialog extends JDialog {
 	}
 
 	class CancelAction extends BaseAction {
-	
+
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 2779828569087146054L;
+
 		private final ObservableValue configuration;
 
-		private CancelAction(Resources resources, ObservableValue configuration) throws ResourcesException {
+		private CancelAction(Resources resources, ObservableValue configuration)
+				throws ResourcesException {
 			super("Cancel");
 			this.configuration = configuration;
 			loadIcons(resources, "cancel");
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			int option = JOptionPane.showConfirmDialog(SetupDialog.this, "Do you really want to cancel setup ?","Cancel Setup", JOptionPane.YES_NO_OPTION);
+			int option = JOptionPane.showConfirmDialog(SetupDialog.this,
+					"Do you really want to cancel setup ?", "Cancel Setup",
+					JOptionPane.YES_NO_OPTION);
 			if (option == JOptionPane.YES_OPTION) {
 				configuration.setValue(null);
 				SetupDialog.this.dispose();
@@ -116,51 +124,60 @@ public class SetupDialog extends JDialog {
 	 * 
 	 */
 	private static final long serialVersionUID = -4277834281458989376L;
+
 	private final Action cancelAction;
+
 	private final Action finishAction;
-	
+
 	private static final ReceiverConfiguration DEFAULT_RECEIVERCONFIGURATION = createDefaultReceiverConfiguration();
 
 	private static ReceiverConfiguration createDefaultReceiverConfiguration() {
 		PlaylistReceiverConfiguration configuration = new PlaylistReceiverConfiguration();
-		configuration.setUri(URI.create("http://download.freecast.org/jws/default/audio.m3u"));
+		configuration.setUri(URI
+				.create("http://download.freecast.org/jws/default/audio.m3u"));
 		configuration.setBandwidth(40);
 		return configuration;
 	}
-	
-	private final ObservableValue modifiedReceiverConfiguration, publicReceiverConfiguration;
-	
+
+	private final ObservableValue modifiedReceiverConfiguration,
+			publicReceiverConfiguration;
+
 	public ObservableValue getReceiverConfiguration() {
 		return publicReceiverConfiguration;
 	}
-	
-	public void setReceiverConfiguration(ReceiverConfiguration receiverConfiguration) {
+
+	public void setReceiverConfiguration(
+			ReceiverConfiguration receiverConfiguration) {
 		publicReceiverConfiguration.setValue(receiverConfiguration);
 	}
 
-	public SetupDialog(Resources resources, JFrame parent) throws ResourcesException {
+	public SetupDialog(Resources resources, JFrame parent)
+			throws ResourcesException {
 		super(parent, "FreeCast Setup");
-		
-		publicReceiverConfiguration = new ObservableValue(DEFAULT_RECEIVERCONFIGURATION);
-		modifiedReceiverConfiguration = new ObservableValue(publicReceiverConfiguration.getValue());
+
+		publicReceiverConfiguration = new ObservableValue(
+				DEFAULT_RECEIVERCONFIGURATION);
+		modifiedReceiverConfiguration = new ObservableValue(
+				publicReceiverConfiguration.getValue());
 		publicReceiverConfiguration.addObserver(new Observer() {
 			public void update(Observable o, Object arg) {
 				modifiedReceiverConfiguration.setValue(arg);
 			}
 		});
-		
+
 		cancelAction = new CancelAction(resources, publicReceiverConfiguration);
 
-		finishAction = new FinishAction(resources, publicReceiverConfiguration, modifiedReceiverConfiguration);
+		finishAction = new FinishAction(resources, publicReceiverConfiguration,
+				modifiedReceiverConfiguration);
 		finishAction.setEnabled(false);
-		
+
 		modifiedReceiverConfiguration.addObserver(new Observer() {
 			public void update(Observable o, Object arg) {
 				ReceiverConfiguration configuration = (ReceiverConfiguration) arg;
 				if (configuration == null) {
 					return;
 				}
-				
+
 				try {
 					configuration.validate();
 					finishAction.setEnabled(true);
@@ -171,18 +188,19 @@ public class SetupDialog extends JDialog {
 		});
 
 		addWindowListener(new WindowAdapter() {
-			ActionEventFactory factory = new ActionEventFactory(SetupDialog.this);
-			
+			ActionEventFactory factory = new ActionEventFactory(
+					SetupDialog.this);
+
 			public void windowClosing(WindowEvent e) {
 				ActionEvent actionEvent = factory.createActionEvent();
 				cancelAction.actionPerformed(actionEvent);
 			}
 		});
-		
+
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-		
+
 		init(resources);
-		
+
 		modifiedReceiverConfiguration.setValue(DEFAULT_RECEIVERCONFIGURATION);
 
 		setLocationRelativeTo(parent);
@@ -192,19 +210,21 @@ public class SetupDialog extends JDialog {
 	private void init(Resources resources) {
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new GridBagLayout());
-		
+
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
-		constraints.insets = new Insets(10,10,10,10);
-		
+		constraints.insets = new Insets(10, 10, 10, 10);
+
 		Component body = createBodyPanel(resources);
-		GridBagConstraints bodyConstraints = (GridBagConstraints) constraints.clone(); 
+		GridBagConstraints bodyConstraints = (GridBagConstraints) constraints
+				.clone();
 		contentPane.add(body, bodyConstraints);
-		
+
 		Component buttons = createButtonPanel();
-		GridBagConstraints buttonConstraints = (GridBagConstraints) constraints.clone();
+		GridBagConstraints buttonConstraints = (GridBagConstraints) constraints
+				.clone();
 		buttonConstraints.anchor = GridBagConstraints.EAST;
-		
+
 		contentPane.add(buttons, buttonConstraints);
 	}
 
@@ -213,29 +233,34 @@ public class SetupDialog extends JDialog {
 
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
-		constraints.insets = new Insets(5,5,5,5);
-		
-		GridBagConstraints textConstraints = (GridBagConstraints) constraints.clone(); 
+		constraints.insets = new Insets(5, 5, 5, 5);
+
+		GridBagConstraints textConstraints = (GridBagConstraints) constraints
+				.clone();
 		textConstraints.anchor = GridBagConstraints.WEST;
 		textConstraints.insets.bottom += 5;
-		panel.add(new JLabel("Choose what kind of stream you want broadcast:"), textConstraints);
-		
-		GridBagConstraints radioButtonConstraints = (GridBagConstraints) constraints.clone();
+		panel.add(new JLabel("Choose what kind of stream you want broadcast:"),
+				textConstraints);
+
+		GridBagConstraints radioButtonConstraints = (GridBagConstraints) constraints
+				.clone();
 		radioButtonConstraints.anchor = GridBagConstraints.WEST;
-		
+
 		Action defaultReceiverAction = new BaseAction("Default test stream") {
-			
+
 			private static final long serialVersionUID = 4298288501819093946L;
 
 			protected void init() throws ResourcesException {
 				loadIcons(resources, "receiver.default");
 			}
-			
+
 			public void actionPerformed(ActionEvent e) {
-				modifiedReceiverConfiguration.setValue(DEFAULT_RECEIVERCONFIGURATION);
+				modifiedReceiverConfiguration
+						.setValue(DEFAULT_RECEIVERCONFIGURATION);
 			}
 		};
-		final JRadioButton defaultReceiver = new JRadioButton(defaultReceiverAction);
+		final JRadioButton defaultReceiver = new JRadioButton(
+				defaultReceiverAction);
 		panel.add(defaultReceiver, radioButtonConstraints);
 		modifiedReceiverConfiguration.addObserver(new Observer() {
 			public void update(Observable o, Object arg) {
@@ -243,11 +268,13 @@ public class SetupDialog extends JDialog {
 				defaultReceiver.setSelected(enabled);
 			}
 		});
-		
+
 		JFormattedTextField.AbstractFormatter uriFormatter = new JFormattedTextField.AbstractFormatter() {
 
 			private static final long serialVersionUID = 6327979522079637751L;
+
 			private URIParser parser = new URIParser();
+
 			public Object stringToValue(String text) throws ParseException {
 				try {
 					return parser.parse(text);
@@ -255,30 +282,35 @@ public class SetupDialog extends JDialog {
 					throw new ParseException("Can't parse the specified URI", 0);
 				}
 			}
+
 			public String valueToString(Object value) throws ParseException {
 				if (value == null) {
 					return "";
 				}
-				
+
 				return value.toString();
-			} 
+			}
 		};
-		
-		final JFormattedTextField playlistField = new JFormattedTextField(uriFormatter);
+
+		final JFormattedTextField playlistField = new JFormattedTextField(
+				uriFormatter);
 		playlistField.setColumns(30);
 		playlistField.setEnabled(false);
 		playlistField.setEditable(false);
-		
+
 		playlistField.getDocument().addDocumentListener(new DocumentListener() {
 			public void changedUpdate(DocumentEvent e) {
 				textChanged();
 			}
+
 			public void insertUpdate(DocumentEvent e) {
 				textChanged();
 			}
+
 			public void removeUpdate(DocumentEvent e) {
 				textChanged();
 			}
+
 			private void textChanged() {
 				URI uri = null;
 
@@ -286,99 +318,105 @@ public class SetupDialog extends JDialog {
 					playlistField.commitEdit();
 					uri = (URI) playlistField.getValue();
 				} catch (ParseException e) {
-					LogFactory.getLog(getClass()).debug("can't parse uri",e);
+					LogFactory.getLog(getClass()).debug("can't parse uri", e);
 				}
-				
-				PlaylistEncoderReceiverConfiguration configuration =
-					(PlaylistEncoderReceiverConfiguration) modifiedReceiverConfiguration.getValue();
+
+				PlaylistEncoderReceiverConfiguration configuration = (PlaylistEncoderReceiverConfiguration) modifiedReceiverConfiguration
+						.getValue();
 				configuration.setUri(uri);
 				modifiedReceiverConfiguration.setValue(configuration);
 			}
 		});
 
-			final FileFilter filter = new FileFilter() {
-					public boolean accept(File f) {
-						String filename = f.getName().toLowerCase();
-					return filename.endsWith(".m3u");
-					}
-					public String getDescription() {
-						return "M3U playlist file";
-					}
-			};
-		
+		final FileFilter filter = new FileFilter() {
+			public boolean accept(File f) {
+				if (f.isDirectory()) {
+					return true;
+				}
+				
+				String filename = f.getName().toLowerCase();
+				return filename.endsWith(".m3u");
+			}
+
+			public String getDescription() {
+				return "M3U playlist file";
+			}
+		};
+
 		Action chooseFileAction = new BaseAction("Choose file") {
 
 			private static final long serialVersionUID = -1643278453196884836L;
 
 			public void actionPerformed(ActionEvent e) {
-				PlaylistEncoderReceiverConfiguration configuration =
-					(PlaylistEncoderReceiverConfiguration) modifiedReceiverConfiguration.getValue();
+				PlaylistEncoderReceiverConfiguration configuration = (PlaylistEncoderReceiverConfiguration) modifiedReceiverConfiguration
+						.getValue();
 				URI uri = configuration.getUri();
-				
+
 				JFileChooser chooser = new JFileChooser();
-			    chooser.setFileFilter(filter);
-			    
-			    
-			    if (uri != null) {
-			    	File selectedFile = new File(uri.getPath());
-			    	chooser.setCurrentDirectory(selectedFile.getParentFile());
-			    }
-			    
-			    
-			    int returnVal = chooser.showOpenDialog(SetupDialog.this);
-			    if(returnVal == JFileChooser.APPROVE_OPTION) {
-			    	File selectedFile = chooser.getSelectedFile();
-			    		configuration.setUri(selectedFile.toURI());
-			    		modifiedReceiverConfiguration.setValue(configuration);
-			    }
+				chooser.setFileFilter(filter);
+
+				if (uri != null) {
+					File selectedFile = new File(uri.getPath());
+					chooser.setCurrentDirectory(selectedFile.getParentFile());
+				}
+
+				int returnVal = chooser.showOpenDialog(SetupDialog.this);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					File selectedFile = chooser.getSelectedFile();
+					configuration.setUri(selectedFile.toURI());
+					modifiedReceiverConfiguration.setValue(configuration);
+				}
 			}
 		};
-		
-		final PlaylistEncoderReceiverConfiguration playlistEncoderReceiverConfiguration 
-			= new PlaylistEncoderReceiverConfiguration();
+
+		final PlaylistEncoderReceiverConfiguration playlistEncoderReceiverConfiguration = new PlaylistEncoderReceiverConfiguration();
 
 		Action playlistReceiverAction = new BaseAction("My own playlist") {
-			
+
 			private static final long serialVersionUID = -2774872036934599284L;
 
 			protected void init() throws ResourcesException {
 				loadIcons(resources, "receiver.playlist");
 			}
-			
+
 			public void actionPerformed(ActionEvent e) {
-				modifiedReceiverConfiguration.setValue(playlistEncoderReceiverConfiguration);
+				modifiedReceiverConfiguration
+						.setValue(playlistEncoderReceiverConfiguration);
 			}
 		};
-		
-		final JRadioButton playlistReceiver = new JRadioButton(playlistReceiverAction);
+
+		final JRadioButton playlistReceiver = new JRadioButton(
+				playlistReceiverAction);
 		modifiedReceiverConfiguration.addObserver(new Observer() {
 			public void update(Observable o, Object arg) {
 				boolean enabled = arg instanceof PlaylistEncoderReceiverConfiguration;
 				playlistReceiver.setSelected(enabled);
 			}
 		});
-		
+
 		panel.add(playlistReceiver, radioButtonConstraints);
-		
-		GridBagConstraints playlistFieldConstraints = (GridBagConstraints) constraints.clone();
+
+		GridBagConstraints playlistFieldConstraints = (GridBagConstraints) constraints
+				.clone();
 		playlistFieldConstraints.fill = GridBagConstraints.HORIZONTAL;
 		playlistFieldConstraints.weightx = 1;
 		playlistFieldConstraints.gridwidth = 1;
 		panel.add(playlistField, playlistFieldConstraints);
-		
-		GridBagConstraints chooseFileConstraints = (GridBagConstraints) constraints.clone();
+
+		GridBagConstraints chooseFileConstraints = (GridBagConstraints) constraints
+				.clone();
 		final JButton chooseFileButton = new JButton(chooseFileAction);
 		panel.add(chooseFileButton, chooseFileConstraints);
-		
+
 		modifiedReceiverConfiguration.addObserver(new Observer() {
 			public void update(Observable o, Object arg) {
 				boolean enabled = (arg instanceof PlaylistEncoderReceiverConfiguration);
 				playlistField.setEnabled(enabled);
 				chooseFileButton.setEnabled(enabled);
-				
+
 				if (enabled) {
 					PlaylistEncoderReceiverConfiguration configuration = (PlaylistEncoderReceiverConfiguration) arg;
-					
+
 					URI uri = configuration.getUri();
 					if (uri != null && !uri.equals(playlistField.getValue())) {
 						playlistField.setValue(uri);
@@ -386,14 +424,14 @@ public class SetupDialog extends JDialog {
 				}
 			}
 		});
-		
+
 		ButtonGroup buttonGroup = new ButtonGroup();
 		buttonGroup.add(defaultReceiver);
 		buttonGroup.add(playlistReceiver);
-		
+
 		return panel;
 	}
-	
+
 	private Component createButtonPanel() {
 		JPanel panel = new JPanel(new FlowLayout());
 		panel.add(new JButton(cancelAction));
