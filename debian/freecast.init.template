@@ -30,7 +30,7 @@ if [ -n "$CONFIG" ]; then
 	echo $CONFIG | egrep "^http:|^file" > /dev/null 2>&1 && CONFIG_URL=true
 	# we can't check urls
 	
-	if [ "$CONFIG_URL" != "true" && ! -f $CONFIG ]; then 
+	if [ "$CONFIG_URL" != "true" -a ! -f $CONFIG ]; then 
 		echo "The specified configuration file doesn't exist ($CONFIG)."
 		echo "See configuration samples into /usr/share/doc/freecast."
 		exit 0
