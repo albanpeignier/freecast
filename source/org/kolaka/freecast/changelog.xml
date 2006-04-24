@@ -6,7 +6,7 @@
 	<Deliveries href="http://download.freecast.org"/>
 	<Summary>Freecast is a Java application which allows peer-to-peer stream broadcast. It make possible a stream broadcast to a large number of listeners from a simple DSL connection.</Summary>
 	<Releases>
-		<!-- next release                          http://www.geekstreet.ca/article.php?sid=3266
+		<!-- next release
 		<Release version="@build.version@" buildDate="@build.date@" builderID="@build.user@">
 		<Deliveries>
 		<Delivery href="freecast-@build.version@.tar.bz">freecast-@build.version@ binary</Delivery>
@@ -19,6 +19,74 @@
 		</Features>
 		</Release>
 		-->
+		<Release version="@build.version@" buildDate="@build.date@" builderID="Alban">
+			<Deliveries>
+				<Delivery href="freecast-@build.version@.tar.bz">freecast-@build.version@ binary</Delivery>
+				<Delivery href="freecast-@build.version@-src.tar.bz">freecast-@build.version@ sources</Delivery>
+			</Deliveries>
+			<Summary>NAT support and embedded Ogg encoder</Summary>
+			<Features>
+				<Feature type="func" why="enhance">
+					<Title>UDP transport layer</Title>
+					<Item>
+						Connections between nodes are now perform via UDP connections.
+						Network problems are overcome more easily. 
+						Note that socket receivers are replaced by udp receivers. 
+						The new transport layer uses the Apache Mina API
+						(http://directory.apache.org/subprojects/mina/).
+					</Item>
+				</Feature>
+				<Feature type="func" why="enhance">
+					<Title>STUN reference</Title>
+					<Item>
+					 	Node can perform STUN requests to determinate its public address.
+					 	Required for NAT traversal. Use Jstun API (http://jstun.javawi.de/).
+					</Item>
+				</Feature>
+				<Feature type="func" why="enhance">
+					<Title>NAT traversal</Title>
+					<Item>
+						Two nodes can open a connection even if they are both behind a NAT (routeur 
+						or equivalent equipment)
+					</Item>
+				</Feature>
+				<Feature type="func" why="enhance">
+					<Title>Latency analysis</Title>
+					<Item>
+						The FreeCast protocol includes messages used to estimate the network latency 
+						between nodes. A node opens connections to several other nodes and uses the 
+						connection with the lower latency.
+					</Item>
+				</Feature>
+				<Feature type="func" why="enhance">
+					<Title>Embedded Ogg encoder</Title>
+					<Item>
+						Based on tritonus libvorbis binding (http://tritonus.org/).
+					</Item>
+				</Feature>
+				<Feature type="func" why="enhance">
+					<Title>FreeCast Manager Setup GUI</Title>
+					<Item>
+					
+					</Item>
+				</Feature>
+				<Feature type="func" why="enhance">
+					<Title>Improved Windows installer</Title>
+					<Item>
+					
+					</Item>
+				</Feature>
+				<!--
+				<Feature type="func" why="enhance">
+					<Title></Title>
+					<Item>
+					
+					</Item>
+				</Feature>
+				-->
+			</Features>
+		</Release>
+		
 		<Release version="20051009" buildDate="2005.10.09" builderID="Alban">
 			<Deliveries>
 				<Delivery href="freecast-20051009.tar.bz">freecast-20051009 binary</Delivery>
