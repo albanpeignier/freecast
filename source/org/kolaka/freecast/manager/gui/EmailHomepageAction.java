@@ -24,11 +24,14 @@
 package org.kolaka.freecast.manager.gui;
 
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.commons.logging.LogFactory;
 import org.jdesktop.jdic.desktop.Desktop;
+import org.jdesktop.jdic.desktop.DesktopException;
 import org.jdesktop.jdic.desktop.Message;
 import org.kolaka.freecast.swing.BaseAction;
 import org.kolaka.freecast.swing.Resources;
@@ -53,22 +56,30 @@ public class EmailHomepageAction extends BaseAction {
 	}
 
 	public void actionPerformed(ActionEvent event) {
-		try {
-			URL url = new URL("http", publicHttpServer.getHostName(),
-					publicHttpServer.getPort(), "/");
-			LogFactory.getLog(getClass()).debug("email " + url);
+		Runnable sendMail = new Runnable() {
+			public void run() {
+				try {
+					sendMail();
+				} catch (Exception e) {
+					LogFactory.getLog(getClass()).error(
+							"can't email to visit " + publicHttpServer, e);
+				}
+			};
+		};
+		new Thread(sendMail).start();
+	}
+	
+	private void sendMail() throws IOException, DesktopException {
+		URL url = new URL("http", publicHttpServer.getHostName(), publicHttpServer.getPort(), "/");
+		LogFactory.getLog(getClass()).debug("email " + url);
 
-			Message message = new Message();
-			message.setSubject("My FreeCast Network");
-			message
-					.setBody("Visit the homepage of my FreeCast network: "
-							+ url);
+		final Message message = new Message();
+		message.setSubject("My FreeCast Network");
+		message
+				.setBody("Visit the homepage of my FreeCast network: "
+						+ url);
 
-			Desktop.mail(message);
-		} catch (Exception e) {
-			LogFactory.getLog(getClass()).error(
-					"can't email to visit " + publicHttpServer, e);
-		}
+		Desktop.mail(message);
 	}
 
 }
