@@ -877,9 +877,9 @@
 				<include name="*.so" />
 			</fileset>
 		</copy>
-		<copy todir="dist/lib/linux/windows">
+		<copy todir="dist/lib/windows/x86" flatten="true">
 			<fileset dir="${track.tritonus.dir}">
-				<include name="*.dll" />
+				<include name="**/*.dll" />
 			</fileset>
 		</copy>
 	</target>
