@@ -21,7 +21,7 @@
 			<!-- the nodes connects to the specified source stream server -->
 			<class>shoutclient</class>
 			<!-- Just a test stream, visit http://www.fluendo.com -->
-   			<url>http://mirror.fluendo.com:8800</url>
+   			<url>http://stream.fluendo.com:8800</url>
    			<checksummer>
 				<!-- the checksum each packet, 
 					must be compatible the listener node validator configuration -->
