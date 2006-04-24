@@ -182,12 +182,20 @@ Section "Start menu shortcuts" SecCreateShortcut
 
   CreateDirectory "$SMPROGRAMS\${AppName}\Broadcast"
   CreateShortCut "$SMPROGRAMS\${AppName}\Broadcast\Start Tracker.lnk" "$INSTDIR\bin\freecast-tracker.bat"
-  CreateShortCut "$SMPROGRAMS\${AppName}\Broadcast\Start Root Node - audio example.lnk" "$INSTDIR\bin\freecast.bat" "-config docs/examples/audio/freecast-node-root.xml"
-  CreateShortCut "$SMPROGRAMS\${AppName}\Broadcast\Start Listener Node - audio example.lnk" "$INSTDIR\bin\freecast-swing.bat" "-config docs/examples/audio/freecast-node-listener.xml"
-  CreateShortCut "$SMPROGRAMS\${AppName}\Broadcast\Start Root Node - video example.lnk" "$INSTDIR\bin\freecast.bat" "-config docs/examples/video/freecast-node-root.xml"
-  CreateShortCut "$SMPROGRAMS\${AppName}\Broadcast\Start Listener Node - video example.lnk" "$INSTDIR\bin\freecast-swing.bat" "-config docs/examples/video/freecast-node-listener.xml"
-  CreateShortCut "$SMPROGRAMS\${AppName}\Broadcast\Start Root Node - my network.lnk" "$INSTDIR\bin\freecast.bat" "-config etc/freecast-node-root.xml"
-  CreateShortCut "$SMPROGRAMS\${AppName}\Broadcast\Start Listener Node - my network.lnk" "$INSTDIR\bin\freecast-swing.bat" "-config etc/freecast-node-listener.xml"
+
+  CreateDirectory "$SMPROGRAMS\${AppName}\Broadcast\Examples"
+  CreateShortCut "$SMPROGRAMS\${AppName}\Broadcast\Examples\Start Tracker.lnk" "$INSTDIR\bin\freecast-tracker.bat"
+  CreateShortCut "$SMPROGRAMS\${AppName}\Broadcast\Examples\Audio Example - Start Root Node.lnk" "$INSTDIR\bin\freecast.bat" "-config docs/examples/audio/freecast-node-root.xml"
+  CreateShortCut "$SMPROGRAMS\${AppName}\Broadcast\Examples\Audio Example - Start Listener Node.lnk" "$INSTDIR\bin\freecast-swing.bat" "-config docs/examples/audio/freecast-node-listener.xml"
+  
+  CreateShortCut "$SMPROGRAMS\${AppName}\Broadcast\Examples\Video Example - Start Root Node.lnk" "$INSTDIR\bin\freecast.bat" "-config docs/examples/video/freecast-node-root.xml"
+  CreateShortCut "$SMPROGRAMS\${AppName}\Broadcast\Examples\Video Example - Start Listener Node.lnk" "$INSTDIR\bin\freecast-swing.bat" "-config docs/examples/video/freecast-node-listener.xml"
+  
+  CreateShortCut "$SMPROGRAMS\${AppName}\Broadcast\My Network - Start Root Node.lnk" "$INSTDIR\bin\freecast.bat" "-config etc/freecast-node-root.xml"
+  CreateShortCut "$SMPROGRAMS\${AppName}\Broadcast\My Network - Start Listener Node.lnk" "$INSTDIR\bin\freecast-swing.bat" "-config etc/freecast-node-listener.xml"
+  CreateShortCut "$SMPROGRAMS\${AppName}\Broadcast\My Network - Configure Root Node.lnk" "notepad" "$INSTDIR\etc\freecast-node-root.xml"
+  CreateShortCut "$SMPROGRAMS\${AppName}\Broadcast\My Network - Configure Listener Node.lnk" "notepad" "$INSTDIR\etc\freecast-node-listener.xml"
+
 ; Etc
 SectionEnd
  
@@ -382,6 +390,10 @@ Section "Uninstall"
   ; remove shortcuts, if any.
   RMDir /r "$SMPROGRAMS\${AppName}"
   ; remove files
-  RMDir /r "$INSTDIR"
+  RMDir /r "$INSTDIR\bin"
+  RMDir /r "$INSTDIR\lib"
+  RMDir /r "$INSTDIR\docs"
+  Delete "$INSTDIR\LICENSE.txt"
+  Delete "$INSTDIR\Uninstall.exe"
  
 SectionEnd
