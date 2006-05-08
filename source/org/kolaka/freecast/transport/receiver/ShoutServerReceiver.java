@@ -36,4 +36,8 @@ public class ShoutServerReceiver extends OggSourceFactoryReceiver {
 		super(new ShoutServerOggSourceFactory(listenAddress), new ShoutServerReceiverConfiguration(listenAddress));
 	}
 
+	public ShoutServerReceiver(ShoutServerReceiverConfiguration configuration) {
+		this(configuration.getListenAddress());
+	}
+
 }

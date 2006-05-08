@@ -32,9 +32,15 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.net.InetSocketAddress;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.Observable;
 import java.util.Observer;
@@ -53,7 +59,11 @@ import javax.swing.JRadioButton;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.text.NumberFormatter;
 
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.UnhandledException;
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.lang.mutable.ObservableValue;
 import org.kolaka.freecast.resource.URIParser;
@@ -64,6 +74,8 @@ import org.kolaka.freecast.swing.ResourcesException;
 import org.kolaka.freecast.transport.receiver.PlaylistEncoderReceiverConfiguration;
 import org.kolaka.freecast.transport.receiver.PlaylistReceiverConfiguration;
 import org.kolaka.freecast.transport.receiver.ReceiverConfiguration;
+import org.kolaka.freecast.transport.receiver.ShoutClientReceiverConfiguration;
+import org.kolaka.freecast.transport.receiver.ShoutServerReceiverConfiguration;
 
 public class SetupDialog extends JDialog {
 
@@ -246,6 +258,8 @@ public class SetupDialog extends JDialog {
 				.clone();
 		radioButtonConstraints.anchor = GridBagConstraints.WEST;
 
+		// Default receiver
+		
 		Action defaultReceiverAction = new BaseAction("Default test stream") {
 
 			private static final long serialVersionUID = 4298288501819093946L;
@@ -269,6 +283,8 @@ public class SetupDialog extends JDialog {
 			}
 		});
 
+		// Playlist receiver
+		
 		JFormattedTextField.AbstractFormatter uriFormatter = new JFormattedTextField.AbstractFormatter() {
 
 			private static final long serialVersionUID = 6327979522079637751L;
@@ -319,6 +335,7 @@ public class SetupDialog extends JDialog {
 					uri = (URI) playlistField.getValue();
 				} catch (ParseException e) {
 					LogFactory.getLog(getClass()).debug("can't parse uri", e);
+					return;
 				}
 
 				PlaylistEncoderReceiverConfiguration configuration = (PlaylistEncoderReceiverConfiguration) modifiedReceiverConfiguration
@@ -400,7 +417,7 @@ public class SetupDialog extends JDialog {
 				.clone();
 		playlistFieldConstraints.fill = GridBagConstraints.HORIZONTAL;
 		playlistFieldConstraints.weightx = 1;
-		playlistFieldConstraints.gridwidth = 1;
+		playlistFieldConstraints.gridwidth = 2;
 		panel.add(playlistField, playlistFieldConstraints);
 
 		GridBagConstraints chooseFileConstraints = (GridBagConstraints) constraints
@@ -424,10 +441,182 @@ public class SetupDialog extends JDialog {
 				}
 			}
 		});
+		
+		// Shoutclient receiver
+		
+		final ShoutClientReceiverConfiguration shoutClientReceiverConfiguration = new ShoutClientReceiverConfiguration();
+		try {
+			shoutClientReceiverConfiguration.setUrl(new URL("http://localhost:8000"));
+		} catch (MalformedURLException e) {
+			throw new UnhandledException("Invalid default URL", e);
+		}
 
+		JFormattedTextField.AbstractFormatter urlFormatter = new JFormattedTextField.AbstractFormatter() {
+
+			public Object stringToValue(String text) throws ParseException {
+				if (StringUtils.isEmpty(text)) {
+					return null;
+				}
+				
+				try {
+					return new URL(text);
+				} catch (MalformedURLException e) {
+					throw new ParseException("Can't parse the specified URL '" + text + "'", 0);
+				}
+			}
+
+			public String valueToString(Object value) throws ParseException {
+				if (value == null) {
+					return "";
+				}
+
+				return value.toString();
+			}
+		};
+		final JFormattedTextField shoutClientURLField = new JFormattedTextField(
+				urlFormatter);
+		shoutClientURLField.setColumns(30);
+		shoutClientURLField.setEnabled(false);
+		
+		shoutClientURLField.addPropertyChangeListener("value", new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent evt) {
+				ShoutClientReceiverConfiguration configuration = (ShoutClientReceiverConfiguration) modifiedReceiverConfiguration.getValue();
+				configuration.setUrl((URL) evt.getNewValue());
+				modifiedReceiverConfiguration.setValue(configuration);
+			}
+		});
+
+		shoutClientURLField.getDocument().addDocumentListener(new DocumentListener() {
+			public void changedUpdate(DocumentEvent e) {
+				textChanged();
+			}
+
+			public void insertUpdate(DocumentEvent e) {
+				textChanged();
+			}
+
+			public void removeUpdate(DocumentEvent e) {
+				textChanged();
+			}
+
+			private void textChanged() {
+				try {
+					shoutClientURLField.commitEdit();
+				} catch (ParseException e) {
+					LogFactory.getLog(getClass()).debug("can't parse URL", e);
+					ShoutClientReceiverConfiguration configuration = (ShoutClientReceiverConfiguration) modifiedReceiverConfiguration
+					.getValue();
+					configuration.setUrl(null);
+					modifiedReceiverConfiguration.setValue(configuration);
+				}
+			}
+		});
+
+		Action shoutClientReceiverAction = new BaseAction("Retrieve ogg stream at this URL: ") {
+
+			protected void init() throws ResourcesException {
+				loadIcons(resources, "receiver.shoutclient");
+			}
+
+			public void actionPerformed(ActionEvent e) {
+				modifiedReceiverConfiguration
+						.setValue(shoutClientReceiverConfiguration);
+			}
+		};
+
+		final JRadioButton shoutClientReceiver = new JRadioButton(
+				shoutClientReceiverAction);
+		modifiedReceiverConfiguration.addObserver(new Observer() {
+			public void update(Observable o, Object arg) {
+				boolean enabled = arg instanceof ShoutClientReceiverConfiguration;
+				shoutClientReceiver.setSelected(enabled);
+				shoutClientURLField.setEnabled(enabled);
+
+				if (enabled) {
+					ShoutClientReceiverConfiguration configuration = (ShoutClientReceiverConfiguration) arg;
+					URL url = configuration.getUrl();
+					if (url != null && !url.equals(shoutClientURLField.getValue())) {
+						shoutClientURLField.setValue(url);
+					}
+				}
+			}
+		});
+		panel.add(shoutClientReceiver, radioButtonConstraints);
+
+		GridBagConstraints shoutClientURLFieldConstraints = (GridBagConstraints) constraints
+		.clone();
+		shoutClientURLFieldConstraints.fill = GridBagConstraints.HORIZONTAL;
+		shoutClientURLFieldConstraints.weightx = 1;
+		shoutClientURLFieldConstraints.gridwidth = GridBagConstraints.REMAINDER;
+		panel.add(shoutClientURLField, shoutClientURLFieldConstraints);
+
+		// Shoutserver receiver
+		
+		final ShoutServerReceiverConfiguration shoutServerReceiverConfiguration = new ShoutServerReceiverConfiguration(new InetSocketAddress(8000));
+		Action shoutServerReceiverAction = new BaseAction("Accept Ogg stream on port: ") {
+
+			protected void init() throws ResourcesException {
+				loadIcons(resources, "receiver.shoutserver");
+			}
+
+			public void actionPerformed(ActionEvent e) {
+				modifiedReceiverConfiguration
+						.setValue(shoutServerReceiverConfiguration);
+			}
+		};
+		final JRadioButton shoutServerReceiver = new JRadioButton(
+				shoutServerReceiverAction);
+		final JFormattedTextField shoutServerPortField = new JFormattedTextField(new NumberFormatter(new DecimalFormat("#0")));
+		shoutServerPortField.setColumns(5);
+		shoutServerPortField.setEnabled(false);
+		
+		modifiedReceiverConfiguration.addObserver(new Observer() {
+			public void update(Observable o, Object arg) {
+				boolean enabled = arg instanceof ShoutServerReceiverConfiguration;
+				shoutServerReceiver.setSelected(enabled);
+				shoutServerPortField.setEnabled(enabled);
+
+				if (enabled) {
+					ShoutServerReceiverConfiguration configuration = (ShoutServerReceiverConfiguration) arg;
+					InetSocketAddress listenAddress = configuration.getListenAddress();
+					if (listenAddress != null) {
+						Integer configuredPort = new Integer(listenAddress.getPort());
+						if (! ObjectUtils.equals(configuredPort, shoutServerPortField.getValue())) {
+							shoutServerPortField.setValue(configuredPort);
+						}
+					}
+				}
+			}
+		});
+		
+		shoutServerPortField.addPropertyChangeListener("value", new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent evt) {
+				ShoutServerReceiverConfiguration configuration = (ShoutServerReceiverConfiguration) modifiedReceiverConfiguration.getValue();
+				int port = ((Number) evt.getNewValue()).intValue();
+				InetSocketAddress listenAddress = new InetSocketAddress(port);
+				configuration.setListenAddress(listenAddress);
+				modifiedReceiverConfiguration.setValue(configuration);
+			}
+		});
+		
+		GridBagConstraints shoutServerRadioButtonConstraints = (GridBagConstraints) radioButtonConstraints.clone();
+		shoutServerRadioButtonConstraints.gridwidth = 1;
+		panel.add(shoutServerReceiver, shoutServerRadioButtonConstraints);
+		
+		GridBagConstraints shoutServerPortFieldConstraints = (GridBagConstraints) constraints
+		.clone();
+		shoutServerPortFieldConstraints.anchor = GridBagConstraints.WEST;
+		shoutServerPortFieldConstraints.gridwidth = GridBagConstraints.REMAINDER;
+		panel.add(shoutServerPortField, shoutServerPortFieldConstraints);
+
+		// Buttons
+		
+		
 		ButtonGroup buttonGroup = new ButtonGroup();
 		buttonGroup.add(defaultReceiver);
 		buttonGroup.add(playlistReceiver);
+		buttonGroup.add(shoutClientReceiver);
+		buttonGroup.add(shoutServerReceiver);
 
 		return panel;
 	}

@@ -4,7 +4,7 @@
  * This code was developped by Alban Peignier (http://people.tryphon.org/~alban/) 
  * and contributors (their names can be found in the CONTRIBUTORS file).
  *
- * Copyright (C) 2004-2006 Alban Peignier
+ * Copyright (C) 2004 Alban Peignier
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -23,48 +23,13 @@
 
 package org.kolaka.freecast.transport.receiver;
 
-import java.net.URL;
+import java.io.IOException;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
+public class ShoutServerReceiverConfigurator extends ReceiverConfigurator {
 
-public class ShoutClientReceiverConfiguration extends ReceiverConfiguration {
-
-	private URL url;
-	
-	public ShoutClientReceiverConfiguration() {
-		
+	public Receiver configure(ReceiverConfiguration configuration)
+			throws IOException {
+		return new ShoutServerReceiver((ShoutServerReceiverConfiguration) configuration);
 	}
-	
-	public ShoutClientReceiverConfiguration(URL url) {
-		this.url = url;
-	}
-
-	public URL getUrl() {
-		return url;
-	}
-
-	public void setUrl(URL url) {
-		this.url = url;
-	}
-	
-	public void validate() throws ValidateException {
-		if (url == null) {
-			throw new ValidateException("No defined URL");
-		}
-		if (StringUtils.isEmpty(url.getHost())) {
-			throw new ValidateException("No defined host in URL '" + url + "'");
-		}
-	}
-	
-	public boolean equals(Object o) {
-		return EqualsBuilder.reflectionEquals(this, o);
-	}
-	
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
-	}
-
 
 }

@@ -32,6 +32,10 @@ public abstract class ReceiverConfigurator {
 			return new  PlaylistEncoderReceiverConfigurator();
 		} else if (configuration instanceof PlaylistReceiverConfiguration) {
 			return new  PlaylistReceiverConfigurator();
+		} else if (configuration instanceof ShoutClientReceiverConfiguration) {
+			return new  ShoutClientReceiverConfigurator();
+		} else if (configuration instanceof ShoutServerReceiverConfiguration) {
+			return new  ShoutServerReceiverConfigurator();
 		}
 		
 		throw new IllegalArgumentException("Unsupported configuration: " + configuration);

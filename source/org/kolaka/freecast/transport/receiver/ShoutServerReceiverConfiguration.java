@@ -29,6 +29,10 @@ public class ShoutServerReceiverConfiguration extends ReceiverConfiguration {
 
 	private InetSocketAddress listenAddress;
 	
+	public ShoutServerReceiverConfiguration() {
+		
+	}
+	
 	public ShoutServerReceiverConfiguration(InetSocketAddress listenAddress) {
 		this.listenAddress = listenAddress;
 	}
