@@ -68,7 +68,7 @@ public class EncoderOggSource implements OggSource {
 		Validate.notEmpty(description, "No specified description");
 		this.description = description;
 
-		Validate.isTrue(quality >= 0, "quality can be be negative");
+		Validate.isTrue(quality >= 0, "quality can be negative");
 		this.quality = quality;
 
 		this.uninterleaver = new Uninterleaver(audioInput.getFormat());
