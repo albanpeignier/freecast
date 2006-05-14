@@ -52,12 +52,12 @@
 			</xsl:if>
 			<xsl:if test="/stream/tracker/host">
 				<argument>
-					<xsl:text>-Dpeerprovider.trackeraddress.host=</xsl:text><xsl:value-of select="/stream/tracker/host"/>
+					<xsl:text>-Dnode.peerprovider.trackeraddress.host=</xsl:text><xsl:value-of select="/stream/tracker/host"/>
 				</argument>
 			</xsl:if>
 			<xsl:if test="/stream/tracker/port">
 				<argument>
-					<xsl:text>-Dpeerprovider.trackeraddress.port=</xsl:text><xsl:value-of select="/stream/tracker/port"/>
+					<xsl:text>-Dnode.peerprovider.trackeraddress.port=</xsl:text><xsl:value-of select="/stream/tracker/port"/>
 				</argument>
 			</xsl:if>
 	  </application-desc>
