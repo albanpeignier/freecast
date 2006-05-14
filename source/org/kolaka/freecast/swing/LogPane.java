@@ -248,7 +248,7 @@ public class LogPane extends JPanel {
 			File file = chooser.getSelectedFile();
 			save(file);
 			JOptionPane.showMessageDialog(LogPane.this,
-					"FreeCast log has been into\n" + file.getAbsolutePath());
+					"FreeCast log has been saved into the file\n" + file.getAbsolutePath());
 		}
 
 	}
