@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?> 
 
-<jnlp spec="1.0+" codebase="http://download.freecast.org/jws/libfreecast/" href="freecast-manager.jnlp">
+<jnlp spec="1.0+" codebase="@codebase@" href="freecast-manager.jnlp">
 
   <information>
     <title>FreeCast Manager</title>
@@ -23,40 +23,48 @@
     <jar href="lib/commons-cli-1.0.jar"/>
     <jar href="lib/commons-collections-3.1.jar"/>
     <jar href="lib/commons-configuration-1.1RC2.jar"/>
-    <jar href="lib/commons-digester.jar"/>
+    <jar href="lib/commons-digester-1.7.jar"/>
     <jar href="lib/commons-lang-2.0.jar"/>
-    <jar href="lib/commons-logging.jar"/>
+    <jar href="lib/commons-logging-1.1-RC5.jar"/>
     <jar href="lib/commons-io-1.0.jar"/>
     <jar href="lib/commons-beanutils.jar"/>
     <jar href="lib/jogg-0.0.7.jar"/>
-    <jar href="lib/jorbis-0.0.13.jar"/>
-    <jar href="lib/log4j-1.2.9.jar"/>
+    <jar href="lib/jorbis-0.0.15.jar"/>
+    <jar href="lib/log4j-1.2.13.jar"/>
     <jar href="lib/tritonus_share.jar"/>
-    <jar href="lib/vorbisspi1.0.1.jar"/>
+    <jar href="lib/tritonus-vorbis.jar"/>
+    <jar href="lib/vorbisspi1.0.2.jar"/>
     <jar href="lib/concurrent.jar"/>
     <jar href="lib/hessian-3.0.8.jar"/>
 	<jar href="lib/javax.servlet.jar"/>
 	<jar href="lib/org.mortbay.jetty.jar"/>
-	<jar href="lib/commons-httpclient-3.0-rc1.jar"/>
+	<jar href="lib/commons-httpclient-3.0-rc3.jar"/>
 	<jar href="lib/commons-codec-1.3.jar"/>
+	
+	<jar href="lib/mina-core-0.9.2.jar"/>
+	<jar href="lib/jstun-0.5.9.2.jar"/>
+	<jar href="lib/mp3spi1.9.4.jar"/>
+	<jar href="lib/jl1.0.jar"/>
+	<jar href="lib/commons-discovery.jar"/>
+	<jar href="lib/slf4j-log4j12.jar"/>
 
 	<jar href="lib/jdic.jar"/>
   </resources>
   <resources os="Windows">
 	  <jar href="lib/windows/jdic_stub.jar"/>
-	  <nativelib href="lib/windows/jdic_native_x86.jar"/>
+	  <nativelib href="lib/windows/native_x86.jar"/>
 	</resources>
 	<resources os="SunOS" arch="sparc">
 		<jar href="lib/sunos/jdic_stub.jar"/>
-		<nativelib href="lib/sunos/jdic_native_sparc.jar"/>
+		<nativelib href="lib/sunos/native_sparc.jar"/>
 	</resources>
 	<resources os="SunOS" arch="x86">
 		<jar href="lib/sunos/jdic_stub.jar"/>
-		<nativelib href="lib/sunos/jdic_native_x86.jar"/>
+		<nativelib href="lib/sunos/native_x86.jar"/>
 	</resources>
 	<resources os="Linux">
 		<jar href="lib/linux/jdic_stub.jar"/>
-		<nativelib href="lib/linux/jdic_native_x86.jar"/>
+		<nativelib href="lib/linux/native_x86.jar"/>
 	</resources>
 
   <application-desc main-class="org.kolaka.freecast.manager.gui.Main">
