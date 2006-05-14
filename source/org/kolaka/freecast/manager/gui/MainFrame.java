@@ -145,7 +145,17 @@ public class MainFrame extends BaseFrame {
 			Observer observer = new Observer() {
 				public void update(Observable o, Object arg) {
 					ObservableValue value = (ObservableValue) o;
-					labelValue.setText(String.valueOf(value.getValue()));
+					String text = String.valueOf(value.getValue());
+					
+					String sizedText = StringUtils.abbreviate(text, text.length(), 15); 
+					labelValue.setText(sizedText);
+					
+					String tooltip = null;
+					if (sizedText.length() < text.length()) {
+						tooltip = text;
+					}
+					labelValue.setToolTipText(tooltip);
+					
 					labelValue.invalidate();
 				}
 			};
@@ -207,8 +217,7 @@ public class MainFrame extends BaseFrame {
 			Receiver.Auditor receiverAuditor = new Receiver.Auditor() {
 				public void receive(Source source) {
 					String sourceDescription = source.getDescription();
-					String sizedSourceDescription = StringUtils.abbreviate(sourceDescription, sourceDescription.length(), 15); 
-					sourceReceiver.setValue(sizedSourceDescription);
+					sourceReceiver.setValue(sourceDescription);
 				}
 				public void disconnected() {
 					sourceReceiver.setValue(UNCONNECTED);
