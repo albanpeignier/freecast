@@ -10,26 +10,11 @@
     			<host>localhost</host>
     		</trackeraddress>
   		</peerprovider>
-		<receiver>
-			<class>peer</class>
-   			<validator>
-				<!-- validate the checksum of each packet, 
-					must be compatible the root node checksum configuration -->
-   				<class>digest</class>
-   			</validator>
-  		</receiver>
   		<players>
    			<player>
    				<!-- play the stream into the embedded video plyare -->
    				<class>video</class>
 				<audio>true</audio>
-   			</player>
-   			<player>
-   				<!-- accept http clients on the port 8001 -->
-   				<class>http</class>
-    			<listenaddress>
-    				<port>8002</port>
-    			</listenaddress>
    			</player>
   		</players>
 	</node>
