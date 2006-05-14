@@ -29,6 +29,7 @@ import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.SocketTimeoutException;
 
+import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -47,10 +48,19 @@ public class StunClient {
 		this.stunServer = stunServer;
 	}
 	
-	private static final StunClient DEFAULT_INSTANCE = new StunClient(new InetSocketAddress("stun.xten.net", 3478));
+	public static void setDefaultServer(InetSocketAddress address) {
+		Validate.notNull(address);
+		defaultAddress = address;
+	}
+	
+	private static InetSocketAddress defaultAddress = new InetSocketAddress("stun.xten.net", 3478);
+	private static StunClient defaultInstance;
 
 	public static StunClient getDefaultInstance() {
-		return DEFAULT_INSTANCE;
+		if (defaultInstance == null) {
+			defaultInstance = new StunClient(defaultAddress);
+		}
+		return defaultInstance;
 	}
 	
 	private final Log logger = LogFactory.getLog(getClass());
@@ -72,6 +82,9 @@ public class StunClient {
 				sendMH.addMessageAttribute(changeRequest);
 				
 				byte[] data = sendMH.getBytes();
+				
+				logger.debug("send STUN request to " + stunServer + " from " + localPort);
+				
 				DatagramPacket send = new DatagramPacket(data, data.length, stunServer.getAddress(), stunServer.getPort());
 				socket.send(send);
 				
