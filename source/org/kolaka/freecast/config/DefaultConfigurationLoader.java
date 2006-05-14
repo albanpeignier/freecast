@@ -141,6 +141,7 @@ public class DefaultConfigurationLoader implements ConfigurationLoader {
 	protected Configuration loadConfiguration() throws ConfigurationException {
 		CompositeConfiguration configuration = new CompositeConfiguration();
 		if (!userProperties.isEmpty()) {
+			LogFactory.getLog(getClass()).trace("use user properties: " + userProperties);
 			configuration
 					.addConfiguration(new MapConfiguration(userProperties));
 		}
