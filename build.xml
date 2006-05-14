@@ -183,14 +183,14 @@
 			</library>
 
 			<library id="lib.tritonus">
-				<lib-entry artifactid="tritonus-share" groupid="tritonus" version="0.3.6" />
+				<!-- <lib-entry artifactid="tritonus-share" groupid="tritonus" version="0.3.6" /> -->
 				<lib-entry artifactid="tritonus-vorbis" groupid="tritonus" version="0.3.6" />
 				<lib-entry artifactid="tritonus-core" groupid="tritonus" version="0.3.6" />
 			</library>
 
 			<library id="lib.test">
-				<lib-entry groupid="junit" version="3.8.1" />
-				<lib-entry groupid="easymock" version="1.1" />
+				<lib-entry groupid="junit" version="3.8.2" />
+				<lib-entry groupid="easymock" version="1.2" />
 				<lib-entry groupid="mockobjects" version="0.09" artifactid="mockobjects-core" />
 			</library>
 
@@ -387,7 +387,7 @@
 
 	<target name="build.docs.userguide" depends="build.docs.userguide.html,build.docs.userguide.pdf" />
 
-	<target name="build.docs.userguide.prepare" depends="prepare.libraries">
+	<target name="build.docs.userguide.prepare" depends="prepare.libraries, prepare.version">
 		<mkdir dir="build/docs/userguide" />
 		<tstamp>
 			<format property="build.docs.userguide.pubdate" pattern="EEEE, MMMM d yyyy" locale="en" />
@@ -399,6 +399,7 @@
 			</fileset>
 			<filterset>
 				<filter token="pubdate" value="${build.docs.userguide.pubdate}" />
+				<filter token="version" value="${project.version}" />
 			</filterset>
 		</copy>
 		<copy todir="build/docs/userguide" flatten="true">
@@ -432,17 +433,19 @@
 		</copy>
 		<copy todir="build/docs/userguide/images">
 			<fileset dir="${track.docbook.dir}/images">
-				<include name="*.png" />
+				<include name="**/*.png" />
 				<present targetdir="source/org/kolaka/freecast/userguide/images" present="srconly" />
 			</fileset>
 			<fileset dir="source/org/kolaka/freecast/userguide/images" />
 		</copy>
 		<copy todir="build/docs/userguide/images">
 			<fileset dir="source/org/kolaka/freecast/node/swing/install">
+				<include name="screenshot-linux-20050322*.png" />
 				<include name="screenshot-linux-20050911*.png" />
 			</fileset>
 			<fileset dir="source/org/kolaka/freecast/manager/gui/install">
 				<include name="manager*-screenshot-linux-20050911*.png" />
+				<include name="manager*-screenshot-linux-20060513*.png" />
 			</fileset>
 			<mapper type="regexp" from="^(.*)-[0-9]+(.*)" to="\1\2" />
 		</copy>
@@ -481,6 +484,7 @@
 				<arg line="-PARAM textinsert.extension 1" />
 				<arg line="-PARAM callout.defaultcolumn 40" />
 				<arg line="-PARAM callout.graphics 1" />
+				<arg line="-PARAM ignore.image.scaling 1"/>
 			</arguments>
 		</docbook>
 	</target>
@@ -489,7 +493,6 @@
 		<copy todir="build/docs/userguide">
 			<fileset dir="source/org/kolaka/freecast/userguide">
 				<include name="css/*" />
-				<include name="images/*" />
 			</fileset>
 		</copy>
 	</target>
@@ -506,13 +509,20 @@
 		<docbook in="build/docs/userguide/userguide.xml" out="build/docs/userguide/userguide.fo" style="${track.docbook.dir}/fo/docbook.xsl">
 			<arguments>
 				<arg line="-PARAM paper.type A4" />
+				<arg line="-PARAM fop.extensions 1"/>
+				<arg line="-PARAM double.sided 1"/>
 			</arguments>
 		</docbook>
+
 		<taskdef name="fop" classname="org.apache.fop.tools.anttasks.Fop">
 			<classpath>
+			  <!--
 				<pathelement location="track/fop/releases/0.20.5/build/fop.jar" />
 				<pathelement location="track/fop/releases/0.20.5/lib/avalon-framework-cvs-20020806.jar" />
 				<pathelement location="track/fop/releases/0.20.5/lib/batik.jar" />
+				-->
+				<fileset dir="track/jai/releases/1.1.2.01" includes="**/*.jar"/>
+				<fileset dir="track/fop/releases/0.20.5" includes="**/*.jar"/>
 			</classpath>
 		</taskdef>
 		<fop format="application/pdf" fofile="build/docs/userguide/userguide.fo" outfile="build/docs/userguide/userguide.pdf" basedir="build/docs/userguide" />
@@ -890,14 +900,18 @@
 
 	<target name="dist.jws.libfreecast" depends="prepare.version, build.etc, dist.jar, dist.lib, dist.jws.check" if="dist.jws.possible">
 		<property name="dist.jws.libfreecast.dir" value="dist/jws/libfreecast" />
+		<property name="dist.jws.codebase" value="http://download.freecast.org/jws/libfreecast/"/>
+		
 		<copy tofile="${dist.jws.libfreecast.dir}/libfreecast-${project.version}.jnlp" file="source/org/kolaka/freecast/node/swing/libfreecast.jnlp">
 			<filterset>
 				<filter token="project.version" value="${project.version}" />
+				<filter token="codebase" value="${dist.jws.codebase}" />
 			</filterset>
 		</copy>
 		<copy tofile="${dist.jws.libfreecast.dir}/freecast-manager.jnlp" file="source/org/kolaka/freecast/manager/gui/freecast-manager.jnlp">
 			<filterset>
 				<filter token="project.version" value="${project.version}" />
+				<filter token="codebase" value="${dist.jws.codebase}" />
 			</filterset>
 		</copy>
 
@@ -929,18 +943,18 @@
 			</fileset>
 		</copy>
 		<mkdir dir="${dist.jws.libfreecast.dir}/lib/linux" />
-		<jar jarfile="${dist.jws.libfreecast.dir}/lib/linux/jdic_native_x86.jar">
+		<jar jarfile="${dist.jws.libfreecast.dir}/lib/linux/native_x86.jar">
 			<fileset dir="dist/lib/linux/x86" />
 		</jar>
 		<mkdir dir="${dist.jws.libfreecast.dir}/lib/windows" />
-		<jar jarfile="${dist.jws.libfreecast.dir}/lib/windows/jdic_native_x86.jar">
+		<jar jarfile="${dist.jws.libfreecast.dir}/lib/windows/native_x86.jar">
 			<fileset dir="dist/lib/windows/x86" />
 		</jar>
 		<mkdir dir="${dist.jws.libfreecast.dir}/lib/sunos" />
-		<jar jarfile="${dist.jws.libfreecast.dir}/lib/sunos/jdic_native_sparc.jar">
+		<jar jarfile="${dist.jws.libfreecast.dir}/lib/sunos/native_sparc.jar">
 			<fileset dir="dist/lib/sunos/sparc" />
 		</jar>
-		<jar jarfile="${dist.jws.libfreecast.dir}/lib/sunos/jdic_native_x86.jar">
+		<jar jarfile="${dist.jws.libfreecast.dir}/lib/sunos/native_x86.jar">
 			<fileset dir="dist/lib/sunos/x86" />
 		</jar>
 		<copy tofile="${dist.jws.libfreecast.dir}/lib/freecast-${project.version}.jar" file="dist/lib/freecast.jar" />
@@ -1214,6 +1228,7 @@
 		<property name="install.export.target" value="${user.name}@download.freecast.org:/var/www/kolaka.org/freecast/export" />
 		<exec executable="rsync">
 			<arg value="-avc" />
+			<arg line="--exclude '*.deb'"/>
 			<arg value="export/" />
 			<arg value="${install.export.target}" />
 		</exec>
