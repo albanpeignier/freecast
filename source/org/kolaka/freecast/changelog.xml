@@ -19,10 +19,11 @@
 		</Features>
 		</Release>
 		-->
-		<Release version="@build.version@" buildDate="@build.date@" builderID="Alban">
+		<Release version="20060514" buildDate="2006.05.14" builderID="Alban">
 			<Deliveries>
-				<Delivery href="freecast-@build.version@.tar.bz">freecast-@build.version@ binary</Delivery>
-				<Delivery href="freecast-@build.version@-src.tar.bz">freecast-@build.version@ sources</Delivery>
+				<Delivery href="freecast-20060514.tar.bz">freecast-20060514 binary</Delivery>
+				<Delivery href="freecast-20060514-src.tar.bz">freecast-20060514 sources</Delivery>
+				<Delivery href="freecast-20060514-exe">freecast-20060514 win32 installer</Delivery>
 			</Deliveries>
 			<Summary>NAT support and embedded Ogg encoder</Summary>
 			<Features>
@@ -37,17 +38,18 @@
 					</Item>
 				</Feature>
 				<Feature type="func" why="enhance">
+					<Title>NAT traversal</Title>
+					<Item>
+						Two nodes can open a connection even if they are both behind a NAT (routeur 
+						or equivalent equipment). This new feature allows larger FreeCast networks
+						and removes the manual forward configuration requirement.
+					</Item>
+				</Feature>
+				<Feature type="func" why="enhance">
 					<Title>STUN reference</Title>
 					<Item>
 					 	Node can perform STUN requests to determinate its public address.
 					 	Required for NAT traversal. Use Jstun API (http://jstun.javawi.de/).
-					</Item>
-				</Feature>
-				<Feature type="func" why="enhance">
-					<Title>NAT traversal</Title>
-					<Item>
-						Two nodes can open a connection even if they are both behind a NAT (routeur 
-						or equivalent equipment)
 					</Item>
 				</Feature>
 				<Feature type="func" why="enhance">
@@ -61,19 +63,30 @@
 				<Feature type="func" why="enhance">
 					<Title>Embedded Ogg encoder</Title>
 					<Item>
+						To make simplier FreeCast Manager and root node deployement, the new
+						playlist encoder receiver can create the Ogg stream from a given playlist
+						of wav, ogg or mp3 files. Thus, the FreeCast root node can broadcast a 
+						playlist without a third application. This feature requires the usage of 
+						native libraries and is available for the moment under Linux x86 and Windows
+						platforms (Mac OS contributors are welcome).
 						Based on tritonus libvorbis binding (http://tritonus.org/).
 					</Item>
 				</Feature>
 				<Feature type="func" why="enhance">
 					<Title>FreeCast Manager Setup GUI</Title>
 					<Item>
-					
+						A new "Configure FreeCast" menu appears in FreeCast Manager. This setup dialog
+						allows for the moment the configuration of the root node receiver.
+						You can switch from the default demo content to your own playlist (via the embedded
+						ogg encoder), or receive the Ogg stream from a third party application.
 					</Item>
 				</Feature>
 				<Feature type="func" why="enhance">
 					<Title>Improved Windows installer</Title>
 					<Item>
-					
+						With the help of numerous windows users feedback, the Windows installer has been
+						improved. Shortcuts have been added to make easier user configuration editing.
+						FreeCast startup scripts have been improved to fix several issues.
 					</Item>
 				</Feature>
 				<!--
@@ -91,7 +104,7 @@
 			<Deliveries>
 				<Delivery href="freecast-20051009.tar.bz">freecast-20051009 binary</Delivery>
 				<Delivery href="freecast-20051009-src.tar.bz">freecast-20051009 sources</Delivery>
-				<Delivery href="freecast-20051009.exe">freecast-20051009 Windows installer</Delivery>
+				<Delivery href="freecast-20051009.exe">freecast-20051009 win32 installer</Delivery>
 			</Deliveries>
 			<Summary></Summary>
 			<Features>
