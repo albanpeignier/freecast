@@ -32,6 +32,7 @@ import java.util.Set;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
+import org.kolaka.freecast.net.StunClient;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
@@ -92,6 +93,9 @@ public class PeerReferenceLoader {
 		} else if (referenceClass.equals("stun")) {
 			InetSocketAddress stunServer = new InetSocketAddress( 
 			configuration.getString("host"), configuration.getInt("port",3478));
+			
+			StunClient.setDefaultServer(stunServer);
+			
 			factory = new StunPeerReferenceFactory(listenAddress.getPort(), stunServer);
 		} else {
 			throw new ConfigurationException("Unknow reference class: "
