@@ -69,7 +69,7 @@ public abstract class LoopService extends BaseService {
 				LogFactory.getLog(getClass()).warn(
 						"Loop interrupted " + LoopService.this, e);
 				stopQuietly();
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				LogFactory.getLog(getClass()).error(
 						"Loop execution failed in " + LoopService.this, e);
 			}
