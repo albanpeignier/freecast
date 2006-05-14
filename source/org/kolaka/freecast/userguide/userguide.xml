@@ -11,7 +11,7 @@
 		FreeCast User's Guide
 	</title> 
   <pubdate>@pubdate@</pubdate>
-  <copyright><year>2005</year><holder>Alban Peignier</holder></copyright>
+  <copyright><year>2005-2006</year><holder>Alban Peignier</holder></copyright>
 </bookinfo>
 <preface id="foreword">
 	<title>Foreword</title>
@@ -43,7 +43,7 @@
 		</textobject>
 	</mediaobject>
 	<para>
-		FreeCast allows to stream data by using a peer-to-peer network model.
+		FreeCast streams content by using a peer-to-peer network model.
 		It allows to broadcast a stream to a large number of listeners from a simple DSL connection.
 		FreeCast offers the possibility to broadcast over the Internet without a strict limit of listener count. 
 		You can share with the largest number without the economic cost of a large bandwidth.
@@ -298,36 +298,81 @@ Visit the homepage of my FreeCast network: http://84.67.103.24:8080/</programlis
 			  </para>
 			</note>
 		  </sect3>
-		</sect2>
-
-		<sect2>
-		  <title>Default configuration</title>
-		  <para>
-			The <application>FreeCast Manager</application> will configure:
-			<itemizedlist>
-			  <listitem>
-				<para>a tracker on the port 1665</para>
-			  </listitem>
-			  <listitem>
-				<para>
-				  a root node which listens on the first free ports between 1664 and 1670, 
-				  the configured receiver uses a default audio playlist provided by the FreeCast server
-				</para>
-			  </listitem>
-			  <listitem>
-				<para>a HTTP server which listens on the port 80 or on the first free ports between 8080 and 8100</para>
-			  </listitem>
-			</itemizedlist>
-		  </para>
-		  <note>
-			<title>Broadcast content</title>
+		  <sect3>
+			<title>Configure FreeCast</title>
 			<para>
-			  In the first release of the FreeCast Manager, the default broadcast content can't be
-			  changed. But future releases will include the dialogs needed to configure other receivers.
+			  Select this menu to start the Setup Dialog, see <xref linkend="getting-started-setupdialog"/>.
 			</para>
-		  </note>
+		  </sect3>
 		</sect2>
 	</sect1>
+	<sect1 id="getting-started-setupdialog">
+	  <title>Setup Dialog</title>
+
+	  <para>
+		The Setup Dialog allows to configure the FreeCast network supported by FreeCast Manager.
+	  </para>
+
+	  <screenshot>
+		<screeninfo>FreeCast Manager - Setup dialog</screeninfo>
+		<mediaobject>
+		  <imageobject>
+			<imagedata fileref="images/manager-setup-screenshot-linux.png" format="PNG"/>
+		  </imageobject>
+		  <textobject>
+			<phrase>FreeCast Manager Setup</phrase>
+		  </textobject>
+		</mediaobject>
+	  </screenshot>
+
+
+	  <sect2>
+		<title>Receiver configuration</title>
+		<para>You can select the content you want broadcast.</para>
+
+		<sect3>
+		  <title>Default test stream</title>
+		  <para>Select this content to perform your first tests.</para>
+		</sect3>
+
+		<sect3>
+		  <title>My own playlist</title>
+		  <para>
+			Select a M3U playlist with the ogg, wav or mp3 files to be broadcast.
+		  </para>
+		</sect3>
+
+		<sect3>
+		  <title>Retrieve the Ogg stream</title>
+		  <para>
+			Specify the URL where the FreeCast root node can retrieve the Ogg stream.
+		  </para>
+		</sect3>
+
+		<sect3>
+		  <title>Receive the Ogg stream</title>
+		  <para>
+			Specify the port where the FreeCast root node will receive the Ogg stream sent 
+			by a third application.
+		  </para>
+		</sect3>
+	  </sect2>
+	  <sect2>
+		<title>Default configuration</title>
+		<para>
+		  The <application>FreeCast Manager</application> will configure for you:
+		  <itemizedlist>
+			<listitem>
+			  <para>a tracker on the port 1665</para>
+			</listitem>
+			<listitem>
+			  <para>a HTTP server which listens on the port 80 or on the first free ports between 8080 and 8100</para>
+			</listitem>
+		  </itemizedlist>
+		</para>
+	  </sect2>
+	</sect1>
+
 	<sect1 id="getting-started-troubleshooting">
 	  <title>Troubleshooting</title>
 	  <sect2>
@@ -339,7 +384,14 @@ Visit the homepage of my FreeCast network: http://84.67.103.24:8080/</programlis
 		  As plug-and-play networks are still more a concept than a reality, you can have
 		  to configurate your network (router, firewall, etc ...) in order to make the 
 		  FreeCast Manager services visible to your listeners (generally on the Internet).
-		  By default, you need to open and/or forward the TCP ports 80, 1664 and 1665.
+		  By default, you need to open and/or forward the TCP ports 80 and 1665.
+		</para>
+	  </sect2>
+	  <sect2>
+		<title>Support team</title>
+		<para>
+		  If you experience any problem or if you have any question about FreeCast and FreeCast Manager,
+		  contact the FreeCast support team. Visit <ulink url="http://www.freecast.org/support"/>.
 		</para>
 	  </sect2>
 	</sect1>
@@ -408,10 +460,8 @@ Visit the homepage of my FreeCast network: http://84.67.103.24:8080/</programlis
 					<row>
 						<entry><filename>docs/examples/jws</filename></entry>
 						<entry>
-							<para>
-								contains configuration sample files for a <productname>JavaWebStart</productname> deployment,
-								see <xref linkend="javawebstart"/>
-							</para>
+						  contains configuration sample files for a <productname>JavaWebStart</productname> deployment,
+						  see <xref linkend="javawebstart"/>
 						</entry>
 					</row>
 				</tbody>
@@ -432,9 +482,10 @@ Visit the homepage of my FreeCast network: http://84.67.103.24:8080/</programlis
 				<para>The FreeCast tracker doesn't require specific configuration. Just start the <command>freecast-tracker</command>:
 					<screen><![CDATA[[host:path/to/freecast] bin/freecast-tracker 
 create log dir: host:path/to/freecast/log
-INFO   [Main]: version 20050907
+INFO   [Main]: version @version@
 INFO   [ConfigurationFactory]: Trying to load configuration defaults-tracker.xml
-INFO   [Main]: start a HttpTracker on port /0.0.0.0:1665]]></screen>
+INFO   [Main]: start a HttpTracker on port /0.0.0.0:1665
+INFO   [ConnectionAssistantServer]: start ConnectionAssistant server on /0.0.0.0:1666]]></screen>
 				</para>
 			</sect3>
 			<sect3>
@@ -445,19 +496,20 @@ INFO   [Main]: start a HttpTracker on port /0.0.0.0:1665]]></screen>
 					This stream will be transmitted by your FreeCast network.
 				</para>
 				<screen><![CDATA[[host:path/to/freecast] bin/freecast -config docs/examples/audio/freecast-node-root.xml
-INFO   [Main]: version 20050907
+INFO   [Main]: version @version@
 INFO   [ConfigurationFactory]: Trying to load configuration defaults-node.xml
-INFO   [NodeConfigurator]: set the public reference to [/192.168.x.x:1664{}, /x.x.x.x:1664{}]{}
-WARN   [NodeConfigurator]: the playlist receiver uses a static bandwidth controler
-INFO   [DefaultNodeService]: received node identifier #30CC71CD520A5F31
-INFO   [HttpPlayerSource$1]: wait for http player connection at /0.0.0.0:8000]]></screen>
+INFO   [NodeConfigurator]: set the public reference to [/x.x.x.x:30932{}, /192.168.0.2:30932{}]{}
+WARN   [NodeConfigurator]: the playlist receiver uses a static bandwidth controler at 70
+INFO   [DefaultNodeService]: received node identifier #32BF31F4C21882D9
+INFO   [ConnectionAssistantClient]: connect to ConnectionAssistant at cas.freecast.org/82.226.166.133:1666
+INFO   [ConnectionAssistantServiceStub]: new session]]></screen>
 				<para>
 					The default node configuration uses the tracker on the same host (localhost). The command line specifies
 					the use of a sample configuration file. It will use a default playlist provided by the FreeCast website.
 				</para>
 				<para>
 					The tracker should have logged the following messages when the root node registers:
-					<screen><![CDATA[INFO   [Tracker$Auditor]: new registered node [/192.168.x.x:1664{}, /x.x.x.x:1664{}]{}
+					<screen><![CDATA[INFO   [Tracker$Auditor]: new registered node [/x.x.x.x:30932{}, /192.168.0.2:30932{}]{}
 INFO   [Tracker$Auditor]: 1 connected nodes]]></screen>
 				</para>
 			</sect3>
@@ -467,26 +519,24 @@ INFO   [Tracker$Auditor]: 1 connected nodes]]></screen>
 					A FreeCast network without a listener isn't really a network .. so let's start a first FreeCast listener node.
 				</para>
 				<screen><![CDATA[[host:path/to/freecast] bin/freecast-swing -config docs/examples/audio/freecast-node-listener.xml
-INFO   [Main]: version 20050907
-INFO   [ConfigurationFactory]: Trying to load configuration defaults-node.xml
-INFO   [NodeConfigurator]: set the public reference to /0.0.0.0:1666{}
-INFO   [DefaultNodeService]: received node identifier #30D299519AC4462A
-INFO   [HttpPlayerSource$1]: wait for http player connection at /0.0.0.0:8001
-INFO   [PeerControler$Auditor]: accept connection with [<host>/192.168.x.x:1664{}, /x.x.x.x:1664{}]{identifier=#30CC71CD520A5F31, order=0}
-INFO   [PeerControler$Auditor]: 1 peers connected]]></screen>
+INFO   [Main]: version @version@
+INFO   [NodeConfigurator]: set the public reference to [/x.x.x.x:30680{}, /192.168.0.2:30680{}]{}
+INFO   [DefaultNodeService]: received node identifier #32C5AE480DADE3F1
+INFO   [ConnectionAssistantClient]: connect to ConnectionAssistant at cas.freecast.org/82.226.166.133:1666
+INFO   [ConnectionAssistantServiceStub]: new session]]></screen>
 				<para>
 					The listener node connects to the tracker, receives the references oto other peers, then tries to connect to one of them
 					(the root node in your case). When the first streamed data are received, the audio player starts to play sound.
 				</para>
 				<para>
 					The tracker should have logged the following messages when the listener node registers:
-					<screen><![CDATA[INFO   [Tracker$Auditor]: new registered node /127.0.0.1:1666{}
+					<screen><![CDATA[INFO   [Tracker$Auditor]: new registered node [/x.x.x.x:30932{}, /192.168.0.2:30932{}]{}
 INFO   [Tracker$Auditor]: 2 connected nodes]]></screen>
 				</para>
 				<para>
 					The root node should have logged the following message when the listener node connects to it:
-					<screen><![CDATA[INFO  SocketPeerConnection[/192.168.x.x] [PeerControler$Auditor]: accept connection with null
-INFO  SocketPeerConnection[/192.168.x.x] [PeerControler$Auditor]: 1 peers connected]]></screen>
+					<screen><![CDATA[INFO  /192.168.0.2:30932 [PeerControler$Auditor]: accept connection with DefaultPeer[identifier=#32BF31F4C21882D9,reference=[/192.168.0.2:30932{}, /x.x.x.x:30932{}]{identifier=#32BF31F4C21882D9, order=0},order=0,latency=9223372036854775807,listeners=[]]
+INFO  /192.168.0.2:30932 [PeerControler$Auditor]: 1 peers connected]]></screen>
 				</para>
 			</sect3>		
 		</sect2>
@@ -572,10 +622,8 @@ Do you want to continue? [Y/n]</screen>
 					<row>
 						<entry><filename>/usr/share/doc/freecast/examples/jws</filename></entry>
 						<entry>
-							<para>
-								contains configuration sample files for a <productname>JavaWebStart</productname> deployment,
-								see <xref linkend="javawebstart"/>
-							</para>
+						  contains configuration sample files for a <productname>JavaWebStart</productname> deployment,
+						  see <xref linkend="javawebstart"/>
 						</entry>
 					</row>
 				</tbody>
@@ -624,31 +672,63 @@ Do you want to continue? [Y/n]</screen>
 		<title>Description</title>
 		<indexterm><primary>tracker</primary></indexterm>
 		<para>
-			The only component which can be configured into the tracker 
-			is the <systemitem>connector</systemitem>
-			that dialogs with every node of the FreeCast network. A <systemitem>HTTP connector</systemitem>
-			implementation is available (the <acronym>RMI</acronym> implementation is obsolete now).
+		  The main component which can be configured into the tracker 
+		  is the <systemitem>connector</systemitem>
+		  that dialogs with every node of the FreeCast network. A <systemitem>HTTP connector</systemitem>
+		  implementation is available (the <acronym>RMI</acronym> implementation is obsolete now).
 		</para>
+
 		<para>
+		  The second component is the <systemitem>connection-assistant</systemitem>, see
+		  <xref linkend="tracker-cas"/>.
+		</para>
+
+		<para>
+		  As soon as the FreeCast tracker is started, nodes can be started.
+		</para>
+
+		<para>
+		  The information about the FreeCast network managed by the tracker are lost if the tracker reboots.
+		  The FreeCast network will experience troubles in this case.
+		</para>
+
+		<sect2>
+		  <title>Network accessibility</title>
+		  <para>
 			The tracker must be accessible for all the nodes that want to participate to 
 			the FreeCast network. The connector configuration must match the network configuration
 			and the constraints of the computer where the tracker is hosted. If the tracker on which the connector is
 			listening requests on the listen address <systemitem class="ipaddress">0.0.0.0:1665</systemitem>
 			(the default value) and if the nodes are on Internet, any firewall or router between the
-			tracker host and Internet must be configured to let pass through or forward connections
-			to the connector port. If the nodes "behind" such equipments encounter connection errors,
-			you should verify the network configuration.
-		</para>
-		<para>
-			When the FreeCast tracker is started, nodes can be started.
-		</para>
-		<caution>
-			<title>Information persistence</title>
+			tracker host and Internet must be configured to let pass through or <emphasis>forward connections</emphasis>
+			to the connector port. 
+		  </para>
+		  <caution>
+			<title>Track unreachable</title>
 			<para>
-				The information about the FreeCast network managed by the tracker are lost if the tracker reboots.
-				The FreeCast network will experience troubles in this case.
+			  If the FreeCast nodes "behind" a firewall, a router or such equipment encounter connection errors,
+			  you should verify the network configuration.
 			</para>
-		</caution>
+		  </caution>
+		</sect2>
+
+		<sect2 id="tracker-cas">
+		  <title>Connection Assistant Service</title>
+		  <para>
+			The connection assistant service provided by the FreeCast tracker assists
+			nodes to connect between them through NATs. Every node connected to the 
+			same service can request help to connect to another one.
+			The connection assistant service will notify the other node in realtime that 
+			a NAT traversal session is starting.
+		  </para>
+		  <para>
+			By default the connection asistant service is started on the TCP port 1666.
+			The default node configuration uses a default service
+			available on freecast.org servers. To use your own service, you must make it
+			reachable from Internet (may be with the required forward) and change the node
+			configuration (see <xref linkend="node-configuration-cas"/>).
+		  </para>
+		</sect2>
 	</sect1>
 	<sect1 id="tracker-configuration">
 		<title>Configuration</title>
@@ -660,6 +740,7 @@ Do you want to continue? [Y/n]</screen>
 <freecast>
   <tracker>
     Connector
+    ConnectionAssistant
   </tracker>
 </freecast>]]></programlisting>
 		</sect2>
@@ -678,13 +759,32 @@ Do you want to continue? [Y/n]</screen>
 				<formalpara>
 					<title>listenaddress</title>
 					<para>
-						specifies where the connector (and so the tracker) is listening to 
+						specifies where the <systemitem>connector</systemitem> (and so the tracker) is listening to 
 						requests sent by the nodes. By default, the connector is listening on
 						every available IP address (<systemitem class="ipaddress">0.0.0.0</systemitem>) 
 						and the TCP port <systemitem>1665</systemitem>.
 					</para>
 				</formalpara>
 			</sect3>
+		</sect2>
+
+		<sect2>
+		  <title>ConnectionAssistant</title>
+		  <programlisting><![CDATA[<connection-assistant>
+  <listenaddress>
+    <port>1666</port>
+  </listenaddress>
+</connection-assistant>]]></programlisting>
+		  <formalpara>
+			<title>listenaddress</title>
+			<para>
+			  specifies where the <systemitem>connection assistant</systemitem> is listening to 
+			  requests sent by the nodes to request assistance to traverse NATs. 
+			  By default, the connection assistant is listening on
+			  every available IP address (<systemitem class="ipaddress">0.0.0.0</systemitem>) 
+			  and the TCP port <systemitem>1666</systemitem>.
+			</para>
+		  </formalpara>
 		</sect2>
 
 		<sect2>
@@ -703,9 +803,10 @@ Do you want to continue? [Y/n]</screen>
 			The FreeCast tracker can be started in command line via the command <command>freecast-tracker</command> (see <xref linkend="freecast"/>).
 			<screen><![CDATA[[host:path/to/freecast] bin/freecast-tracker 
 create log dir: host:path/to/freecast/log
-INFO   [Main]: version 20050907
+INFO   [Main]: version @version@
 INFO   [ConfigurationFactory]: Trying to load configuration defaults-tracker.xml
-INFO   [Main]: start a HttpTracker on port /0.0.0.0:1665]]></screen>
+INFO   [Main]: start a HttpTracker on port /0.0.0.0:1665
+INFO   [ConnectionAssistantServer]: start ConnectionAssistant server on /0.0.0.0:1666]]></screen>
 		</para>
 	</sect1>
 </chapter>
@@ -728,22 +829,28 @@ INFO   [Main]: start a HttpTracker on port /0.0.0.0:1665]]></screen>
 		<sect2 id="sender">
 			<title>Sender</title>
 			<para>
-				The <systemitem>sender</systemitem> component listens to requests from other nodes (peers), manages the opened connections 
-				and controls the sending of data. The <systemitem>socket sender</systemitem> implementation
+				The <systemitem>sender</systemitem> component listens to requests from other nodes (peers), manages 
+				the opened connections 
+				and controls the sending of data. The <systemitem>udp sender</systemitem> implementation
 				uses a TCP socket by default. The <systemitem>none sender</systemitem> implementation disables
 				the node relaying (.. discouraged).
 			</para>
+			<sect3 id="sender-udp">
+				<title>UDP sender</title>
+				<para>
+					The <systemitem>udp sender</systemitem> implementation waits for UDP connections
+					initiated by other nodes. Once a connection is opened with another node (peer), 
+					the sender forwards the received streamed data to this peer.
+				</para>
+				<para>
+				  Via the <systemitem>connection assistant</systemitem>, the <systemitem>udp sender</systemitem>
+				  is reachable even behind a NAT (NAT traversal).
+				</para>
+			</sect3>
 			<sect3 id="sender-socket">
 				<title>Socket sender</title>
 				<para>
-					The <systemitem>socket sender</systemitem> implementation waits for TCP connections
-					initiated by other nodes. Once a connection is opened with another node (peer), the sender forwards the
-					received streamed data to this peer.
-				</para>
-				<para>
-					The specified listening address must be visible from other nodes. That means that your network configuration
-					must be correct to allow other nodes to accept the root node. When needed, check the configuration of
-					your router and/or your firewall.
+					The <systemitem>socket sender</systemitem> is obsolete now. Use an <systemitem>udp sender</systemitem>.
 				</para>
 			</sect3>
         </sect2>
@@ -751,19 +858,43 @@ INFO   [Main]: start a HttpTracker on port /0.0.0.0:1665]]></screen>
             <title>Reference</title>
             <para>
                 The node reference is used to localize it over the network. The default reference
-                specifies the IP address and TCP port where the node waits for connections from other nodes
-                (see <xref linkend="sender-socket"/>). By default, the IP address of the node is resolved
-                by the tracker.
+                specifies the IP address and UDP port where the node waits for connections from other nodes
+                (see <xref linkend="sender-udp"/>).
             </para>
-            <para>
-                When a node and the tracker are on the same network, you may need to specify manually the
-                <systemitem>reference</systemitem> that must be used by the node. Indeed, by default the
-                tracker finds the node <systemitem>reference</systemitem> (the public reference used
-                by other nodes to contact the node). If the tracker and a node are on the same network,
-                the tracker will see the local network address of the node. Other nodes over Internet won't be able to
-                use this reference. In this case, you need to specify manually the <systemitem>reference</systemitem>
-                in the sender configuration.
-            </para>
+            <sect3 id="reference-stun">
+                <title><systemitem>stun</systemitem> reference</title>
+                <para>
+				  By using <systemitem>stun</systemitem> reference, the FreeCast node 
+				  determinates its public address (and natted UDP port) via a 
+				  <ulink url="http://en.wikipedia.org/wiki/STUN">STUN</ulink> request.
+                </para>
+				<para>
+				  The <systemitem>stun</systemitem> reference configuration allows to specify
+				  the STUN server to be used.
+				</para>
+				<para>
+				  Node local addresses will be determinated automatically to make the node
+				  reachable in the local network(s).
+				</para>
+				<note>
+				  <title>NAT traversal</title>
+				  <para>
+					A node must use a <systemitem>stun</systemitem> reference to be reachable behind a NAT 
+					and make NAT tranversal possible.
+				  </para>
+				</note>
+            </sect3>
+			<sect3>
+			  <title><systemitem>inet</systemitem> reference</title>
+			  <para>
+				The <systemitem>reference</systemitem> can be specified manually via an 
+				<systemitem>inet</systemitem> reference by giving host and port.
+			  </para>
+			  <para>
+				Take care by using an <systemitem>inet</systemitem> reference, if the specified 
+				information is wrong, the node won't be reachable.
+			  </para>
+			</sect3>
             <sect3>
                 <title><systemitem>multiple</systemitem> reference</title>
                 <para>
@@ -776,9 +907,8 @@ INFO   [Main]: start a HttpTracker on port /0.0.0.0:1665]]></screen>
             <sect3>
                 <title><systemitem>auto</systemitem> reference</title>
                 <para>
-                    To skip to a manual configuration of the <systemitem>reference</systemitem>, an automatic
-                    mechanism is available by using a <systemitem>reference</systemitem> with the class
-                    <systemitem>auto</systemitem>.
+				  The <systemitem>auto</systemitem> reference is obsolete, use 
+				  <systemitem>stun</systemitem> reference instead. See <xref linkend="reference-stun"/>.
                 </para>
             </sect3>
         </sect2>
@@ -792,7 +922,7 @@ INFO   [Main]: start a HttpTracker on port /0.0.0.0:1665]]></screen>
 			<sect3 id="receiver-peer">
 				<title>Peer receiver</title>
 				<para>
-					The <systemitem>peer receiver</systemitem> component receives the stream
+					The <systemitem>peer</systemitem> receiver component receives the stream
 					from other nodes (peers). It doesn't require any configuration. It will use the tracker
 					to find other nodes.
 				</para>
@@ -800,34 +930,53 @@ INFO   [Main]: start a HttpTracker on port /0.0.0.0:1665]]></screen>
 			<sect3 id="receiver-shoutclient">
 				<title>Shoutclient receiver</title>
 				<para>
-					The <systemitem>shoutclient receiver</systemitem> component opens a connection
+					The <systemitem>shoutclient</systemitem> receiver component opens a connection
 					on a shout server (like icecast or fluemondo) to retrieve an audio or video ogg stream.
 				</para>
 				<para>
-					The <systemitem>shoutclient receiver</systemitem> configuration defines the
+					The <systemitem>shoutclient</systemitem> receiver configuration defines the
 					URL where the stream can be received.
 				</para>
 			</sect3>
 			<sect3 id="receiver-shoutserver">
 				<title>Shoutserver receiver</title>
 				<para>
-					The <systemitem>shoutserver receiver</systemitem> component acts like
+					The <systemitem>shoutserver</systemitem> receiver component acts like
 					a shout server. It can receive an audio or video ogg stream sent by a tool like ices2 or oddcast.
 				</para>
 				<para>
-					The <systemitem>shoutserver receiver</systemitem> configuration defines
+					The <systemitem>shoutserver</systemitem> receiver configuration defines
 					the listen address used to wait for the shout connection.
 				</para>
 			</sect3>
 			<sect3 id="receiver-playlist">
 				<title>Playlist receiver</title>
 				<para>
-					The <systemitem>playlist receiver</systemitem> component uses a playlist
+					The <systemitem>playlist receiver</systemitem> component uses a 
+					<ulink url="http://en.wikipedia.org/wiki/M3u">M3U</ulink> playlist
 					which lists the ogg files to be read (a file per line).
 				</para>
 				<para>
 					The <systemitem>playlist receiver</systemitem> configuration contains the
 					URL where the playlist can be found.
+				</para>
+			</sect3>
+			<sect3 id="receiver-playlistencoder">
+				<title>Encoder-Playlist receiver</title>
+				<para>
+				  The <systemitem>encoder-playlist</systemitem> receiver component uses a 
+				  <ulink url="http://en.wikipedia.org/wiki/M3u">M3U</ulink> playlist
+				  which lists the files to be read (a file per line). 
+				  By default, wav, ogg and mp3 files are supported.
+				</para>
+				<para>
+				  The Ogg stream is created via a native library which depends of the runtime platform.
+				  For the moment, the library is available for linux x86 and windows platforms.
+				</para>
+				<para>
+				  The <systemitem>encoder-playlist</systemitem> receiver configuration contains the
+				  URL where the playlist can be found and stream encoding parameters like wanted Ogg 
+				  quality, channel count and sample rate.
 				</para>
 			</sect3>
 		</sect2>
@@ -896,6 +1045,18 @@ Take care to the private key file security</screen>
 				</para>
 			</sect3>
 		</sect2>
+		<sect2>
+		  <title>Connection Assistant</title>
+		  <para>
+			The FreeCast nodes can connect through NATs by using the connection assistance service
+			(which is started into the FreeCast tracker). 
+		  </para>
+		  <para>
+			By default, FreeCast nodes use the connection assistance service available at cas.freecast.org 
+			on port 1666. The node configuration allows to specify the wanted connection assistant.
+			You can use the connection assistant service provided by your tracker. See <xref linkend="tracker-cas"/>.
+		  </para>
+		</sect2>
 	</sect1>
 	
 	<sect1 id="node-configuration">
@@ -911,10 +1072,12 @@ Take care to the private key file security</screen>
     Sender
     Receiver
 
-	<players>
-	  Player
-	  ...
+    <players>
+      Player
+      ...
     </players>
+
+    ConnectionAssistant
   </node>
 
   GUI Configuration
@@ -946,10 +1109,10 @@ Take care to the private key file security</screen>
 		<sect2>
 			<title>Sender</title>
 			<programlisting><![CDATA[<sender>
-  <class>socket</class>
+  <class>udp</class>
   <listenaddress>
     <host>0.0.0.0</host>
-    <port>1664</port>
+    <port>30000~31000</port>
   </listenaddress>
 
   Reference
@@ -959,7 +1122,7 @@ Take care to the private key file security</screen>
 				<term><systemitem>listenaddress</systemitem></term>
 				<listitem>
 				  <para>
-					the TCP address where the node listens to requests of other nodes.
+					the UDP address where the node listens to requests of other nodes.
 					See <xref linkend="listen-address"/>.
 				  </para>
 				</listitem>
@@ -968,17 +1131,19 @@ Take care to the private key file security</screen>
 			<sect3>
 			  <title>Reference</title>
 			  <sect4>
+				<title>Stun Reference</title>
+				<programlisting><![CDATA[<reference>
+  <class>stun</class>
+  <host>stun.xten.net</host>
+  <port>3478</port>
+</reference>]]></programlisting>
+			  </sect4>
+			  <sect4>
 				<title>Inet Reference</title>
 				<programlisting><![CDATA[<reference>
   <class>inet</class>
   <host>0.0.0.0</host>
   <port>1664</port>
-</reference>]]></programlisting>
-			  </sect4>
-			  <sect4>
-				<title>Automatic Reference</title>
-				<programlisting><![CDATA[<reference>
-  <class>auto</class>
 </reference>]]></programlisting>
 			  </sect4>
 			  <sect4>
@@ -1032,8 +1197,61 @@ Take care to the private key file security</screen>
 			  </varlistentry>
 			</variablelist>
 		  </sect3>
+
 		  <sect3>
-			<title>File Receiver</title>
+			<title>Encoder-Playlist Receiver</title>
+			<programlisting><![CDATA[<receiver>
+  <class>encoder-playlist</class>
+  <url>file:///etc/freecast/playlist.m3u</url>
+  <channels>2</channels>
+  <quality>0</quality>
+  <samplerate>44100</samplerate>
+  Validator
+</receiver>]]></programlisting>
+			<variablelist>
+			  <varlistentry>
+				<term><systemitem>url</systemitem></term>
+				<listitem>
+				  <para>
+					the URL where the playlist can be found. This playlist will be loaded and
+					each specified file will be played. If you use relative file names into
+					the playlist, the base url of the playlist will be used as a prefix.
+					Files specified via HTTP URLs will be cached locally.
+				  </para>
+				</listitem>
+			  </varlistentry>
+			  <varlistentry>
+				<term><systemitem>quality</systemitem></term>
+				<listitem>
+				  <para>
+					the wanted quality of the encoded Ogg Vorbis stream.
+					Read the dedicated <ulink url="http://www.vorbis.com/faq/#quality">Vorbis FAQ quality section</ulink>.
+					Notice that only quality between 0 and 10 are supported.
+				  </para>
+				</listitem>
+			  </varlistentry>
+			  <varlistentry>
+				<term><systemitem>channels</systemitem></term>
+				<listitem>
+				  <para>
+					the channel count of the encoded stream. Set 1 for a mono stream, 2 for a stereo stream.
+				  </para>
+				</listitem>
+			  </varlistentry>
+			  <varlistentry>
+				<term><systemitem>samplerate</systemitem></term>
+				<listitem>
+				  <para>
+					specifies the sample rate of the encoded stream. 
+					Set 44100 for higher quality, 22050 for medium quality.
+				  </para>
+				</listitem>
+			  </varlistentry>
+			</variablelist>
+		  </sect3>
+
+		  <sect3>
+			<title>Playlist Receiver</title>
 			<programlisting><![CDATA[<receiver>
   <class>playlist</class>
   <url>file:///etc/freecast/playlist.m3u</url>
@@ -1116,6 +1334,23 @@ Take care to the private key file security</screen>
 			  </variablelist>
 			</sect4>
 		  </sect3>
+		</sect2>
+		<sect2 id="node-configuration-cas">
+		  <title>Connection Assistant</title>
+		  <programlisting><![CDATA[<connection-assistant>
+  <host>cas.freecast.org</host>
+  <port>1666</port>
+</connection-assistant>]]></programlisting>
+		  <variablelist>
+			<varlistentry>
+			  <term><systemitem>host</systemitem> and <systemitem>port</systemitem></term>
+			  <listitem>
+				<para>
+				  the host and port of the connection assistant service to be used by the node.
+				</para>
+			  </listitem>
+			</varlistentry>
+		  </variablelist>
 		</sect2>
 		<sect2>
 		  <title>GUI Configuration</title>
@@ -1392,15 +1627,35 @@ Take care to the private key file security</screen>
 	  <sect3>
 		<title>Port</title>
 		<para>
-		  Port elements designate a TCP port or a port selection.
-		  A single port is designated by a number.
-		  A port range is defined by a lower and an higher port separated by a <constant>-</constant>.
-		  A port selection can contain one or more ports or port ranges separated by a <constant>,</constant>.
+		  Port elements designate a TCP port or a port selection:
+		  <itemizedlist>
+			<listitem>
+			  <para>
+				A single port is designated by a number.
+			  </para>
+			</listitem>
+			<listitem>
+			  <para>
+				A port range is defined by a lower and an higher port separated by a <constant>-</constant>.
+			  </para>
+			</listitem>
+			<listitem>
+			  <para>
+				A random port range is defined by a lower and an higher port separated by a <constant>~</constant>.
+			  </para>
+			</listitem>
+			<listitem>
+			  <para>
+				A port selection can contain one or more ports or port ranges separated by a <constant>,</constant>.
+			  </para>
+			</listitem>
+		  </itemizedlist>
 		</para>
 		<example>
 		  <title>Port configurations</title>
 		  <programlisting><![CDATA[<port>1665</port>]]></programlisting>
 		  <programlisting><![CDATA[<port>1664,1666-1680</port> <!-- port 1664 or from 1666 to 1670 -->]]></programlisting>
+		  <programlisting><![CDATA[<port>30000~30100</port> <!-- port from 30000 to 30100 choosed randomly -->]]></programlisting>
 		</example>
 	  </sect3>
 	  <sect3 id="listen-address">
@@ -1535,7 +1790,7 @@ Take care to the private key file security</screen>
 				<listitem><para>your webradio is named <literal>Acme Radio</literal></para></listitem>
 				<listitem><para>your website is <literal>http://acme-radio.org/</literal></para></listitem>
 				<listitem><para>your tracker is available at <literal>freecast.acme-radio.org:1665</literal></para></listitem>
-				<listitem><para>you're running the <literal>freecast-20050323</literal> release</para></listitem>
+				<listitem><para>you're running the <literal>freecast-@version@</literal> release</para></listitem>
 			</itemizedlist>
 		</para>
 		<para>In this case, your stream description file should look like this:</para>
@@ -1549,7 +1804,7 @@ Take care to the private key file security</screen>
   <port>1665</port>
  </tracker>
  <jnlp>
-  <version>20050323</version>
+  <version>@version@</version>
  </jnlp>
 </stream>]]></programlisting>
 		</example>
@@ -1619,7 +1874,7 @@ Take care to the private key file security</screen>
    <name>acme Radio</name>
    <homepage>http://acme-radio.org/</homepage>
    <jnlp>
-    <version>20050323</version>
+    <version>@version@</version>
     <config>http://acme-radio.org/freecast/config.xml</config>
    </jnlp>
   </stream>]]></programlisting>
@@ -1788,12 +2043,16 @@ Take care to the private key file security</screen>
 		<sect2>
 			<title>OddCast</title>
 			<para>
-				<ulink url="http://www.oddsock.org">OddSock.org</ulink> provides a lot of streaming tools for the Windows platforms.
-				<application>oddcast</application> is a <productname>WinAmp</productname> plugin which creates a Ogg stream
-				from what <productname>WinAmp</productname> is playing.
+			  <ulink url="http://www.oddsock.org">OddSock.org</ulink> provides a lot of streaming tools for the Windows platforms.
+			  <application>oddcast</application> is a standalone application or a <productname>WinAmp</productname> plugin 
+			  which creates a Ogg stream from the line input or from what <productname>WinAmp</productname> is playing.
 			</para>
 			<para>
-				Visit the <application>oddcast</application> website: <ulink url="http://www.oddsock.org/tools/oddcastv3/"/>.
+			  Visit the <application>oddcast</application> website: <ulink url="http://www.oddsock.org/tools/oddcastv3/"/>.
+			</para>
+			<para>
+			  Watch <ulink url="http://www.freecast.org/screencasts">FreeCast screencasts</ulink> dedicated to the OddCast
+			  and FreeCast collaboration.
 			</para>
 		</sect2>
 		<sect2>
