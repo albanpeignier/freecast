@@ -112,15 +112,14 @@ public class AudioSystem {
 	private static Iterator getProviders(Class providerClass) {
 		List availables = new LinkedList();
 
-		for (Enumeration iter = Service.providers(providerClass); iter.hasMoreElements();) {
-			try {
-				availables.add(iter.nextElement());
-			} catch (Throwable t) {
-				LogFactory.getLog(AudioSystem.class).error(
-						"can't load one of the provider for "
-								+ providerClass.getName(), t);
-				continue;
+		try {
+			for (Enumeration iter = Service.providers(providerClass); iter.hasMoreElements();) {
+					availables.add(iter.nextElement());
 			}
+		} catch (Throwable t) {
+			LogFactory.getLog(AudioSystem.class).error(
+					"can't load one of the provider for "
+							+ providerClass.getName(), t);
 		}
 
 		final List favorites = selectFavorites(availables);
