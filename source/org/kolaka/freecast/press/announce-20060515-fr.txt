@@ -1,0 +1,49 @@
+FreeCast 20060515
+
+Après un hiver très occupé, l'équipe de FreeCast est heureuse de publier cette nouvelle version.
+
+FreeCast a maintenant deux ans. L'expérience tirée du développement et de l'utilisation a amenée la ré-écriture complète du protocole. Le transport est passé de TCP à UDP. Et le très attendu "NAT traversal" est au rendez-vous : les réseaux FreeCast ne seront plus arrêtés par les NATs mal configurés.
+
+FreeCast Manager a été examiné sous toutes les coutures par la communauté des utilisateurs. De nouvelles fonctionnalités font leurs apparitions comme la possibilité de dffuser une liste de fichiers grâce à un encodeur Ogg Vorbis intégré. Pour simplifier l'utilisation de FreeCast Mananager, une interface graphique de configuration permet la configuration de la diffusion. Avec "Clic & Diffus" de FreeCast, diffuser son contenu n'a jamais été aussi simple.
+
+Liens :
+
+- freecast.org: http://www.freecast.org/fr/
+- Listening with Freecast: http://www.freecast.org/fr/listen
+- Streaming with FreeCast: http://www.freecast.org/fr/broadcast
+- Complete changelog: http://download.freecast.org/README.html
+
+Short changelog:
+
+UDP transport layer, NAT traversal, STUN reference, Latency analysis, Embedded Ogg encoder, 
+FreeCast Manager Setup GUI, Improved Windows installer
+
+Complete changelog:
+
+- UDP transport layer
+
+Connections between nodes are now performed via UDP connections. Network problems are more easily overcomed. Note that socket receivers are replaced by UDP receivers. The new transport layer uses the Apache Mina API (http://directory.apache.org/subprojects/mina/).
+
+- NAT traversal
+
+Two nodes can open a connection even if they are both behind a NAT (router or similar equipment). This new feature allows larger FreeCast networks and removes the manual forward configuration requirement.
+
+- STUN reference
+
+Node can perform STUN requests to determinate its public address. Required for NAT traversal. Use Jstun API (http://jstun.javawi.de/).
+
+- Latency analysis
+
+The FreeCast protocol includes messages used to estimate the network latency between nodes. A node opens connections to several other nodes and uses the connection with the lower latency.
+
+- Embedded Ogg encoder
+
+To ease FreeCast Manager and root node deployement, the new playlist encoder receiver can create the Vorbis Ogg stream from a given playlist of wav, ogg or mp3 files. Thus, the FreeCast root node can broadcast a list of files without the need of a third-party application. This feature requires the use of native libraries and is available for the moment under Linux x86 and Windows platforms (Mac OS contributors are welcome). Based on tritonus libvorbis binding (http://tritonus.org/).
+
+- FreeCast Manager Setup GUI
+
+A new "Configure FreeCast" menu appears in FreeCast Manager. This setup dialog allows for the moment the configuration of the root node receiver. You can switch from the default demo content to your own playlist (via the embedded ogg encoder), or receive the Ogg stream from a third party application.
+
+- Improved Windows installer
+
+With the help of numerous windows users feedback, the Windows installer has been improved. Shortcuts have been added to make easier user configuration. FreeCast startup scripts have been improved to fix several issues. 
