@@ -1,360 +1,240 @@
 <page>
- <title>
-  <i18n>
-   <text lang="en">Home</text>
-   <text lang="fr">Accueil</text>
-  <text lang="es">Inicio </text>
- 
-
-
-</i18n>
- </title> 
- 
- <menubar>
-  <menu icon="images/nav/list.png">
-   <title>
+  <title>
     <i18n>
-     <text lang="en">Home</text>
-     <text lang="fr">Accueil</text>
-  <text lang="es">Inicio </text>
-
-
-</i18n>
-   </title>
-      
-   <menuitem>
-    <title>
-     <i18n>
-      <text lang="en">Abstract</text>
-      <text lang="fr">Présentation</text>
-       <text lang="es">Presentación </text>
-
-
-</i18n>
-    </title>
-    <link href="#abstract"/>
-   </menuitem>
-   
-   <menuitem>
-    <title>
-     <i18n>
-      <text lang="en">News</text>
-      <text lang="fr">Actualités</text>
-     <text lang="es">Actualidades</text>
-
-
-</i18n>
-    </title>
-    <link href="#news"/>
-   </menuitem>
-  </menu>
- </menubar>
- 
- <content>
-    <h1>Freecast :
-     <i18n>
+      <text lang="en">Home</text>
+      <text lang="fr">Accueil</text>
+      <text lang="es">Inicio</text>
+    </i18n>
+  </title>
+  <menubar>
+    <menu icon="images/nav/list.png">
+      <title>
+        <i18n>
+          <text lang="en">Home</text>
+          <text lang="fr">Accueil</text>
+          <text lang="es">Inicio</text>
+        </i18n>
+      </title>
+      <menuitem>
+        <title>
+          <i18n>
+            <text lang="en">Abstract</text>
+            <text lang="fr">Présentation</text>
+            <text lang="es">Presentación</text>
+          </i18n>
+        </title>
+        <link href="#abstract" />
+      </menuitem>
+      <menuitem>
+        <title>
+          <i18n>
+            <text lang="en">News</text>
+            <text lang="fr">Actualités</text>
+            <text lang="es">Actualidades</text>
+          </i18n>
+        </title>
+        <link href="#news" />
+      </menuitem>
+    </menu>
+  </menubar>
+  <content>
+    <h1>Freecast : 
+    <i18n>
       <text lang="en">Peer-to-peer Streaming</text>
       <text lang="fr">Diffusion Peer-to-peer</text>
-	<text lang="es">Difusión Peer-to-peer</text> 
-     
-
-
-</i18n>
-    </h1>
-
+      <text lang="es">Difusión Peer-to-peer</text>
+    </i18n></h1>
     <div class="summary">
-     <p>
-     <strong>FreeCast</strong> 
-
-     <i18n>
-      <text lang="en">
-       is a Java application which allows peer-to-peer streaming. 
-       It makes possible a stream broadcast to a large number of listeners
-       from a simple DSL connection.
-      </text>
-      <text lang="fr">
-       est une application qui permet une diffusion audio en peer-to-peer. 
-       Elle rend possible la diffusion d'un flux vers un large nombre d'auditeurs
-       à partir d'une simple ligne ADSL.
-      </text>
-   <text lang="es">
-       es una aplicación que permite la difusión audio en peer-to-peer. Esta aplicación hace posible la difusión de un flujo de audio a un amplio numero de oyentes a partir de una simple línea ADSL.
-      </text>
-     
-
-
-</i18n>
-     </p>
+      <p>
+        <strong>FreeCast</strong>
+        <i18n>
+          <text lang="en">is a Java application which allows
+          peer-to-peer streaming. It makes possible a stream
+          broadcast to a large number of listeners from a simple
+          DSL connection.</text>
+          <text lang="fr">est une application qui permet une
+          diffusion audio en peer-to-peer. Elle rend possible la
+          diffusion d'un flux vers un large nombre d'auditeurs à
+          partir d'une simple ligne ADSL.</text>
+          <text lang="es">es una aplicación que permite la difusión
+          audio en peer-to-peer. Esta aplicación hace posible la
+          difusión de un flujo de audio a un amplio numero de
+          oyentes a partir de una simple línea ADSL.</text>
+        </i18n>
+      </p>
     </div>
-
-		<h3 id="enduser">
-     <i18n>
-      <text lang="en">Listeners</text>
-      <text lang="fr">Auditeurs</text>
-<text lang="es">Oyentes</text>
-     
-
-
-</i18n>
-		</h3>
-
-    <img class="screenshot" src="images/screenshots/swing-default.png" alt="FreeCast Swing node"/>
-
-		<p>
-     <i18n>
-      <text lang="en"><strong>FreeCast</strong> allows you to listen a live stream over Internet by using smartly resources. You can listen a webradio or share an event by allowing other listeners to make the same thing in the best conditions.</text>
-      <text lang="fr"><strong>FreeCast</strong> vous permet de profiter d'une retransmission en direct sur Internet utilisant moins de bande passante qu'une diffusion "classique". Vous pouvez écouter une webradio ou partager un évènement tout en permettant aux autres auditeurs de faire de même dans de bonnes conditions.</text>
-    <text lang="es">Con <strong>Freecast</strong>, puede escuchar una retrasmisión en directo vía internet con muchas más facilidades. Usted puede escuchar una webradio o compartir un evento al tiempo que permite a otros oyentes hacer lo mismo con la mejores condiciones.</text>
-
-
- </i18n>
-		</p>
-
-		<p class="go">
-		 <a href="listen">
-     <i18n>
-      <text lang="en">Discover some of the broadcasters which use <strong>FreeCast</strong></text>
-      <text lang="fr">Découvrez quelques uns des diffuseurs utilisant <strong>FreeCast</strong></text>
-<text lang="es">Descubra algunos difusores utilisando <strong>FreeCast</strong></text>    
-
-
-
- </i18n>
-     </a>
-		</p>		
-
-		<h3 id="broadcasters">
-     <i18n>
-      <text lang="en">Broadcasters</text>
-      <text lang="fr">Diffuseurs</text>
-      <text lang="es">Difusores</text> 
-    
-
-
-</i18n>
-		</h3>
-
-		<p>
-     <i18n>
-      <text lang="en"><strong>FreeCast</strong> offers the possibility to broadcast over Internet without a strict limit of listener count. You can share with the largest number without the economic cost of a large bandwidth.</text>
-      <text lang="fr"><strong>FreeCast</strong> vous ouvre les portes des retransmissions sur Internet sans une stricte limitation du nombre d'auditeurs. Vous pouvez faire partager au plus grand nombre sans le coût financier d'une bande-passante importante. </text>
-     
-<text lang="es"><strong>FreeCast</strong> le abre las puertas de las retrasmisiones en internet sin una estricta limitación en el número de oyentes. Usted puede invitar a cuantos quiera sin el costo financiero de una banda ancha. </text>
-
-</i18n>
-		</p>
-
-		<p class="go">
-     <i18n>
-      <text lang="en">
-				<a href="broadcast">To discover the broadcast with <strong>FreeCast</strong> in details</a>
-			</text>
-      <text lang="fr">
-				<a href="broadcast">Pour découvrir la diffusion par <strong>FreeCast</strong> plus en détails</a>
-			</text>
-      <text lang="es">		
- <a href="broadcast">Para descubrir en detalle la difusión por <strong>FreeCast</strong></a>
-			</text>
-
-</i18n>
-		</p>
-
-    <h3 id="news">
-     <i18n>
-      <text lang="en">News</text>
-      <text lang="fr">Actualités</text>
-       <text lang="es">Actualidades</text>    
-
-
-</i18n>
+    <h3 id="enduser">
+      <i18n>
+        <text lang="en">Listeners</text>
+        <text lang="fr">Auditeurs</text>
+        <text lang="es">Oyentes</text>
+      </i18n>
     </h3>
-
-	<div>
-     <strong>
-      <i18n>
-       <text lang="en">October 9, 2005</text>
-       <text lang="fr">9 octobre 2005</text>
-       <text lang="es">9 de Octubre de 2005</text>
-      
-
-
-</i18n>
-     </strong> :
-      <i18n>
-       	<text lang="en">
-       		New <strong>FreeCast</strong> release:
-		</text>
-		<text lang="fr">
-       		Nouvelle version de <strong>FreeCast</strong>:
-		</text>
-		<text lang="es">
-       		Nueva versión de <strong>FreeCast</strong> :
-		</text>	  
-
-</i18n>
-	  <ul>
-		<li>
-		  <a href="broadcast">FreeCast Manager</a>: 
-		  <i18n>
-			<text lang="en">
-			  this new GUI allows you to <strong>start a FreeCast network by a single click</strong>.
-			  Every needed components (even a tiny HTTP server) are embedded into a single and graphical application.
-			</text>
-			<text lang="fr">
-			  la nouvelle interface permet de démarrer un réseau FreeCast par un simple clic.
-			  Tous les composants nécessaires (même un petit serveur HTTP) sont embarqués dans une seule et même application graphique.
-			</text>
-			<text lang="es">
-			  La nueva interface permite iniciar la red FreeCast con un simple click.
-Todos los componentes necesarios (incluso un pequeño servidor HTTP) están incluidos en la misma aplicación gráfica.
-			</text>		  
-
-
-</i18n>
-		</li>
-		<li>
-		  <i18n>
-			<text lang="en">
-			  Refactored <a href="/userguide">FreeCast UserGuide</a>: new sections, 
-			  new look&amp;feel and new configuration documentation.
-			</text>
-			<text lang="fr">
-			  <a href="/userguide">Guide de l'utilisateur</a> retravaillé: nouvelles sections, 
-			  nouvelle mise en page et nouvelle documentation de la configuration.
-			</text>
-			<text lang="es">
-			  <a href="/userguide">Guía del usuario</a> retrabajada: nuevas secciones, nueva configuracion de página y nueva documentación sobre la configuración.
-			</text>
-		  
- 
-
-</i18n>
-		</li>
-		<li>
-		  <i18n>
-			<text lang="en">
-			  <a href="broadcast#distribution">Windows installer</a>: to make easier install for Windows deployers, 
-			  a FreeCast installer is now available (via <a href="http://nsis.sourceforge.net/">NSIS</a>).
-			</text>
-			<text lang="fr">
-			  <a href="broadcast#distribution">Installeur Windows</a>: par rendre plus facile l'installation 
-			  pour les déployeurs sous Windows, un installeur FreeCast est maintenant disponible.
-			</text>
-
-			<text lang="es">
-			  <a href="broadcast#distribution">Instalador Windows</a>: Para los usuarios de Windows un instalador FreeCast esta disponible para hacer más fácil la instalación.
-			</text>		  
-
-</i18n>
-		</li>
-		<li>
-		  <i18n>
-			<text lang="en">
-			  <strong>JDIC</strong> integration: tray icon, send email and browser startup, by using <a href="https://jdic.dev.java.net/">JDesktop Integration Components</a>, FreeCast is now more integrated into the user desktop.
-			</text>
-			<text lang="fr">
-			  Integration de <strong>JDIC</strong>: icone systeme, envoi d'email et démarrage de navigateur, 
-			  en utilisant <a href="https://jdic.dev.java.net/">JDesktop Integration Components</a>,
-			  FreeCast est maintenant plus intégré à l'environnement de l'utilisateur.
-			</text>
-			<text lang="es">
-			  Integración de <strong>JDIC</strong>: sistema ícono, envío de email e inicio del navegador utilisando <a href="https://jdic.dev.java.net/">JDesktop Integration Components</a>,
-FreeCast está ahora mejor integrado al medio del usuario.
-			</text>
-		  
-
-</i18n>
-		</li>
-		<li>
-		  <i18n>
-			<text lang="en">
-			  New GUI resources customization: the FreeCast GUI can now easily customized by deployers. 
-			  Color, logo and icons can be customized by HTTP resources.
-			</text>
-			<text lang="fr">
-			  Nouvelles personnalisations des resources graphiques: l'interface de FreeCast peut être maintenant
-			  facilement personnaliser par les déployeurs.
-			  Couleur, logo et icones peuvent personnalisés avec des resources HTTP.
-			</text>
-			<text lang="es">
-			  Nuevas personalizaciones de recursos gráficos: la interface de FreeCast puede ser facilmente personalizada. Color, logo e íconos pueden personalizarse con recursos HTTP.
-			</text>
-		  
-
-
-</i18n>
-		</li>
-	  </ul>
-	  <p>
-		<i18n>
-		  <text lang="en">
-			For more information about this release, see the whole <a href="http://download.freecast.org/README.html">changelog</a>.
-		  </text>
-		  <text lang="fr">
-			Pour plus d'informations à propos de cette version, consultez la <a href="http://download.freecast.org/README.html">liste complète des modifications</a>.
-		  </text>
-		<text lang="es">
-			Para más información sobre esta versión consulte <a href="http://download.freecast.org/README.html">lista completa de modificaciones</a>.
-		  </text>
-
-
-</i18n>
-	  </p>
-	</div>
-
-	<div>
-	  <strong>
-		<i18n>
-		  <text lang="en">Aout 5, 2005</text>
-		  <text lang="fr">5 août 2005</text>
-		  <text lang="es">5 de Agosto de 2005</text>
-		
-
-
-</i18n>
-	  </strong> 
-	  : Radio Esperanzah
-	  <i18n>
-		<text lang="en">via</text>
-		<text lang="fr">grâce à</text>
-		<text lang="es">Gracias a</text>	  
-
-
-</i18n>
-	  FreeCast
-	  <p>
-		<i18n>
-		  <text lang="en">
-			The belgium festival <a href="http://www.esperanzah.be">Esperanzah 2005</a> is followed once again this year by 
-			<a href="http://www.radiosoundsystem.org/evenements/radio-esperanzah-2005">Radio Esperanzah</a>.
-			5 five days of broadcasting in live over Internet via FreeCast.
-		  </text>
-		  <text lang="fr">
-			Le festival belge <a href="http://www.esperanzah.be">Esperanzah 2005</a> est couvert cette année encore par 
-			<a href="http://www.radiosoundsystem.org/evenements/radio-esperanzah-2005">Radio Esperanzah</a>.
-			5 jours de programme en direct sur Internet grâce à FreeCast.
-		  </text>
-		<text lang="es">
-			Este año, el festival belga <a href="http://www.esperanzah.be">Esperanzah 2005</a> ha sido cubierto una vez más por <a href="http://www.radiosoundsystem.org/evenements/radio-esperanzah-2005">Radio Esperanzah</a>.
-5 días de programación en directo gracias a FreeCast.
-		  </text>
-		
-
-
-</i18n>
-	  </p>
-	</div>
-
+    <img class="screenshot"
+    src="images/screenshots/swing-default.png"
+    alt="FreeCast Swing node" />
     <p>
       <i18n>
-       <text lang="en">See the <strong>FreeCast</strong> <a href="http://blog.tryphon.org/tryphon/archives/category/freecast">blog</a></text>
-       <text lang="fr">Consultez le <a href="http://blog.tryphon.org/tryphon/archives/category/freecast">blog</a> <strong>FreeCast</strong></text>
-       <text lang="es">Consulte <a href="http://blog.tryphon.org/tryphon/archives/category/freecast">blog</a> <strong>FreeCast</strong></text>
-      
-
-
-
-</i18n>
+        <text lang="en">
+        <strong>FreeCast</strong> allows you to listen a live stream
+        over Internet by using smartly resources. You can listen a
+        webradio or share an event by allowing other listeners to
+        make the same thing in the best conditions.</text>
+        <text lang="fr">
+        <strong>FreeCast</strong> vous permet de profiter d'une
+        retransmission en direct sur Internet utilisant moins de
+        bande passante qu'une diffusion "classique". Vous pouvez
+        écouter une webradio ou partager un évènement tout en
+        permettant aux autres auditeurs de faire de même dans de
+        bonnes conditions.</text>
+        <text lang="es">Con 
+        <strong>Freecast</strong>, puede escuchar una retrasmisión
+        en directo vía internet con muchas más facilidades. Usted
+        puede escuchar una webradio o compartir un evento al tiempo
+        que permite a otros oyentes hacer lo mismo con la mejores
+        condiciones.</text>
+      </i18n>
     </p>
- </content>
+    <p class="go">
+      <a href="listen">
+        <i18n>
+          <text lang="en">Discover some of the broadcasters which
+          use 
+          <strong>FreeCast</strong></text>
+          <text lang="fr">Découvrez quelques uns des diffuseurs
+          utilisant 
+          <strong>FreeCast</strong></text>
+          <text lang="es">Descubra algunos difusores utilisando 
+          <strong>FreeCast</strong></text>
+        </i18n>
+      </a>
+    </p>
+    <h3 id="broadcasters">
+      <i18n>
+        <text lang="en">Broadcasters</text>
+        <text lang="fr">Diffuseurs</text>
+        <text lang="es">Difusores</text>
+      </i18n>
+    </h3>
+    <p>
+      <i18n>
+        <text lang="en">
+        <strong>FreeCast</strong> offers the possibility to
+        broadcast over Internet without a strict limit of listener
+        count. You can share with the largest number without the
+        economic cost of a large bandwidth.</text>
+        <text lang="fr">
+        <strong>FreeCast</strong> vous ouvre les portes des
+        retransmissions sur Internet sans une stricte limitation du
+        nombre d'auditeurs. Vous pouvez faire partager au plus
+        grand nombre sans le coût financier d'une bande-passante
+        importante.</text>
+        <text lang="es">
+        <strong>FreeCast</strong> le abre las puertas de las
+        retrasmisiones en internet sin una estricta limitación en
+        el número de oyentes. Usted puede invitar a cuantos quiera
+        sin el costo financiero de una banda ancha.</text>
+      </i18n>
+    </p>
+    <p class="go">
+      <i18n>
+        <text lang="en">
+          <a href="broadcast">To discover the broadcast with 
+          <strong>FreeCast</strong> in details</a>
+        </text>
+        <text lang="fr">
+          <a href="broadcast">Pour découvrir la diffusion par 
+          <strong>FreeCast</strong> plus en détails</a>
+        </text>
+        <text lang="es">
+          <a href="broadcast">Para descubrir en detalle la difusión
+          por 
+          <strong>FreeCast</strong></a>
+        </text>
+      </i18n>
+    </p>
+    <h3 id="news">
+      <i18n>
+        <text lang="en">News</text>
+        <text lang="fr">Actualités</text>
+        <text lang="es">Actualidades</text>
+      </i18n>
+    </h3>
+    <div>
+    <strong>
+      <i18n>
+        <text lang="en">May 15, 2006</text>
+        <text lang="fr">15 mai 2006</text>
+      </i18n>
+    </strong>: 
+    <i18n>
+      <text lang="en">New
+      <strong>FreeCast</strong> release:</text>
+      <text lang="fr">Nouvelle version de 
+      <strong>FreeCast</strong> :</text>
+      <text lang="es">Nueva versión de 
+      <strong>FreeCast</strong> :</text>
+    </i18n>
+    <ul>
+      <li>
+	      <strong>
+	      	<i18n>
+	        	<text lang="en">UDP transport and NAT traversal:</text>
+	        	<text lang="fr">transport UDP et NAT traversal :</text>
+	        </i18n>
+	      </strong>
+	      
+      	<i18n>
+        	<text lang="en">FreeCast is now two years old, and the experience we gained through its development and use led us to a deep rewriting of the protocol since the transport layer was switched from TCP to UDP. We also added the long-awaited NAT traversal: FreeCast networks won't be stopped anymore by misconfigured NATs.</text>
+        	<text lang="fr">FreeCast a maintenant deux ans. L'expérience tirée du développement et de l'utilisation a amené la ré-écriture complète du protocole. Le transport est passé de TCP à UDP. Et le très attendu "NAT traversal" est au rendez-vous : les réseaux FreeCast ne seront plus arrêtés par les NATs mal configurés.</text>
+        </i18n>
+      </li>
+      <li>
+	      <strong>
+	      	<i18n>
+	        	<text lang="en">Embedded Ogg Vorbis encoder and FreeCast Manager Setup GUI:</text>
+	        	<text lang="fr">Ogg Vorbis encodeur intégré et interface de configuration de FreeCast Manager :</text>
+	        </i18n>
+	      </strong>
+      
+        <i18n>
+          <text lang="en">FreeCast Manager has been thoroughly reviewed by our user community, and we added some new features, such as the ability of broadcasting a playlist/list of files thanks to an integrated Ogg Vorbis encoder. To ease the use of FreeCast Mananager, one simple dialog allows you to setup your broadcast. With FreeCast's <a href="broadcast">Click &amp; Broadcast</a>, broadcasting your own content has never been so easy.</text>
+          <text lang="fr">FreeCast Manager a été examiné sous toutes les coutures par la communauté des utilisateurs. De nouvelles fonctionnalités font leurs apparitions comme la possibilité de diffuser une liste de fichiers grâce à un encodeur Ogg Vorbis intégré. Pour simplifier l'utilisation de FreeCast Manager, une interface de configuration permet la sélection du contenu qui doit être diffusé. Avec le <a href="broadcast">Clic &amp; Diffuse</a> de FreeCast, diffuser son contenu n'a jamais été aussi simple.</text>
+        </i18n>
+      </li>
+    </ul>
+    <p>
+      <i18n>
+        <text lang="en">For more information about this release,
+        see the whole 
+        <a href="http://download.freecast.org/README.html">
+        changelog</a>.</text>
+        <text lang="fr">Pour plus d'informations à propos de cette
+        version, consultez la 
+        <a href="http://download.freecast.org/README.html">liste
+        complète des modifications</a>.</text>
+        <text lang="es">Para más información sobre esta versión
+        consulte 
+        <a href="http://download.freecast.org/README.html">lista
+        completa de modificaciones</a>.</text>
+      </i18n>
+    </p>
+    </div>
+    <p>
+      <i18n>
+        <text lang="en">See the 
+        <strong>FreeCast</strong>
+        <a href="http://blog.tryphon.org/tryphon/archives/category/freecast">
+        blog</a></text>
+        <text lang="fr">Consultez le 
+        <a href="http://blog.tryphon.org/tryphon/archives/category/freecast">
+        blog</a>
+        <strong>FreeCast</strong></text>
+        <text lang="es">Consulte 
+        <a href="http://blog.tryphon.org/tryphon/archives/category/freecast">
+        blog</a>
+        <strong>FreeCast</strong></text>
+      </i18n>
+    </p>
+  </content>
 </page>
