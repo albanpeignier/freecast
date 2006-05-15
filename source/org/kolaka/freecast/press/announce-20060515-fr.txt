@@ -2,20 +2,20 @@ FreeCast 20060515
 
 Après un hiver très occupé, l'équipe de FreeCast est heureuse de publier cette nouvelle version.
 
-FreeCast a maintenant deux ans. L'expérience tirée du développement et de l'utilisation a amenée la ré-écriture complète du protocole. Le transport est passé de TCP à UDP. Et le très attendu "NAT traversal" est au rendez-vous : les réseaux FreeCast ne seront plus arrêtés par les NATs mal configurés.
+FreeCast a maintenant deux ans. L'expérience tirée du développement et de l'utilisation a amené la ré-écriture complète du protocole. Le transport est passé de TCP à UDP. Et le très attendu "NAT traversal" est au rendez-vous : les réseaux FreeCast ne seront plus arrêtés par les NATs mal configurés.
 
-FreeCast Manager a été examiné sous toutes les coutures par la communauté des utilisateurs. De nouvelles fonctionnalités font leurs apparitions comme la possibilité de dffuser une liste de fichiers grâce à un encodeur Ogg Vorbis intégré. Pour simplifier l'utilisation de FreeCast Mananager, une interface graphique de configuration permet la configuration de la diffusion. Avec "Clic & Diffus" de FreeCast, diffuser son contenu n'a jamais été aussi simple.
+FreeCast Manager a été examiné sous toutes les coutures par la communauté des utilisateurs. De nouvelles fonctionnalités font leurs apparitions comme la possibilité de diffuser une liste de fichiers grâce à un encodeur Ogg Vorbis intégré. Pour simplifier l'utilisation de FreeCast Manager, une interface de configuration permet la sélection du contenu qui doit être diffusé. Avec le "Clic & Diffuse" de FreeCast, diffuser son contenu n'a jamais été aussi simple.
 
 Liens :
 
 - freecast.org: http://www.freecast.org/fr/
-- Listening with Freecast: http://www.freecast.org/fr/listen
-- Streaming with FreeCast: http://www.freecast.org/fr/broadcast
-- Complete changelog: http://download.freecast.org/README.html
+- Ecouter with Freecast: http://www.freecast.org/fr/listen
+- Diffuser with FreeCast: http://www.freecast.org/fr/broadcast
+- Liste complète des changements: http://download.freecast.org/README.html
 
 Short changelog:
 
-UDP transport layer, NAT traversal, STUN reference, Latency analysis, Embedded Ogg encoder, 
+couche de transport UDP, NAT traversal, STUN support, analyse de latence réseau, Embedded Ogg encoder, 
 FreeCast Manager Setup GUI, Improved Windows installer
 
 Complete changelog:
