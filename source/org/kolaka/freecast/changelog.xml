@@ -19,19 +19,19 @@
 		</Features>
 		</Release>
 		-->
-		<Release version="20060514" buildDate="2006.05.14" builderID="Alban">
+		<Release version="20060515" buildDate="2006.05.15" builderID="Alban">
 			<Deliveries>
-				<Delivery href="freecast-20060514.tar.bz">freecast-20060514 binary</Delivery>
-				<Delivery href="freecast-20060514-src.tar.bz">freecast-20060514 sources</Delivery>
-				<Delivery href="freecast-20060514-exe">freecast-20060514 win32 installer</Delivery>
+				<Delivery href="freecast-20060515.tar.bz">freecast-20060515 binary</Delivery>
+				<Delivery href="freecast-20060515-src.tar.bz">freecast-20060515 sources</Delivery>
+				<Delivery href="freecast-20060515-exe">freecast-20060515 win32 installer</Delivery>
 			</Deliveries>
 			<Summary>NAT support and embedded Ogg encoder</Summary>
 			<Features>
 				<Feature type="func" why="enhance">
 					<Title>UDP transport layer</Title>
 					<Item>
-						Connections between nodes are now perform via UDP connections.
-						Network problems are overcome more easily. 
+						Connections between nodes are now performed via UDP connections.
+						Network problems are overcomed more easily. 
 						Note that socket receivers are replaced by udp receivers. 
 						The new transport layer uses the Apache Mina API
 						(http://directory.apache.org/subprojects/mina/).
@@ -85,7 +85,7 @@
 					<Title>Improved Windows installer</Title>
 					<Item>
 						With the help of numerous windows users feedback, the Windows installer has been
-						improved. Shortcuts have been added to make easier user configuration editing.
+						improved. Shortcuts have been added to make easier user configuration.
 						FreeCast startup scripts have been improved to fix several issues.
 					</Item>
 				</Feature>
