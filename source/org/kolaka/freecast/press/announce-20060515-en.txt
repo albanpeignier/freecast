@@ -2,8 +2,8 @@ FreeCast 20060515
 
 After a busy winter, the FreeCast team is proud to publish this new major release.
 
-FreeCast is now two years old, and the experience we gained through its dev led us to a deep rewriting of 
-the protocol, and the transport layer was switched from TCP to UDP. We also added the long-awaited NAT trav.
+FreeCast is now two years old, and the experience we gained through its development and use led us to a 
+deep rewriting of the protocol since the transport layer was switched from TCP to UDP. We also added the long-awaited NAT traversal.
 The FreeCast networks won't be stopped anymore by misconfigured NATs.
 
 FreeCast Manager has been thoroughly reviewed by our user community, and we added some new features, 
@@ -31,7 +31,7 @@ Connections between nodes are now performed via UDP connections. Network problem
 
 - NAT traversal
 
-Two nodes can open a connection even if they are both behind a NAT (routeur or equivalent equipment). This new feature allows larger FreeCast networks and removes the manual forward configuration requirement.
+Two nodes can open a connection even if they are both behind a NAT (router or similar equipment). This new feature allows larger FreeCast networks and removes the manual forward configuration requirement.
 
 - STUN reference
 
@@ -43,7 +43,7 @@ The FreeCast protocol includes messages used to estimate the network latency bet
 
 - Embedded Ogg encoder
 
-To make simplier FreeCast Manager and root node deployement, the new playlist encoder receiver can create the Vorbis Ogg stream from a given playlist of wav, ogg or mp3 files. Thus, the FreeCast root node can broadcast a playlist without the need of a third application. This feature requires the use of native libraries and is available for the moment under Linux x86 and Windows platforms (Mac OS contributors are welcome). Based on tritonus libvorbis binding (http://tritonus.org/).
+To ease FreeCast Manager and root node deployement, the new playlist encoder receiver can create the Vorbis Ogg stream from a given playlist of wav, ogg or mp3 files. Thus, the FreeCast root node can broadcast a list of files without the need of a third-party application. This feature requires the use of native libraries and is available for the moment under Linux x86 and Windows platforms (Mac OS contributors are welcome). Based on tritonus libvorbis binding (http://tritonus.org/).
 
 - FreeCast Manager Setup GUI
 
