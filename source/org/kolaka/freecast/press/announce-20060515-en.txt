@@ -2,9 +2,9 @@ FreeCast 20060515
 
 After a busy winter, the FreeCast team is proud to publish this new major release.
 
-Based on two-years experience, a deep rewriting of the transport layer
-provides a new UDP protocol and the awaited NAT traversal support. The FreeCast 
-networks won't be stopped anymore by misconfigured NATs.
+FreeCast is now two years old, and the experience we gained through its dev led us to a deep rewriting of 
+the protocol, and the transport layer was switched from TCP to UDP. We also added the long-awaited NAT trav.
+The FreeCast networks won't be stopped anymore by misconfigured NATs.
 
 FreeCast Manager has been thoroughly reviewed by our user community, and we added some new features, 
 such as the ability of broadcasting a playlist/list of files thanks to an integrated Ogg Vorbis encoder.
