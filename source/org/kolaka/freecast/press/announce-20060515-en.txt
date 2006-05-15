@@ -6,16 +6,16 @@ Based on two-years experience, a deep rewriting of the transport layer
 provides a new UDP protocol and the awaited NAT traversal support. The FreeCast 
 networks won't be stopped anymore by misconfigured NATs.
 
-By integrating the user feedback, FreeCast Manager has been improved by including a
-Ogg Vorbis encoder to broadcast directly from a playlist. To make simplier first
-FreeCast deployment, a simple setup dialog allows to configure the broadcast content.
-Click & Broadcast your own content has never been so easy.
+FreeCast Manager has been thoroughly reviewed by our user community, and we added some new features, 
+such as the ability of broadcasting a playlist/list of files thanks to an integrated Ogg Vorbis encoder.
+To ease the use of FreeCast, one simple dialog allows you to setup your broadcast.
+With FreeCast's "Click & Broadcast", broadcasting your own content has never been so easy.
 
 Links :
 
 - freecast.org: http://www.freecast.org
-- Listening with Freecast: http://www.freecast.org/fr/listen
-- Streaming with FreeCast: http://www.freecast.org/fr/broadcast
+- Listening with Freecast: http://www.freecast.org/listen
+- Streaming with FreeCast: http://www.freecast.org/broadcast
 - complete changelog: http://download.freecast.org/README.html
 
 Short changelog:
