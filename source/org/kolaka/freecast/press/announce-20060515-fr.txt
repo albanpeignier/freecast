@@ -11,14 +11,14 @@ Liens :
 - freecast.org: http://www.freecast.org/fr/
 - Ecouter with Freecast: http://www.freecast.org/fr/listen
 - Diffuser with FreeCast: http://www.freecast.org/fr/broadcast
+- Démos video: http://www.freecast.org/fr/screencasts
 - Liste complète des changements: http://download.freecast.org/README.html
 
-Short changelog:
+Changements en bref:
 
-couche de transport UDP, NAT traversal, STUN support, analyse de latence réseau, Embedded Ogg encoder, 
-FreeCast Manager Setup GUI, Improved Windows installer
+couche de transport UDP, NAT traversal, STUN support, analyse de latence réseau, Ogg Vorbis encodeur intégré, Interface de configuration de FreeCast Manager, Améliorations de l'installeur Windows
 
-Complete changelog:
+Liste complète des changements:
 
 - couche de transport UDP
 
