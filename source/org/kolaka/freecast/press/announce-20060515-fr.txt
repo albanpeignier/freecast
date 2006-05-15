@@ -20,30 +20,32 @@ FreeCast Manager Setup GUI, Improved Windows installer
 
 Complete changelog:
 
-- UDP transport layer
+- couche de transport UDP
 
-Connections between nodes are now performed via UDP connections. Network problems are more easily overcomed. Note that socket receivers are replaced by UDP receivers. The new transport layer uses the Apache Mina API (http://directory.apache.org/subprojects/mina/).
+Les connections entre les nodes sont maintenant réalisés grâce à des connections UDP. Les problèmes réseau peuvent être ainsi plus facilement surmontés. La nouvelle couche de transport utilise l'API Apache Mina (http://directory.apache.org/subprojects/mina/).
 
 - NAT traversal
 
-Two nodes can open a connection even if they are both behind a NAT (router or similar equipment). This new feature allows larger FreeCast networks and removes the manual forward configuration requirement.
+Deux nodes peuvent établir une connection même s'ils sont tous deux derrière un NAT (un routeur ou un équipement équivalent).
+Cette nouvelle fonctionnalité permet de plus grands réseaux FreeCast et met fin à la configuration manuelle d'un forward.
 
-- STUN reference
+- STUN support
 
-Node can perform STUN requests to determinate its public address. Required for NAT traversal. Use Jstun API (http://jstun.javawi.de/).
+Un node peut maintenant réaliser une requête STUN pour déterminer son adresse publique. 
+Node can perform STUN requests to determinate its public address. utilise l'API Jstun (http://jstun.javawi.de/).
 
-- Latency analysis
+- Analyse de latence
 
-The FreeCast protocol includes messages used to estimate the network latency between nodes. A node opens connections to several other nodes and uses the connection with the lower latency.
+Le protocole FreeCast inclut des messages utilisés pour estimer la latence réseau entre les nodes. A node ouvre plusieurs connections vers ses confrères mais utilise la connection avec le moins de latence.
 
-- Embedded Ogg encoder
+- Encodeur Ogg Vorbis intégré
 
-To ease FreeCast Manager and root node deployement, the new playlist encoder receiver can create the Vorbis Ogg stream from a given playlist of wav, ogg or mp3 files. Thus, the FreeCast root node can broadcast a list of files without the need of a third-party application. This feature requires the use of native libraries and is available for the moment under Linux x86 and Windows platforms (Mac OS contributors are welcome). Based on tritonus libvorbis binding (http://tritonus.org/).
+Pour faciliter le déployement de FreeCast Manager et des root nodes, le nouveau encoder-playlist receiver permet de créer le flux Ogg Vorbis à partir d'une liste de fichiers wav, ogg ou mp3. Ainsi le root node FreeCast peut diffuser un liste de fichiers sans avoir recours à une application externe. Basé sur l'adapteur java libvorbis fourni par tritonus (http://tritonus.org/).
 
-- FreeCast Manager Setup GUI
+- Interface de configuration de FreeCast Manager
 
-A new "Configure FreeCast" menu appears in FreeCast Manager. This setup dialog allows for the moment the configuration of the root node receiver. You can switch from the default demo content to your own playlist (via the embedded ogg encoder), or receive the Ogg stream from a third party application.
+Un nouveau menu "Configure FreeCast" fait son apparation dans FreeCast Manager. L'interface de configuration permet pour le moment la configuration du contenu diffusé. Vous pouvez passer de la boucle de démonstration à votre propre liste de fichiers ou recupérer le flux Ogg créé par une autre application.
 
-- Improved Windows installer
+- Améliorations de l'installeur Windows
 
-With the help of numerous windows users feedback, the Windows installer has been improved. Shortcuts have been added to make easier user configuration. FreeCast startup scripts have been improved to fix several issues. 
+Grâce aux remarques des nombreux utilisateurs sous Windows, l'installeur a été amélioré. Des raccourcis ont été ajoutés pour simplifier la phase de configuration. Les scripts de démarrage ont été modifiés pour corriger plusieurs problèmes.
