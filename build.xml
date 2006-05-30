@@ -191,7 +191,6 @@
 			<library id="lib.test">
 				<lib-entry groupid="junit" version="3.8.2" />
 				<lib-entry groupid="easymock" version="1.2" />
-				<lib-entry groupid="mockobjects" version="0.09" artifactid="mockobjects-core" />
 			</library>
 
 			<library id="lib.mina">
