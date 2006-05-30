@@ -221,7 +221,7 @@
 			<library id="build">
 				<library refid="core" />
 				<lib-entry groupid="commons-digester" version="1.7" />
-				<lib-entry groupid="commons-httpclient" version="3.0-rc3" />
+				<lib-entry groupid="commons-httpclient" version="3.0.1" />
 				<lib-entry groupid="cortado" version="0.1.0" artifactid="cortado-ovt-0.1.0" />
 				<lib-entry groupid="jdic" version="0.9" />
 				<library refid="lib.hessian" />
