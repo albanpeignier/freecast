@@ -1,7 +1,7 @@
 # defined the VirtualFileSystem used to synchronized the track directory
 # required (for the moment) a patched commons-vfs release with a fileprovider for "virtual:" scheme
 
-antlion/releases/0.4.0=zip:${mirror.sourceforge}/sourceforge/antlion/antlion-0.4.0.zip
+antlion/releases/0.9.0=zip:${mirror.sourceforge}/sourceforge/antlion/antlion-0.9.0.zip
 easymock/releases/1.2=zip:${mirror.sourceforge}/sourceforge/easymock/easymock1.2_Java1.3.zip!easymock1.2_Java1.3
 commons-cli/releases/1.0=tgz:${mirror.apache}/jakarta/commons/cli/binaries/cli-1.0.tar.gz!commons-cli-1.0
 commons-collections/releases/3.1=tgz:${mirror.apache}/jakarta/commons/collections/binaries/commons-collections-3.1.tar.gz!commons-collections-3.1
@@ -11,7 +11,6 @@ commons-httpclient/releases/3.0.1=tgz:${mirror.apache}/jakarta/commons/httpclien
 commons-codec/releases/1.3=tgz:${mirror.apache}/jakarta/commons/codec/binaries/commons-codec-1.3.tar.gz
 vorbisspi/releases/1.0.2=tgz:http://www.javazoom.net/vorbisspi/sources/vorbisspi1.0.2.tar.gz!VorbisSPI1.0.2
 mp3spi/releases/1.9.4=tgz:http://www.javazoom.net/mp3spi/sources/mp3spi1.9.4.tar.gz!MpegAudioSPI1.9.4
-jcoverage/releases/1.0.5=zip:http://www.jcoverage.com/download/jcoverage-1.0.5-bin.zip!jcoverage-1.0.5
 junit/releases/3.8.2=zip:${mirror.sourceforge}/sourceforge/junit/junit3.8.2.zip!junit3.8.2
 log4j/releases/1.2.13=tgz:${mirror.apache}/logging/log4j/1.2.13/logging-log4j-1.2.13.tar.gz!logging-log4j-1.2.13
 concurrent/releases/kolaka=tgz:${mirror.kolaka}/track/concurrent/concurrent.tar.gz

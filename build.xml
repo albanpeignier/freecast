@@ -129,9 +129,9 @@
 	</target>
 
 	<target name="prepare.antlion" depends="prepare.track.optional">
-		<typedef resource="net/sf/antlion/inline/antlib.xml">
+		<typedef resource="net/sf/antlion/antlib.xml">
 			<classpath>
-				<pathelement location="track/antlion/releases/0.4.0/antlion-inline-0.4.0.jar" />
+				<pathelement location="track/antlion/releases/0.9.0/antlion-inline-0.9.0.jar" />
 			</classpath>
 		</typedef>
 	</target>
@@ -564,7 +564,7 @@
 		</uptodate>
 	</target>
 
-	<target name="build.docs.coverage" depends="prepare.libraries, build.test, build.docs.coverage.check" unless="build.docs.coverage.notRequired">
+	<target name="build.docs.coverage" depends="prepare.libraries, build.test, build.docs.coverage.check" unless="build.docs.coverage.notRequired" if="build.docs.coverage.required">
 		<taskdef resource="tasks.properties">
 			<classpath refid="path.coverage" />
 		</taskdef>
