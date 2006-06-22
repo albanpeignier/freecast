@@ -30,7 +30,9 @@ import java.net.UnknownHostException;
 import junit.framework.TestCase;
 
 import org.apache.mina.common.ByteBuffer;
+import org.apache.mina.common.IoSession;
 import org.apache.mina.common.WriteFuture;
+import org.apache.mina.common.support.DefaultWriteFuture;
 import org.apache.mina.filter.codec.support.SimpleProtocolDecoderOutput;
 import org.apache.mina.filter.codec.support.SimpleProtocolEncoderOutput;
 import org.kolaka.freecast.transport.cas.PendingConnection;
@@ -65,14 +67,14 @@ public class ProtocolCodecTest extends TestCase {
 	private void testEncodeDecode(ProtocolMessage message) throws Exception {
 		SimpleProtocolEncoderOutput encodeOutput = new SimpleProtocolEncoderOutput() {
 			protected WriteFuture doFlush(ByteBuffer buffer) {
-				return WriteFuture.newWrittenFuture();
+        return DefaultWriteFuture.newWrittenFuture(null);
 			}
 		};
 		codec.encode(null, message, encodeOutput);
 		encodeOutput.mergeAll();
 
 		ByteBuffer buffer = (ByteBuffer) encodeOutput.getBufferQueue().first();
-		System.out.println("message length: " + buffer.remaining());
+		// System.out.println("message length: " + buffer.remaining());
 
 		SimpleProtocolDecoderOutput decoderOutput = new SimpleProtocolDecoderOutput();
 		codec.decode(null, buffer, decoderOutput);

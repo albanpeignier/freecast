@@ -149,7 +149,7 @@ public class MinaPeerReceivingConnection extends BaseMinaPeerConnection
 					throws Exception {
 				if (getStatus().equals(PeerConnection.Status.OPENING)
 						|| getStatus().equals(PeerConnection.Status.ACTIVATED)) {
-					LogFactory.getLog(getClass()).error(
+					LogFactory.getLog(getClass()).debug(
 							"exception caught by handler", t);
 					closeImpl();
 				}

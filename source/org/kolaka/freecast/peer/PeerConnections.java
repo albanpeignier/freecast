@@ -23,8 +23,6 @@
 
 package org.kolaka.freecast.peer;
 
-import java.io.IOException;
-
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.logging.LogFactory;
 
@@ -48,7 +46,7 @@ public class PeerConnections {
 	public static void closeQuietly(PeerConnection connection) {
 		try {
 			connection.close();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			LogFactory.getLog(PeerConnections.class).debug("can't close connection " + connection, e);
 		}
 	}

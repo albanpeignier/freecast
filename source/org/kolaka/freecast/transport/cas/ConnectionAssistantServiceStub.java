@@ -23,7 +23,6 @@
 
 package org.kolaka.freecast.transport.cas;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.HashMap;
@@ -58,14 +57,10 @@ public class ConnectionAssistantServiceStub implements
 
 		IoSession protocolSession;
 
-		try {
-			ConnectFuture connectFuture = connector.connect(serviceAddress,
-					session.getProtocolHandler());
-			connectFuture.join();
-			protocolSession = connectFuture.getSession();
-		} catch (IOException e) {
-			throw new Exception("Can't connection to " + serviceAddress, e);
-		}
+		ConnectFuture connectFuture = connector.connect(serviceAddress,
+				session.getProtocolHandler());
+		connectFuture.join();
+		protocolSession = connectFuture.getSession();
 
 		session.setProtocolSession(protocolSession);
 
