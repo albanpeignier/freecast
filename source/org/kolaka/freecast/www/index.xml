@@ -163,6 +163,25 @@
     <div>
     <strong>
       <i18n>
+        <text lang="en">June 9, 2006</text>
+        <text lang="fr">15 juin 2006</text>
+      </i18n>
+    </strong>: 
+    <i18n>
+      <text lang="en"><strong>FreeCast</strong> live from Lille (France)</text>
+      <text lang="fr"><strong>FreeCast</strong> en direct de Lille</text>
+    </i18n>
+    <p>
+      <a href="http://www.autres-mondes.org/evenements/2006/cultures-equitables">Radio Cultures Equitables</a>
+      <i18n>
+      	<text lang="en">in live from Lille (France) friday, saturday and sunday. “FreeCast with a simple DSL line" in action</text>
+      	<text lang="fr">en direct depuis Lille vendredi, samedi et dimanche. "FreeCast sur une simple ligne ADSL" en action</text>
+    	</i18n>
+    </p>
+    </div>
+    <div>
+    <strong>
+      <i18n>
         <text lang="en">May 15, 2006</text>
         <text lang="fr">15 mai 2006</text>
       </i18n>
