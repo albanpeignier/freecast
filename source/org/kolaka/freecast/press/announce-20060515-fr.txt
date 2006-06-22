@@ -1,6 +1,8 @@
-FreeCast 20060515
+FreeCast 20060515 - FreeCast traverse les NATs 
 
 Après un hiver très occupé, l'équipe de FreeCast est heureuse de publier cette nouvelle version.
+
+FreeCast est une solution de streaming peer-to-peer. Basée sur le format Ogg, elle permet de diffuser un contenu audio (Ogg/Vorbis) ou vidéo (Ogg/Theora).
 
 FreeCast a maintenant deux ans. L'expérience tirée du développement et de l'utilisation a amené la ré-écriture complète du protocole. Le transport est passé de TCP à UDP. Et le très attendu "NAT traversal" est au rendez-vous : les réseaux FreeCast ne seront plus arrêtés par les NATs mal configurés.
 
@@ -9,14 +11,14 @@ FreeCast Manager a été examiné sous toutes les coutures par la communauté de
 Liens :
 
 - freecast.org: http://www.freecast.org/fr/
-- Ecouter with Freecast: http://www.freecast.org/fr/listen
-- Diffuser with FreeCast: http://www.freecast.org/fr/broadcast
+- Écouter avec Freecast: http://www.freecast.org/fr/listen
+- Diffuser avec FreeCast: http://www.freecast.org/fr/broadcast
 - Démos video: http://www.freecast.org/fr/screencasts
 - Liste complète des changements: http://download.freecast.org/README.html
 
-Changements en bref:
+Nouveautés en bref:
 
-couche de transport UDP, NAT traversal, STUN support, analyse de latence réseau, Ogg Vorbis encodeur intégré, Interface de configuration de FreeCast Manager, Améliorations de l'installeur Windows
+couche de transport UDP, NAT traversal, STUN support, analyse de latence réseau, Ogg Vorbis encodeur intégré, Interface de configuration de FreeCast Manager, Améliorations de l'installateur Windows
 
 Liste complète des changements:
 
@@ -26,26 +28,20 @@ Les connections entre les nodes sont maintenant réalisés grâce à des connect
 
 - NAT traversal
 
-Deux nodes peuvent établir une connection même s'ils sont tous deux derrière un NAT (un routeur ou un équipement équivalent).
-Cette nouvelle fonctionnalité permet de plus grands réseaux FreeCast et met fin à la configuration manuelle d'un forward.
+Deux nodes peuvent établir une connexion même s'ils sont tous deux derrière un NAT (un routeur ou un équipement équivalent). Cette nouvelle fonctionnalité permet de plus grands réseaux FreeCast et met fin à la configuration manuelle d'un forward.
 
 - STUN support
 
-Un node peut maintenant réaliser une requête STUN pour déterminer son adresse publique. 
-Node can perform STUN requests to determinate its public address. utilise l'API Jstun (http://jstun.javawi.de/).
-
-- Analyse de latence
-
-Le protocole FreeCast inclut des messages utilisés pour estimer la latence réseau entre les nodes. A node ouvre plusieurs connections vers ses confrères mais utilise la connection avec le moins de latence.
+Un node peut maintenant réaliser une requête STUN pour déterminer son adresse publique. Utilise l'API Jstun (http://jstun.javawi.de/).
 
 - Encodeur Ogg Vorbis intégré
 
-Pour faciliter le déployement de FreeCast Manager et des root nodes, le nouveau encoder-playlist receiver permet de créer le flux Ogg Vorbis à partir d'une liste de fichiers wav, ogg ou mp3. Ainsi le root node FreeCast peut diffuser un liste de fichiers sans avoir recours à une application externe. Basé sur l'adapteur java libvorbis fourni par tritonus (http://tritonus.org/).
+Pour faciliter le déploiement de FreeCast Manager et des root nodes, le nouveau encoder-playlist receiver permet de créer le flux Ogg Vorbis à partir d'une liste de fichiers wav, ogg ou mp3. Ainsi le root node FreeCast peut diffuser un liste de fichiers sans avoir recours à une application externe. Basé sur le binding java libvorbis fourni par tritonus (http://tritonus.org/).
 
 - Interface de configuration de FreeCast Manager
 
-Un nouveau menu "Configure FreeCast" fait son apparation dans FreeCast Manager. L'interface de configuration permet pour le moment la configuration du contenu diffusé. Vous pouvez passer de la boucle de démonstration à votre propre liste de fichiers ou recupérer le flux Ogg créé par une autre application.
+Un nouveau menu "Configure FreeCast" fait son apparition dans FreeCast Manager. L'interface de configuration permet pour le moment la configuration du contenu diffusé. Vous pouvez passer de la boucle de démonstration à votre propre liste de fichiers ou récupérer le flux Ogg créé par une autre application.
 
-- Améliorations de l'installeur Windows
+- Améliorations de l'installateur Windows
 
-Grâce aux remarques des nombreux utilisateurs sous Windows, l'installeur a été amélioré. Des raccourcis ont été ajoutés pour simplifier la phase de configuration. Les scripts de démarrage ont été modifiés pour corriger plusieurs problèmes.
+Grâce aux remarques des nombreux utilisateurs sous Windows, l'installateur a été amélioré. Des raccourcis ont été ajoutés pour simplifier la phase de configuration. Les scripts de démarrage ont été modifiés pour corriger plusieurs problèmes.

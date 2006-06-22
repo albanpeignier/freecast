@@ -1,6 +1,8 @@
-FreeCast 20060515
+FreeCast 20060515 - FreeCast traverses NAT
 
 After a busy winter, the FreeCast team is proud to publish this new major release.
+
+FreeCast is a peer-to-peer streaming solution based on Ogg encoding format. Audio (Ogg/Vorbis) or video (Ogg/Theora) streaming content are thus allowed.
 
 FreeCast is now two years old, and the experience we gained through its development and use led us to a deep rewriting of the protocol since the transport layer was switched from TCP to UDP. We also added the long-awaited NAT traversal: FreeCast networks won't be stopped anymore by misconfigured NATs.
 
@@ -14,7 +16,7 @@ Links :
 - Screencasts: http://www.freecast.org/screencasts
 - Complete changelog: http://download.freecast.org/README.html
 
-Short changelog:
+Changelog in brief:
 
 UDP transport layer, NAT traversal, STUN support, Latency analysis, Embedded Ogg Vorbis encoder, 
 FreeCast Manager Setup GUI, Improved Windows installer
