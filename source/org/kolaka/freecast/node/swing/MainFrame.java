@@ -35,6 +35,7 @@ import org.kolaka.freecast.node.Node;
 import org.kolaka.freecast.player.GraphicalPlayerSource;
 import org.kolaka.freecast.player.InteractivePlayerSource;
 import org.kolaka.freecast.player.PlayerSource;
+import org.kolaka.freecast.swing.AsyncAction;
 import org.kolaka.freecast.swing.BaseFrame;
 import org.kolaka.freecast.swing.ProxyAction;
 import org.kolaka.freecast.swing.Resources;
@@ -51,7 +52,7 @@ public class MainFrame extends BaseFrame {
 	private static final long serialVersionUID = -2511903707382989163L;
 
 	private InteractivePlayerSource playerSource;
-
+  
 	private Action playerAction;
 
 	public MainFrame(Resources resources, Node node) throws ResourcesException {
@@ -65,8 +66,12 @@ public class MainFrame extends BaseFrame {
 			}
 		}
 
-		playerAction = new PlayerControlAction(resources, playerSource);
+		playerAction = new AsyncAction(new PlayerControlAction(resources, playerSource));
 	}
+  
+  protected JComponent createOptionalPane() throws ResourcesException {
+    return new VolumePane(getResources(), playerSource);    
+  }
 
 	protected JComponent createContentPane() {
 		if (playerSource instanceof GraphicalPlayerSource) {

@@ -32,6 +32,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.Action;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -68,9 +69,17 @@ public class ToolbarPane extends JPanel {
 		buttonsPanel.add(button);
 	}
 
-	public ToolbarPane() {
+	public ToolbarPane(JComponent optionalPane) {
 		super(new GridBagLayout());
 		setOpaque(false);
+    
+    if (optionalPane != null) {
+      GridBagConstraints optionalConstraints = new GridBagConstraints();
+      optionalConstraints.gridwidth = GridBagConstraints.REMAINDER;
+      optionalConstraints.weightx = 1.0;
+      optionalConstraints.fill = GridBagConstraints.HORIZONTAL;
+      add(optionalPane, optionalConstraints);
+    }
 
 		buttonsPanel = new JPanel(new FlowLayout());
 		buttonsPanel.setOpaque(false);

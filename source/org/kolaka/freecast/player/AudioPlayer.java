@@ -44,7 +44,7 @@ import org.kolaka.freecast.service.ControlException;
  * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
-public class AudioPlayer extends BaseService implements InteractivePlayer {
+public class AudioPlayer extends BaseService implements InteractivePlayer, VolumeControlable {
 
 	private Consumer consumer;
 
@@ -86,7 +86,15 @@ public class AudioPlayer extends BaseService implements InteractivePlayer {
 		} catch (LineUnavailableException e) {
 			throw new ControlException("Can't obtain a sound ouput", e);
 		}
+    
+    volumeControl = new LineVolumeControl(line);
 	}
+
+  private VolumeControl volumeControl;
+
+  public VolumeControl getVolumeControl() {
+    return volumeControl;
+  }
 
 	public void start() throws ControlException {
 		stoppedOnError = false;

@@ -73,6 +73,10 @@ public abstract class BaseFrame extends JFrame {
 	}
 
 	protected abstract JComponent createContentPane();
+  
+  protected JComponent createOptionalPane() throws ResourcesException {
+    return null;
+  }
 
 	protected abstract List createAdditionalActions();
 
@@ -183,8 +187,8 @@ public abstract class BaseFrame extends JFrame {
 		return NullAction.getInstance();
 	}
 
-	private ToolbarPane createToolBarPane() {
-		ToolbarPane toolbar = new ToolbarPane();
+	private ToolbarPane createToolBarPane() throws ResourcesException {
+		ToolbarPane toolbar = new ToolbarPane(createOptionalPane());
 		toolbar.add(aboutAction);
 		toolbar.add(logAction);
 		toolbar.setMessageAction(logAction);
