@@ -19,8 +19,8 @@
   			<class>peer</class>
   		</receiver>
   		<connection-assistant>
- 			<host>unstable.freecast.org</host>
-			<port>10666</port>
+ 			<host>stable.freecast.org</host>
+			<port>1666</port>
 		</connection-assistant>
   	</node>
 </freecast>
