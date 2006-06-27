@@ -60,7 +60,6 @@ public class VolumePane extends JPanel {
     volumeSlider.setEnabled(false);
     volumeSlider.setOpaque(false);
     volumeSlider.setUI(new CustomizedSliderUI(volumeSlider));
-    //volumeSlider.putClientProperty("Slider.paintThumbArrowShape", Boolean.FALSE);
     volumeSlider.setPaintTicks(false);
     volumeSlider.setBackground(resources.getColor("background"));
     
@@ -95,11 +94,15 @@ public class VolumePane extends JPanel {
     source.addListener(new Listener() {
       public void playerCreated(Player player) {
         if (player instanceof VolumeControlable) {
-          volumeControl = ((VolumeControlable) player).getVolumeControl();
-          sliderModel.setValue(volumeControl.getVolume());
-          volumeSlider.setEnabled(true);
-          
-          player.add(playerListener);
+          VolumeControl control = ((VolumeControlable) player).getVolumeControl();
+          if (control.isEnabled()) {
+            volumeControl = control;
+            
+            sliderModel.setValue(volumeControl.getVolume());
+            volumeSlider.setEnabled(true);
+            
+            player.add(playerListener);
+          }
         }
       }
     });

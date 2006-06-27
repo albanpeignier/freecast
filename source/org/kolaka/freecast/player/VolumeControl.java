@@ -28,5 +28,7 @@ public interface VolumeControl {
   int getVolume();
   
   void setVolume(int volume);
+
+  boolean isEnabled();
   
 }

@@ -23,6 +23,9 @@
 
 package org.kolaka.freecast.player;
 
+import java.util.Arrays;
+
+import javax.sound.sampled.Control;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.SourceDataLine;
 
@@ -32,13 +35,34 @@ public class LineVolumeControl implements VolumeControl {
 
   private FloatControl control;
   
+  private static final Control.Type[] CONTROL_TYPES = new Control.Type[] {
+    FloatControl.Type.MASTER_GAIN, FloatControl.Type.VOLUME
+  };
+  
   public LineVolumeControl(SourceDataLine line) {
-    control = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
-    LogFactory.getLog(getClass()).debug("create LineVolumeControl (units: " + control.getUnits() + ")");
+    control = selectControl(line);
+    LogFactory.getLog(getClass()).debug("create LineVolumeControl with " + control);
+  }
+
+  private FloatControl selectControl(SourceDataLine line) {
+    LogFactory.getLog(getClass()).debug("looking for volume control into " + Arrays.asList(line.getControls()));
+    
+    for (int i=0; i < CONTROL_TYPES.length; i++) {
+      try {
+        return (FloatControl) line.getControl(CONTROL_TYPES[i]);
+      } catch (IllegalArgumentException e) {
+        LogFactory.getLog(getClass()).trace("No control associated to " + CONTROL_TYPES[i]);
+      }    
+    }
+    return null;
   }
 
   // volume = (value - min) / (max - min) * 100
   public int getVolume() {
+    if (!isEnabled()) {
+      throw new IllegalStateException("Disabled volume control");
+    }
+    
     float value = control.getValue();
     int volume = (int) ((value - control.getMinimum()) / (control.getMaximum() - control.getMinimum()) * 100);
     LogFactory.getLog(getClass()).trace("value: " + value + " volume: " + volume);
@@ -47,9 +71,17 @@ public class LineVolumeControl implements VolumeControl {
 
   // value = min + (volume * (max - min) / 100)  
   public void setVolume(int volume) {
+    if (!isEnabled()) {
+      throw new IllegalStateException("Disabled volume control");
+    }
+
     float value = control.getMinimum() + ((float) volume / 100 * (control.getMaximum() - control.getMinimum()));
     LogFactory.getLog(getClass()).trace("volume: " + volume + " value: " + value);
     control.setValue(value);
+  }
+  
+  public boolean isEnabled() {
+    return control != null;
   }
 
 }
