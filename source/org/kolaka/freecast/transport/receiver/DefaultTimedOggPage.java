@@ -68,6 +68,10 @@ public class DefaultTimedOggPage implements TimedOggPage {
 	public int getLength() {
 		return page.getLength();
 	}
+  
+  public byte[] getPayload() {
+    return page.getPayload();
+  }
 
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);

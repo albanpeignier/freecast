@@ -4,7 +4,7 @@
  * This code was developped by Alban Peignier (http://people.tryphon.org/~alban/) 
  * and contributors (their names can be found in the CONTRIBUTORS file).
  *
- * Copyright (C) 2004-2006 Alban Peignier
+ * Copyright (C) 2004 Alban Peignier
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -23,30 +23,48 @@
 
 package org.kolaka.freecast.ogg;
 
-/**
- * 
- * 
- * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
- */
-public interface OggPage {
+import java.io.IOException;
 
-	public static final byte[] CAPTURE_PATTERN = new byte[] { 'O', 'g', 'g',
-			'S' };
+import org.apache.commons.lang.Validate;
 
-	byte[] getRawBytes();
+public class ProxyOggSource implements OggSource {
 
-	boolean isFirstPage();
+  private final OggStreamSource source;
 
-	boolean isLastPage();
+  public ProxyOggSource(OggStreamSource source) {
+    Validate.notNull(source);
+    this.source = source;
+  }
 
-	long getAbsoluteGranulePosition();
+  public void close() throws IOException {
+    source.close();
+  }
 
-	int getStreamSerialNumber();
+  public String getDescription() {
+    return source.getDescription();
+  }
 
-	String getStreamSerialNumberString();
-
-	int getLength();
+  public OggPage next() throws IOException {
+    OggPage page = source.next();
+    handler.pageRead(page);
+    return page;
+  }
   
-  byte[] getPayload();
-
+  private PageHandler handler = new PageHandler() {
+    public void pageRead(OggPage page) {
+      
+    }
+  };
+  
+  public void setHandler(PageHandler handler) {
+    Validate.notNull(handler);
+    this.handler = handler;
+  }
+  
+  public static interface PageHandler {
+    
+    void pageRead(OggPage page);
+    
+  }
+  
 }

@@ -4,7 +4,7 @@
  * This code was developped by Alban Peignier (http://people.tryphon.org/~alban/) 
  * and contributors (their names can be found in the CONTRIBUTORS file).
  *
- * Copyright (C) 2004-2006 Alban Peignier
+ * Copyright (C) 2004 Alban Peignier
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -21,22 +21,41 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.kolaka.freecast.ogg;
+package org.kolaka.freecast.ogg.vorbis;
 
-/**
- * 
- * 
- * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
- */
-public interface MutableOggPage extends OggPage {
-	public abstract void setRawBytes(byte[] bytes);
+import java.util.Map;
+import java.util.TreeMap;
 
-	public abstract void setFirstPage(boolean firstPage);
+import org.apache.commons.lang.Validate;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
-	public abstract void setLastPage(boolean lastPage);
+public class VorbisComment {
+  
+  private final String vendor;
+  
+  public static final String ARTIST = "ARTIST";
+  public static final String TITLE = "TITLE";
+  public static final String TRACKNUMBER = "TRACKNUMBER";
+  public static final String WWW = "WWW";
+  
+  private final Map userComments = new TreeMap();
+  
+  public VorbisComment(final String vendor) {
+    Validate.notEmpty(vendor);
+    this.vendor = vendor;
+  }
 
-	public void setAbsoluteGranulePosition(long absoluteGranulePosition);
-
-	public void setStreamSerialNumber(int streamSerialNumber);
+  public String getVendor() {
+    return vendor;
+  }
+  
+  public void putUserComment(String key, String value) {
+    Validate.notEmpty(key);
+    userComments.put(key, value);
+  }
+  
+  public String toString() {
+    return ToStringBuilder.reflectionToString(this);
+  }
 
 }

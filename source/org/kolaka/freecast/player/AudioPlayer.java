@@ -33,7 +33,10 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
 import org.apache.commons.logging.LogFactory;
-import org.kolaka.freecast.ogg.OggDecoder;
+import org.kolaka.freecast.ogg.OggVorbisDecoder;
+import org.kolaka.freecast.ogg.vorbis.VorbisComment;
+import org.kolaka.freecast.ogg.vorbis.VorbisCommentInputStream;
+import org.kolaka.freecast.ogg.vorbis.VorbisCommentInputStream.CommentHandler;
 import org.kolaka.freecast.pipe.Consumer;
 import org.kolaka.freecast.pipe.ConsumerInputStreamFactory;
 import org.kolaka.freecast.service.BaseService;
@@ -86,8 +89,6 @@ public class AudioPlayer extends BaseService implements InteractivePlayer, Volum
 		} catch (LineUnavailableException e) {
 			throw new ControlException("Can't obtain a sound ouput", e);
 		}
-    
-    volumeControl = new LineVolumeControl(line);
 	}
 
   private VolumeControl volumeControl;
@@ -107,6 +108,8 @@ public class AudioPlayer extends BaseService implements InteractivePlayer, Volum
 		}
 		line.start();
 
+    volumeControl = new LineVolumeControl(line);
+    
 		LogFactory.getLog(getClass()).debug(
 				"line " + line + " is open and started");
 
@@ -180,9 +183,17 @@ public class AudioPlayer extends BaseService implements InteractivePlayer, Volum
 
 				while (!stopped) {
 					if (audioInput == null) {
-						audioInput = OggDecoder.getInstance().decode(
+            VorbisCommentInputStream vorbisInput = new VorbisCommentInputStream(consumerInputStreamFactory.next());
+            CommentHandler handler = new CommentHandler() {
+              public void commentRead(VorbisComment comment) {
+                  LogFactory.getLog(getClass()).debug(comment);
+              }
+            };
+            vorbisInput.setCommentHandler(handler);
+            
+            audioInput = OggVorbisDecoder.getInstance().decode(
 								OUTPUT_FORMAT,
-								consumerInputStreamFactory.next());
+								vorbisInput);
 					}
 
 					int read = audioInput.read(buffer, 0, buffer.length);

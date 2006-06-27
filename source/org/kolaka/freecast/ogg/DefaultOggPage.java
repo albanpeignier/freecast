@@ -32,7 +32,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
-public class DefaultOggPage implements OggPage, MutableOggPage {
+public class DefaultOggPage implements OggPage {
 
 	private boolean firstPage;
 
@@ -43,6 +43,8 @@ public class DefaultOggPage implements OggPage, MutableOggPage {
 	private int streamSerialNumber;
 
 	private byte[] bytes;
+  
+  private byte[] payload;
 
 	public byte[] getRawBytes() {
 		if (bytes == null) {
@@ -54,6 +56,14 @@ public class DefaultOggPage implements OggPage, MutableOggPage {
 	public void setRawBytes(byte[] bytes) {
 		this.bytes = bytes;
 	}
+  
+  public byte[] getPayload() {
+    return payload;
+  }
+  
+  public void setPayload(byte[] payload) {
+    this.payload = payload;
+  }
 
 	public boolean isFirstPage() {
 		return firstPage;

@@ -26,7 +26,6 @@ package org.kolaka.freecast.ogg.test;
 import java.util.Random;
 
 import org.kolaka.freecast.ogg.DefaultOggPage;
-import org.kolaka.freecast.ogg.MutableOggPage;
 import org.kolaka.freecast.ogg.OggPage;
 
 public class OggPageGenerator {
@@ -38,7 +37,7 @@ public class OggPageGenerator {
 	private int streamSerialNumber = new Random().nextInt();
 
 	public OggPage generate() {
-		MutableOggPage page = new DefaultOggPage();
+    DefaultOggPage page = new DefaultOggPage();
 		page.setAbsoluteGranulePosition(absoluteGranulePosition);
 		page.setFirstPage(firstPage);
 		page.setLastPage(false);

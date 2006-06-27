@@ -4,7 +4,7 @@
  * This code was developped by Alban Peignier (http://people.tryphon.org/~alban/) 
  * and contributors (their names can be found in the CONTRIBUTORS file).
  *
- * Copyright (C) 2004-2006 Alban Peignier
+ * Copyright (C) 2004 Alban Peignier
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -23,30 +23,44 @@
 
 package org.kolaka.freecast.ogg;
 
-/**
- * 
- * 
- * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
- */
-public interface OggPage {
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStream;
 
-	public static final byte[] CAPTURE_PATTERN = new byte[] { 'O', 'g', 'g',
-			'S' };
+import org.apache.commons.lang.Validate;
+import org.apache.mina.common.ByteBuffer;
 
-	byte[] getRawBytes();
-
-	boolean isFirstPage();
-
-	boolean isLastPage();
-
-	long getAbsoluteGranulePosition();
-
-	int getStreamSerialNumber();
-
-	String getStreamSerialNumberString();
-
-	int getLength();
+public class OggSourceInputStream extends InputStream {
   
-  byte[] getPayload();
+  private final OggSource source;
+
+  public OggSourceInputStream(OggSource source) {
+    Validate.notNull(source);
+    this.source = source;
+  }
+
+  private ByteBuffer buffer;
+  
+  public int read() throws IOException {
+    if (buffer == null || !buffer.hasRemaining()) {
+      try {
+        buffer = createNewBuffer();
+      } catch (EOFException e) {
+        return -1;
+      }      
+    }
+    
+    return buffer.getUnsigned();
+  }
+  
+  public void close() throws IOException {
+    source.close();
+    super.close();
+  }
+
+  private ByteBuffer createNewBuffer() throws IOException {
+    OggPage page = source.next();
+    return ByteBuffer.wrap(page.getRawBytes());
+  }
 
 }

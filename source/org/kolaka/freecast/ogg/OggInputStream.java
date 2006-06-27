@@ -4,7 +4,7 @@
  * This code was developped by Alban Peignier (http://people.tryphon.org/~alban/) 
  * and contributors (their names can be found in the CONTRIBUTORS file).
  *
- * Copyright (C) 2004-2006 Alban Peignier
+ * Copyright (C) 2004 Alban Peignier
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -23,30 +23,30 @@
 
 package org.kolaka.freecast.ogg;
 
-/**
- * 
- * 
- * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
- */
-public interface OggPage {
+import java.io.InputStream;
 
-	public static final byte[] CAPTURE_PATTERN = new byte[] { 'O', 'g', 'g',
-			'S' };
+import org.apache.commons.io.input.ProxyInputStream;
+import org.apache.commons.lang.Validate;
 
-	byte[] getRawBytes();
-
-	boolean isFirstPage();
-
-	boolean isLastPage();
-
-	long getAbsoluteGranulePosition();
-
-	int getStreamSerialNumber();
-
-	String getStreamSerialNumberString();
-
-	int getLength();
+public class OggInputStream extends ProxyInputStream {
   
-  byte[] getPayload();
+  private final ProxyOggSource oggSource;
+
+  private OggInputStream(InputStream input, ProxyOggSource oggSource) {
+    super(input);
+    this.oggSource = oggSource;
+  }
+  
+  public void setPageHandler(ProxyOggSource.PageHandler handler) {
+    oggSource.setHandler(handler);
+  }
+  
+  public static OggInputStream getInstance(InputStream input) {
+    Validate.notNull(input);
+    
+    ProxyOggSource filteredOggSource = new ProxyOggSource(new OggStreamSource(input));
+    InputStream filtered = new OggSourceInputStream(filteredOggSource);
+    return new OggInputStream(filtered, filteredOggSource);
+  }
 
 }

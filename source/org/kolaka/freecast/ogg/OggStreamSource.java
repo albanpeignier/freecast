@@ -94,7 +94,7 @@ public class OggStreamSource implements OggSource {
 					+ streamStructureVersion);
 		}
 
-		MutableOggPage page = new DefaultOggPage();
+    DefaultOggPage page = new DefaultOggPage();
 
 		try {
 			int headerTypeFlag = dataInput.readUnsignedByte();
@@ -114,11 +114,9 @@ public class OggStreamSource implements OggSource {
 				pageSize += dataInput.readUnsignedByte();
 			}
 			
-			long skipped = dataInput.skip(pageSize);
-			if (skipped != pageSize) {
-				String message = "Can't skip the required size (" + skipped + "/" + pageSize + ")";
-				throw createIOException(message);
-			}
+      byte payload[] = new byte[pageSize];
+			dataInput.readFully(payload);
+      page.setPayload(payload);
 
 			page.setRawBytes(reminderInput.toByteArray());
 			reminderInput.resetByteArray();

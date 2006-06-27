@@ -38,7 +38,7 @@ import junit.framework.TestCase;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.discovery.tools.Service;
 import org.apache.commons.logging.LogFactory;
-import org.kolaka.freecast.ogg.OggDecoder;
+import org.kolaka.freecast.ogg.OggVorbisDecoder;
 import org.kolaka.freecast.resource.ResourceLocator;
 import org.kolaka.freecast.resource.ResourceLocators;
 
@@ -60,7 +60,7 @@ public class OggDecoderTest extends TestCase {
 
 	public void testJavaZoom() throws Exception {
 		if (isEnabled("javazoom")) {
-			testProvider(OggDecoder.createOggDecoder("javazoom"));
+			testProvider(OggVorbisDecoder.createOggDecoder("javazoom"));
 		}
 	}
 
@@ -73,7 +73,7 @@ public class OggDecoderTest extends TestCase {
 	*/
 
 	public void testDefault() throws Exception {
-		testProvider(OggDecoder.getInstance());
+		testProvider(OggVorbisDecoder.getInstance());
 	}
 
 	private boolean isEnabled(String provider) {
@@ -82,7 +82,7 @@ public class OggDecoderTest extends TestCase {
 		return property == null || !property.equals("false");
 	}
 
-	private void testProvider(OggDecoder decoder) throws Exception {
+	private void testProvider(OggVorbisDecoder decoder) throws Exception {
 		InputStream inputResources = getResourceAsStream();
 		AudioInputStream pcmInputStream = decoder.decode(inputResources);
 

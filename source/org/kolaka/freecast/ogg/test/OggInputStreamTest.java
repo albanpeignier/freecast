@@ -4,7 +4,7 @@
  * This code was developped by Alban Peignier (http://people.tryphon.org/~alban/) 
  * and contributors (their names can be found in the CONTRIBUTORS file).
  *
- * Copyright (C) 2004-2006 Alban Peignier
+ * Copyright (C) 2004 Alban Peignier
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -23,36 +23,38 @@
 
 package org.kolaka.freecast.ogg.test;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 
 import junit.framework.TestCase;
 
-import org.kolaka.freecast.ogg.OggPage;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.HexDump;
+import org.apache.commons.io.IOUtils;
+import org.kolaka.freecast.ogg.OggSourceInputStream;
 import org.kolaka.freecast.ogg.OggStreamSource;
 
-/**
- * 
- * 
- * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
- */
-public class OggStreamSourceTest extends TestCase {
+public class OggInputStreamTest extends TestCase {
 
-	public void testReadFile() throws IOException {
-    InputStream resource = OggTestResources.getResourceAsStream("sample.ogg");
+  public void testRead() throws IOException {
+    byte[] expected = IOUtils.toByteArray(loadResource());
+    byte[] expectedChecksum = DigestUtils.md5(expected);
+    
+    OggStreamSource oggSource = new OggStreamSource(loadResource());
+    OggSourceInputStream input = new OggSourceInputStream(oggSource);
 
-		OggStreamSource oggSource = new OggStreamSource(resource);
+    byte[] read = IOUtils.toByteArray(input);
+    byte[] checksum = DigestUtils.md5(read);
+    
+    // HexDump.dump(expected, 0, new FileOutputStream("expected.dump"), 0);
+    // HexDump.dump(read, 0, new FileOutputStream("read.dump"), 0);
+    assertTrue("invalid checksum", Arrays.equals(expectedChecksum, checksum));
+  }
 
-		OggPage firstPage = oggSource.next();
-		assertTrue("page must be first", firstPage.isFirstPage());
-
-		OggPage page = firstPage;
-		while (!page.isLastPage()) {
-			page = oggSource.next();
-			assertFalse("page can't be first", page.isFirstPage());
-		}
-
-		oggSource.close();
-	}
+  private InputStream loadResource() {
+    return OggTestResources.getResourceAsStream("sample.ogg");
+  }
 
 }

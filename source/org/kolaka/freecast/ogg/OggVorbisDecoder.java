@@ -40,22 +40,22 @@ import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.sound.AudioSystem;
 import org.kolaka.freecast.sound.StereoPCMAudioInputStream;
 
-public abstract class OggDecoder {
+public abstract class OggVorbisDecoder {
 
 	private static final List INSTANCE_NAMES = Arrays.asList(new String[] {
 			"javazoom" });
 
-	private static OggDecoder instance;
+	private static OggVorbisDecoder instance;
 
-	public static OggDecoder getInstance() {
+	public static OggVorbisDecoder getInstance() {
 		if (instance == null) {
 			instance = createOggDecoder();
 		}
 		return instance;
 	}
 
-	private static OggDecoder createOggDecoder() {
-		OggDecoder decoder = new Default();
+	private static OggVorbisDecoder createOggDecoder() {
+		OggVorbisDecoder decoder = new Default();
 
 		for (Iterator iter = INSTANCE_NAMES.iterator(); iter.hasNext();) {
 			String name = (String) iter.next();
@@ -64,22 +64,22 @@ public abstract class OggDecoder {
 				decoder = createOggDecoder(name);
 				break;
 			} catch (NotAvailableException e) {
-				LogFactory.getLog(OggDecoder.class).debug(
+				LogFactory.getLog(OggVorbisDecoder.class).debug(
 						"can't use " + name + " decoder", e);
 			}
 		}
 
-		LogFactory.getLog(OggDecoder.class).debug("use " + decoder);
+		LogFactory.getLog(OggVorbisDecoder.class).debug("use " + decoder);
 		return decoder;
 	}
 
-	public static OggDecoder createOggDecoder(String name)
+	public static OggVorbisDecoder createOggDecoder(String name)
 			throws NotAvailableException {
-		LogFactory.getLog(OggDecoder.class)
+		LogFactory.getLog(OggVorbisDecoder.class)
 				.debug("create " + name + " decoder");
 		try {
-			return (OggDecoder) Class.forName(
-					OggDecoder.class.getName() + "$"
+			return (OggVorbisDecoder) Class.forName(
+					OggVorbisDecoder.class.getName() + "$"
 							+ WordUtils.capitalize(name)).newInstance();
 		} catch (Throwable t) {
 			throw new NotAvailableException("can't create OggDecoder '" + name
@@ -167,7 +167,7 @@ public abstract class OggDecoder {
 		return pcmFormat;
 	}
 
-	public static class Default extends OggDecoder {
+	public static class Default extends OggVorbisDecoder {
 
 		/**
 		 * @param inputStream
@@ -193,7 +193,7 @@ public abstract class OggDecoder {
 
 	}
 
-	public abstract static class Direct extends OggDecoder {
+	public abstract static class Direct extends OggVorbisDecoder {
 
 		private final AudioFileReader fileReader;
 

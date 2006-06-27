@@ -4,7 +4,7 @@
  * This code was developped by Alban Peignier (http://people.tryphon.org/~alban/) 
  * and contributors (their names can be found in the CONTRIBUTORS file).
  *
- * Copyright (C) 2004-2006 Alban Peignier
+ * Copyright (C) 2004 Alban Peignier
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -28,31 +28,37 @@ import java.io.InputStream;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.mutable.MutableInt;
+import org.kolaka.freecast.ogg.OggInputStream;
 import org.kolaka.freecast.ogg.OggPage;
-import org.kolaka.freecast.ogg.OggStreamSource;
+import org.kolaka.freecast.ogg.ProxyOggSource.PageHandler;
 
-/**
- * 
- * 
- * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
- */
-public class OggStreamSourceTest extends TestCase {
+public class OggSourceInputStreamTest extends TestCase {
 
-	public void testReadFile() throws IOException {
-    InputStream resource = OggTestResources.getResourceAsStream("sample.ogg");
+  public void testRead() throws IOException {
+    int expectedLength = IOUtils.toByteArray(loadResource()).length;
+    
+    InputStream resource = loadResource();
 
-		OggStreamSource oggSource = new OggStreamSource(resource);
+    final MutableInt readPageLength = new MutableInt();
+    
+    PageHandler handler = new PageHandler() {
+      public void pageRead(OggPage page) {
+        readPageLength.setValue(readPageLength.intValue() + page.getLength());
+      }
+    };
+    OggInputStream input = OggInputStream.getInstance(resource);
+    input.setPageHandler(handler);
 
-		OggPage firstPage = oggSource.next();
-		assertTrue("page must be first", firstPage.isFirstPage());
+    int readLength = IOUtils.toByteArray(input).length;
+    assertEquals(expectedLength, readLength);
+    
+    assertEquals(expectedLength, readPageLength.intValue());
+  }
 
-		OggPage page = firstPage;
-		while (!page.isLastPage()) {
-			page = oggSource.next();
-			assertFalse("page can't be first", page.isFirstPage());
-		}
-
-		oggSource.close();
-	}
+  private InputStream loadResource() {
+    return OggTestResources.getResourceAsStream("sample.ogg");
+  }
 
 }
