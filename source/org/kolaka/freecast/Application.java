@@ -170,6 +170,7 @@ public abstract class Application {
 		try {
 			LogFactory.getLog(getClass()).info(
 					"version " + Version.getInstance().getName());
+      LogFactory.getLog(getClass()).debug("runtime version " + SystemUtils.JAVA_RUNTIME_VERSION);
 			LogFactory.getLog(getClass()).debug("init");
 			if (init(args)) {
 				LogFactory.getLog(getClass()).debug("start");
