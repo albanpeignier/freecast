@@ -23,6 +23,9 @@
 
 package org.kolaka.freecast.node.swing;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -30,6 +33,7 @@ import java.util.List;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 
 import org.kolaka.freecast.node.Node;
 import org.kolaka.freecast.player.GraphicalPlayerSource;
@@ -70,7 +74,19 @@ public class MainFrame extends BaseFrame {
 	}
   
   protected JComponent createOptionalPane() throws ResourcesException {
-    return new VolumePane(getResources(), playerSource);    
+    JPanel panel = new JPanel(new GridBagLayout());
+    panel.setOpaque(false);
+    
+    GridBagConstraints constraints = new GridBagConstraints();
+    constraints.gridwidth = GridBagConstraints.REMAINDER;
+    constraints.fill = GridBagConstraints.HORIZONTAL;
+    constraints.weightx = 1;
+    constraints.insets = new Insets(2,2,2,2);
+    
+    panel.add(new PlayDescriptionPane(playerSource), constraints);
+    panel.add(new VolumePane(getResources(), playerSource), constraints);
+    
+    return panel;    
   }
 
 	protected JComponent createContentPane() {
@@ -78,7 +94,7 @@ public class MainFrame extends BaseFrame {
 			JComponent playerComponent = ((GraphicalPlayerSource) playerSource)
 					.getJComponent();
 			playerComponent.setBorder(BorderFactory.createLoweredBevelBorder());
-			return playerComponent;
+      return playerComponent;
 		}
 
 		return null;

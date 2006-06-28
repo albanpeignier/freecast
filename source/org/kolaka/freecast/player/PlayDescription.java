@@ -21,46 +21,41 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.kolaka.freecast.ogg.vorbis;
+package org.kolaka.freecast.player;
 
-import java.util.Map;
-import java.util.TreeMap;
+import java.net.URL;
 
-import org.apache.commons.lang.Validate;
-import org.apache.commons.lang.builder.ToStringBuilder;
 
-public class VorbisComment {
-  
-  private final String vendor;
-  
-  public static final String ARTIST = "ARTIST";
-  public static final String TITLE = "TITLE";
-  public static final String TRACKNUMBER = "TRACKNUMBER";
-  public static final String ALBUM = "ALBUM";
-  public static final String WWW = "WWW";
-  
-  private final Map userComments = new TreeMap();
-  
-  public VorbisComment(final String vendor) {
-    Validate.notEmpty(vendor);
-    this.vendor = vendor;
-  }
+public class PlayDescription {
 
-  public String getVendor() {
-    return vendor;
+  private String shortDescription;
+  
+  public PlayDescription(String shortDescription) {
+    this.shortDescription = shortDescription;
   }
   
-  public void putUserComment(String key, String value) {
-    Validate.notEmpty(key);
-    userComments.put(key, value);
+  public String getShortDescription() {
+    return shortDescription;
   }
   
-  public String getUserComment(String key) {
-    return (String) userComments.get(key);
+  private URL url;
+  
+  public URL getURL() {
+    return url;
   }
   
-  public String toString() {
-    return ToStringBuilder.reflectionToString(this);
+  public void setUrl(URL url) {
+    this.url = url;
   }
 
+  private String longDescription;
+  
+  public String getLongDescription() {
+    return longDescription;
+  }
+  
+  public void setLongDescription(String longDescription) {
+    this.longDescription = longDescription;
+  }
+  
 }

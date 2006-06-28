@@ -23,7 +23,6 @@
 
 package org.kolaka.freecast.node.swing;
 
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.MouseWheelEvent;
@@ -36,7 +35,6 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.player.Player;
 import org.kolaka.freecast.player.PlayerSource;
 import org.kolaka.freecast.player.VolumeControl;

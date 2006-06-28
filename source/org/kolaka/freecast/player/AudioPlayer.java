@@ -47,7 +47,7 @@ import org.kolaka.freecast.service.ControlException;
  * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
-public class AudioPlayer extends BaseService implements InteractivePlayer, VolumeControlable {
+public class AudioPlayer extends BaseService implements InteractivePlayer, VolumeControlable, PlayDescriptionProvider {
 
 	private Consumer consumer;
 
@@ -95,6 +95,15 @@ public class AudioPlayer extends BaseService implements InteractivePlayer, Volum
 
   public VolumeControl getVolumeControl() {
     return volumeControl;
+  }
+  
+  private PlayDescriptionHandler descriptionHandler = new PlayDescriptionHandler() {
+    public void descriptionChanged(PlayDescription description) {
+    }
+  };
+  
+  public void setPlayDescriptionHandler(PlayDescriptionHandler handler) {
+    this.descriptionHandler = handler;
   }
 
 	public void start() throws ControlException {
@@ -187,6 +196,9 @@ public class AudioPlayer extends BaseService implements InteractivePlayer, Volum
             CommentHandler handler = new CommentHandler() {
               public void commentRead(VorbisComment comment) {
                   LogFactory.getLog(getClass()).debug(comment);
+                  PlayDescription description = new VorbisPlayDescriptionFactory().create(comment);
+                  descriptionHandler.descriptionChanged(description);
+                  LogFactory.getLog(getClass()).info("play " + description.getShortDescription());
               }
             };
             vorbisInput.setCommentHandler(handler);

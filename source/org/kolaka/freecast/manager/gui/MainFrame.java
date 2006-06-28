@@ -49,6 +49,7 @@ import org.kolaka.freecast.peer.Peer;
 import org.kolaka.freecast.peer.PeerControler;
 import org.kolaka.freecast.peer.PeerReference;
 import org.kolaka.freecast.setup.SetupAction;
+import org.kolaka.freecast.swing.AsyncAction;
 import org.kolaka.freecast.swing.BaseFrame;
 import org.kolaka.freecast.swing.ConfigurableResources;
 import org.kolaka.freecast.swing.Resources;
@@ -83,9 +84,9 @@ public class MainFrame extends BaseFrame {
 		this.tracker = tracker;
 		this.node = node;
 
-		visitAction = new BrowseHomepageAction(resources, publicHttpServer);
-		emailHomepageAction = new EmailHomepageAction(resources,
-				publicHttpServer);
+		visitAction = new AsyncAction(new BrowseHomepageAction(resources, publicHttpServer));
+		emailHomepageAction = new AsyncAction(new EmailHomepageAction(resources,
+				publicHttpServer));
 		setupAction = new SetupAction(((ConfigurableResources) resources).subset("setup"), this, node);
 	}
 

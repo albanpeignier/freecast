@@ -56,17 +56,12 @@ public class EmailHomepageAction extends BaseAction {
 	}
 
 	public void actionPerformed(ActionEvent event) {
-		Runnable sendMail = new Runnable() {
-			public void run() {
-				try {
-					sendMail();
-				} catch (Exception e) {
-					LogFactory.getLog(getClass()).error(
-							"can't email to visit " + publicHttpServer, e);
-				}
-			};
-		};
-		new Thread(sendMail).start();
+		try {
+			sendMail();
+		} catch (Exception e) {
+			LogFactory.getLog(getClass()).error(
+					"can't email to visit " + publicHttpServer, e);
+		}
 	}
 	
 	private void sendMail() throws IOException, DesktopException {
