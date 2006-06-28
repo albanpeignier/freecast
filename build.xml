@@ -1222,7 +1222,7 @@
 		</copy>
 	</target>
 
-	<target name="ccontrol.loop" depends="clean, export" />
+	<target name="ccontrol.loop" depends="clean, dist, export" />
 
 	<target name="install.export" depends="export">
 		<property name="install.export.target" value="${user.name}@download.freecast.org:/var/www/kolaka.org/freecast/export" />
