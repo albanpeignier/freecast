@@ -17,7 +17,7 @@
 					<pathelement path="track/xalan/releases/2.7.0/xalan.jar" />
 					<pathelement path="${track.docbook.dir}/extensions/xalan25.jar" />
 				</classpath>
-j
+
 				<arg line="-IN @{in}" />
 				<arg line="-OUT @{out}" />
 				<arg line="-XSL @{style}" />
@@ -1299,5 +1299,7 @@ j
 			<arg value="${install.www.target}" />
 		</exec>
 	</target>
+	
+	<target name="ccontrol.loop" depends="clean, export"/>
 
 </project>
