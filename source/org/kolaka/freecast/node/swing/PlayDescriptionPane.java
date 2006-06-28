@@ -43,10 +43,13 @@ import org.kolaka.freecast.player.PlayDescriptionProvider;
 import org.kolaka.freecast.player.Player;
 import org.kolaka.freecast.player.PlayerSource;
 import org.kolaka.freecast.player.PlayerSource.Listener;
+import org.kolaka.freecast.service.Service;
 import org.kolaka.freecast.swing.ActionEventFactory;
 import org.kolaka.freecast.swing.AsyncAction;
 
 public class PlayDescriptionPane extends JPanel {
+
+  private static final String NO_DESCRIPTION = "No description available";
 
   private static final long serialVersionUID = -3816636595541185609L;
 
@@ -55,7 +58,7 @@ public class PlayDescriptionPane extends JPanel {
   public PlayDescriptionPane(PlayerSource playerSource) {
     setOpaque(false);
     
-    final JLabel label = new JLabel("No description available");
+    final JLabel label = new JLabel(NO_DESCRIPTION);
 
     final Action visitAction = new AsyncAction(new AbstractAction() {
 
@@ -102,10 +105,20 @@ public class PlayDescriptionPane extends JPanel {
           }
         };
 
+    final Player.Listener playerListener = new Player.Adapter() {
+      public void serviceStopped(Service service) {
+        label.setText(NO_DESCRIPTION);
+        label.setToolTipText(null);
+        playDescription = null;
+      }
+    };
+
+        
     playerSource.addListener(new Listener() {
       public void playerCreated(Player player) {
         if (player instanceof PlayDescriptionProvider) {
           ((PlayDescriptionProvider) player).setPlayDescriptionHandler(descriptionHandler);
+          player.add(playerListener);
         }
       }
     });

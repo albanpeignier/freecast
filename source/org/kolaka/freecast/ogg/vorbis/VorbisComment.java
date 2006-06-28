@@ -59,6 +59,10 @@ public class VorbisComment {
     return (String) userComments.get(key);
   }
   
+  public boolean isEmpty() {
+    return userComments.isEmpty();
+  }
+  
   public String toString() {
     return ToStringBuilder.reflectionToString(this);
   }

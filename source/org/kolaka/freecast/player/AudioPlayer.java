@@ -196,6 +196,10 @@ public class AudioPlayer extends BaseService implements InteractivePlayer, Volum
             CommentHandler handler = new CommentHandler() {
               public void commentRead(VorbisComment comment) {
                   LogFactory.getLog(getClass()).debug(comment);
+                  if (comment.isEmpty()) {
+                    return;
+                  }
+                  
                   PlayDescription description = new VorbisPlayDescriptionFactory().create(comment);
                   descriptionHandler.descriptionChanged(description);
                   LogFactory.getLog(getClass()).info("play " + description.getShortDescription());
