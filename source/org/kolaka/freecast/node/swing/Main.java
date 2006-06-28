@@ -23,7 +23,11 @@
 
 package org.kolaka.freecast.node.swing;
 
+import javax.swing.JOptionPane;
+
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kolaka.freecast.NodeConfigurator;
 import org.kolaka.freecast.node.ConfigurableNode;
 import org.kolaka.freecast.node.DefaultNode;
@@ -38,53 +42,68 @@ import org.kolaka.freecast.swing.SwingApplication;
  */
 public class Main extends SwingApplication {
 
-	private MainFrame frame;
+  private MainFrame frame;
 
-	private Node node;
+  private Node node;
 
-	public Main() {
-		super("node-swing");
-	}
+  public Main() {
+    super("node-swing");
+  }
 
-	public static void main(String args[]) {
-		new Main().run(args);
-	}
+  public static void main(String args[]) {
+    if (args.length == 0) {
+      args = startWithOptions();
+    }
 
-	protected void postInit(Configuration configuration) throws Exception {
-		super.postInit(configuration);
+    new Main().run(args);
+  }
 
-		ConfigurableNode node = new DefaultNode();
-		NodeConfigurator nodeConfigurator = new NodeConfigurator();
-		nodeConfigurator.setResourceLocator(getResourceLocator());
-		nodeConfigurator.configure(node, configuration.subset("node"));
-		this.node = node;
+  private static String[] startWithOptions() {
+    String input = (String) JOptionPane.showInputDialog(null,
+        "Configuration URL",
+        "Choose a FreeCast configuration", JOptionPane.QUESTION_MESSAGE, null, null, "http://download.freecast.org/jws/stable/config.xml");
+    if (StringUtils.isEmpty(input)) {
+      return ArrayUtils.EMPTY_STRING_ARRAY;
+    }
 
-		ConfigurableResources resources = new ConfigurableResources(
-				configuration.subset("gui"));
-		resources.setResourceLocator(getResourceLocator());
+    return new String[] { "-config", input };
+  }
 
-		frame = new MainFrame(resources, node);
-		frame.setQuitAction(createQuitAction(resources));
-		frame.init();
-	}
+  protected void postInit(Configuration configuration) throws Exception {
+    super.postInit(configuration);
 
-	protected void exitImpl() throws Exception {
-		node.stop();
-		node.dispose();
-	}
+    ConfigurableNode node = new DefaultNode();
+    NodeConfigurator nodeConfigurator = new NodeConfigurator();
+    nodeConfigurator.setResourceLocator(getResourceLocator());
+    nodeConfigurator.configure(node, configuration.subset("node"));
+    this.node = node;
 
-	protected void run() throws Exception {
-		frame.setLocationRelativeTo(null);
-		frame.setVisible(true);
+    ConfigurableResources resources = new ConfigurableResources(configuration
+        .subset("gui"));
+    resources.setResourceLocator(getResourceLocator());
 
-		node.init();
-		node.start();
+    frame = new MainFrame(resources, node);
+    frame.setQuitAction(createQuitAction(resources));
+    frame.init();
+  }
 
-		Object lock = new Object();
+  protected void exitImpl() throws Exception {
+    node.stop();
+    node.dispose();
+  }
 
-		synchronized (lock) {
-			lock.wait();
-		}
-	}
+  protected void run() throws Exception {
+    frame.setLocationRelativeTo(null);
+    frame.setVisible(true);
+
+    node.init();
+    node.start();
+
+    Object lock = new Object();
+
+    synchronized (lock) {
+      lock.wait();
+    }
+  }
 
 }
