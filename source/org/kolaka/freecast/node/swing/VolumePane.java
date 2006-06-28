@@ -93,7 +93,7 @@ public class VolumePane extends JPanel {
       public void playerCreated(Player player) {
         if (player instanceof VolumeControlable) {
           VolumeControl control = ((VolumeControlable) player).getVolumeControl();
-          if (control.isEnabled()) {
+          if (control != null && control.isEnabled()) {
             volumeControl = control;
             
             sliderModel.setValue(volumeControl.getVolume());
