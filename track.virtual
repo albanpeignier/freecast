@@ -18,7 +18,8 @@ ant-jxr/releases/1.0=tgz:${mirror.kolaka}/export/ant-jxr/ant-jxr-1.0.tar.gz
 hessian/releases/3.0.8/hessian-3.0.8.jar=http://www.caucho.com/hessian/download/hessian-3.0.8.jar
 hessian/releases/3.0.8/src=jar:http://caucho.com/hessian/download/hessian-3.0.8-src.jar
 jetty/releases/5.1.4rc0=zip:${mirror.sourceforge}/sourceforge/jetty/jetty-5.1.4rc0-all.zip!jetty-5.1.4rc0
-xmlreleasenotes/releases/0.17.2=zip:${mirror.sourceforge}/sourceforge/xmlreleasenotes/XMLReleaseNotes-0.17.2.zip!XMLReleaseNotes-0.17.2
+xmlreleasenotes/releases/0.17.2=http://xmlreleasenotes.free.fr/delivery/XMLReleaseNotes-0.17.2.zip!XMLReleaseNotes-0.17.2
+# zip:${mirror.sourceforge}/sourceforge/xmlreleasenotes/XMLReleaseNotes-0.17.2.zip!XMLReleaseNotes-0.17.2
 cortado/releases/0.1.0/src=tgz:http://www.flumotion.net/src/cortado/cortado-0.1.0.tar.gz
 cortado/releases/0.1.0/cortado-ovt-0.1.0.jar=http://www.flumotion.net/jar/cortado/cortado-ovt-0.1.0.jar
 docbook-xsl/releases/1.69.1=tgz:${mirror.sourceforge}/sourceforge/docbook/docbook-xsl-1.69.1.tar.gz!docbook-xsl-1.69.1
