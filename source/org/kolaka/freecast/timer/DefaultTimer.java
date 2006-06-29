@@ -24,6 +24,7 @@
 package org.kolaka.freecast.timer;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.logging.LogFactory;
 
@@ -80,7 +81,7 @@ public class DefaultTimer implements Timer {
 	private boolean isCanceled(Runnable runnable) {
 		return runnable instanceof Task && ((Task) runnable).isCanceled();
 	}
-
+  
 	public void executeLater(Runnable runnable) {
 		if (isCanceled(runnable)) {
 			LogFactory.getLog(getClass()).debug(
@@ -88,22 +89,41 @@ public class DefaultTimer implements Timer {
 		}
 
 		try {
-			pool.execute(runnable);
+			pool.execute(new ProtectedRunnable(runnable));
 		} catch (InterruptedException e) {
 			throw new NotImplementedException(
 					"Unsupported InterruptedException", e);
 		}
 	}
+  
+  static class ProtectedRunnable implements Runnable {
+    
+    private final Runnable runnable;
+    
+    public ProtectedRunnable(Runnable runnable) {
+      Validate.notNull(runnable);
+      this.runnable = runnable;
+    }
+
+    public void run() {
+      try {
+        runnable.run();
+      } catch (Throwable t) {
+        LogFactory.getLog(getClass()).error("error in " + runnable, t);
+      }      
+    }
+    
+  }
 
 	public void executeAfterDelay(long delay, Runnable runnable) {
 		Object taskID = clockDaemon.executeAfterDelay(delay,
-				new PooledRunnable(runnable));
+				new PooledRunnable(new ProtectedRunnable(runnable)));
 		init(runnable, taskID);
 	}
 
 	public void executePeriodically(long delay, Runnable runnable,
 			boolean startsNow) {
-		Object taskID = clockDaemon.executePeriodically(delay, runnable,
+		Object taskID = clockDaemon.executePeriodically(delay, new ProtectedRunnable(runnable),
 				startsNow);
 		init(runnable, taskID);
 	}
