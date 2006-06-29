@@ -46,9 +46,8 @@ public class DefaultConnectionAssistantServiceTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		service = new DefaultConnectionAssistantService();
-		acceptorAddress = InetSocketAddress.createUnresolved("acceptor", 1000);
-		connectorAddress = InetSocketAddress
-				.createUnresolved("connector", 1000);
+		acceptorAddress = new InetSocketAddress(1000);
+		connectorAddress = new InetSocketAddress(1001);
 		handlerControl = MockControl.createControl(ConnectionHandler.class);
 		handler = (ConnectionHandler) handlerControl.getMock();
 	}
