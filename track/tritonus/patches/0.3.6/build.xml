@@ -11,18 +11,20 @@
 		<delete dir="build" />
 		<delete>
 			<fileset dir="${dist.dir}">
-				<include name="*.jar" />
+				<include name="tritonus-vorbis.jar" />
+				<include name="tritonus-share.jar" />
 				<patternset refid="libraries.natives" />
 			</fileset>
 		</delete>
 	</target>
 
-	<target name="build" depends="build.classes, build.natives" />
-
+	<target name="build" depends="build.classes, build.natives, build.tests" />
 
 	<target name="build.classes">
 		<mkdir dir="build/classes" />
-		<javac destdir="build/classes" srcdir="source" />
+		<javac destdir="build/classes" srcdir="source" target="1.4" source="1.4">
+			<exclude name="**/test/*.java"/>
+		</javac>
 	</target>
 
 	<target name="build.natives" depends="build.classes">
@@ -59,28 +61,77 @@
 		<property name="jdk.include.dir" value="${jdk.home}/include" />
 		<available property="jdk.include.dir.available" file="${jdk.include.dir}" type="dir" />
 		<fail unless="jdk.include.dir.available" message="Can't find ${jdk.include.dir}, use -Djdk.home to define JDK home" />
+		
+		<macrodef name="cc">
+			<attribute name="libname"/>
+			<attribute name="os.dir"/>
+			<attribute name="cc" default="gcc"/>
+			<sequential>
+				<apply executable="@{cc}" parallel="true" failonerror="true" dir="build/natives">
+					<arg line="-c -g"/>
+					<arg value="-I${jdk.include.dir}"/>
+					<arg value="-I${jdk.include.dir}/@{os.dir}"/>
+					<fileset dir="build/natives">
+						<include name="**/*.c" />
+					</fileset>
+				</apply>
 
-		<cc debug="true" outtype="shared" objdir="build/natives/vorbis" outfile="tritonusvorbis">
-			<fileset dir="build/natives">
-				<include name="**/*.c" />
-			</fileset>
-			<includepath>
-				<pathelement path="${jdk.home}/include" />
-				<pathelement path="${jdk.home}/include/linux" />
-			</includepath>
-			<libset libs="ogg,vorbis,vorbisenc" />
-		</cc>
-		<move todir="build/natives/vorbis">
-			<fileset dir="${basedir}">
-				<patternset refid="libraries.natives" />
-			</fileset>
-		</move>
-		<delete file="history.xml" />
+				<apply executable="@{cc}" parallel="true" failonerror="true" dir="build/natives">
+					<!-- <arg value="-mno-cygwin"/> -->
+					<arg line="-g -shared"/>
+					<!--
+					<arg line="-L/usr/local/lib"/>
+					<arg line="-Wl,-add-stdcall-alias"/>
+					-->
+					<arg value="-o"/>
+					<arg file="build/natives/@{libname}"/>
+					<srcfile/>
+					<arg line="-logg -lvorbis -lvorbisenc"/>
+					<fileset dir="build/natives">
+						<include name="**/*.o" />
+					</fileset>
+				</apply>
+			</sequential>			
+		</macrodef>
+
+		<cc libname="libtritonusvorbis.so" os.dir="linux"/>
+		<!-- <cc libname="tritonusvorbis.dll" os.dir="win32" cc="i586-mingw32msvc-cc"/> -->
+	</target>
+	
+	<target name="build.tests" depends="build.classes">
+		<mkdir dir="build/tests" />
+		<javac destdir="build/tests" srcdir="source">
+			<include name="**/test/*.java"/>
+			<classpath>
+				<pathelement path="build/classes"/>
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="test" depends="build">
+		<java classname="org.tritonus.lowlevel.vorbis.test.VorbisEncoder"
+		      fork="yes" failonerror="true">
+			<classpath>
+				<pathelement path="build/classes"/>
+				<pathelement path="build/tests"/>
+			</classpath>
+			<jvmarg value="-verbose:jni"/>
+			<!-- no effect under cmd.exe ?!
+			<env key="PATH" path="${java.home}/bin:${basedir}/lib/win32"/>
+			-->
+			<!-- trace are disabled
+			<sysproperty key="tritonus.TraceOggNative" value="true"/>
+			<sysproperty key="tritonus.TraceVorbisNative" value="true"/>
+			-->
+			<sysproperty key="java.library.path" path="build/natives:lib"/>
+			<arg file="sample.wav"/>
+			<arg file="sample.ogg"/>
+		</java>
 	</target>
 
 	<target name="dist" depends="build">
 		<copy todir="${dist.dir}">
-			<fileset dir="build/natives/vorbis">
+			<fileset dir="build/natives">
 				<patternset refid="libraries.natives" />
 			</fileset>
 		</copy>
@@ -93,6 +144,12 @@
 		<jar destfile="${dist.dir}/tritonus-share.jar">
 			<fileset dir="build/classes">
 				<include name="org/tritonus/share/**" />
+			</fileset>
+		</jar>
+		<jar destfile="${dist.dir}/tritonus-core.jar">
+			<fileset dir="build/classes">
+				<include name="javax/sound/**" />
+				<include name="org/tritonus/core/**" />
 			</fileset>
 		</jar>
 	</target>
