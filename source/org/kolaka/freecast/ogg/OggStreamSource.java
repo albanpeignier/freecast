@@ -114,6 +114,8 @@ public class OggStreamSource implements OggSource {
 				pageSize += dataInput.readUnsignedByte();
 			}
 			
+      LogFactory.getLog(getClass()).trace("payload size: " + pageSize);
+      
       byte payload[] = new byte[pageSize];
 			dataInput.readFully(payload);
       page.setPayload(payload);

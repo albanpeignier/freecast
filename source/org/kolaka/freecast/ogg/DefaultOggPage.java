@@ -147,6 +147,7 @@ public class DefaultOggPage implements OggPage {
 		builder.append("streamSerialNumber", getStreamSerialNumberString());
 		builder.append("absoluteGranulePosition", absoluteGranulePosition);
 		builder.append("length", getLength());
+    builder.append("payload length", payload.length);
 		return builder.toString();
 	}
 

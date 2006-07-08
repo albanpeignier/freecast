@@ -50,7 +50,7 @@ public class ReminderInputStream extends FilterInputStream {
 			this.buffer.write(buffer, offset, read);
 		}
 
-		return length;
+		return read;
 	}
 
 	public long skip(long length) throws IOException {
