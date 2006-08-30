@@ -41,7 +41,7 @@
 	<jar href="lib/commons-httpclient-3.0-rc3.jar"/>
 	<jar href="lib/commons-codec-1.3.jar"/>
 	
-	<jar href="lib/mina-core-0.9.2.jar"/>
+	<jar href="lib/mina-core-0.9.5-SNAPSHOT.jar"/>
 	<jar href="lib/jstun-0.5.9.2.jar"/>
 	<jar href="lib/mp3spi1.9.4.jar"/>
 	<jar href="lib/jl1.0.jar"/>
