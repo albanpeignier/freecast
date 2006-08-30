@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="http://www.ivyrep.org/ivy-doc.xsl"?>
+<ivy-module version="1.3"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="http://www.jayasoft.org/misc/ivy/ivy.xsd">
+  <info organisation="kolaka" module="freecast" />
+  
+  <configurations>
+  	<conf name="core"/>
+    <conf name="test"/>
+    <conf name="runtime"/>
+    <conf name="build-docbook"/>
+    <conf name="build-antjxr"/>
+    <conf name="build-xmlreleasenotes"/>
+  </configurations>
+  
+  <dependencies>
+    <dependency org="apache" name="commons-lang" rev="2.1" conf="core->*"/>
+    <dependency org="apache" name="commons-logging" rev="1.1" conf="core->*"/>
+    <dependency org="apache" name="commons-cli" rev="1.0" conf="core->*"/>
+    <dependency org="apache" name="commons-configuration" rev="1.2" conf="core->default"/>
+    <dependency org="apache" name="commons-io" rev="1.2" conf="core->*"/>
+    <dependency org="apache" name="commons-codec" rev="1.3" conf="core->*"/>
+    <dependency org="apache" name="commons-collections" rev="3.2" conf="core->*"/>
+    <dependency org="apache" name="commons-httpclient" rev="3.1-alpha1" conf="core->*"/>
+    <dependency org="apache" name="commons-discovery" rev="0.2" conf="core->*"/>
+    
+    <dependency org="apache-directory" name="mina" rev="0.9.5-SNAPSHOT" conf="core->*"/>
+    
+    <dependency org="mortbay" name="jetty" rev="5.1.9" conf="core->*"/>
+    <dependency org="apache" name="log4j" rev="1.2.13" conf="core->*"/>
+    <dependency org="caucho" name="hessian" rev="3.0.20" conf="core->*"/>
+    <dependency org="flumotion" name="cortado" rev="0.1.0" conf="core->*"/>
+    <dependency org="javawi" name="jstun" rev="0.5.9.2" conf="core->*"/>
+    <dependency org="jdesktop" name="jdic" rev="20060613" conf="core->default"/>
+    <dependency org="douglea" name="concurrent" rev="1.3.4" conf="core->*"/>
+    <dependency org="tritonus" name="tritonus" rev="0.3.6" conf="core->*">
+    	<artifact name="tritonus-share"/>
+    	<artifact name="tritonus-vorbis"/>
+    	<artifact name="tritonus-core"/>
+    </dependency>
+    <dependency org="javazoom" name="vorbisspi" rev="1.0.2" conf="core->*"/>
+    
+    <dependency org="docbook" name="docbook-xsl" rev="1.69.1" conf="build-docbook->*"/>
+		<dependency org="apache" name="xalan" rev="2.7.0" conf="build-docbook->*"/>
+		<dependency org="apache" name="xerces" rev="2.8.0" conf="build-docbook->*"/>
+    <dependency org="apache-xml" name="fop" rev="0.20.5" conf="build-docbook->*"/>
+    <dependency org="sun" name="jai" rev="1.1.2.01" conf="build-docbook->*"/>
+
+    <dependency org="kolaka" name="ant-jxr" rev="1.1" conf="build-antjxr->*"/>
+
+    <dependency org="xmlreleasenotes" name="xmlreleasenotes" rev="0.19.2" conf="build-xmlreleasenotes->*"/>
+
+    <dependency org="javazoom" name="mp3spi" rev="1.9.4" conf="runtime->*"/>
+    <dependency org="slf4j" name="slf4j" rev="1.0.2" conf="runtime->log4j12"/>
+    <dependency org="jdesktop" name="jdic" rev="20060613" conf="runtime->windows-x86,linux-x86,sunos-x86,sunos-sparc"/>
+    <dependency org="apache" name="commons-configuration" rev="1.2" conf="core->runtime"/>
+    
+    <dependency org="mockobjects" name="mockobjects" rev="0.09" conf="test->*"/>
+    <dependency org="easymock" name="easymock" rev="1.1" conf="test->*"/>
+  </dependencies>
+</ivy-module>

@@ -1,4 +1,4 @@
-<project name="freecast" default="test" basedir=".">
+<project xmlns:ivy="antlib:fr.jayasoft.ivy.ant" name="freecast" default="test" basedir=".">
 
 	<property file="build-user.properties" />
 	<property file="build.properties" />
@@ -12,9 +12,9 @@
 
 			<java classname="org.apache.xalan.xslt.Process" fork="true" failonerror="true">
 				<jvmarg line="-Dorg.apache.xerces.xni.parser.XMLParserConfiguration=org.apache.xerces.parsers.XIncludeParserConfiguration" />
-				<jvmarg line="-Xbootclasspath/p:/usr/share/java/xercesImpl.jar:track/xalan/releases/2.7.0/xml-apis.jar" />
+				<jvmarg line="-Xbootclasspath/p:lib/build-docbook/xercesImpl.jar" />
 				<classpath>
-					<pathelement path="track/xalan/releases/2.7.0/xalan.jar" />
+					<pathelement path="lib/build-docbook/xalan.jar" />
 					<pathelement path="${track.docbook.dir}/extensions/xalan25.jar" />
 				</classpath>
 
@@ -29,241 +29,67 @@
 		</sequential>
 	</macrodef>
 
-	<macrodef name="prepare.track.httpdownload">
-		<attribute name="url" />
-		<attribute name="target" />
-		<attribute name="prefix" default="" />
-		<sequential>
-			<tempfile property="prepare.track.httpdownload.temp.file" />
-			<get src="@{url}" dest="${prepare.track.httpdownload.temp.file}" />
-
-			<tempfile property="prepare.track.httpdownload.temp.dir" />
-			<untar compression="gzip" src="${prepare.track.httpdownload.temp.file}" dest="${prepare.track.httpdownload.temp.dir}" />
-			<move todir="@{target}">
-				<fileset dir="${prepare.track.httpdownload.temp.dir}/@{prefix}" />
-			</move>
-			<delete file="${prepare.track.httpdownload.temp.file}" />
-			<delete dir="${prepare.track.httpdownload.temp.dir}" />
-		</sequential>
-	</macrodef>
-
-	<target name="prepare.track.commons-vfs.download.check">
-		<available property="prepare.track.commons-vfs.download.notRequired" resource="org/apache/commons/vfs/tasks/tasks.properties">
-			<classpath>
-				<pathelement path="${track.commons.vfs.jar}" />
-			</classpath>
-		</available>
-	</target>
-
-	<target name="prepare.track.commons-vfs.download" depends="prepare.track.commons-vfs.download.check" unless="prepare.track.commons-vfs.download.notRequired">
-		<prepare.track.httpdownload url="${track.commons.vfs.url}" target="${track.commons.vfs.dir}" prefix="commons-vfs-1.0-dev" />
-	</target>
-
-	<target name="prepare.track.commons-vfs" depends="prepare.track.commons-vfs.download, prepare.track.commons-logging, prepare.track.commons-compress">
-		<taskdef resource="org/apache/commons/vfs/tasks/tasks.properties">
-			<classpath>
-				<pathelement path="${track.commons.vfs.jar}" />
-				<pathelement path="${track.commons.logging.jar}" />
-				<pathelement path="${track.commons.compress.jar}" />
-			</classpath>
-		</taskdef>
-	</target>
-
-	<target name="prepare.track.commons-logging.download.check">
-		<available property="prepare.track.commons-logging.download.notRequired" classname="org.apache.commons.logging.Log">
-			<classpath>
-				<pathelement path="${track.commons.logging.jar}" />
-			</classpath>
-		</available>
-	</target>
-
-	<target name="prepare.track.commons-logging.download" depends="prepare.track.commons-logging.download.check" unless="prepare.track.commons-logging.download.notRequired">
-		<prepare.track.httpdownload url="${track.commons.logging.url}" target="${track.commons.logging.dir}" prefix="commons-logging" />
-	</target>
-
-	<target name="prepare.track.commons-logging" depends="prepare.track.commons-logging.download" />
-
-	<target name="prepare.track.commons-compress.download.check">
-		<available property="prepare.track.commons-compress.download.notRequired" classname="org.apache.commons.compress.tar.TarInputStream">
-			<classpath>
-				<pathelement path="${track.commons.compress.jar}" />
-			</classpath>
-		</available>
-	</target>
-
-	<target name="prepare.track.commons-compress.download" depends="prepare.track.commons-compress.download.check" unless="prepare.track.commons-compress.download.notRequired">
-		<prepare.track.httpdownload url="${track.commons.compress.url}" target="${track.commons.compress.dir}" prefix="commons-compress-0.1-dev" />
-	</target>
-
-	<target name="prepare.track.commons-compress" depends="prepare.track.commons-compress.download" />
-
-	<target name="prepare.track.file">
-		<property file="track.properties" />
-		<tempfile property="prepare.track.file" />
-		<copy tofile="${prepare.track.file}" file="track.virtual">
-			<filterchain>
-				<expandproperties />
-			</filterchain>
-		</copy>
-	</target>
-
-	<target name="prepare.track" depends="prepare.track.commons-vfs, prepare.track.file">
-		<property name="prepare.track.includes" value="**"/>
-		<echo message="updating the track directory ... (${prepare.track.includes})" />
-		<v-copy src="virtual:${prepare.track.file}" destdir="track" includes="${prepare.track.includes}" />
-	</target>
-
-	<target name="prepare.track.optional.check">
-		<!-- the last tracked directory is tested -->
-		<available file="${track.dir}/xmlreleasenotes" property="prepare.track.optional.notRequired" />
-	</target>
-
-	<target name="prepare.track.optional" depends="prepare.track.optional.check" unless="prepare.track.optional.notRequired">
-		<antcall target="prepare.track" />
-	</target>
-
 	<target name="prepare.version">
 		<tstamp />
 		<property name="project.version" value="${DSTAMP}" />
 		<property name="project.fullname" value="freecast-${project.version}" />
 	</target>
+	
+  <target name="prepare.track">
+  	<ivy:configure />
+  </target>
 
-	<target name="prepare.antlion" depends="prepare.track.optional">
-		<typedef resource="net/sf/antlion/antlib.xml">
-			<classpath>
-				<pathelement location="track/antlion/releases/0.9.0/antlion-inline-0.9.0.jar" />
-			</classpath>
-		</typedef>
-	</target>
-
-	<target name="prepare.libraries" depends="prepare.track.optional, prepare.antlion">
-		<libraryDef>
-			<type>
-				<must-find/>
-				<default/>
-			</type>
-			<repository basedir="${track.dir}">
-				<format text="[groupid]/patches/[version]/[artifactid]-[version].[type]" />
-				<format text="[groupid]/patches/[version]/[artifactid].[type]" />
-				<format text="[groupid]/patches/[version]/[groupid]-[version].[type]" />
-				<format text="[groupid]/patches/[version]/[groupid].[type]" />
-				<format text="[groupid]/releases/[version]/[artifactid]-[version].[type]" />
-				<format text="[groupid]/releases/[version]/[artifactid].[type]" />
-				<format text="[groupid]/releases/[version]/[groupid]-[version].[type]" />
-				<format text="[groupid]/releases/[version]/[groupid].[type]" />
-				<!-- for log4j -->
-				<format text="[groupid]/releases/[version]/dist/lib/[groupid]-[version].[type]" />
-				<format text="[groupid]/releases/[version]/lib/[artifactid].[type]" />
-			</repository>
-
-			<library id="lib.jetty">
-				<lib-entry groupid="jetty" version="5.1.4rc0" artifactid="org.mortbay.jetty" />
-			</library>
-
-			<library id="lib.servlet">
-				<lib-entry groupid="jetty" version="5.1.4rc0" artifactid="javax.servlet" />
-			</library>
-
-			<library id="lib.hessian">
-				<library refid="lib.servlet" />
-				<lib-entry groupid="hessian" version="3.0.8" />
-			</library>
-
-			<library id="lib.vorbisspi">
-				<lib-entry groupid="vorbisspi" version="1.0.2" artifactid="vorbisspi1.0.2" />
-				<lib-entry groupid="vorbisspi" version="1.0.2" artifactid="jogg-0.0.7" />
-				<lib-entry groupid="vorbisspi" version="1.0.2" artifactid="jorbis-0.0.15" />
-				<lib-entry groupid="vorbisspi" version="1.0.2" artifactid="tritonus_share" />
-			</library>
-
-			<library id="lib.mp3spi">
-				<lib-entry groupid="mp3spi" version="1.9.4" artifactid="mp3spi1.9.4" />
-				<lib-entry groupid="mp3spi" version="1.9.4" artifactid="jl1.0" />
-				<lib-entry groupid="mp3spi" version="1.9.4" artifactid="tritonus_share" />
-			</library>
-
-			<library id="lib.tritonus">
-				<!-- <lib-entry artifactid="tritonus-share" groupid="tritonus" version="0.3.6" /> -->
-				<lib-entry artifactid="tritonus-vorbis" groupid="tritonus" version="0.3.6" />
-				<lib-entry artifactid="tritonus-core" groupid="tritonus" version="0.3.6" />
-			</library>
-
-			<library id="lib.test">
-				<lib-entry groupid="mockobjects" version="0.09" artifactid="mockobjects-core" />
-				<lib-entry groupid="junit" version="3.8.2" />
-				<lib-entry groupid="easymock" version="1.2" />
-			</library>
-
-			<library id="lib.mina">
-				<lib-entry groupid="mina" version="0.9.5-SNAPSHOT" artifactid="mina-core" />
-				<lib-entry groupid="slf4j" version="1.0" artifactid="slf4j-log4j12" />
-			</library>
-
-			<library id="lib.jstun">
-				<lib-entry groupid="jstun" version="0.5.9.2"/>
-			</library>
-
-			<library id="core">
-				<lib-entry groupid="commons-collections" version="3.1" />
-				<lib-entry groupid="commons-logging" version="1.1.0" artifactid="commons-logging-1.1-RC5" />
-				<lib-entry groupid="commons-cli" version="1.0" />
-				<lib-entry groupid="commons-codec" version="1.3" />
-				<lib-entry groupid="commons-io" version="1.0" />
-				<lib-entry groupid="commons-discovery" version="0.2" />
-				<lib-entry groupid="log4j" version="1.2.13" />
-				<lib-entry groupid="commons-lang" version="nightly-20041229" artifactid="commons-lang-2.0" />
-				<lib-entry groupid="commons-configuration" version="nightly-20050307" artifactid="commons-configuration-1.1RC2" />
-				<lib-entry groupid="concurrent" version="kolaka" />
-				<library refid="lib.mina" />
-				<library refid="lib.jstun" />
-			</library>
-
-			<library id="build">
-				<library refid="core" />
-				<lib-entry groupid="commons-digester" version="1.7" />
-				<lib-entry groupid="commons-httpclient" version="3.0.1" />
-				<lib-entry groupid="cortado" version="0.1.0" artifactid="cortado-ovt-0.1.0" />
-				<lib-entry groupid="jdic" version="0.9" />
-				<library refid="lib.hessian" />
-				<library refid="lib.jetty" />
-				<library refid="lib.tritonus" />
-				<library refid="lib.vorbisspi" />
-			</library>
-
-			<library id="runtime">
-				<library refid="build" />
-				<lib-entry groupid="commons-beanutils" version="1.7.0" />
-				<library refid="lib.mp3spi"/>
-			</library>
-
-			<library id="test">
-				<library refid="lib.test" />
-				<library refid="runtime" />
-			</library>
-
-			<!--
-			<library id="coverage">
-				<library refid="test" />
-			</library>
-			-->
-		</libraryDef>
-
-		<property name="track.docbook.dir" value="${track.dir}/docbook-xsl/releases/1.69.1" />
-		<property name="track.tritonus.dir" value="${track.dir}/tritonus/patches/0.3.6" />
-	</target>
+  <target name="prepare.libraries" depends="prepare.track">
+  	<ivy:retrieve pattern="lib/[conf]/[artifact].[ext]" conf="core, runtime, test" />
+  	<path id="path.build">
+  		<fileset dir="lib/core"/>
+  	</path>
+  	<path id="path.runtime">
+  		<fileset dir="lib/runtime"/>
+  		<path refid="path.build"/>
+  	</path>
+  	<path id="path.test">
+  		<fileset dir="lib/test"/>
+  		<path refid="path.runtime"/>
+  	</path>
+  </target>
+  
+  <target name="prepare.docbook" depends="prepare.track, prepare.docbook.retrieve, prepare.docbook.install">
+  	<path id="path.docbook">
+  		<fileset dir="lib/build-docbook"/>
+  	</path>
+		<property name="track.docbook.dir" location="lib/build-docbook/docbook-xsl" />
+  </target>
+  
+  <target name="prepare.docbook.retrieve">
+  	<ivy:retrieve pattern="lib/[conf]/[artifact].[ext]" conf="build-docbook" />
+  </target>
+  
+  <target name="prepare.docbook.install.check">
+  	<uptodate property="prepare.docbook.install.notRequired"
+            srcfile="lib/build-docbook/docbook-xsl.zip"
+            targetfile="lib/build-docbook/docbook-xsl/.touch"/>
+  </target>
+  
+  <target name="prepare.docbook.install" 
+  	depends="prepare.docbook.install.check" unless="prepare.docbook.install.notRequired">
+  	<tempfile property="prepare.docbook.dir"/>
+  	<mkdir dir="${prepare.docbook.dir}"/>
+  	<unzip src="lib/build-docbook/docbook-xsl.zip" dest="${prepare.docbook.dir}"/>
+  	<move todir="lib/build-docbook/docbook-xsl">
+  		<fileset dir="${prepare.docbook.dir}"/>
+	  	<regexpmapper from="^docbook-xsl-[0-9\.]+/(.*)$$" to="\1"/>
+	  </move>
+	  <delete dir="${prepare.docbook.dir}"/>
+	  <touch file="lib/build-docbook/docbook-xsl/.touch"/>
+  </target>
 
 	<target name="clean">
 		<delete dir="build" />
+		<delete dir="lib" />
 		<delete dir="dist" />
 		<delete dir="export" />
 	</target>
-
-	<target name="clean.track" depends="prepare.track.commons-vfs, prepare.track.file">
-		<echo message="synchronize the track directory ..." />
-		<v-sync src="virtual:${prepare.track.file}" destdir="track" />
-	</target>
-
-
 
 	<target name="build.validate">
 		<macrodef name="configvalidate">
@@ -291,7 +117,6 @@
 	<target name="build.core" depends="prepare.libraries, build.core.classes, build.core.resources" />
 
 	<target name="build.core.classes" depends="build.validate">
-		<property name="build.core.classes.dir" value="build/core/classes" />
 		<mkdir dir="${build.core.classes.dir}" />
 		<javac target="1.4" source="1.4" srcdir="source" destdir="${build.core.classes.dir}" debug="true">
 			<classpath refid="path.build" />
@@ -357,9 +182,31 @@
 	<target name="build" depends="build.core" />
 
 	<target name="build.changelog">
-		<mkdir dir="build/changelog" />
-		<style in="source/org/kolaka/freecast/changelog.xml" out="build/changelog/changelog.html" style="${track.xmlreleasenotes.dir}/src/XMLReleaseNotes2HTML.xsl" />
-		<copy todir="build/changelog" file="${track.xmlreleasenotes.dir}/stylesheet.css" />
+  	<ivy:retrieve pattern="lib/[conf]/[artifact].[ext]" conf="build-xmlreleasenotes" />
+  	
+  	<taskdef classname="org.xrn.ant.XMLReleaseNotes" name="xrn">
+  		<classpath>
+  			<fileset dir="lib/build-xmlreleasenotes"/>
+  		</classpath>
+  	</taskdef>
+
+  	<property name="build.changelog.xrn.dir" value="lib/build-xmlreleasenotes/xmlreleasenotes"/>
+		<mkdir dir="${build.changelog.xrn.dir}" />
+		<xrn destination="${build.changelog.xrn.dir}" deploy="true" />
+
+		<mkdir dir="build/xmlreleasenotes"/>
+
+		<style in="source/org/kolaka/freecast/changelog.xml" out="build/xmlreleasenotes/changelog.html" style="${build.changelog.xrn.dir}/XMLReleaseNotes2HTML.xsl" />
+
+		<mkdir dir="build/changelog"/>
+
+		<tidy dest="build/changelog" failonerror="false" encoding="latin1">
+			<filesets>
+				<fileset dir="build/xmlreleasenotes"/>
+			</filesets>
+		</tidy>
+		
+		<copy tofile="build/changelog/stylesheet.css" file="${build.changelog.xrn.dir}/XMLReleaseNotes.css" />
 	</target>
 
 	<target name="build.docs" depends="build.docs.api, build.docs.xref, build.docs.coverage, build.docs.userguide" />
@@ -387,7 +234,7 @@
 
 	<target name="build.docs.userguide" depends="build.docs.userguide.html,build.docs.userguide.pdf" />
 
-	<target name="build.docs.userguide.prepare" depends="prepare.libraries, prepare.version">
+	<target name="build.docs.userguide.prepare" depends="prepare.docbook, prepare.version">
 		<mkdir dir="build/docs/userguide" />
 		<tstamp>
 			<format property="build.docs.userguide.pubdate" pattern="EEEE, MMMM d yyyy" locale="en" />
@@ -516,13 +363,7 @@
 
 		<taskdef name="fop" classname="org.apache.fop.tools.anttasks.Fop">
 			<classpath>
-			  <!--
-				<pathelement location="track/fop/releases/0.20.5/build/fop.jar" />
-				<pathelement location="track/fop/releases/0.20.5/lib/avalon-framework-cvs-20020806.jar" />
-				<pathelement location="track/fop/releases/0.20.5/lib/batik.jar" />
-				-->
-				<fileset dir="track/jai/releases/1.1.2.01" includes="**/*.jar"/>
-				<fileset dir="track/fop/releases/0.20.5" includes="**/*.jar"/>
+				<fileset dir="lib/build-docbook" includes="*.jar"/>
 			</classpath>
 		</taskdef>
 		<fop format="application/pdf" fofile="build/docs/userguide/userguide.fo" outfile="build/docs/userguide/userguide.pdf" basedir="build/docs/userguide" />
@@ -537,20 +378,22 @@
 	</target>
 
 	<target name="build.docs.xref" depends="build.docs.xref.check" unless="build.docs.xref.notRequired">
-		<taskdef name="jxr" classname="org.kolaka.ant.jxr.Jxr">
+  	<ivy:retrieve pattern="lib/[conf]/[artifact].[ext]" conf="build-antjxr" />
+    <unzip dest="lib/build-antjxr">
+    	<fileset dir="lib/build-antjxr" includes="ant-jxr-data*.zip"/>
+    </unzip>
+    <taskdef name="jxr" classname="org.kolaka.ant.jxr.Jxr">
 			<classpath>
-				<fileset dir="${track.ant-jxr.dir}">
-					<include name="**/*.jar" />
-				</fileset>
-			</classpath>
-		</taskdef>
+				<fileset dir="lib/build-antjxr"/>
+			</classpath>    
+    </taskdef>
 
 		<mkdir dir="build/docs/xref" />
 
-		<jxr sourcedir="source" destdir="build/docs/xref" templatedir="${track.ant-jxr.dir}/templates" windowTitle="Kolaka - FreeCast" docTitle="FreeCast" bottom="Copyright 2004. Kolaka Team" />
+		<jxr sourcedir="source" destdir="build/docs/xref" templatedir="lib/build-antjxr/templates" windowTitle="Kolaka - FreeCast" docTitle="FreeCast" bottom="Copyright 2004-2006. Alban Peignier" />
 
 		<copy todir="build/docs/xref">
-			<fileset dir="${track.ant-jxr.dir}/resources" />
+			<fileset dir="lib/build-antjxr/resources" />
 		</copy>
 
 		<touch file="build/docs/xref/.touch" />
@@ -715,9 +558,9 @@
 		</junit>
 	</target>
 
-	<target name="dist" depends="dist.jar, dist.bin, dist.etc, dist.lib" description="Create the binaries distribution" />
+	<target name="dist" depends="build, dist.jar, dist.bin, dist.etc, dist.lib" description="Create the binaries distribution" />
 
-	<target name="dist.jar" depends="build">
+	<target name="dist.jar">
 		<mkdir dir="dist/lib" />
 		<jar jarfile="dist/lib/freecast.jar">
 			<fileset dir="${build.core.classes.dir}" />
@@ -871,17 +714,46 @@
 		</xmltidy>
 	</target>
 
-	<target name="dist.lib" depends="prepare.libraries">
-		<copy todir="dist/lib" flatten="true">
-			<fileset refid="fileset.runtime" />
-		</copy>
+	<target name="dist.lib">
 		<copy todir="dist/lib">
-			<fileset dir="track/jdic/releases/0.9">
-				<include name="linux/**" />
-				<include name="windows/**" />
-				<include name="sunos/**" />
+			<fileset dir="lib/core"/>
+			<fileset dir="lib/runtime">
+				 <include name="*.jar"/>
+				 <exclude name="jdic-stub*"/>
+				 <exclude name="jdic-native*"/>
 			</fileset>
 		</copy>
+		<copy todir="dist/lib/linux">
+			<fileset dir="lib/runtime" includes="jdic-stub-linux.jar"/>
+		</copy>
+		<copy todir="dist/lib/windows">
+			<fileset dir="lib/runtime" includes="jdic-stub-windows.jar"/>
+		</copy>
+		<copy todir="dist/lib/sunos">
+			<fileset dir="lib/runtime" includes="jdic-stub-sunos.jar"/>
+		</copy>
+			
+		<patternset id="patternset.nometainf">
+			<exclude name="META-INF/**"/>
+		</patternset>
+
+		<unjar dest="dist/lib/linux/x86">
+			<fileset dir="lib/runtime" includes="*-native-linux-x86.jar"/>
+			<patternset refid="patternset.nometainf"/>
+		</unjar>
+		<unjar dest="dist/lib/windows/x86">
+			<fileset dir="lib/runtime" includes="*-native-windows-x86.jar"/>
+			<patternset refid="patternset.nometainf"/>
+		</unjar>
+		<unjar dest="dist/lib/sunos/x86">
+			<fileset dir="lib/runtime" includes="*-native-sunos-x86.jar"/>
+			<patternset refid="patternset.nometainf"/>
+		</unjar>
+		<unjar dest="dist/lib/sunos/sparc">
+			<fileset dir="lib/runtime" includes="*-native-sunos-sparc.jar"/>
+			<patternset refid="patternset.nometainf"/>
+		</unjar>
+		
 		<copy todir="dist/lib/linux/x86">
 			<fileset dir="${track.tritonus.dir}">
 				<include name="*.so" />
@@ -1026,10 +898,11 @@
 	<macrodef name="tidy">
 		<attribute name="dest" />
 		<attribute name="failonerror" default="true" />
+		<attribute name="encoding" default="utf8" />
 		<element name="filesets" optional="false" />
 		<sequential>
 			<apply executable="tidy" dest="@{dest}" failonerror="@{failonerror}" verbose="true">
-				<arg line="-quiet -utf8 -wrap 100 -indent" />
+				<arg line="-quiet -@{encoding} -wrap 100 -indent" />
 				<arg value="-o" />
 				<targetfile />
 				<srcfile />
@@ -1146,7 +1019,7 @@
 				<pathelement location="${basedir}/build/win32" />
 			</path>
 		</pathconvert>
-		<exec executable="makensis">
+		<exec executable="makensis" failonerror="true">
 			<arg value="-V4" />
 			<arg value="-NOCD" />
 			<arg value="-DBuildDir=build\win32" />
@@ -1157,10 +1030,10 @@
 	</target>
 
 	<target name="export.debian" depends="export.debian.changelog">
-		<exec executable="fakeroot">
+		<exec executable="fakeroot" failonerror="true">
 			<arg line="./debian/rules binary"/>
 		</exec>
-		<exec executable="sed" outputproperty="export.debian.changelog.version">
+		<exec executable="sed" outputproperty="export.debian.changelog.version" failonerror="true">
 			<arg line="-n '1 s/freecast (\(.*\)).*/\1/p'"/>
 			<arg file="debian/changelog"/>
 		</exec>
@@ -1169,13 +1042,13 @@
 	</target>
 
 	<target name="export.debian.clean">
-		<exec executable="fakeroot">
+		<exec executable="fakeroot" failonerror="true">
 			<arg line="./debian/rules clean"/>
 		</exec>
 	</target>
 	
 	<target name="export.debian.changelog.check" depends="prepare.version">
-		<exec executable="sed" outputproperty="export.debian.changelog.currentversion">
+		<exec executable="sed" outputproperty="export.debian.changelog.currentversion" failonerror="true">
 			<arg line="-n '1 s/freecast (\(.*\)).*/\1/p'"/>
 			<arg file="debian/changelog"/>
 		</exec>
@@ -1197,7 +1070,7 @@
 			</filterset>
 		</copy>
 		
-		<exec executable="cat">
+		<exec executable="cat" failonerror="true">
 			<arg value="${export.debian.changelog.append}"/>
 		</exec>
 
@@ -1226,7 +1099,7 @@
 
 	<target name="install.export" depends="export">
 		<property name="install.export.target" value="${user.name}@download.freecast.org:/var/www/kolaka.org/freecast/export" />
-		<exec executable="rsync">
+		<exec executable="rsync" failonerror="true">
 			<arg value="-avc" />
 			<arg line="--exclude '*.deb'"/>
 			<arg value="export/" />
@@ -1240,12 +1113,12 @@
 
 		<tar destfile="${install.docs.tempfile}" basedir="dist/docs" compression="gzip" />
 
-		<exec executable="rsync">
+		<exec executable="rsync" failonerror="true">
 			<arg value="-av" />
 			<arg value="${install.docs.tempfile}" />
 			<arg value="${user.name}@ssh.tryphon.org:/tmp/" />
 		</exec>
-		<exec executable="ssh">
+		<exec executable="ssh" failonerror="true">
 			<arg value="${user.name}@ssh.tryphon.org" />
 			<arg value="tar -xzf /tmp/${install.docs.tempfilename} -C /var/www/kolaka.org/freecast/docs ; rm /tmp/${install.docs.tempfilename}" />
 		</exec>
@@ -1263,7 +1136,7 @@
 		<mkdir dir="dist/install/jws" />
 		<property name="install.jws.target" value="${user.name}@ssh.tryphon.org:/var/www/kolaka.org/freecast/jws" />
 
-		<exec executable="rsync">
+		<exec executable="rsync" failonerror="true">
 			<arg value="-av" />
 			<arg value="${install.jws.target}/libfreecast" />
 			<arg value="dist/install/jws" />
@@ -1284,7 +1157,7 @@
 			</fileset>
 		</copy>
 
-		<exec executable="rsync">
+		<exec executable="rsync" failonerror="true">
 			<arg value="-av" />
 			<arg value="dist/install/jws/" />
 			<arg value="${user.name}@ssh.tryphon.org:/var/www/kolaka.org/freecast/jws" />
@@ -1293,7 +1166,7 @@
 
 	<target name="install.www" depends="dist.www">
 		<property name="install.www.target" value="${user.name}@ssh.tryphon.org:/var/www/freecast.org/www/" />
-		<exec executable="rsync">
+		<exec executable="rsync" failonerror="true">
 			<arg value="-av" />
 			<arg value="dist/www/" />
 			<arg value="${install.www.target}" />
