@@ -163,6 +163,40 @@
     <div>
     <strong>
       <i18n>
+        <text lang="en">June 29, 2006</text>
+        <text lang="fr">29 juin 2006</text>
+      </i18n>
+    </strong>: 
+    <i18n>
+      <text lang="en"><strong>FreeCast</strong> release 20060629</text>
+      <text lang="fr"><strong>FreeCast</strong> version 20060629</text>
+    </i18n>
+    <p>
+      <i18n>
+      	<text lang="en">Several new features like the volume control and the stream metadata display.</text>
+      	<text lang="fr">Plusieurs nouvelles fonctionnalités comme le contrôle du volume et l'affichage de la description du flux.</text>
+    	</i18n>
+    </p>
+    <p>
+      <i18n>
+        <text lang="en">For more information about this release,
+        see the whole 
+        <a href="http://download.freecast.org/README.html">
+        changelog</a>.</text>
+        <text lang="fr">Pour plus d'informations à propos de cette
+        version, consultez la 
+        <a href="http://download.freecast.org/README.html">liste
+        complète des modifications</a>.</text>
+        <text lang="es">Para más información sobre esta versión
+        consulte 
+        <a href="http://download.freecast.org/README.html">lista
+        completa de modificaciones</a>.</text>
+      </i18n>
+    </p>
+    </div>
+    <div>
+    <strong>
+      <i18n>
         <text lang="en">June 9, 2006</text>
         <text lang="fr">15 juin 2006</text>
       </i18n>
@@ -222,22 +256,6 @@
         </i18n>
       </li>
     </ul>
-    <p>
-      <i18n>
-        <text lang="en">For more information about this release,
-        see the whole 
-        <a href="http://download.freecast.org/README.html">
-        changelog</a>.</text>
-        <text lang="fr">Pour plus d'informations à propos de cette
-        version, consultez la 
-        <a href="http://download.freecast.org/README.html">liste
-        complète des modifications</a>.</text>
-        <text lang="es">Para más información sobre esta versión
-        consulte 
-        <a href="http://download.freecast.org/README.html">lista
-        completa de modificaciones</a>.</text>
-      </i18n>
-    </p>
     </div>
     <p>
       <i18n>
