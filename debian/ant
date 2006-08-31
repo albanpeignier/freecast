@@ -1,0 +1,2 @@
+#/bin/sh -ex
+ant -Divy.default.ivy.user.dir=$HOME/.ivy $*
