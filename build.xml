@@ -12,9 +12,12 @@
 
 			<java classname="org.apache.xalan.xslt.Process" fork="true" failonerror="true">
 				<jvmarg line="-Dorg.apache.xerces.xni.parser.XMLParserConfiguration=org.apache.xerces.parsers.XIncludeParserConfiguration" />
-				<jvmarg line="-Xbootclasspath/p:lib/build-docbook/xercesImpl.jar" />
+				<jvmarg 
+line="-Xbootclasspath/p:lib/build-docbook/xercesImpl.jar;lib/build-docbook/xml-apis.jar" />
 				<classpath>
-					<pathelement path="lib/build-docbook/xalan.jar" />
+					<fileset dir="lib/build-docbook">
+						<include name="xalan.jar"/>
+					</fileset>
 					<pathelement path="${track.docbook.dir}/extensions/xalan25.jar" />
 				</classpath>
 
