@@ -1,0 +1,521 @@
+<project xmlns:ivy="antlib:fr.jayasoft.ivy.ant" name="freecast-all" default="dist.all" basedir=".">
+
+	<import file="build.xml"/>
+	<import file="build-docs.xml"/>
+
+	<target name="prepare.ivy">
+  	<ivy:configure />
+	</target>
+
+	<target name="prepare.version">
+		<tstamp />
+		<property name="project.version" value="${DSTAMP}" />
+		<property name="project.fullname" value="freecast-${project.version}" />
+	</target>
+	
+  <target name="prepare.libraries" depends="prepare.ivy">
+  	<ivy:retrieve pattern="lib/[conf]/[artifact].[ext]" conf="core, runtime, test" />
+
+		<patternset id="patternset.nometainf">
+			<exclude name="META-INF/**"/>
+		</patternset>
+  	
+  	<macrodef name="unjar-natives">
+  		<attribute name="platform"/>
+  		<attribute name="arch"/>
+  		<sequential>
+				<unjar dest="lib/runtime/@{platform}/@{arch}">
+					<fileset dir="lib/runtime" includes="*-native-@{platform}-@{arch}.jar"/>
+					<patternset refid="patternset.nometainf"/>
+				</unjar>
+  		</sequential>
+  	</macrodef>
+  	
+		<unjar-natives platform="linux" arch="x86"/>  	
+		<unjar-natives platform="windows" arch="x86"/>  	
+		<unjar-natives platform="sunos" arch="x86"/>  	
+		<unjar-natives platform="sunos" arch="sparc"/>  	
+		
+		<copy todir="lib/runtime/linux/x86">
+			<fileset dir="${track.tritonus.dir}">
+				<include name="*.so" />
+			</fileset>
+		</copy>
+		<copy todir="lib/runtime/windows/x86" flatten="true">
+			<fileset dir="${track.tritonus.dir}">
+				<include name="**/*.dll" />
+			</fileset>
+		</copy>
+  	
+  	<path id="path.build">
+  		<fileset dir="lib/core"/>
+  	</path>
+  	<path id="path.runtime">
+  		<fileset dir="lib/runtime"/>
+  		<path refid="path.build"/>
+  	</path>
+  	<path id="path.test">
+  		<fileset dir="lib/test"/>
+  		<path refid="path.runtime"/>
+  	</path>
+  </target>
+
+	<target name="clean.all" depends="clean">
+		<delete dir="lib" />
+		<delete dir="export" />
+	</target>
+
+	<target name="build.www">
+		<property name="build.www.dir" location="build/www" />
+		<mkdir dir="${build.www.dir}" />
+
+		<property name="source.www.dir" location="source/org/kolaka/freecast/www" />
+		<patternset id="build.www.xml.patternset">
+			<include name="*.xml" />
+			<exclude name="start*.xml" />
+		</patternset>
+
+		<xmlvalidate lenient="true" failonerror="true" warn="true">
+			<fileset dir="${source.www.dir}">
+				<include name="*.xml" />
+			</fileset>
+		</xmlvalidate>
+
+		<xslt basedir="${source.www.dir}" destdir="${build.www.dir}" style="${source.www.dir}/template.xsl">
+			<param name="lang" expression="en" />
+			<mapper type="glob" from="*.xml" to="*.html.en" />
+			<patternset refid="build.www.xml.patternset" />
+		</xslt>
+		<xslt basedir="${source.www.dir}" destdir="${build.www.dir}" style="${source.www.dir}/template.xsl">
+			<param name="lang" expression="fr" />
+			<mapper type="glob" from="*.xml" to="*.html.fr" />
+			<patternset refid="build.www.xml.patternset" />
+		</xslt>
+		<xslt basedir="${source.www.dir}" destdir="${build.www.dir}" style="${source.www.dir}/template.xsl">
+			<param name="lang" expression="es" />
+			<mapper type="glob" from="*.xml" to="*.html.es" />
+			<patternset refid="build.www.xml.patternset" />
+		</xslt>
+
+		<copy todir="${build.www.dir}">
+			<fileset dir="${source.www.dir}">
+				<include name="robots.txt" />
+				<include name="**/*.css" />
+				<include name="**/*.png" />
+				<include name="**/*.png.*" />
+				<include name="**/*.jpg" />
+				<include name="**/*.gif" />
+				<include name="**/*.ico" />
+				<include name="**/start*.*" />
+				<include name="**/jnlp.*" />
+				<include name="**/reference.php" />
+				<include name="js/*" />
+			</fileset>
+		</copy>
+
+		<macrodef name="thumbnails">
+			<attribute name="dest" />
+			<element name="filesets" />
+			<sequential>
+				<apply executable="convert" dest="@{dest}" failonerror="true" verbose="true">
+					<arg line="-geometry 200x200" />
+					<srcfile />
+					<targetfile />
+					<filesets />
+					<mapper type="regexp" from="^(.*)\.([^.]*)" to="\1-thumb.\2" />
+				</apply>
+			</sequential>
+		</macrodef>
+
+		<thumbnails dest="${build.www.dir}">
+			<filesets>
+				<fileset dir="${source.www.dir}">
+					<include name="images/screenshots/*.png" />
+				</fileset>
+			</filesets>
+		</thumbnails>
+	</target>
+
+	<target name="build.win32" depends="build.win32.jre">
+		<copy todir="build/win32">
+			<fileset dir="source/org/kolaka/freecast/nsis" />
+			<filterset>
+				<filter token="project.version" value="${project.version}" />
+			</filterset>
+		</copy>
+	</target>
+
+	<target name="build.win32.jre" unless="build.win32.jre.notRequired">
+		<mkdir dir="build/win32" />
+		<get dest="build/win32/jre-setup.exe" src="${export.win32.jresetup.url}" usetimestamp="true" />
+	</target>
+
+	<target name="test" depends="build.test" description="Run the unit tests">
+		<property name="build.test.results.dir" value="build/test/results" />
+		<mkdir dir="${build.test.results.dir}" />
+		<property name="test.haltonfailure" value="true" />
+		<junit printsummary="yes" haltonfailure="${test.haltonfailure}" includeantruntime="yes" fork="yes">
+			<formatter type="plain" />
+			<batchtest todir="${build.test.results.dir}">
+				<fileset dir="source">
+					<include name="**/test/*Test.java" />
+					<include name="**/test/*TestSuite.java" />
+					<exclude name="**/test/*BaseTest.java" />
+				</fileset>
+			</batchtest>
+			<classpath>
+				<pathelement path="build/core/classes" />
+				<pathelement path="build/test/classes" />
+				<path refid="path.test" />
+			</classpath>
+			<sysproperty key="java.library.path" path="${track.tritonus.dir}" />
+		</junit>
+	</target>
+
+	<target name="dist.jws.check">
+		<available file="${dist.jws.keystore}" property="dist.jws.possible" />
+	</target>
+
+	<target name="dist.jws.libfreecast" depends="prepare.version, build.etc, dist.jar, dist.lib, dist.jws.check" if="dist.jws.possible">
+		<property name="dist.jws.libfreecast.dir" value="dist/jws/libfreecast" />
+		<property name="dist.jws.codebase" value="http://download.freecast.org/jws/libfreecast/"/>
+		
+		<copy tofile="${dist.jws.libfreecast.dir}/libfreecast-${project.version}.jnlp" file="source/org/kolaka/freecast/node/swing/libfreecast.jnlp">
+			<filterset>
+				<filter token="project.version" value="${project.version}" />
+				<filter token="codebase" value="${dist.jws.codebase}" />
+			</filterset>
+		</copy>
+		<copy tofile="${dist.jws.libfreecast.dir}/freecast-manager.jnlp" file="source/org/kolaka/freecast/manager/gui/freecast-manager.jnlp">
+			<filterset>
+				<filter token="project.version" value="${project.version}" />
+				<filter token="codebase" value="${dist.jws.codebase}" />
+			</filterset>
+		</copy>
+
+		<mkdir dir="${dist.jws.libfreecast.dir}/lib" />
+		<jar jarfile="${dist.jws.libfreecast.dir}/lib/freecast-bootstrap.jar">
+			<fileset dir="${build.core.classes.dir}">
+				<include name="org/kolaka/freecast/node/swing/Bootstrap.class" />
+			</fileset>
+		</jar>
+
+		<jar jarfile="${dist.jws.libfreecast.dir}/lib/freecast-etc.jar">
+			<fileset dir="build/etc/console-only" />
+		</jar>
+
+		<copy todir="${dist.jws.libfreecast.dir}/lib" flatten="true">
+			<fileset dir="dist/lib">
+				<include name="*.jar" />
+				<include name="jws/freecast-bootstrap.jar" />
+
+				<!-- TODO replace with a dedicated library -->
+				<exclude name="freecast*" />
+			</fileset>
+		</copy>
+		<copy todir="${dist.jws.libfreecast.dir}/lib">
+			<fileset dir="dist/lib">
+				<include name="linux/*.jar" />
+				<include name="windows/*.jar" />
+				<include name="sunos/*.jar" />
+			</fileset>
+		</copy>
+		<mkdir dir="${dist.jws.libfreecast.dir}/lib/linux" />
+		<jar jarfile="${dist.jws.libfreecast.dir}/lib/linux/native_x86.jar">
+			<fileset dir="dist/lib/linux/x86" />
+		</jar>
+		<mkdir dir="${dist.jws.libfreecast.dir}/lib/windows" />
+		<jar jarfile="${dist.jws.libfreecast.dir}/lib/windows/native_x86.jar">
+			<fileset dir="dist/lib/windows/x86" />
+		</jar>
+		<mkdir dir="${dist.jws.libfreecast.dir}/lib/sunos" />
+		<jar jarfile="${dist.jws.libfreecast.dir}/lib/sunos/native_sparc.jar">
+			<fileset dir="dist/lib/sunos/sparc" />
+		</jar>
+		<jar jarfile="${dist.jws.libfreecast.dir}/lib/sunos/native_x86.jar">
+			<fileset dir="dist/lib/sunos/x86" />
+		</jar>
+		<copy tofile="${dist.jws.libfreecast.dir}/lib/freecast-${project.version}.jar" file="dist/lib/freecast.jar" />
+
+		<signjar keystore="${dist.jws.keystore}" alias="kolaka" storepass="kolaka">
+			<fileset dir="${dist.jws.libfreecast.dir}/lib" includes="**/*.jar">
+				<depend targetdir="${dist.jws.libfreecast.dir}/lib">
+					<mapper type="merge" to=".signjar" />
+				</depend>
+			</fileset>
+		</signjar>
+		<touch file="${dist.jws.libfreecast.dir}/lib/.signjar" />
+	</target>
+
+	<target name="dist.jws" depends="dist.jws.libfreecast" />
+
+	<target name="dist.win32" depends="dist.jar, dist.lib, dist.bin, dist.docs, dist.etc, build.win32">
+		<copy todir="${dist.win32.dir}" includeemptydirs="false">
+			<fileset dir="dist">
+				<include name="lib/*.jar" />
+				<include name="lib/windows/**" />
+				<include name="bin/*.bat" />
+				<include name="etc/**" />
+				<include name="docs/*" />
+				<include name="docs/userguide/**" />
+				<include name="docs/examples/**" />
+			</fileset>
+		</copy>
+		<copy todir="${dist.win32.dir}/etc">
+		  <fileset dir="dist/docs/examples/audio"/>
+		</copy>
+		<copy file="LICENSE" tofile="${dist.win32.dir}/LICENSE.txt" />
+        <fixcrlf srcdir="${dist.win32.dir}" eol="dos">
+		  <include name="**/*.xml"/>
+		  <include name="**/*.bat"/>
+		  <include name="**/*.txt"/>
+		  <include name="**/*.html"/>
+		</fixcrlf>
+	</target>
+
+	<target name="dist.www" depends="build.www, build.docs.userguide">
+		<mkdir dir="dist/www" />
+		<tidy dest="dist/www">
+			<filesets>
+				<fileset dir="build/www">
+					<include name="*.html.*" />
+					<exclude name="start.html.*" />
+					<exclude name="screencast-*.html.*" />
+				</fileset>
+			</filesets>
+		</tidy>
+
+		<!-- screencast pages used an embed tag -->
+		<tidy dest="dist/www" failonerror="false">
+			<filesets>
+				<fileset dir="build/www">
+					<include name="screencast-*.html.*" />
+				</fileset>
+			</filesets>
+		</tidy>
+
+		<copy todir="dist/www" encoding="UTF-8">
+			<fileset dir="build/www">
+				<exclude name="*.html.*" />
+			</fileset>
+		</copy>
+
+		<mkdir dir="dist/www/userguide" />
+		<tidy dest="dist/www/userguide" failonerror="false">
+			<filesets>
+				<fileset dir="build/docs/userguide">
+					<include name="*.html" />
+				</fileset>
+			</filesets>
+		</tidy>
+		<copy todir="dist/www/userguide">
+			<fileset dir="build/docs/userguide">
+				<include name="**/*.png" />
+				<include name="**/*.css" />
+				<include name="*.pdf" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="export.tar" depends="prepare.version, build.changelog, dist, dist.docs" description="Packages binaries and sources distributions">
+		<mkdir dir="export" />
+
+		<tar tarfile="export/${project.fullname}.tar.bz" compression="bzip2">
+			<!-- permissions are not managed by the tar target -->
+			<tarfileset dir="dist" prefix="${project.fullname}" mode="755">
+				<include name="bin/freecast*" />
+				<exclude name="bin/*.bat" />
+			</tarfileset>
+			<tarfileset dir="dist" prefix="${project.fullname}">
+				<include name="bin/*.bat" />
+			</tarfileset>
+			<tarfileset dir="dist" prefix="${project.fullname}">
+				<exclude name="bin/**" />
+				<exclude name="jws/**" />
+				<exclude name="www/**" />
+				<exclude name="log/**" />
+				<exclude name="docs/**" />
+				<exclude name="install/**" />
+			</tarfileset>
+			<tarfileset dir="dist/docs" prefix="${project.fullname}/docs">
+				<include name="userguide/**" />
+				<include name="examples/**" />
+			</tarfileset>
+		</tar>
+		<tar tarfile="export/${project.fullname}-src.tar.bz" compression="bzip2">
+			<tarfileset dir="source" prefix="${project.fullname}/source">
+				<exclude name="**/.arch-ids/**" />
+			</tarfileset>
+			<tarfileset dir="dist/docs" prefix="${project.fullname}/docs">
+				<exclude name="**/.touch" />
+			</tarfileset>
+			<tarfileset dir="${basedir}" prefix="${project.fullname}">
+				<include name="build.*" />
+				<include name="track.*" />
+				<include name="CONTRIBUTORS" />
+				<include name="LICENSE" />
+			</tarfileset>
+		</tar>
+	</target>
+
+	<target name="export.win32" depends="dist.win32">
+		<pathconvert targetos="windows" property="export.win32.build.dir">
+			<path>
+				<pathelement location="${basedir}/build/win32" />
+			</path>
+		</pathconvert>
+		<exec executable="makensis" failonerror="true">
+			<arg value="-V4" />
+			<arg value="-NOCD" />
+			<arg value="-DBuildDir=build\win32" />
+			<arg value="-DDistDir=dist\win32" />
+			<arg value="-DExportFile=export\${project.fullname}.exe" />
+			<arg file="build/win32/freecast.nsi" />
+		</exec>
+	</target>
+
+	<target name="export.debian" depends="export.debian.changelog">
+		<exec executable="fakeroot" failonerror="true">
+			<arg line="./debian/rules binary"/>
+		</exec>
+		<exec executable="sed" outputproperty="export.debian.changelog.version" failonerror="true">
+			<arg line="-n '1 s/freecast (\(.*\)).*/\1/p'"/>
+			<arg file="debian/changelog"/>
+		</exec>
+		<echo message="${export.debian.changelog.version}"/>
+		<move file="../freecast_${export.debian.changelog.version}_all.deb" todir="export"/>
+	</target>
+
+	<target name="export.debian.clean">
+		<exec executable="fakeroot" failonerror="true">
+			<arg line="./debian/rules clean"/>
+		</exec>
+	</target>
+	
+	<target name="export.debian.changelog.check" depends="prepare.version">
+		<exec executable="sed" outputproperty="export.debian.changelog.currentversion" failonerror="true">
+			<arg line="-n '1 s/freecast (\(.*\)).*/\1/p'"/>
+			<arg file="debian/changelog"/>
+		</exec>
+		
+		<condition property="export.debian.changelog.notRequired">
+			<contains string="${export.debian.changelog.currentversion}" substring="${project.version}"/>
+		</condition>
+	</target>
+
+	<target name="export.debian.changelog" unless="export.debian.changelog.notRequired" depends="export.debian.changelog.check">
+		<tempfile property="export.debian.changelog.append"/>
+		<tstamp>
+	      <format property="export.debian.changelog.date" pattern="EEE, dd MMM yyyy hh:mm:ss Z"/>
+		</tstamp>
+		<copy tofile="${export.debian.changelog.append}" file="debian/changelog.template">
+			<filterset>
+				<filter token="project.version" value="${project.version}" />
+				<filter token="date" value="${export.debian.changelog.date}" />
+			</filterset>
+		</copy>
+		
+		<exec executable="cat" failonerror="true">
+			<arg value="${export.debian.changelog.append}"/>
+		</exec>
+
+		<tempfile property="export.debian.changelog.output"/>
+		<concat destfile="${export.debian.changelog.output}">
+			<fileset file="${export.debian.changelog.append}"/>
+			<filelist dir="${basedir}" files="debian/changelog"/>
+		</concat>
+		
+		<copy tofile="debian/changelog" file="${export.debian.changelog.output}"/>
+		
+		<delete file="${export.debian.changelog.output}"/>
+		<delete file="${export.debian.changelog.append}"/>
+	</target>
+	
+	<target name="export" depends="export.tar, export.debian, export.win32">
+		<copy tofile="export/README.html" file="build/changelog/changelog.html" />
+		<copy todir="export">
+			<fileset dir="build/changelog">
+				<include name="*.css" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="ccontrol.loop" depends="clean.all, dist, export" />
+
+	<target name="install.export" depends="export">
+		<property name="install.export.target" value="${user.name}@download.freecast.org:/var/www/kolaka.org/freecast/export" />
+		<exec executable="rsync" failonerror="true">
+			<arg value="-avc" />
+			<arg line="--exclude '*.deb'"/>
+			<arg value="export/" />
+			<arg value="${install.export.target}" />
+		</exec>
+	</target>
+
+	<target name="install.docs" depends="dist.docs">
+		<tempfile property="install.docs.tempfile" prefix="freecast-docs-" suffix=".tar.gz" />
+		<basename property="install.docs.tempfilename" file="${install.docs.tempfile}" />
+
+		<tar destfile="${install.docs.tempfile}" basedir="dist/docs" compression="gzip" />
+
+		<exec executable="rsync" failonerror="true">
+			<arg value="-av" />
+			<arg value="${install.docs.tempfile}" />
+			<arg value="${user.name}@ssh.tryphon.org:/tmp/" />
+		</exec>
+		<exec executable="ssh" failonerror="true">
+			<arg value="${user.name}@ssh.tryphon.org" />
+			<arg value="tar -xzf /tmp/${install.docs.tempfilename} -C /var/www/kolaka.org/freecast/docs ; rm /tmp/${install.docs.tempfilename}" />
+		</exec>
+
+		<delete file="${install.docs.tempfile}" />
+	</target>
+
+	<target name="install.jws" depends="dist.jws">
+		<!--
+			install files needed for the JavaWebStart deployment, can look a bit complicated,
+			but the copy operation must preserve the files already published and the jar
+			signatures modify the jar files (and the last modifications). So retrieve published
+			files, add only missing files, and sync back the remote directory
+        -->
+		<mkdir dir="dist/install/jws" />
+		<property name="install.jws.target" value="${user.name}@ssh.tryphon.org:/var/www/kolaka.org/freecast/jws" />
+
+		<exec executable="rsync" failonerror="true">
+			<arg value="-av" />
+			<arg value="${install.jws.target}/libfreecast" />
+			<arg value="dist/install/jws" />
+		</exec>
+
+		<copy todir="dist/install/jws" verbose="true">
+			<fileset dir="dist/jws">
+				<include name="**/*.jar" />
+				<present present="srconly" targetdir="dist/install/jws" />
+				<exclude name="**/.signjar" />
+			</fileset>
+			<fileset dir="dist/jws">
+				<include name="**/freecast*.jar" />
+			</fileset>
+			<fileset dir="dist/jws">
+				<exclude name="**/*.jar" />
+				<exclude name="**/.signjar" />
+			</fileset>
+		</copy>
+
+		<exec executable="rsync" failonerror="true">
+			<arg value="-av" />
+			<arg value="dist/install/jws/" />
+			<arg value="${user.name}@ssh.tryphon.org:/var/www/kolaka.org/freecast/jws" />
+		</exec>
+	</target>
+
+	<target name="install.www" depends="dist.www">
+		<property name="install.www.target" value="${user.name}@ssh.tryphon.org:/var/www/freecast.org/www/" />
+		<exec executable="rsync" failonerror="true">
+			<arg value="-av" />
+			<arg value="dist/www/" />
+			<arg value="${install.www.target}" />
+		</exec>
+	</target>
+	
+</project>
