@@ -29,7 +29,7 @@ install: build
 	dh_clean -k
 	dh_installdirs
 
-	debian/ant dist.debian -Ddist.debian.dir=debian/freecast
+	debian/ant -f debian/build.xml dist.debian -Ddist.debian.dir=debian/freecast
 
 # Build architecture-dependent files here.
 binary-arch: build install

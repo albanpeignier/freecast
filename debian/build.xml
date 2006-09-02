@@ -1,0 +1,31 @@
+<project name="freecast-debian" basedir="..">
+
+	<target name="dist.debian">
+		<copy todir="${dist.debian.dir}/usr/share/freecast">
+			<fileset dir="dist">
+				<include name="lib/*.jar" />
+				<include name="lib/linux/**" />
+				<!-- log4j is provided by package dependencies -->
+				<exclude name="lib/log4j*.jar" />
+				<exclude name="lib/commons-cli*.jar" />
+				<exclude name="lib/commons-collections*.jar" />
+				<exclude name="lib/commons-logging*.jar" />
+				<exclude name="lib/commons-digester*.jar" />
+				<exclude name="lib/commons-beanutils*.jar" />
+
+				<include name="bin/*" />
+				<exclude name="bin/*.bat" />
+			</fileset>
+		</copy>
+
+		<copy todir="${dist.debian.dir}/etc/freecast" includeemptydirs="false">
+			<fileset dir="dist/etc" />
+		</copy>
+		<chmod perm="+x">
+			<fileset dir="${dist.debian.dir}/usr/share/freecast/bin">
+				<include name="freecast*" />
+			</fileset>
+		</chmod>
+	</target>
+	
+</project>
