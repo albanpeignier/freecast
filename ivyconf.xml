@@ -9,21 +9,18 @@
 		    <artifact pattern="track/[module]/releases/[revision]/[artifact]-[revision].[ext]" />
 		    <artifact pattern="track/[module]/releases/[revision]/[artifact].[ext]" />
 		  </filesystem>
-		  <ivyrep name="ivytryphon" 
-		  	ivyroot="http://ivy.tryphon.org" ivypattern="[organisation]/[module]/ivy-[revision].xml"
-		  	artroot="http://ivy.tryphon.org" artpattern="[organisation]/[module]/[artifact]-[revision].[ext]"
+		  <ivyrep name="ivykolaka" 
+		  	ivyroot="http://ivy.kolaka.org" ivypattern="[organisation]/[module]/ivy-[revision].xml"
+		  	artroot="http://ivy.kolaka.org" artpattern="[organisation]/[module]/[artifact]-[revision].[ext]"
 		  	/>
 		  <ivyrep name="ivyrep"/>
 		  <ivyrep name="ivyrep-sanbox" ivyroot="http://opensvn.csie.org/ivyrepsandbox"/>
 		</chain>
 	</resolvers>
 	<modules>
-    <module organisation="apache" name="log4j" resolver="ivytryphon" />
+    <module organisation="apache" name="log4j" resolver="ivykolaka" />
+    <module organisation="apache" name="commons-beanutils" resolver="ivyrep" />
+    <module organisation="apache" name="commons-digester" resolver="ivyrep" />
     <module organisation=".*" name=".*" resolver="main" />
-    <!--
-    <module organisation="apache" name=".*" resolver="ibiblio" />
-    <module organisation="apache-directory" name=".*" resolver="internal" />
-    <module organisation="mortbay" name=".*" resolver="ibiblio" />
-    -->
 	</modules>
 </ivyconf>
