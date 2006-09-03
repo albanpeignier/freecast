@@ -25,6 +25,7 @@
 	<target name="build.core" depends="prepare.libraries, build.core.classes, build.core.resources" />
 
 	<target name="build.core.classes">
+		<property name="build.core.classes.dir" value="build/core/classes"/>
 		<mkdir dir="${build.core.classes.dir}" />
 		<javac target="1.4" source="1.4" srcdir="source" destdir="${build.core.classes.dir}" debug="true">
 			<classpath refid="path.build" />

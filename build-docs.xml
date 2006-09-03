@@ -340,13 +340,20 @@
 				<exclude name="userguide/**/*.xsl" />
 				<exclude name="userguide/*.fo" />
 				<exclude name="userguide/*.html" />
+				<exclude name="api/**/*.html" />
 			</fileset>
 			<fileset dir="build/changelog" />
+		</copy>
+		<copy todir="dist/docs" includeEmptyDirs="true">
+			<fileset dir="build/docs">
+				<exclude name="api/**/*.html" />
+			</fileset>
 		</copy>
 		<tidy dest="dist/docs" failonerror="false">
 			<filesets>
 				<fileset dir="build/docs">
 					<include name="userguide/*.html" />
+					<include name="api/**/*.html" />
 				</fileset>
 			</filesets>
 		</tidy>
@@ -382,7 +389,7 @@
 		<element name="filesets" optional="false" />
 		<sequential>
 			<apply executable="tidy" dest="@{dest}" failonerror="@{failonerror}" verbose="true">
-				<arg line="-quiet -@{encoding} -wrap 100 -indent" />
+				<arg line="-quiet -@{encoding} -wrap 100" />
 				<arg value="-o" />
 				<targetfile />
 				<srcfile />

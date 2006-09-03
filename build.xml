@@ -317,9 +317,44 @@
 		</copy>
 	</target>
 	
-	<target name="export.tar" depends="prepare.version, build.changelog, dist, dist.docs" description="Packages binaries and sources distributions">
+	<target name="dist.sources" depends="prepare.version">
+		<copy todir="dist/sources/source">
+			<fileset dir="source">
+				<include name="org/kolaka/freecast/www/images/header/freecast.png" />
+				<include name="org/kolaka/freecast/www/css/start.css" />
+				<include name="org/kolaka/freecast/www/css/screen.css" />
+			</fileset>
+			<fileset dir="source">
+				<exclude name="org/kolaka/freecast/www/**"/>
+				<exclude name="org/kolaka/freecast/userguide/**"/>
+				<exclude name="org/kolaka/freecast/nsis/**"/>
+				<exclude name="org/kolaka/freecast/press/**"/>
+			</fileset>
+			<fileset dir="${basedir}">
+				<include name="CONTRIBUTORS" />
+				<include name="LICENSE" />
+			</fileset>
+		</copy>
+		<copy tofile="dist/sources/build.xml" file="build-base.xml"/>
+		<propertyfile file="dist/sources/build.properties">
+  		<entry key="project.version" value="${project.version}"/>
+		</propertyfile>
+		<copy todir="dist/sources/lib">
+			<fileset dir="lib">
+				<exclude name="**/jdic-stub*"/>
+				<exclude name="**/jdic-native*"/>
+				<include name="core/**"/>
+				<include name="runtime/**"/>
+				<include name="test/**"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="export.tar.prepare" depends="prepare.version, build.changelog, dist, dist.docs">
 		<mkdir dir="export" />
+	</target>
 
+	<target name="export.tar.bin" depends="export.tar.prepare">
 		<tar tarfile="export/${project.fullname}.tar.bz" compression="bzip2">
 			<!-- permissions are not managed by the tar target -->
 			<tarfileset dir="dist" prefix="${project.fullname}" mode="755">
@@ -342,21 +377,19 @@
 				<include name="examples/**" />
 			</tarfileset>
 		</tar>
+	</target>
+	
+	<target name="export.tar.sources" depends="export.tar.prepare, dist.sources">
 		<tar tarfile="export/${project.fullname}-src.tar.bz" compression="bzip2">
-			<tarfileset dir="source" prefix="${project.fullname}/source">
-				<exclude name="**/.arch-ids/**" />
-			</tarfileset>
+			<tarfileset dir="dist/sources" prefix="${project.fullname}"/>
 			<tarfileset dir="dist/docs" prefix="${project.fullname}/docs">
 				<exclude name="**/.touch" />
-			</tarfileset>
-			<tarfileset dir="${basedir}" prefix="${project.fullname}">
-				<include name="build.*" />
-				<include name="track.*" />
-				<include name="CONTRIBUTORS" />
-				<include name="LICENSE" />
+				<exclude name="xref/**" />
 			</tarfileset>
 		</tar>
 	</target>
+	
+	<target name="export.tar" depends="export.tar.bin,export.tar.sources" description="Packages binaries and sources distributions"/>
 
 	<target name="export.win32" depends="dist.win32">
 		<pathconvert targetos="windows" property="export.win32.build.dir">
