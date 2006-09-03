@@ -1,6 +1,6 @@
 <project xmlns:ivy="antlib:fr.jayasoft.ivy.ant" name="freecast-all" default="dist.all" basedir=".">
 
-	<import file="build.xml"/>
+	<import file="build-base.xml"/>
 	<import file="build-docs.xml"/>
 
 	<target name="prepare.ivy">
