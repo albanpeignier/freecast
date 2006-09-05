@@ -29,7 +29,6 @@ import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.node.NodeIdentifier;
 import org.kolaka.freecast.node.NodeStatus;
 import org.kolaka.freecast.peer.PeerReference;
-import org.kolaka.freecast.service.ControlException;
 
 /**
  * 
@@ -42,14 +41,6 @@ public class ProtectedTracker implements Tracker {
 
 	public ProtectedTracker(final Tracker tracker) {
 		this.tracker = tracker;
-	}
-
-	public void start() throws ControlException {
-		tracker.start();
-	}
-
-	public void stop() throws ControlException {
-		tracker.stop();
 	}
 
 	public NodeIdentifier register(PeerReference reference)

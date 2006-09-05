@@ -4,7 +4,7 @@
  * This code was developped by Alban Peignier (http://people.tryphon.org/~alban/) 
  * and contributors (their names can be found in the CONTRIBUTORS file).
  *
- * Copyright (C) 2004-2006 Alban Peignier
+ * Copyright (C) 2004 Alban Peignier
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -29,30 +29,33 @@ import org.kolaka.freecast.node.NodeIdentifier;
 import org.kolaka.freecast.node.NodeStatus;
 import org.kolaka.freecast.peer.PeerReference;
 
-/**
- * 
- * 
- * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
- */
-public interface Tracker {
+import com.caucho.hessian.server.HessianServlet;
 
-	public NodeIdentifier register(PeerReference reference)
-			throws TrackerException;
+public class HttpSimpleTrackerConnector extends HessianServlet implements Tracker {
 
-	public void unregister(NodeIdentifier identifier) throws TrackerException;
+  private static final long serialVersionUID = 8802338594786705476L;
+  private final Tracker tracker;
 
-	public void refresh(NodeStatus status) throws TrackerException;
+  public HttpSimpleTrackerConnector() {
+    tracker = new DefaultTracker(new HessianClientInfoProvider());
+  }
 
-	public Set getPeerReferences(NodeIdentifier node) throws TrackerException;
+  public Set getPeerReferences(NodeIdentifier identifier)
+      throws TrackerException {
+    return tracker.getPeerReferences(identifier);
+  }
 
-	interface Auditor extends org.kolaka.freecast.auditor.Auditor {
+  public NodeIdentifier register(PeerReference reference)
+      throws TrackerException {
+    return tracker.register(reference);
+  }
 
-		void connectedNodes(int count);
+  public void unregister(NodeIdentifier identifier) throws TrackerException {
+    tracker.unregister(identifier);
+  }
 
-		void register(PeerReference reference);
-
-		void unregister(PeerReference reference);
-
-	}
+  public void refresh(NodeStatus status) throws TrackerException {
+    tracker.refresh(status);
+  }
 
 }

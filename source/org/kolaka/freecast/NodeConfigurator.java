@@ -30,6 +30,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -64,6 +65,7 @@ import org.kolaka.freecast.player.PlayerSource;
 import org.kolaka.freecast.player.VideoPlayerSource;
 import org.kolaka.freecast.resource.ResourceLocator;
 import org.kolaka.freecast.resource.ResourceLocators;
+import org.kolaka.freecast.tracker.NetworkIdentifier;
 import org.kolaka.freecast.transport.MinaPeerReceivingConnectionFactory;
 import org.kolaka.freecast.transport.MinaPeerSendingConnectionFactory;
 import org.kolaka.freecast.transport.cas.ConnectionAssistantClient;
@@ -106,8 +108,8 @@ public class NodeConfigurator {
 	 */
 	public void configure(ConfigurableNode node, Configuration configuration)
 			throws ConfigurationException, IOException {
-		Configuration trackerAddressConfiguration = configuration
-				.subset("peerprovider.trackeraddress");
+    Configuration peerProviderConfiguration = configuration.subset("peerprovider");
+		Configuration trackerAddressConfiguration = peerProviderConfiguration.subset("trackeraddress");
 		InetSocketAddress trackerAddress = new InetSocketAddress(
 				trackerAddressConfiguration.getString("host"),
 				trackerAddressConfiguration.getInt("port"));
@@ -115,7 +117,15 @@ public class NodeConfigurator {
 		LogFactory.getLog(getClass()).debug(
 				"install a NodeService connected to the tracker "
 						+ trackerAddress);
-		node.setNodeService(new DefaultNodeService(trackerAddress));
+		DefaultNodeService nodeService = new DefaultNodeService(trackerAddress);
+    
+    try {
+      nodeService.setNetworkId(NetworkIdentifier.getInstance(peerProviderConfiguration.getString("networkid")));
+    } catch (NoSuchElementException e) {
+      LogFactory.getLog(getClass()).trace("no network identifier in configuration", e);
+    }
+    
+    node.setNodeService(nodeService);
 
 		ConfigurablePeerControler peerControler = new DefaultPeerControler();
 		node.setPeerControler(peerControler);

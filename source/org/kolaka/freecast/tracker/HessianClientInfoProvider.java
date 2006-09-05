@@ -4,7 +4,7 @@
  * This code was developped by Alban Peignier (http://people.tryphon.org/~alban/) 
  * and contributors (their names can be found in the CONTRIBUTORS file).
  *
- * Copyright (C) 2004-2006 Alban Peignier
+ * Copyright (C) 2004 Alban Peignier
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -23,36 +23,10 @@
 
 package org.kolaka.freecast.tracker;
 
-import java.util.Set;
+import com.caucho.services.server.ServiceContext;
 
-import org.kolaka.freecast.node.NodeIdentifier;
-import org.kolaka.freecast.node.NodeStatus;
-import org.kolaka.freecast.peer.PeerReference;
-
-/**
- * 
- * 
- * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
- */
-public interface Tracker {
-
-	public NodeIdentifier register(PeerReference reference)
-			throws TrackerException;
-
-	public void unregister(NodeIdentifier identifier) throws TrackerException;
-
-	public void refresh(NodeStatus status) throws TrackerException;
-
-	public Set getPeerReferences(NodeIdentifier node) throws TrackerException;
-
-	interface Auditor extends org.kolaka.freecast.auditor.Auditor {
-
-		void connectedNodes(int count);
-
-		void register(PeerReference reference);
-
-		void unregister(PeerReference reference);
-
-	}
-
+final class HessianClientInfoProvider implements DefaultTracker.ClientInfoProvider {
+  public String getClientHost() throws TrackerException {
+    return ServiceContext.getContextRequest().getRemoteHost();
+  }
 }

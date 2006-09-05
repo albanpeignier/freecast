@@ -47,8 +47,7 @@ public class TrackerServletTest extends TestCase {
 		tracker.setListenAddress(address);
 		tracker.start();
 
-		Tracker remoteTracker = HttpTrackerLocator.getInstance().resolve(
-				address);
+		Tracker remoteTracker = new HttpTrackerLocator(address).resolve();
 		remoteTracker.register(InetPeerReference
 				.getInstance(new InetSocketAddress(4000)));
 

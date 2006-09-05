@@ -55,6 +55,7 @@ import org.kolaka.freecast.swing.ConfigurableResources;
 import org.kolaka.freecast.swing.Resources;
 import org.kolaka.freecast.swing.ResourcesException;
 import org.kolaka.freecast.tracker.Tracker;
+import org.kolaka.freecast.tracker.TrackerService;
 import org.kolaka.freecast.transport.receiver.Receiver;
 import org.kolaka.freecast.transport.receiver.Receiver.Source;
 
@@ -67,7 +68,7 @@ public class MainFrame extends BaseFrame {
 	 */
 	private static final long serialVersionUID = -5807144656289901506L;
 
-	private final Tracker tracker;
+	private final TrackerService tracker;
 
 	private final Node node;
 
@@ -77,7 +78,7 @@ public class MainFrame extends BaseFrame {
 
 	private final Action setupAction;
 
-	public MainFrame(Resources resources, Tracker tracker, ConfigurableNode node,
+	public MainFrame(Resources resources, TrackerService tracker, ConfigurableNode node,
 			InetSocketAddress publicHttpServer) throws ResourcesException {
 		super(resources);
 
@@ -175,7 +176,7 @@ public class MainFrame extends BaseFrame {
 		 */
 		private static final long serialVersionUID = 7865840587031612121L;
 
-		public TrackerControlPanel(Tracker tracker) {
+		public TrackerControlPanel(TrackerService tracker) {
 			super("Tracker");
 
 			final ObservableValue nodeCount = new ObservableValue(

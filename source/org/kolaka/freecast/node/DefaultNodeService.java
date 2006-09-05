@@ -31,7 +31,9 @@ import org.kolaka.freecast.peer.PeerProvider;
 import org.kolaka.freecast.peer.PeerProviderException;
 import org.kolaka.freecast.service.ControlException;
 import org.kolaka.freecast.service.LoopService;
+import org.kolaka.freecast.tracker.HttpMultiTrackerLocator;
 import org.kolaka.freecast.tracker.HttpTrackerLocator;
+import org.kolaka.freecast.tracker.NetworkIdentifier;
 import org.kolaka.freecast.tracker.Tracker;
 import org.kolaka.freecast.tracker.TrackerException;
 import org.kolaka.freecast.tracker.TrackerLocator;
@@ -43,141 +45,152 @@ import org.kolaka.freecast.tracker.TrackerLocator;
  */
 public class DefaultNodeService extends LoopService implements NodeService {
 
-	private ConfigurableNode node;
+  private ConfigurableNode node;
 
-	private InetSocketAddress trackerAddress;
+  private InetSocketAddress trackerAddress;
+  private NetworkIdentifier networkId;
 
-	/**
-	 * 
-	 */
-protected Loop createLoop() {
-		return new Loop() {
-			private int loopCount = 0;
+  /**
+   * 
+   */
+  protected Loop createLoop() {
+    return new Loop() {
+      private int loopCount = 0;
 
-			public long loop() throws LoopInterruptedException {
-				node.checkQoS();
-				loopCount++;
+      public long loop() throws LoopInterruptedException {
+        node.checkQoS();
+        loopCount++;
 
-				if (loopCount % 2 == 0) {
-					NodeStatus status = node.getNodeStatus();
-					LogFactory.getLog(getClass()).debug(
-							"refresh node status " + status);
+        if (loopCount % 2 == 0) {
+          NodeStatus status = node.getNodeStatus();
+          LogFactory.getLog(getClass()).debug("refresh node status " + status);
 
-					try {
-						try {
-							tracker.refresh(status);
-						} catch (TrackerException.UnknownNode e) {
-							LogFactory.getLog(getClass()).debug(
-									"the tracker forgot our existence, register again");
-							registerNode();
-						} 
-					} catch (Throwable t) {
-						LogFactory.getLog(getClass()).error(
-								"failed to refresh status", t);
-					}
-				}
+          try {
+            try {
+              tracker.refresh(status);
+            } catch (TrackerException.UnknownNode e) {
+              LogFactory.getLog(getClass()).debug(
+                  "the tracker forgot our existence, register again");
+              registerNode();
+            }
+          } catch (Throwable t) {
+            LogFactory.getLog(getClass()).error("failed to refresh status", t);
+          }
+        }
 
-				return 30 * 1000;
-			}
-		};
-	}
-	private TrackerLocator trackerLocator = HttpTrackerLocator.getInstance();
+        return 30 * 1000;
+      }
+    };
+  }
 
-	private Tracker tracker;
+  private Tracker tracker;
 
-	/**
-	 * 
-	 */
-	public void init() throws ControlException {
-		try {
-			tracker = trackerLocator.resolve(trackerAddress);
-		} catch (TrackerException e) {
-			throw new ControlException("Can't connect to the tracker "
-					+ trackerAddress, e);
-		}
+  /**
+   * 
+   */
+  public void init() throws ControlException {
+    TrackerLocator trackerLocator;
+    
+    if (networkId == null) {
+      trackerLocator = new HttpTrackerLocator(trackerAddress);
+    } else {
+      trackerLocator = new HttpMultiTrackerLocator(trackerAddress, networkId);
+    }
+    
+    LogFactory.getLog(getClass()).debug("connect tracker " + trackerAddress + " (" + networkId + ")");
+    
+    try {
+      tracker = trackerLocator.resolve();
+    } catch (TrackerException e) {
+      throw new ControlException("Can't connect to the tracker "
+          + trackerAddress, e);
+    }
 
-		super.init();
-	}
+    super.init();
+  }
 
-	/**
-	 * @param node
-	 *            The node to set.
-	 */
-	public void setNode(ConfigurableNode node) {
-		this.node = node;
-	}
+  /**
+   * @param node
+   *          The node to set.
+   */
+  public void setNode(ConfigurableNode node) {
+    this.node = node;
+  }
 
-	/**
-	 * @param trackerAddress
-	 *            The trackerAddress to set.
-	 */
-	public void setTrackerAddress(InetSocketAddress trackerAddress) {
-		this.trackerAddress = trackerAddress;
-	}
+  /**
+   * @param trackerAddress
+   *          The trackerAddress to set.
+   */
+  public void setTrackerAddress(InetSocketAddress trackerAddress) {
+    this.trackerAddress = trackerAddress;
+  }
+  
+  public void setNetworkId(NetworkIdentifier networkId) {
+    this.networkId = networkId;
+  }
 
-	/**
-	 * 
-	 */
+  /**
+   * 
+   */
 
-	public void start() throws ControlException {
-		try {
-			registerNode();
-		} catch (TrackerException e) {
-			throw new ControlException("Can't connect to the tracker "
-					+ trackerAddress, e);
-		}
+  public void start() throws ControlException {
+    try {
+      registerNode();
+    } catch (TrackerException e) {
+      throw new ControlException("Can't connect to the tracker "
+          + trackerAddress, e);
+    }
 
-		// TODO move the PeerProvider setting (to allow
-		// MinimumOrderPeerProvider)
-		LogFactory.getLog(getClass()).debug(
-				"change the peer provider to use tracker");
-		node.getConfigurablePeerControler().setPeerProvider(
-				createPeerProvider());
+    // TODO move the PeerProvider setting (to allow
+    // MinimumOrderPeerProvider)
+    LogFactory.getLog(getClass()).debug(
+        "change the peer provider to use tracker");
+    node.getConfigurablePeerControler().setPeerProvider(createPeerProvider());
 
-		super.start();
-	}
+    super.start();
+  }
 
-	/**
-	 * @throws TrackerException
-	 */
-	private void registerNode() throws TrackerException {
-		NodeIdentifier identifier = tracker.register(node.getPeerReference());
-		LogFactory.getLog(getClass()).info(
-				"received node identifier " + identifier);
-		node.setIdentifier(identifier);
-	}
+  /**
+   * @throws TrackerException
+   */
+  private void registerNode() throws TrackerException {
+    NodeIdentifier identifier = tracker.register(node.getPeerReference());
+    LogFactory.getLog(getClass())
+        .info("received node identifier " + identifier);
+    node.setIdentifier(identifier);
+  }
 
-	protected PeerProvider createPeerProvider() {
-		return new PeerProvider() {
-			public Set getPeerReferences() throws PeerProviderException {
-				try {
-					return tracker.getPeerReferences(node.getIdentifier());
-				} catch (TrackerException e) {
-					String msg = "Can't retrieve new peer references from the tracker";
-					throw new PeerProviderException(msg, e);
-				}
-			}
-		};
-	}
+  protected PeerProvider createPeerProvider() {
+    return new PeerProvider() {
+      public Set getPeerReferences() throws PeerProviderException {
+        try {
+          return tracker.getPeerReferences(node.getIdentifier());
+        } catch (TrackerException e) {
+          String msg = "Can't retrieve new peer references from the tracker";
+          throw new PeerProviderException(msg, e);
+        }
+      }
+    };
+  }
 
-	/**
-	 * @param trackerAddress
-	 */
-	public DefaultNodeService(InetSocketAddress trackerAddress) {
-		this.trackerAddress = trackerAddress;
-	}
+  /**
+   * @param trackerAddress
+   */
+  public DefaultNodeService(InetSocketAddress trackerAddress) {
+    this.trackerAddress = trackerAddress;
+  }
 
-	public void stop() throws ControlException {
-		super.stop();
+  public void stop() throws ControlException {
+    super.stop();
 
-		LogFactory.getLog(getClass()).info("unregister node");
+    LogFactory.getLog(getClass()).info("unregister node");
 
-		if (tracker != null) {
-			try {
-				tracker.unregister(node.getIdentifier());
-			} catch (TrackerException e) {
-				throw new ControlException("Can't unregister the node", e);
-			}
-		}
-	}
+    if (tracker != null) {
+      try {
+        tracker.unregister(node.getIdentifier());
+      } catch (TrackerException e) {
+        throw new ControlException("Can't unregister the node", e);
+      }
+    }
+  }
 }

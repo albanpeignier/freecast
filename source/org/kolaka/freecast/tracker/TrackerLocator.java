@@ -23,7 +23,6 @@
 
 package org.kolaka.freecast.tracker;
 
-import java.net.InetSocketAddress;
 
 /**
  * 
@@ -32,6 +31,6 @@ import java.net.InetSocketAddress;
  */
 public interface TrackerLocator {
 
-	public Tracker resolve(InetSocketAddress address) throws TrackerException;
+	public Tracker resolve() throws TrackerException;
 
 }

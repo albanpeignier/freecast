@@ -23,40 +23,29 @@
 
 package org.kolaka.freecast.tracker;
 
-import java.net.InetSocketAddress;
-import java.net.MalformedURLException;
+import java.util.Set;
 
-import org.apache.commons.lang.Validate;
-
-import com.caucho.hessian.client.HessianProxyFactory;
+import org.kolaka.freecast.node.NodeIdentifier;
+import org.kolaka.freecast.node.NodeStatus;
+import org.kolaka.freecast.peer.PeerReference;
 
 /**
  * 
  * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
-public class HttpTrackerLocator implements TrackerLocator {
+public interface MultiTracker {
 
-	private InetSocketAddress trackerAddress;
+  public NodeIdentifier register(NetworkIdentifier network,
+      PeerReference reference) throws TrackerException;
 
-  public HttpTrackerLocator(InetSocketAddress trackerAddress) {
-    Validate.notNull(trackerAddress);
-    this.trackerAddress = trackerAddress;
-  }
+  public void unregister(NetworkIdentifier network, NodeIdentifier identifier)
+      throws TrackerException;
 
-	public Tracker resolve() throws TrackerException {
-		String url = "http://" + trackerAddress.getHostName() + ":"
-				+ trackerAddress.getPort() + "/tracker";
+  public void refresh(NetworkIdentifier network, NodeStatus status)
+      throws TrackerException;
 
-		try {
-			HessianProxyFactory factory = new HessianProxyFactory();
-			Tracker hessianTracker = (Tracker) factory.create(Tracker.class,
-					url);
-			return new ProtectedTracker(hessianTracker);
-		} catch (MalformedURLException e) {
-			throw new TrackerException("The tracker url is invalid '" + url
-					+ "'", e);
-		}
-	}
+  public Set getPeerReferences(NetworkIdentifier network, NodeIdentifier node)
+      throws TrackerException;
 
 }

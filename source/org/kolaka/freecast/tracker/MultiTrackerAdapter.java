@@ -4,7 +4,7 @@
  * This code was developped by Alban Peignier (http://people.tryphon.org/~alban/) 
  * and contributors (their names can be found in the CONTRIBUTORS file).
  *
- * Copyright (C) 2004-2006 Alban Peignier
+ * Copyright (C) 2004 Alban Peignier
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -25,34 +25,38 @@ package org.kolaka.freecast.tracker;
 
 import java.util.Set;
 
+import org.apache.commons.lang.Validate;
 import org.kolaka.freecast.node.NodeIdentifier;
 import org.kolaka.freecast.node.NodeStatus;
 import org.kolaka.freecast.peer.PeerReference;
 
-/**
- * 
- * 
- * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
- */
-public interface Tracker {
+public class MultiTrackerAdapter implements Tracker {
+  
+  private NetworkIdentifier networkId;
+  private MultiTracker tracker;
+  
+  public MultiTrackerAdapter(NetworkIdentifier networkId, MultiTracker tracker) {
+    Validate.notNull(networkId);
+    Validate.notNull(tracker);
+    
+    this.networkId = networkId;
+    this.tracker = tracker;
+  }
 
-	public NodeIdentifier register(PeerReference reference)
-			throws TrackerException;
+  public Set getPeerReferences(NodeIdentifier node) throws TrackerException {
+    return tracker.getPeerReferences(networkId, node);
+  }
 
-	public void unregister(NodeIdentifier identifier) throws TrackerException;
+  public void refresh(NodeStatus status) throws TrackerException {
+    tracker.refresh(networkId, status);  }
 
-	public void refresh(NodeStatus status) throws TrackerException;
+  public NodeIdentifier register(PeerReference reference)
+      throws TrackerException {
+    return tracker.register(networkId, reference);
+  }
 
-	public Set getPeerReferences(NodeIdentifier node) throws TrackerException;
-
-	interface Auditor extends org.kolaka.freecast.auditor.Auditor {
-
-		void connectedNodes(int count);
-
-		void register(PeerReference reference);
-
-		void unregister(PeerReference reference);
-
-	}
+  public void unregister(NodeIdentifier identifier) throws TrackerException {
+    tracker.unregister(this.networkId, identifier);
+  }
 
 }

@@ -24,14 +24,14 @@
 package org.kolaka.freecast.tracker;
 
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.Application;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public class Main extends Application {
-	private HttpTracker tracker;
+	
+  private TrackerService tracker;
 
 	public Main() {
 		super("tracker");
@@ -45,12 +45,10 @@ public class Main extends Application {
 		HttpTracker tracker = new HttpTracker();
 		new HttpTrackerConfigurator().configure(tracker, configuration
 				.subset("tracker"));
-		this.tracker = tracker;
+    this.tracker = tracker;
 	}
 
 	protected void run() throws Exception {
-		LogFactory.getLog(Main.class).info(
-				"start a HttpTracker on port " + tracker.getListenAddress());
 		tracker.start();
 
 		Object lock = new Object();

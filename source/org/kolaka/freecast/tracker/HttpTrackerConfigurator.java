@@ -36,6 +36,17 @@ import org.kolaka.freecast.transport.cas.ConnectionAssistantServer;
 public class HttpTrackerConfigurator {
 
 	public void configure(HttpTracker tracker, Configuration configuration) {
+    /*
+     * for the moment, the tracker.class changes the Connector implementation 
+     * which creates its own Tracker instance
+     */ 
+    String trackerClass = configuration.getString("class", "single");
+    Class connectorClass = HttpSimpleTrackerConnector.class; 
+    if (trackerClass.equals("multi")) {
+      connectorClass = HttpMultiTrackerConnector.class;
+    }
+    tracker.setConnectorClass(connectorClass);
+    
 		Configuration listenAddressConfiguration = configuration
 				.subset("connector.listenaddress");
 		InetSocketAddress listenAddress = new InetSocketAddress(
