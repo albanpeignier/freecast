@@ -58,5 +58,6 @@
     
     <dependency org="mockobjects" name="mockobjects" rev="0.09" conf="test->*"/>
     <dependency org="easymock" name="easymock" rev="1.1" conf="test->*"/>
+    <dependency org="junit" name="junit" rev="3.8" conf="test->*"/>
   </dependencies>
 </ivy-module>
