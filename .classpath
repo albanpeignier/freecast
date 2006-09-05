@@ -1,33 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="source"/>
-	<classpathentry kind="lib" path="track/commons-cli/releases/1.0/commons-cli-1.0.jar"/>
-	<classpathentry kind="lib" path="track/commons-collections/releases/3.1/commons-collections-3.1.jar"/>
-	<classpathentry kind="lib" path="track/commons-lang/releases/nightly-20041229/commons-lang-2.0.jar"/>
-	<classpathentry kind="lib" path="track/junit/releases/3.8.1/junit.jar"/>
-	<classpathentry kind="lib" path="track/commons-io/releases/1.0/commons-io-1.0.jar"/>
-	<classpathentry kind="lib" path="track/easymock/releases/1.1/easymock.jar"/>
-	<classpathentry kind="lib" path="track/mockobjects/releases/0.09/mockobjects-core-0.09.jar"/>
-	<classpathentry kind="lib" path="track/concurrent/releases/kolaka/concurrent.jar"/>
-	<classpathentry kind="lib" path="track/hessian/releases/3.0.8/hessian-3.0.8.jar"/>
-	<classpathentry kind="lib" path="track/commons-codec/releases/1.3/commons-codec-1.3.jar"/>
-	<classpathentry kind="lib" path="track/commons-configuration/releases/nightly-20050307/commons-configuration-1.1RC2.jar"/>
-	<classpathentry kind="lib" path="track/jdic/releases/0.9/jdic.jar"/>
-	<classpathentry kind="lib" path="track/cortado/releases/0.1.0/cortado-ovt-0.1.0.jar"/>
-	<classpathentry kind="lib" path="track/jetty/releases/5.1.4rc0/lib/javax.servlet.jar"/>
-	<classpathentry kind="lib" path="track/jetty/releases/5.1.4rc0/lib/org.mortbay.jetty.jar"/>
-	<classpathentry kind="lib" path="track/commons-httpclient/releases/3.0-rc3/commons-httpclient-3.0-rc3.jar"/>
-	<classpathentry kind="lib" path="track/vorbisspi/releases/1.0.2/lib/jogg-0.0.7.jar"/>
-	<classpathentry kind="lib" path="track/vorbisspi/releases/1.0.2/lib/jorbis-0.0.15.jar"/>
-	<classpathentry kind="lib" path="track/vorbisspi/releases/1.0.2/vorbisspi1.0.2.jar"/>
 	<classpathentry kind="lib" path="track/tritonus/patches/0.3.6/tritonus-vorbis.jar"/>
-	<classpathentry kind="lib" path="track/vorbisspi/releases/1.0.2/lib/tritonus_share.jar"/>
-	<classpathentry kind="lib" path="track/commons-discovery/releases/0.2/commons-discovery.jar"/>
-	<classpathentry kind="lib" path="track/slf4j/releases/1.0/slf4j-log4j12.jar"/>
-	<classpathentry kind="lib" path="track/commons-logging/releases/1.1.0/commons-logging-1.1-RC5.jar"/>
-	<classpathentry kind="lib" path="track/log4j/releases/1.2.13/dist/lib/log4j-1.2.13.jar"/>
-	<classpathentry sourcepath="track/jstun/releases/0.5.9.2/src" kind="lib" path="track/jstun/releases/0.5.9.2/jstun-0.5.9.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="track/mina/patches/0.9.5-SNAPSHOT/mina-core-0.9.5-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/core/commons-cli.jar"/>
+	<classpathentry kind="lib" path="lib/core/commons-codec.jar"/>
+	<classpathentry kind="lib" path="lib/core/commons-collections.jar"/>
+	<classpathentry kind="lib" path="lib/core/commons-configuration.jar"/>
+	<classpathentry kind="lib" path="lib/core/commons-discovery.jar"/>
+	<classpathentry kind="lib" path="lib/core/commons-httpclient.jar"/>
+	<classpathentry kind="lib" path="lib/core/commons-io.jar"/>
+	<classpathentry kind="lib" path="lib/core/commons-lang.jar"/>
+	<classpathentry kind="lib" path="lib/core/commons-logging.jar"/>
+	<classpathentry kind="lib" path="lib/core/concurrent.jar"/>
+	<classpathentry kind="lib" path="lib/core/cortado-ovt.jar"/>
+	<classpathentry kind="lib" path="lib/core/hessian.jar"/>
+	<classpathentry kind="lib" path="lib/core/jdic.jar"/>
+	<classpathentry kind="lib" path="lib/core/jogg.jar"/>
+	<classpathentry kind="lib" path="lib/core/jorbis.jar"/>
+	<classpathentry kind="lib" path="lib/core/jstun.jar"/>
+	<classpathentry kind="lib" path="lib/core/log4j.jar"/>
+	<classpathentry kind="lib" path="lib/core/mina-core.jar"/>
+	<classpathentry kind="lib" path="lib/core/org.mortbay.jetty.jar"/>
+	<classpathentry kind="lib" path="lib/core/tritonus-share.jar"/>
+	<classpathentry kind="lib" path="lib/core/tritonus-vorbis.jar"/>
+	<classpathentry kind="lib" path="lib/core/vorbisspi.jar"/>
+	<classpathentry kind="lib" path="lib/core/vorbisspi-tritonus.jar"/>
+	<classpathentry kind="lib" path="lib/core/servletapi.jar"/>
+	<classpathentry kind="lib" path="lib/test/easymock.jar"/>
+	<classpathentry kind="lib" path="lib/test/mockobjects-core.jar"/>
+	<classpathentry kind="lib" path="lib/test/junit.jar"/>
 	<classpathentry kind="output" path=".eclipse"/>
 </classpath>
