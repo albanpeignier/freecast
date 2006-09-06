@@ -25,33 +25,72 @@ package org.kolaka.freecast.tracker.test;
 
 import java.net.InetSocketAddress;
 
-import junit.framework.TestCase;
-
+import org.kolaka.freecast.node.NodeIdentifier;
 import org.kolaka.freecast.peer.InetPeerReference;
+import org.kolaka.freecast.test.BaseTestCase;
+import org.kolaka.freecast.tracker.HttpMultiTrackerConnector;
+import org.kolaka.freecast.tracker.HttpMultiTrackerLocator;
+import org.kolaka.freecast.tracker.HttpSimpleTrackerConnector;
 import org.kolaka.freecast.tracker.HttpTracker;
 import org.kolaka.freecast.tracker.HttpTrackerLocator;
+import org.kolaka.freecast.tracker.NetworkIdentifier;
 import org.kolaka.freecast.tracker.Tracker;
+import org.kolaka.freecast.tracker.TrackerException;
+import org.kolaka.freecast.tracker.TrackerLocator;
 
 /**
  * 
  * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
-public class TrackerServletTest extends TestCase {
+public class TrackerServletTest extends BaseTestCase {
 
-	public void testBindConnect() throws Exception {
-		InetSocketAddress address = new InetSocketAddress(50000 + (int) (Math
-				.random() * 1000));
-		HttpTracker tracker = new HttpTracker();
+	private InetSocketAddress address;
 
+  protected void setUp() throws Exception {
+    super.setUp();
+    address = new InetSocketAddress(50000 + (int) (Math
+        .random() * 1000));
+  }
+  
+  public void testSingle() throws Exception {
+    testBindConnect(HttpSimpleTrackerConnector.class, new HttpTrackerLocator(address));
+  }
+
+  public void testMulti() throws Exception {
+    testBindConnect(HttpMultiTrackerConnector.class, new HttpMultiTrackerLocator(address, NetworkIdentifier.getRandomInstance()));
+  }
+
+  private void testBindConnect(Class connectorClass, TrackerLocator locator) throws Exception {
+    HttpTracker tracker = new HttpTracker();
+
+    tracker.setConnectorClass(connectorClass);
 		tracker.setListenAddress(address);
+    
 		tracker.start();
-
-		Tracker remoteTracker = new HttpTrackerLocator(address).resolve();
-		remoteTracker.register(InetPeerReference
-				.getInstance(new InetSocketAddress(4000)));
-
-		tracker.stop();
+    
+    try {
+  		Tracker remoteTracker = locator.resolve();
+      
+  		InetPeerReference nodeReference = InetPeerReference.getInstance(new InetSocketAddress(4000));
+      testRemoteTracker(remoteTracker, nodeReference);
+      
+      testRemoteTracker(remoteTracker, null);
+    } finally {
+      tracker.stop();
+    }
 	}
+
+  /**
+   * @param remoteTracker
+   * @param nodeReference
+   * @throws TrackerException
+   */
+  private void testRemoteTracker(Tracker remoteTracker, InetPeerReference nodeReference) throws TrackerException {
+    NodeIdentifier nodeIdentifier = remoteTracker.register(nodeReference);
+    remoteTracker.getPeerReferences(nodeIdentifier);
+    remoteTracker.unregister(nodeIdentifier);
+  }
+  
 
 }

@@ -26,36 +26,47 @@ package org.kolaka.freecast.tracker;
 import java.util.Set;
 
 import org.apache.commons.lang.Validate;
+import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.node.NodeIdentifier;
 import org.kolaka.freecast.node.NodeStatus;
 import org.kolaka.freecast.peer.PeerReference;
 
 public class MultiTrackerAdapter implements Tracker {
-  
+
   private NetworkIdentifier networkId;
+
   private MultiTracker tracker;
-  
+
   public MultiTrackerAdapter(NetworkIdentifier networkId, MultiTracker tracker) {
     Validate.notNull(networkId);
     Validate.notNull(tracker);
-    
+
     this.networkId = networkId;
     this.tracker = tracker;
   }
+  
+  private void logInvocation(String description) {
+    LogFactory.getLog(getClass()).debug(description + " on network " + networkId);
+  }
 
   public Set getPeerReferences(NodeIdentifier node) throws TrackerException {
+    logInvocation("getPeerStatus for " + node);
     return tracker.getPeerReferences(networkId, node);
   }
 
   public void refresh(NodeStatus status) throws TrackerException {
-    tracker.refresh(networkId, status);  }
+    logInvocation("refresh " + status);
+    tracker.refresh(networkId, status);
+  }
 
   public NodeIdentifier register(PeerReference reference)
       throws TrackerException {
+    logInvocation("register " + reference);
     return tracker.register(networkId, reference);
   }
 
   public void unregister(NodeIdentifier identifier) throws TrackerException {
+    logInvocation("unregister " + identifier);
     tracker.unregister(this.networkId, identifier);
   }
 

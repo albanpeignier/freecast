@@ -132,6 +132,7 @@ public class DefaultTracker implements Tracker {
 		NodeEntry entry = (NodeEntry) entries.remove(identifier);
 		if (entry != null) {
 			LogFactory.getLog(getClass()).debug("unregister " + entry);
+      auditor.unregister(entry.getReference());
 		} else {
 			String clientHost = "unknown";
 			try {
@@ -144,7 +145,7 @@ public class DefaultTracker implements Tracker {
 					+ " from " + clientHost;
 			LogFactory.getLog(getClass()).warn(msg);
 		}
-		auditor.unregister(entry.getReference());
+		
 		auditor.connectedNodes(entries.size());
 	}
 

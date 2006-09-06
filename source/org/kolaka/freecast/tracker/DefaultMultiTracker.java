@@ -24,17 +24,22 @@
 package org.kolaka.freecast.tracker;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.node.NodeIdentifier;
 import org.kolaka.freecast.node.NodeStatus;
 import org.kolaka.freecast.peer.PeerReference;
+import org.kolaka.freecast.timer.DefaultTimer;
+import org.kolaka.freecast.timer.Timer;
+import org.kolaka.freecast.timer.TimerUser;
 import org.kolaka.freecast.tracker.DefaultTracker.ClientInfoProvider;
 
-public class DefaultMultiTracker {
+public class DefaultMultiTracker implements TimerUser {
 
   private Map trackers = new TreeMap();
 
@@ -42,9 +47,16 @@ public class DefaultMultiTracker {
 
   public DefaultMultiTracker(final ClientInfoProvider clientInfoProvider) {
     this.clientInfoProvider = clientInfoProvider;
-  }
 
-  private Tracker getTracker(NetworkIdentifier identifier) {
+    Runnable purgeRunnable = new Runnable() {
+      public void run() {
+        purge();
+      }
+    };
+    timer.executePeriodically(DefaultTimer.minutes(1), purgeRunnable , false);
+}
+
+  private synchronized Tracker getTracker(NetworkIdentifier identifier) {
     Tracker tracker = (Tracker) trackers.get(identifier);
     if (tracker == null) {
       LogFactory.getLog(getClass()).info("create tracker for network " + identifier);
@@ -55,7 +67,7 @@ public class DefaultMultiTracker {
   }
   
   protected Tracker createTracker(ClientInfoProvider clientInfoProvider) {
-    return new DefaultTracker(clientInfoProvider);
+    return new TimedTracker(new DefaultTracker(clientInfoProvider));
   }
 
   public NodeIdentifier register(NetworkIdentifier network,
@@ -76,6 +88,69 @@ public class DefaultMultiTracker {
   public Set getPeerReferences(NetworkIdentifier network, NodeIdentifier node)
       throws TrackerException {
     return getTracker(network).getPeerReferences(node);
+  }
+  
+  private Timer timer = DefaultTimer.getInstance();
+  
+  public void setTimer(Timer timer) {
+    Validate.notNull(timer);
+    this.timer = timer;
+  }
+    
+  private synchronized void purge() {
+    Date olderLastRequest = new Date(System.currentTimeMillis() - DefaultTimer.minutes(5));
+    LogFactory.getLog(getClass()).debug("purge trackers unused since " + olderLastRequest);
+    for (Iterator iter = trackers.entrySet().iterator(); iter.hasNext();) {
+      Map.Entry entry = (Map.Entry) iter.next();
+      NetworkIdentifier networkId = (NetworkIdentifier) entry.getKey();
+      TimedTracker tracker = (TimedTracker) entry.getValue();
+      
+      if (tracker.getLastRequest().before(olderLastRequest)) {
+        LogFactory.getLog(getClass()).info("purge tracker " + networkId);
+        iter.remove();
+      }
+    }
+    LogFactory.getLog(getClass()).debug(trackers.size() + " trackers kept");
+  }
+  
+  static class TimedTracker implements Tracker {
+    
+    private final Tracker delegate;
+    private Date lastRequest = new Date();
+    
+    public TimedTracker(final Tracker delegate) {
+      Validate.notNull(delegate);
+      this.delegate = delegate;
+    }
+
+    public Date getLastRequest() {
+      return lastRequest;
+    }
+
+    public Set getPeerReferences(NodeIdentifier node) throws TrackerException {
+      updateLastRequest();
+      return delegate.getPeerReferences(node);
+    }
+
+    public void refresh(NodeStatus status) throws TrackerException {
+      updateLastRequest();
+      delegate.refresh(status);
+    }
+
+    public NodeIdentifier register(PeerReference reference) throws TrackerException {
+      updateLastRequest();
+      return delegate.register(reference);
+    }
+
+    public void unregister(NodeIdentifier identifier) throws TrackerException {
+      updateLastRequest();
+      delegate.unregister(identifier);
+    }
+
+    private void updateLastRequest() {
+      lastRequest = new Date();
+    }
+    
   }
 
 }
