@@ -3,6 +3,10 @@
 	<property file="build-user.properties" />
 	<property file="build.properties" />
 
+  <target name="prepare.version">
+  	<fail unless="project.version" message="no property project.version"/>
+  </target>
+
   <target name="prepare.libraries">
   	<path id="path.build">
   		<fileset dir="lib/core"/>
@@ -33,7 +37,7 @@
 		</javac>
 	</target>
 
-	<target name="build.core.resources">
+	<target name="build.core.resources" depends="prepare.version">
 		<copy todir="${build.core.classes.dir}">
 			<fileset dir="source">
 				<include name="**/resources/*" />
