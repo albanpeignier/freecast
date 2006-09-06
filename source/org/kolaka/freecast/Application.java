@@ -41,6 +41,9 @@ import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.lang.builder.StandardToStringStyle;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Category;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.kolaka.freecast.config.ConfigurationLoader;
 import org.kolaka.freecast.config.DefaultConfigurationLoader;
 import org.kolaka.freecast.resource.ClassLoaderResourceLocator;
@@ -114,6 +117,10 @@ public abstract class Application {
 				"only load and test the configuration");
 		options.addOption(dryrunOption);
 
+    Option debugOption = new Option("debug", false,
+    "set log level to debug");
+    options.addOption(debugOption);
+
 		Option propertyOption = new Option("D", true,
 				"specifies a configuration property");
 		propertyOption.setArgName("value=property");
@@ -134,6 +141,12 @@ public abstract class Application {
 			help("", options);
 			return false;
 		}
+
+    boolean debug = line.hasOption(debugOption.getOpt());
+    if (debug) {
+      Logger.getLogger("org.kolaka.freecast").setLevel(Level.DEBUG);
+      LogFactory.getLog(getClass()).debug("debug level set by command line");
+    }
 
 		boolean dryrun = line.hasOption(dryrunOption.getOpt());
 
