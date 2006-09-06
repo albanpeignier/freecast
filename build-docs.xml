@@ -110,6 +110,7 @@
 		<javadoc packagenames="org.kolaka.freecast.*" sourcepath="source" destdir="build/docs/api" author="true" use="true">
 			<link href="http://java.sun.com/j2se/1.4.2/docs/api/" />
 			<classpath refid="path.test" />
+			<tag name="todo" description="To do:"/>
 		</javadoc>
 
 		<touch file="build/docs/api/.touch" />
@@ -388,8 +389,8 @@
 		<attribute name="encoding" default="utf8" />
 		<element name="filesets" optional="false" />
 		<sequential>
-			<apply executable="tidy" dest="@{dest}" failonerror="@{failonerror}" verbose="true">
-				<arg line="-quiet -@{encoding} -wrap 100" />
+			<apply executable="tidy" dest="@{dest}" failonerror="@{failonerror}" error="build/tidy.log">
+				<arg line="-quiet -@{encoding} -wrap 100 -errors" />
 				<arg value="-o" />
 				<targetfile />
 				<srcfile />
@@ -404,8 +405,8 @@
 		<attribute name="failonerror" default="true" />
 		<element name="filesets" optional="false" />
 		<sequential>
-			<apply executable="tidy" dest="@{dest}" failonerror="@{failonerror}" verbose="true">
-				<arg line="-xml -quiet -utf8 -wrap 100 -indent" />
+			<apply executable="tidy" dest="@{dest}" failonerror="@{failonerror}" error="build/tidy.log">
+				<arg line="-xml -quiet -utf8 -wrap 100 -indent -errors" />
 				<arg value="-o" />
 				<targetfile />
 				<srcfile />
