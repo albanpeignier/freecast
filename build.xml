@@ -389,7 +389,7 @@
 		</tar>
 	</target>
 	
-	<target name="export.tar" depends="export.tar.bin,export.tar.sources" description="Packages binaries and sources distributions"/>
+	<target name="export.tar" depends="export.tar.bin, export.tar.sources" description="Packages binaries and sources distributions"/>
 
 	<target name="export.win32" depends="dist.win32">
 		<pathconvert targetos="windows" property="export.win32.build.dir">
@@ -397,7 +397,7 @@
 				<pathelement location="${basedir}/build/win32" />
 			</path>
 		</pathconvert>
-		<exec executable="makensis" failonerror="true">
+		<exec executable="makensis" failonerror="true" output="build/nsis.log" append="true">
 			<arg value="-V4" />
 			<arg value="-NOCD" />
 			<arg value="-DBuildDir=build\win32" />

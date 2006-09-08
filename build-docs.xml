@@ -15,7 +15,7 @@
 			<element name="arguments" optional="true" />
 			<sequential>
 
-				<java classname="org.apache.xalan.xslt.Process" fork="true" failonerror="true">
+				<java classname="org.apache.xalan.xslt.Process" fork="true" failonerror="true" output="build/docbook.log" append="true">
 					<jvmarg line="-Dorg.apache.xerces.xni.parser.XMLParserConfiguration=org.apache.xerces.parsers.XIncludeParserConfiguration" />
 					<jvmarg 
 	line="-Xbootclasspath/p:lib/build-docbook/xercesImpl.jar;lib/build-docbook/xml-apis.jar" />
@@ -350,14 +350,16 @@
 				<exclude name="api/**/*.html" />
 			</fileset>
 		</copy>
-		<tidy dest="dist/docs" failonerror="false">
-			<filesets>
+		<!-- too verbose <tidy dest="dist/docs" failonerror="false"> 
+			<filesets> -->
+		<copy todir="dist/docs">
 				<fileset dir="build/docs">
 					<include name="userguide/*.html" />
 					<include name="api/**/*.html" />
 				</fileset>
-			</filesets>
-		</tidy>
+		</copy>
+		<!--	</filesets>
+		</tidy> -->
 
 		<!-- TODO find a better way -->
 		<mkdir dir="dist/docs/examples/audio"/>
@@ -389,8 +391,8 @@
 		<attribute name="encoding" default="utf8" />
 		<element name="filesets" optional="false" />
 		<sequential>
-			<apply executable="tidy" dest="@{dest}" failonerror="@{failonerror}" error="build/tidy.log">
-				<arg line="-quiet -@{encoding} -wrap 100 -errors" />
+			<apply executable="tidy" dest="@{dest}" failonerror="@{failonerror}" output="build/tidy.log" append="true">
+				<arg line="-quiet -@{encoding} -wrap 100" />
 				<arg value="-o" />
 				<targetfile />
 				<srcfile />
@@ -405,7 +407,7 @@
 		<attribute name="failonerror" default="true" />
 		<element name="filesets" optional="false" />
 		<sequential>
-			<apply executable="tidy" dest="@{dest}" failonerror="@{failonerror}" error="build/tidy.log">
+			<apply executable="tidy" dest="@{dest}" failonerror="@{failonerror}" output="build/tidy.log" append="true">
 				<arg line="-xml -quiet -utf8 -wrap 100 -indent -errors" />
 				<arg value="-o" />
 				<targetfile />
