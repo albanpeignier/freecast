@@ -27,7 +27,7 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.net.InetSocketAddress;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Observable;
@@ -79,15 +79,16 @@ public class MainFrame extends BaseFrame {
 	private final Action setupAction;
 
 	public MainFrame(Resources resources, TrackerService tracker, ConfigurableNode node,
-			InetSocketAddress publicHttpServer) throws ResourcesException {
+			URL listenPage) throws ResourcesException {
 		super(resources);
 
 		this.tracker = tracker;
 		this.node = node;
 
-		visitAction = new AsyncAction(new BrowseHomepageAction(resources, publicHttpServer));
+    boolean localListenPage = tracker != null;
+		visitAction = new AsyncAction(new BrowseHomepageAction(resources, listenPage, localListenPage));
 		emailHomepageAction = new AsyncAction(new EmailHomepageAction(resources,
-				publicHttpServer));
+				listenPage));
 		setupAction = new SetupAction(((ConfigurableResources) resources).subset("setup"), this, node);
 	}
 
@@ -100,7 +101,9 @@ public class MainFrame extends BaseFrame {
 		constraints.insets = new Insets(5, 5, 5, 5);
 		constraints.weightx = 1;
 
-		panel.add(new TrackerControlPanel(tracker), constraints);
+    if (tracker != null) {
+      panel.add(new TrackerControlPanel(tracker), constraints);
+    }
 		panel.add(new NodeControlPanel(node), constraints);
 
 		return panel;

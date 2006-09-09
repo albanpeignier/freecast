@@ -25,8 +25,10 @@ package org.kolaka.freecast.manager.gui;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.URL;
 
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.DataConfiguration;
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.NodeConfigurator;
 import org.kolaka.freecast.manager.http.HttpServer;
@@ -41,6 +43,7 @@ import org.kolaka.freecast.swing.ConfigurableResources;
 import org.kolaka.freecast.swing.SwingApplication;
 import org.kolaka.freecast.tracker.HttpTracker;
 import org.kolaka.freecast.tracker.HttpTrackerConfigurator;
+import org.kolaka.freecast.tracker.NoConfiguredTrackerException;
 
 /**
  * 
@@ -64,10 +67,16 @@ public class Main extends SwingApplication {
 	protected void postInit(Configuration configuration) throws Exception {
 		super.postInit(configuration);
 
-		HttpTracker tracker = new HttpTracker();
-		new HttpTrackerConfigurator().configure(tracker, configuration
-				.subset("tracker"));
-		this.tracker = tracker;
+		try {
+      HttpTracker tracker = new HttpTracker();
+      new HttpTrackerConfigurator().configure(tracker, configuration
+      		.subset("tracker"));
+      this.tracker = tracker;
+    } catch (NoConfiguredTrackerException e) {
+      LogFactory.getLog(getClass()).info("no tracker configured");
+      LogFactory.getLog(getClass()).debug("local track won't start");
+    }
+    
 
 		ConfigurableNode node = new DefaultNode();
 		NodeConfigurator nodeConfigurator = new NodeConfigurator();
@@ -75,26 +84,41 @@ public class Main extends SwingApplication {
 		nodeConfigurator.configure(node, configuration.subset("node"));
 		this.node = node;
 
-		String listenAddressPort = configuration
-				.getString("httpserver.listenaddress.port");
-		InetSocketAddressSpecification listenAddressSpecification = new InetSocketAddressSpecificationParser()
-				.parse("0.0.0.0", listenAddressPort);
-		InetSocketAddress listenAddress = SpecificationServerSocketBinder
-				.select(listenAddressSpecification);
+    boolean localListenPage = tracker != null;
+    URL listenPage;
+		if (localListenPage) { 
+  		String listenAddressPort = configuration
+  				.getString("httpserver.listenaddress.port");
+  		InetSocketAddressSpecification listenAddressSpecification = new InetSocketAddressSpecificationParser()
+  				.parse("0.0.0.0", listenAddressPort);
+  		InetSocketAddress listenAddress = SpecificationServerSocketBinder
+  				.select(listenAddressSpecification);
+  
+  		this.httpServer = new HttpServer(listenAddress);
+  		InetAddress publicAddress = PublicAddressResolver.getDefaultInstance()
+  				.getPublicAddress();
+  		httpServer.setServerName(publicAddress);
 
-		this.httpServer = new HttpServer(listenAddress);
-		InetAddress publicAddress = PublicAddressResolver.getDefaultInstance()
-				.getPublicAddress();
-		httpServer.setServerName(publicAddress);
+      InetSocketAddress publicHttpServer = new InetSocketAddress(
+          publicAddress, listenAddress.getPort());
+      listenPage = new URL("http", publicHttpServer.getHostName(), publicHttpServer.getPort(), "/");
+    } else {
+      LogFactory.getLog(getClass()).debug("no tracker configured, local http server won't start");
+      LogFactory.getLog(getClass()).debug("configured listen page will be used");
+      listenPage = new DataConfiguration(configuration).getURL("listenpage");
+      
+      if (listenPage == null) {
+        throw new IllegalArgumentException("No configured listen page");
+      }
+    }
+
+    LogFactory.getLog(getClass()).info("listener welcome page: " + listenPage);
 
 		ConfigurableResources resources = new ConfigurableResources(
 				configuration.subset("gui"));
 		resources.setResourceLocator(getResourceLocator());
-
-		InetSocketAddress publicHttpServer = new InetSocketAddress(
-				publicAddress, listenAddress.getPort());
-
-		frame = new MainFrame(resources, tracker, node, publicHttpServer);
+    
+		frame = new MainFrame(resources, tracker, node, listenPage);
 		frame.setQuitAction(createQuitAction(resources));
 		frame.init();
 	}
@@ -111,11 +135,15 @@ public class Main extends SwingApplication {
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 
-		httpServer.start();
+    if (httpServer != null) {
+      httpServer.start();
+    }
 
-		LogFactory.getLog(Main.class).info(
-				"start a HttpTracker on port " + tracker.getListenAddress());
-		tracker.start();
+    if (tracker != null) {
+  		LogFactory.getLog(Main.class).info(
+  				"start a HttpTracker on port " + tracker.getListenAddress());
+  		tracker.start();
+    }
 
 		node.init();
 		node.start();

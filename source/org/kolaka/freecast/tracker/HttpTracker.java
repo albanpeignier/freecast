@@ -65,6 +65,9 @@ public class HttpTracker implements TrackerService {
         "start a HttpConnector on port " + listenAddress);
     LogFactory.getLog(Main.class).trace(
         "use connector " + connectorClass.getName());
+    if (connectorClass.equals(HttpMultiTrackerConnector.class)) {
+      LogFactory.getLog(Main.class).info("multi network support enabled");
+    }
 
     server = new Server();
 		SocketListener listener = new SocketListener();

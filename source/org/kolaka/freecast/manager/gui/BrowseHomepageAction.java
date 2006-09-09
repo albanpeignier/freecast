@@ -24,7 +24,6 @@
 package org.kolaka.freecast.manager.gui;
 
 import java.awt.event.ActionEvent;
-import java.net.InetSocketAddress;
 import java.net.URL;
 
 import org.apache.commons.logging.LogFactory;
@@ -43,24 +42,29 @@ public class BrowseHomepageAction extends BaseAction {
 	 */
 	private static final long serialVersionUID = 1014721912985395264L;
 
-	private final InetSocketAddress publicHttpServer;
+	private final URL listenPage;
+  private final boolean localListenPage;
 
 	public BrowseHomepageAction(Resources resources,
-			InetSocketAddress publicHttpServer) throws ResourcesException {
+			URL listenPage, boolean localListenPage) throws ResourcesException {
 		super("Browse network homepage");
-		this.publicHttpServer = publicHttpServer;
+		this.listenPage = listenPage;
+    this.localListenPage = localListenPage;
 		loadIcons(resources, "visit.browse");
 	}
 
 	public void actionPerformed(ActionEvent event) {
+    URL url = listenPage;
 		try {
-			URL url = new URL("http", "localhost", publicHttpServer.getPort(),
-					"/");
+      if (localListenPage) {
+        url = new URL(listenPage.getPath(), "localhost", listenPage.getPort(), listenPage.getPath());
+      }
+          
 			LogFactory.getLog(getClass()).debug("browse " + url);
 			Desktop.browse(url);
 		} catch (Exception e) {
 			LogFactory.getLog(getClass()).error(
-					"can't start a browser to visit " + publicHttpServer, e);
+					"can't start a browser to visit " + url, e);
 		}
 	}
 

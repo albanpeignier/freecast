@@ -25,8 +25,6 @@ package org.kolaka.freecast.manager.gui;
 
 import java.awt.event.ActionEvent;
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.commons.logging.LogFactory;
@@ -46,12 +44,12 @@ public class EmailHomepageAction extends BaseAction {
 	 */
 	private static final long serialVersionUID = -6845487445187546115L;
 
-	private final InetSocketAddress publicHttpServer;
+	private final URL listenPage;
 
 	public EmailHomepageAction(Resources resources,
-			InetSocketAddress publicHttpServer) throws ResourcesException {
+			URL listenPage) throws ResourcesException {
 		super("Email network homepage");
-		this.publicHttpServer = publicHttpServer;
+		this.listenPage = listenPage;
 		loadIcons(resources, "visit.email");
 	}
 
@@ -60,12 +58,12 @@ public class EmailHomepageAction extends BaseAction {
 			sendMail();
 		} catch (Exception e) {
 			LogFactory.getLog(getClass()).error(
-					"can't email to visit " + publicHttpServer, e);
+					"can't email to visit " + listenPage, e);
 		}
 	}
 	
 	private void sendMail() throws IOException, DesktopException {
-		URL url = new URL("http", publicHttpServer.getHostName(), publicHttpServer.getPort(), "/");
+		URL url = listenPage;
 		LogFactory.getLog(getClass()).debug("email " + url);
 
 		final Message message = new Message();

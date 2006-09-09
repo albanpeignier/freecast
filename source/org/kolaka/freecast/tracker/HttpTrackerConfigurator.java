@@ -35,7 +35,7 @@ import org.kolaka.freecast.transport.cas.ConnectionAssistantServer;
  */
 public class HttpTrackerConfigurator {
 
-	public void configure(HttpTracker tracker, Configuration configuration) {
+	public void configure(HttpTracker tracker, Configuration configuration) throws NoConfiguredTrackerException {
     /*
      * for the moment, the tracker.class changes the Connector implementation 
      * which creates its own Tracker instance
@@ -44,6 +44,8 @@ public class HttpTrackerConfigurator {
     Class connectorClass = HttpSimpleTrackerConnector.class; 
     if (trackerClass.equals("multi")) {
       connectorClass = HttpMultiTrackerConnector.class;
+    } else if (trackerClass.equals("none")) {
+      throw new NoConfiguredTrackerException();
     }
     tracker.setConnectorClass(connectorClass);
     

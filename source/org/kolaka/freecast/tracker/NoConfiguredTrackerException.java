@@ -4,7 +4,7 @@
  * This code was developped by Alban Peignier (http://people.tryphon.org/~alban/) 
  * and contributors (their names can be found in the CONTRIBUTORS file).
  *
- * Copyright (C) 2004-2006 Alban Peignier
+ * Copyright (C) 2004 Alban Peignier
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -23,39 +23,8 @@
 
 package org.kolaka.freecast.tracker;
 
-import org.apache.commons.configuration.Configuration;
-import org.kolaka.freecast.Application;
+public class NoConfiguredTrackerException extends Exception {
 
-/**
- * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
- */
-public class Main extends Application {
-	
-  private TrackerService tracker;
-
-	public Main() {
-		super("tracker");
-	}
-
-	public static void main(String args[]) {
-		new Main().run(args);
-	}
-
-	protected void postInit(Configuration configuration) throws Exception {
-		HttpTracker tracker = new HttpTracker();
-		new HttpTrackerConfigurator().configure(tracker, configuration
-				.subset("tracker"));
-    this.tracker = tracker;
-	}
-
-	protected void run() throws Exception {
-		tracker.start();
-
-		Object lock = new Object();
-
-		synchronized (lock) {
-			lock.wait();
-		}
-	}
+  private static final long serialVersionUID = 308987929854225820L;
 
 }
