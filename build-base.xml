@@ -172,7 +172,7 @@
 		<copy todir="dist/lib">
 			<fileset dir="lib/core"/>
 			<fileset dir="lib/runtime">
-				 <include name="*.jar"/>
+				 <include name="**/*.jar"/>
 				 <exclude name="jdic-stub*"/>
 				 <exclude name="jdic-native*"/>
 			</fileset>

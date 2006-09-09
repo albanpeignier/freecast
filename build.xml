@@ -46,7 +46,14 @@
 				<include name="**/*.dll" />
 			</fileset>
 		</copy>
-  	
+		
+		<copy todir="lib/runtime">
+			<fileset dir="lib/runtime">
+				<include name="jdic-stub*"/>
+			</fileset>
+			<mapper type="regexp" from="jdic-stub-([a-z]+).jar" to="\1/jdic-stub-\1.jar"/>
+		</copy>
+		
   	<path id="path.build">
   		<fileset dir="lib/core"/>
   	</path>
