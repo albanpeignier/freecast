@@ -13,53 +13,7 @@
 		<all-permissions/>
 	</security>
 
-	<resources>
-		<jar href="lib/freecast-@project.version@.jar"/>
-		<jar href="lib/freecast-etc.jar"/>
-
-		<jar href="lib/commons-cli-1.0.jar"/>
-		<jar href="lib/commons-collections-3.1.jar"/>
-		<jar href="lib/commons-configuration-1.1RC2.jar"/>
-		<jar href="lib/cortado-ovt-0.1.0.jar"/>
-		<jar href="lib/commons-lang-2.0.jar"/>
-    <jar href="lib/commons-logging-1.1-RC5.jar"/>
-		<jar href="lib/commons-io-1.0.jar"/>
-		<jar href="lib/commons-beanutils.jar"/>
-		<jar href="lib/jogg-0.0.7.jar"/>
-    <jar href="lib/jorbis-0.0.15.jar"/>
-    <jar href="lib/log4j-1.2.13.jar"/>
-    <jar href="lib/tritonus_share.jar"/>
-    <jar href="lib/tritonus-vorbis.jar"/>
-    <jar href="lib/vorbisspi1.0.2.jar"/>
-		<jar href="lib/concurrent.jar"/>
-		<jar href="lib/hessian-3.0.8.jar"/>
-		<jar href="lib/commons-httpclient-3.0-rc3.jar"/>
-		<jar href="lib/commons-codec-1.3.jar"/>
-		<jar href="lib/commons-digester-1.7.jar"/>
-	
-	<jar href="lib/mina-core-0.9.5-SNAPSHOT.jar"/>
-	<jar href="lib/jstun-0.5.9.2.jar"/>
-	<jar href="lib/commons-discovery.jar"/>
-	<jar href="lib/slf4j-log4j12.jar"/>		
-		
-		<jar href="lib/jdic.jar"/>
-	</resources>
-	<resources os="Windows">
-		<jar href="lib/windows/jdic_stub.jar"/>
-		<nativelib href="lib/windows/jdic_native_x86.jar"/>
-	</resources>
-	<resources os="SunOS" arch="sparc">
-		<jar href="lib/sunos/jdic_stub.jar"/>
-		<nativelib href="lib/sunos/jdic_native_sparc.jar"/>
-	</resources>
-	<resources os="SunOS" arch="x86">
-		<jar href="lib/sunos/jdic_stub.jar"/>
-		<nativelib href="lib/sunos/jdic_native_x86.jar"/>
-	</resources>
-	<resources os="Linux">
-		<jar href="lib/linux/jdic_stub.jar"/>
-		<nativelib href="lib/linux/jdic_native_x86.jar"/>
-	</resources>
+	@resources@
 
 	<component-desc/>
 </jnlp>

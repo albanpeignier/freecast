@@ -40,8 +40,8 @@
   </target>
   
   <target name="prepare.docbook.retrieve">
-  	<ivy:configure />
-  	<ivy:retrieve pattern="lib/[conf]/[artifact].[ext]" conf="build-docbook" />
+  	<ivy-configure />
+  	<ivy-retrieve pattern="lib/[conf]/[artifact].[ext]" conf="build-docbook" />
   </target>
   
   <target name="prepare.docbook.install.check">
@@ -64,7 +64,7 @@
   </target>
   
   <target name="prepare.xmlreleasenotes" depends="prepare.ivy">
-  	<ivy:retrieve pattern="lib/[conf]/[artifact].[ext]" conf="build-xmlreleasenotes" />
+  	<ivy-retrieve pattern="lib/[conf]/[artifact].[ext]" conf="build-xmlreleasenotes" />
   	<taskdef classname="org.xrn.ant.XMLReleaseNotes" name="xrn">
   		<classpath>
   			<fileset dir="lib/build-xmlreleasenotes"/>
@@ -262,7 +262,7 @@
 	</target>
 
 	<target name="build.docs.xref" depends="build.docs.xref.check" unless="build.docs.xref.notRequired">
-  	<ivy:retrieve pattern="lib/[conf]/[artifact].[ext]" conf="build-antjxr" />
+  	<ivy-retrieve pattern="lib/[conf]/[artifact].[ext]" conf="build-antjxr" />
     <unzip dest="lib/build-antjxr">
     	<fileset dir="lib/build-antjxr" includes="ant-jxr-data*.zip"/>
     </unzip>

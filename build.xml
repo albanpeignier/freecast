@@ -1,11 +1,20 @@
-<project xmlns:ivy="antlib:fr.jayasoft.ivy.ant" name="freecast-all" default="dist" basedir=".">
+<project name="freecast-all" default="dist" basedir=".">
 
 	<import file="build-base.xml"/>
 	<import file="build-docs.xml"/>
 
 	<target name="prepare.ivy">
-  	<ivy:configure />
-	</target>
+		<path id="path.ivy">
+			<fileset dir="${track.ivy.dir}"/>
+		</path>
+		<taskdef name="ivy-configure" classname="fr.jayasoft.ivy.ant.IvyConfigure" classpathref="path.ivy"/>
+	  <taskdef name="ivy-resolve" classname="fr.jayasoft.ivy.ant.IvyResolve" classpathref="path.ivy"/>
+	  <taskdef name="ivy-retrieve" classname="fr.jayasoft.ivy.ant.IvyRetrieve" classpathref="path.ivy"/>
+	  <taskdef name="ivy-deliver" classname="fr.jayasoft.ivy.ant.IvyDeliver" classpathref="path.ivy"/>
+	  <taskdef name="ivy-publish" classname="fr.jayasoft.ivy.ant.IvyPublish" classpathref="path.ivy"/>
+	  <taskdef name="ivy-artifactreport" classname="fr.jayasoft.ivy.ant.IvyArtifactReport" classpathref="path.ivy"/>
+  	<ivy-configure />
+  </target>
 
 	<target name="prepare.version">
 		<tstamp />
@@ -13,8 +22,12 @@
 		<property name="project.fullname" value="freecast-${project.version}" />
 	</target>
 	
-  <target name="prepare.libraries" depends="prepare.ivy">
-  	<ivy:retrieve pattern="lib/[conf]/[artifact].[ext]" conf="core, runtime, test" />
+	<target name="prepare.libraries.check">
+		<available property="prepare.library.retrieve.notRequired" file="lib/.touch"/>
+	</target>
+
+	<target name="prepare.libraries.retrieve" depends="prepare.ivy" unless="prepare.library.retrieve.notRequired">
+  	<ivy-retrieve pattern="lib/[conf]/[artifact].[ext]" conf="core, runtime, test" />
 
 		<patternset id="patternset.nometainf">
 			<exclude name="META-INF/**"/>
@@ -54,6 +67,10 @@
 			<mapper type="regexp" from="jdic-stub-([a-z]+).jar" to="\1/jdic-stub-\1.jar"/>
 		</copy>
 		
+		<touch file="lib/.touch"/>
+	</target>
+	
+  <target name="prepare.libraries" depends="prepare.libraries.check, prepare.libraries.retrieve" >
   	<path id="path.build">
   		<fileset dir="lib/core"/>
   	</path>
@@ -187,16 +204,29 @@
 		<property name="dist.jws.libfreecast.dir" value="dist/jws/libfreecast" />
 		<property name="dist.jws.codebase" value="http://download.freecast.org/jws/libfreecast/"/>
 		
-		<copy tofile="${dist.jws.libfreecast.dir}/libfreecast-${project.version}.jnlp" file="source/org/kolaka/freecast/node/swing/libfreecast.jnlp">
+		<mkdir dir="build/jws"/>
+		<ivy-artifactreport tofile="build/jws/ivy-report.xml" conf="core,runtime"/>
+		<style in="build/jws/ivy-report.xml" out="build/jws/jnlp-resources.xml" style="source/org/kolaka/freecast/jnlp-resources.xsl">
+			<param name="project.version" expression="${project.version}"/>
+		</style>
+		<loadfile property="dist.jws.resources" srcFile="build/jws/jnlp-resources.xml">
+			<filterchain>
+		    <tailfilter lines="-1" skip="1"/>
+      </filterchain>
+		</loadfile>
+		
+		<copy tofile="${dist.jws.libfreecast.dir}/libfreecast.jnlp" file="source/org/kolaka/freecast/node/swing/libfreecast.jnlp">
 			<filterset>
 				<filter token="project.version" value="${project.version}" />
 				<filter token="codebase" value="${dist.jws.codebase}" />
+				<filter token="resources" value="${dist.jws.resources}" />
 			</filterset>
 		</copy>
 		<copy tofile="${dist.jws.libfreecast.dir}/freecast-manager.jnlp" file="source/org/kolaka/freecast/manager/gui/freecast-manager.jnlp">
 			<filterset>
 				<filter token="project.version" value="${project.version}" />
 				<filter token="codebase" value="${dist.jws.codebase}" />
+				<filter token="resources" value="${dist.jws.resources}" />
 			</filterset>
 		</copy>
 
@@ -242,7 +272,7 @@
 		<jar jarfile="${dist.jws.libfreecast.dir}/lib/sunos/native_x86.jar">
 			<fileset dir="dist/lib/sunos/x86" />
 		</jar>
-		<copy tofile="${dist.jws.libfreecast.dir}/lib/freecast-${project.version}.jar" file="dist/lib/freecast.jar" />
+		<copy tofile="${dist.jws.libfreecast.dir}/lib/freecast.jar" file="dist/lib/freecast.jar" />
 
 		<signjar keystore="${dist.jws.keystore}" alias="kolaka" storepass="kolaka">
 			<fileset dir="${dist.jws.libfreecast.dir}/lib" includes="**/*.jar">
