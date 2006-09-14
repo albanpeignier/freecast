@@ -118,7 +118,7 @@
 
 	<target name="dist" depends="build, dist.jar, dist.bin, dist.etc, dist.lib" description="Create the binaries distribution" />
 
-	<target name="dist.jar">
+	<target name="dist.jar" depends="build.core">
 		<mkdir dir="dist/lib" />
 		<jar jarfile="dist/lib/freecast.jar">
 			<fileset dir="${build.core.classes.dir}" />
@@ -172,7 +172,6 @@
 		<copy todir="dist/lib">
 			<fileset dir="lib/core"/>
 			<fileset dir="lib/runtime">
-				 <include name="**/*.jar"/>
 				 <exclude name="jdic-stub*"/>
 				 <exclude name="jdic-native*"/>
 			</fileset>
