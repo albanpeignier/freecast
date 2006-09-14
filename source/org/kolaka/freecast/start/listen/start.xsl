@@ -8,7 +8,7 @@
  <xsl:param name="lang"/>
  <xsl:param name="descriptor"/>
  <xsl:param name="url"/>
- <xsl:param name="autostart"/>
+ <xsl:param name="jnlp_file"/>
 
  <xsl:variable name="description" select="document($descriptor)"/>
  <xsl:variable name="name" select="$description/stream/name"/>
@@ -21,23 +21,23 @@
     <title><xsl:text>Freecast | </xsl:text><xsl:apply-templates select="title"/> <xsl:value-of select="$name"/></title> 
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<xsl:if test="$autostart = 'true'">
+	<xsl:if test="boolean($jnlp_file)">
 	  <meta http-equiv="refresh">
 		<xsl:attribute name="content">
-		  <xsl:text>3; url=jnlp/descriptor=</xsl:text><xsl:value-of select="$url"/>
+		  <xsl:text>3; url=</xsl:text><xsl:value-of select="$jnlp_file"/>
 		</xsl:attribute>
 	  </meta>
+	  <xsl:comment><xsl:value-of select="$jnlp_file"/></xsl:comment>
 	</xsl:if>
 
-    <link href="css/start.css" rel="stylesheet" type="text/css" media="screen" title="FreeCast"/>
-    <link href="css/print.css" rel="stylesheet" type="text/css" media="print"/>
+    <link href="../stylesheets/screen.css" rel="stylesheet" type="text/css" media="screen" title="FreeCast"/>
    </head>
 
    <body>
     <div id="container"> 
      <div id="branding">
       <div id="logo">
-       <a href="."><img src="images/header/freecast.png" alt=""/></a>
+       <a href="."><img src="../images/freecast.png" alt=""/></a>
       </div>
       <div id="tool"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></div>  
      </div>

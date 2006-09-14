@@ -159,6 +159,18 @@
 			</filesets>
 		</thumbnails>
 	</target>
+	
+	<target name="build.start">
+		<property name="build.start.site" value="start.freecast.org"/>
+		<copy todir="build/start">
+			<fileset dir="source/org/kolaka/freecast/start">
+				<include name="**/start.js"/>
+			</fileset>
+			<filterset>
+				<filter token="start.site" value="${build.start.site}"/>
+			</filterset>
+		</copy>
+	</target>
 
 	<target name="build.win32" depends="build.win32.jre">
 		<copy todir="build/win32">
@@ -354,6 +366,15 @@
 		</copy>
 	</target>
 	
+	<target name="dist.start" depends="build.start">
+		<copy todir="dist/start">
+			<fileset dir="source/org/kolaka/freecast/start">
+				<exclude name="**/start.js"/>
+			</fileset>
+			<fileset dir="build/start"/>
+		</copy>
+	</target>
+	
 	<target name="dist.sources" depends="prepare.version">
 		<copy todir="dist/sources/source">
 			<fileset dir="source">
@@ -402,12 +423,8 @@
 				<include name="bin/*.bat" />
 			</tarfileset>
 			<tarfileset dir="dist" prefix="${project.fullname}">
-				<exclude name="bin/**" />
-				<exclude name="jws/**" />
-				<exclude name="www/**" />
-				<exclude name="log/**" />
-				<exclude name="docs/**" />
-				<exclude name="install/**" />
+				<include name="etc/**" />
+				<include name="lib/**" />
 			</tarfileset>
 			<tarfileset dir="dist/docs" prefix="${project.fullname}/docs">
 				<include name="userguide/**" />
@@ -585,6 +602,15 @@
 			<arg value="-av" />
 			<arg value="dist/www/" />
 			<arg value="${install.www.target}" />
+		</exec>
+	</target>
+
+	<target name="install.start" depends="dist.start">
+		<property name="install.start.target" value="${user.name}@start.freecast.org:/var/www/freecast.org/start/" />
+		<exec executable="rsync" failonerror="true">
+			<arg value="-av" />
+			<arg value="dist/start/" />
+			<arg value="${install.start.target}" />
 		</exec>
 	</target>
 	

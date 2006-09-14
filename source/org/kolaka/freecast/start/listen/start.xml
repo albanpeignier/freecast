@@ -1,0 +1,88 @@
+<page>
+  <title>
+    <i18n>
+      <text lang="en">Start</text>
+      <text lang="fr">Démarrage</text>
+      <text lang="es">Inicio</text>
+    </i18n>
+  </title>
+  <content>
+    <h1>
+    <i18n>
+      <text lang="en">Start</text>
+      <text lang="fr">Démarrer</text>
+      <text lang="es">Inicio</text>
+    </i18n>
+    FreeCast 
+    <i18n>
+      <text lang="en">to listen</text>
+      <text lang="fr">pour écouter</text>
+      <text lang="es">para escuchar</text>
+    </i18n>
+    <variable name="name" /></h1>
+    <div class="summary">
+      <p>
+      <i18n>
+        <text lang="en">You've just clicked to start 
+        <strong>FreeCast</strong> to listen</text>
+        <text lang="fr">Vous venez de cliquer pour démarrer 
+        <strong>FreeCast</strong> pour écouter</text>
+        <text lang="es">Usted acaba de iniciar 
+        <strong>FreeCast</strong> para escuchar</text>
+      </i18n>
+      <strong>
+        <variable name="name" />
+      </strong>. Java Web Start 
+      <i18n>
+        <text lang="en">should start shortly.</text>
+        <text lang="fr">devrait démarrer dans quelques
+        secondes.</text>
+        <text lang="es">Debe iniciarse en pocos segundos.</text>
+      </i18n></p>
+    </div>
+    <h3 id="openwith">
+      <i18n>
+        <text lang="en">Open with ...</text>
+        <text lang="fr">Ouvrir avec ...</text>
+        <text lang="es">Abrir con ...</text>
+      </i18n>
+    </h3>
+    <p>
+      <i18n>
+        <text lang="en">If your browser asks you what it shoud do
+        with a JNLP file, try yo choose 
+        <em>Open with Java Web Start</em>or with 
+        <em>JNLP File</em> (for Mozilla users).</text>
+        <text lang="fr">Si votre navigateur vous demande quoi faire
+        avec un fichier JNLP, essayer de choisir 
+        <em>Ouvrir avec Java Web Start</em>ou 
+        <em>JNLP File</em> (pour les utilisateurs de
+        Mozilla).</text>
+        <text lang="es">Si su navegador le pregunta quà hacer con
+        un archivo JNLP, trate de seleccionar 
+        <em>Abrir con Java Web Start</em>o 
+        <em>JNLP File</em> (para los usuarios de Mozilla).</text>
+      </i18n>
+    </p>
+    <p>
+      <i18n>
+        <text lang="en">If you don't find Java Web Start, it might
+        because .. Java isn't properly install on your computer.
+        See the 
+        <a class="external" target="_blank"
+        href="http://www.freecast.org/install">
+        install</a> page.</text>
+        <text lang="fr">Si vous ne trouvez pas Java Web Start,
+        c'est peut-etre parce que Java n'est pas correctement
+        installé sur votre ordinateur. Reportez vous à la page d'
+        <a target="_blank" href="http://www.freecast.org/install">
+        installation</a>.</text>
+        <text lang="es">Si usted no encuentra Java Web Start puede
+        ser que Java no està correctamente instalado en su
+        computadora. Regrese a la página de 
+        <a target="_blank" href="http://www.freecast.org/install">
+        instalación</a>.</text>
+      </i18n>
+    </p>
+  </content>
+</page>
