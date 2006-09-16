@@ -245,7 +245,7 @@
 		<mkdir dir="${dist.jws.libfreecast.dir}/lib" />
 		<jar jarfile="${dist.jws.libfreecast.dir}/lib/freecast-bootstrap.jar">
 			<fileset dir="${build.core.classes.dir}">
-				<include name="org/kolaka/freecast/node/swing/Bootstrap.class" />
+				<include name="**/Bootstrap.class" />
 			</fileset>
 		</jar>
 
