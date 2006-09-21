@@ -7,17 +7,24 @@
 		<path id="path.ivy">
 			<fileset dir="${track.ivy.dir}"/>
 		</path>
-		<taskdef name="ivy-configure" classname="fr.jayasoft.ivy.ant.IvyConfigure" classpathref="path.ivy"/>
-	  <taskdef name="ivy-resolve" classname="fr.jayasoft.ivy.ant.IvyResolve" classpathref="path.ivy"/>
-	  <taskdef name="ivy-retrieve" classname="fr.jayasoft.ivy.ant.IvyRetrieve" classpathref="path.ivy"/>
-	  <taskdef name="ivy-deliver" classname="fr.jayasoft.ivy.ant.IvyDeliver" classpathref="path.ivy"/>
-	  <taskdef name="ivy-publish" classname="fr.jayasoft.ivy.ant.IvyPublish" classpathref="path.ivy"/>
-	  <taskdef name="ivy-artifactreport" classname="fr.jayasoft.ivy.ant.IvyArtifactReport" classpathref="path.ivy"/>
+		<taskdef name="ivy-configure" classname="fr.jayasoft.ivy.ant.IvyConfigure" classpathref="path.ivy" loaderRef="ivy.loader"/>
+	  <taskdef name="ivy-resolve" classname="fr.jayasoft.ivy.ant.IvyResolve" classpathref="path.ivy" loaderRef="ivy.loader"/>
+	  <taskdef name="ivy-retrieve" classname="fr.jayasoft.ivy.ant.IvyRetrieve" classpathref="path.ivy" loaderRef="ivy.loader"/>
+	  <taskdef name="ivy-deliver" classname="fr.jayasoft.ivy.ant.IvyDeliver" classpathref="path.ivy" loaderRef="ivy.loader"/>
+	  <taskdef name="ivy-publish" classname="fr.jayasoft.ivy.ant.IvyPublish" classpathref="path.ivy" loaderRef="ivy.loader"/>
+	  <taskdef name="ivy-artifactreport" classname="fr.jayasoft.ivy.ant.IvyArtifactReport" classpathref="path.ivy" loaderRef="ivy.loader"/>
   	<ivy-configure />
   </target>
-
-	<target name="prepare.version">
+  
+  <target name="prepare.version.tstamp">
 		<tstamp />
+  </target>
+
+  <target name="prepare.version.ccontrol" if="label">
+		<property name="project.version" value="${DSTAMP}-${label}" />
+  </target>
+
+	<target name="prepare.version" depends="prepare.version.tstamp, prepare.version.ccontrol">
 		<property name="project.version" value="${DSTAMP}" />
 		<property name="project.fullname" value="freecast-${project.version}" />
 	</target>
@@ -64,7 +71,7 @@
 			<fileset dir="lib/runtime">
 				<include name="jdic-stub*"/>
 			</fileset>
-			<mapper type="regexp" from="jdic-stub-([a-z]+).jar" to="\1/jdic-stub-\1.jar"/>
+			<mapper type="regexp" from="jdic-stub-([a-z]+).jar" to="\1/jdic-stub.jar"/>
 		</copy>
 		
 		<touch file="lib/.touch"/>
@@ -160,7 +167,7 @@
 		</thumbnails>
 	</target>
 	
-	<target name="build.start">
+	<target name="build.start" depends="prepare.version">
 		<property name="build.start.site" value="start.freecast.org"/>
 		<copy todir="build/start">
 			<fileset dir="source/org/kolaka/freecast/start">
@@ -170,6 +177,26 @@
 				<filter token="start.site" value="${build.start.site}"/>
 			</filterset>
 		</copy>
+
+		<copy todir="build/start/broadcast">
+			<fileset dir="source/org/kolaka/freecast/start/broadcast">
+				<include name="jnlp.xsl"/>
+			</fileset>
+			<filterset>
+				<filter token="project.version" value="${project.version}"/>
+			</filterset>
+		</copy>
+
+		<mkdir dir="build/start/broadcast"/>
+		
+		<echo message="&lt;empty&gt;&lt;/empty&gt;" file="build/empty.xml"/>
+		<style 
+			style="build/start/broadcast/jnlp.xsl"
+			in="build/empty.xml" 
+			out="build/start/broadcast/freecast-manager.jnlp">
+			<param name="codebase" expression="http://${build.start.site}/broadcast"/>
+			<param name="href" expression="freecast-manager.jnlp"/>
+		</style>
 	</target>
 
 	<target name="build.win32" depends="build.win32.jre">
@@ -213,8 +240,8 @@
 	</target>
 
 	<target name="dist.jws.libfreecast" depends="prepare.version, build.etc, dist.jar, dist.lib, dist.jws.check" if="dist.jws.possible">
-		<property name="dist.jws.libfreecast.dir" value="dist/jws/libfreecast" />
-		<property name="dist.jws.codebase" value="http://download.freecast.org/jws/libfreecast/"/>
+		<property name="dist.jws.libfreecast.dir" value="dist/jws" />
+		<property name="dist.jws.codebase" value="http://jws.freecast.org/${project.version}/"/>
 		
 		<mkdir dir="build/jws"/>
 		<ivy-artifactreport tofile="build/jws/ivy-report.xml" conf="core,runtime"/>
@@ -223,18 +250,11 @@
 		</style>
 		<loadfile property="dist.jws.resources" srcFile="build/jws/jnlp-resources.xml">
 			<filterchain>
-		    <tailfilter lines="-1" skip="1"/>
+		    <headfilter lines="-1" skip="1"/>
       </filterchain>
 		</loadfile>
 		
 		<copy tofile="${dist.jws.libfreecast.dir}/libfreecast.jnlp" file="source/org/kolaka/freecast/node/swing/libfreecast.jnlp">
-			<filterset>
-				<filter token="project.version" value="${project.version}" />
-				<filter token="codebase" value="${dist.jws.codebase}" />
-				<filter token="resources" value="${dist.jws.resources}" />
-			</filterset>
-		</copy>
-		<copy tofile="${dist.jws.libfreecast.dir}/freecast-manager.jnlp" file="source/org/kolaka/freecast/manager/gui/freecast-manager.jnlp">
 			<filterset>
 				<filter token="project.version" value="${project.version}" />
 				<filter token="codebase" value="${dist.jws.codebase}" />
@@ -270,18 +290,18 @@
 			</fileset>
 		</copy>
 		<mkdir dir="${dist.jws.libfreecast.dir}/lib/linux" />
-		<jar jarfile="${dist.jws.libfreecast.dir}/lib/linux/native_x86.jar">
+		<jar jarfile="${dist.jws.libfreecast.dir}/lib/linux/native-x86.jar">
 			<fileset dir="dist/lib/linux/x86" />
 		</jar>
 		<mkdir dir="${dist.jws.libfreecast.dir}/lib/windows" />
-		<jar jarfile="${dist.jws.libfreecast.dir}/lib/windows/native_x86.jar">
+		<jar jarfile="${dist.jws.libfreecast.dir}/lib/windows/native-x86.jar">
 			<fileset dir="dist/lib/windows/x86" />
 		</jar>
 		<mkdir dir="${dist.jws.libfreecast.dir}/lib/sunos" />
-		<jar jarfile="${dist.jws.libfreecast.dir}/lib/sunos/native_sparc.jar">
+		<jar jarfile="${dist.jws.libfreecast.dir}/lib/sunos/native-sparc.jar">
 			<fileset dir="dist/lib/sunos/sparc" />
 		</jar>
-		<jar jarfile="${dist.jws.libfreecast.dir}/lib/sunos/native_x86.jar">
+		<jar jarfile="${dist.jws.libfreecast.dir}/lib/sunos/native-x86.jar">
 			<fileset dir="dist/lib/sunos/x86" />
 		</jar>
 		<copy tofile="${dist.jws.libfreecast.dir}/lib/freecast.jar" file="dist/lib/freecast.jar" />
@@ -368,10 +388,10 @@
 	
 	<target name="dist.start" depends="build.start">
 		<copy todir="dist/start">
+			<fileset dir="build/start"/>
 			<fileset dir="source/org/kolaka/freecast/start">
 				<exclude name="**/start.js"/>
 			</fileset>
-			<fileset dir="build/start"/>
 		</copy>
 	</target>
 	
@@ -558,46 +578,19 @@
 		<delete file="${install.docs.tempfile}" />
 	</target>
 
-	<target name="install.jws" depends="dist.jws">
-		<!--
-			install files needed for the JavaWebStart deployment, can look a bit complicated,
-			but the copy operation must preserve the files already published and the jar
-			signatures modify the jar files (and the last modifications). So retrieve published
-			files, add only missing files, and sync back the remote directory
-        -->
-		<mkdir dir="dist/install/jws" />
-		<property name="install.jws.target" value="${user.name}@ssh.tryphon.org:/var/www/kolaka.org/freecast/jws" />
+	<target name="install.jws" depends="prepare.version, dist.jws">
+		<property name="install.jws.target" value="${user.name}@jws.freecast.org:/var/www/freecast.org/jws/${project.version}/" />
 
 		<exec executable="rsync" failonerror="true">
 			<arg value="-av" />
-			<arg value="${install.jws.target}/libfreecast" />
-			<arg value="dist/install/jws" />
-		</exec>
-
-		<copy todir="dist/install/jws" verbose="true">
-			<fileset dir="dist/jws">
-				<include name="**/*.jar" />
-				<present present="srconly" targetdir="dist/install/jws" />
-				<exclude name="**/.signjar" />
-			</fileset>
-			<fileset dir="dist/jws">
-				<include name="**/freecast*.jar" />
-			</fileset>
-			<fileset dir="dist/jws">
-				<exclude name="**/*.jar" />
-				<exclude name="**/.signjar" />
-			</fileset>
-		</copy>
-
-		<exec executable="rsync" failonerror="true">
-			<arg value="-av" />
-			<arg value="dist/install/jws/" />
-			<arg value="${user.name}@ssh.tryphon.org:/var/www/kolaka.org/freecast/jws" />
+			<arg line="--exclude '*/.signjar'" />
+			<arg value="dist/jws/" />
+			<arg value="${install.jws.target}" />
 		</exec>
 	</target>
 
 	<target name="install.www" depends="dist.www">
-		<property name="install.www.target" value="${user.name}@ssh.tryphon.org:/var/www/freecast.org/www/" />
+		<property name="install.www.target" value="${user.name}@www.freecast.org:/var/www/freecast.org/www/" />
 		<exec executable="rsync" failonerror="true">
 			<arg value="-av" />
 			<arg value="dist/www/" />

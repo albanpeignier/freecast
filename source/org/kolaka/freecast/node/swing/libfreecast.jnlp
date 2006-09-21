@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<jnlp spec="1.0+" codebase="http://download.freecast.org/jws/libfreecast/" href="libfreecast-@project.version@.jnlp">
+<jnlp spec="1.0+" codebase="http://jws.freecast.org/@project.version@/" href="libfreecast.jnlp">
 
 	<information>
 		<title>FreeCast libraries</title>

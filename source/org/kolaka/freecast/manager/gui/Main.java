@@ -89,6 +89,7 @@ public class Main extends SwingApplication {
 		if (localListenPage) { 
   		String listenAddressPort = configuration
   				.getString("httpserver.listenaddress.port");
+      LogFactory.getLog(getClass()).debug("search a free port in " + listenAddressPort);
   		InetSocketAddressSpecification listenAddressSpecification = new InetSocketAddressSpecificationParser()
   				.parse("0.0.0.0", listenAddressPort);
   		InetSocketAddress listenAddress = SpecificationServerSocketBinder
