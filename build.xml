@@ -178,15 +178,6 @@
 			</filterset>
 		</copy>
 
-		<copy todir="build/start/broadcast">
-			<fileset dir="source/org/kolaka/freecast/start/broadcast">
-				<include name="jnlp.xsl"/>
-			</fileset>
-			<filterset>
-				<filter token="project.version" value="${project.version}"/>
-			</filterset>
-		</copy>
-
 		<mkdir dir="build/start/broadcast"/>
 		
 		<echo message="&lt;empty&gt;&lt;/empty&gt;" file="build/empty.xml"/>
@@ -582,7 +573,7 @@
 		<property name="install.jws.target" value="${user.name}@jws.freecast.org:/var/www/freecast.org/jws/${project.version}/" />
 
 		<exec executable="rsync" failonerror="true">
-			<arg value="-av" />
+			<arg value="-azv" />
 			<arg line="--exclude '*/.signjar'" />
 			<arg value="dist/jws/" />
 			<arg value="${install.jws.target}" />
