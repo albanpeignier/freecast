@@ -121,7 +121,9 @@ public class StunClient {
 					if (timeoutAddValue > 1600) timeoutAddValue = 1600;
 					timeout = timeoutAddValue;
 				} else {
-					throw new IOException("Node is not capable of udp communication.");
+					IOException exception = new IOException("Node is not capable of udp communication");
+          exception.initCause(ste);
+          throw exception;
 				}
 			} catch (Exception e) {
 				IOException exception = new IOException("can't process the stun server request");
