@@ -10,3 +10,9 @@ usr/share/java/commons-logging.jar usr/share/freecast/lib/commons-logging.jar
 usr/share/java/commons-cli.jar usr/share/freecast/lib/commons-cli.jar
 usr/share/java/commons-beanutils.jar usr/share/freecast/lib/commons-beanutils.jar
 usr/share/java/commons-digester.jar usr/share/freecast/lib/commons-digester.jar
+usr/share/java/commons-httpclient.jar usr/share/freecast/lib/commons-httpclient.jar
+usr/share/java/commons-io.jar usr/share/freecast/lib/commons-io.jar
+usr/share/java/commons-discovery.jar usr/share/freecast/lib/commons-discovery.jar
+usr/share/java/commons-codec.jar usr/share/freecast/lib/commons-codec.jar
+usr/share/java/concurrent.jar usr/share/freecast/lib/concurrent.jar
+usr/share/java/servlet-api.jar usr/share/freecast/lib/servlet-api.jar

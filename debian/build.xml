@@ -7,11 +7,17 @@
 				<include name="lib/linux/**" />
 				<!-- log4j is provided by package dependencies -->
 				<exclude name="lib/log4j*.jar" />
+				<exclude name="lib/concurrent*.jar" />
+				<exclude name="lib/commons-codec*.jar" />
+				<exclude name="lib/commons-discovery*.jar" />
+				<exclude name="lib/commons-httpclient*.jar" />
+				<exclude name="lib/commons-io*.jar" />
 				<exclude name="lib/commons-cli*.jar" />
 				<exclude name="lib/commons-collections*.jar" />
 				<exclude name="lib/commons-logging*.jar" />
 				<exclude name="lib/commons-digester*.jar" />
 				<exclude name="lib/commons-beanutils*.jar" />
+				<exclude name="lib/servletapi*.jar" />
 
 				<include name="bin/*" />
 				<exclude name="bin/*.bat" />
