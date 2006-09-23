@@ -172,6 +172,7 @@
 		<copy todir="build/start">
 			<fileset dir="source/org/kolaka/freecast/start">
 				<include name="**/start.js"/>
+				<include name="**/broadcast/test.html"/>
 			</fileset>
 			<filterset>
 				<filter token="start.site" value="${build.start.site}"/>
@@ -182,7 +183,7 @@
 		
 		<echo message="&lt;empty&gt;&lt;/empty&gt;" file="build/empty.xml"/>
 		<style 
-			style="build/start/broadcast/jnlp.xsl"
+			style="source/org/kolaka/freecast/start/broadcast/jnlp.xsl"
 			in="build/empty.xml" 
 			out="build/start/broadcast/freecast-manager.jnlp">
 			<param name="codebase" expression="http://${build.start.site}/broadcast"/>
@@ -472,7 +473,7 @@
 		</exec>
 	</target>
 
-	<target name="export.debian" depends="export.debian.changelog">
+	<target name="export.debian" depends="export.debian.changelog, dist, dist.docs">
 		<exec executable="fakeroot" failonerror="true">
 			<arg line="./debian/rules binary"/>
 		</exec>
