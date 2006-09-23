@@ -6,7 +6,22 @@
  <xsl:param name="href"/>
  <xsl:param name="codebase"/>
 
- <xsl:variable name="name" select="/stream/name"/>
+	<xsl:variable name="name" select="/stream/name"/>
+	<xsl:variable name="version">
+		<xsl:choose>
+			<xsl:when test="boolean(/stream/jnlp/version)">
+				<xsl:value-of select="/stream/jnlp/version"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>stable</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+	<xsl:variable name="libfreecast_baseurl">
+		<xsl:text>http://jws.freecast.org/</xsl:text>
+		<xsl:value-of select="$version"/>
+		<xsl:text>/</xsl:text>
+	</xsl:variable>
 
  <xsl:template match="/">
 	<jnlp spec="1.0+">
@@ -31,12 +46,17 @@
 	  
 	  <resources> 
 	    <j2se version="1.4+"/>
-	    <jar href="http://download.freecast.org/jws/libfreecast/lib/freecast-bootstrap.jar" main="true"/>
+	    <jar main="true">
+		    	<xsl:attribute name="href">
+		    		<xsl:value-of select="$libfreecast_baseurl"/>
+		    		<xsl:text>lib/freecast-bootstrap.jar</xsl:text>
+		    	</xsl:attribute>
+			</jar>
+			
 	    <extension name="libfreecast">
 	    	<xsl:attribute name="href">
-	    		<xsl:text>http://download.freecast.org/jws/libfreecast/libfreecast-</xsl:text>
-	    		<xsl:value-of select="/stream/jnlp/version"/>
-	    		<xsl:text>.jnlp</xsl:text>
+	    		<xsl:value-of select="$libfreecast_baseurl"/>
+	    		<xsl:text>libfreecast.jnlp</xsl:text>
 	    	</xsl:attribute>
 	    </extension>
 	  </resources>
