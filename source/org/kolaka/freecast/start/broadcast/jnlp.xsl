@@ -13,7 +13,7 @@
 				<xsl:value-of select="/stream/jnlp/version"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:text>@project.version@</xsl:text>
+				<xsl:text>stable</xsl:text>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
