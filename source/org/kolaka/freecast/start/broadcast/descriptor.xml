@@ -1,0 +1,9 @@
+<stream>
+	<name>FreeCast Test Network</name>
+	<homepage>http://www.freecast.org</homepage>
+	<tracker>
+		<host>tracker.freecast.org</host>
+		<port>1665</port>
+		<networkid>1</networkid>
+	</tracker>
+</stream>

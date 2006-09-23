@@ -69,7 +69,33 @@
 		    </extension>
 		  </resources>
 
-		  <application-desc main-class="org.kolaka.freecast.manager.gui.Bootstrap"/>
+		  <application-desc main-class="org.kolaka.freecast.manager.gui.Bootstrap">
+		  	<xsl:if test="/stream/tracker">
+		  		<argument>
+						<xsl:text>-Dtracker.class=none</xsl:text>
+					</argument>
+		  	</xsl:if>
+				<xsl:if test="/stream/tracker/host">
+					<argument>
+						<xsl:text>-Dnode.peerprovider.trackeraddress.host=</xsl:text><xsl:value-of select="/stream/tracker/host"/>
+					</argument>
+				</xsl:if>
+				<xsl:if test="/stream/tracker/port">
+					<argument>
+						<xsl:text>-Dnode.peerprovider.trackeraddress.port=</xsl:text><xsl:value-of select="/stream/tracker/port"/>
+					</argument>
+				</xsl:if>
+				<xsl:if test="/stream/tracker/networkid">
+					<argument>
+						<xsl:text>-Dnode.peerprovider.networkid=</xsl:text><xsl:value-of select="/stream/tracker/networkid"/>
+					</argument>
+				</xsl:if>
+				<xsl:if test="/stream/homepage">
+					<argument>
+						<xsl:text>-Dlistenpage=</xsl:text><xsl:value-of select="/stream/homepage"/>
+					</argument>
+				</xsl:if>
+		  </application-desc>
 		</jnlp>
 	</xsl:template>
 

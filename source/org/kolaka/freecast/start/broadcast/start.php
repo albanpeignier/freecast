@@ -53,7 +53,7 @@ if (isset($_GET["descriptor"])) {
   $descriptor_content = download_descriptor($descriptor);
 
 	$id = md5($descriptor);
-	$jnlp_file='../cache/freecast-' . $id . '.jnlp';
+	$jnlp_file='../cache/freecast-manager-' . $id . '.jnlp';
 
 	createjnlp($descriptor_content, $codebase, $jnlp_file);
 	$cache_file = $jnlp_file;
@@ -61,5 +61,5 @@ if (isset($_GET["descriptor"])) {
 	$cache_file = 'freecast-manager.jnlp';
 }
 
-header('Location: /' . $dirname . $cache_file);
+header('Location: ' . $dirname . $cache_file);
 ?>

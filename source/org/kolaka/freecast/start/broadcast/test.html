@@ -2,11 +2,14 @@
 <head>
 	<title>Start FreeCast Manager - Test Page</title>
 	<script type="text/javascript" src="start.js"></script>
+	<script type="text/javascript" src="../listen/start.js"></script>
 </head>
 <body>
 	<h1>Test Page</h1>
 	<ul>
-		<li><a href="freecast-manager.jnlp">Start FreeCast Manager</a></li>
+		<li><a href="freecast-manager.jnlp">Start FreeCast Manager</a> (standalone, without javascript)</li>
+		<li><a href="javascript:click_and_broadcast()">Start FreeCast Manager</a> (standalone)</li>
+		<li><a href="javascript:click_and_broadcast('@start.site@/broadcast/descriptor.xml')">Start FreeCast Manager</a> (external tracker) - <a href="javascript:click_and_listen('@start.site@/broadcast/descriptor.xml')">Test Listener</a></li>
 	</ul>
 </body>
 </html>

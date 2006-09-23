@@ -36,8 +36,8 @@
 	    </homepage>
 	    
 	    <description><xsl:value-of select="$name"/></description>
-	    <icon href="http://download.freecast.org/jws/default/freecast-icon-64.gif"/>
-	    <icon kind="splash" href="http://download.freecast.org/jws/default/freecast-splash.jpg"/>
+			<icon href="http://start.freecast.org/images/freecast-icon-64.gif"/>
+	    <icon kind="splash" href="http://start.freecast.org/images/freecast-splash.jpg"/>
 	  </information> 
 	
 	  <security> 
@@ -78,6 +78,11 @@
 			<xsl:if test="/stream/tracker/port">
 				<argument>
 					<xsl:text>-Dnode.peerprovider.trackeraddress.port=</xsl:text><xsl:value-of select="/stream/tracker/port"/>
+				</argument>
+			</xsl:if>
+			<xsl:if test="/stream/tracker/networkid">
+				<argument>
+					<xsl:text>-Dnode.peerprovider.networkid=</xsl:text><xsl:value-of select="/stream/tracker/networkid"/>
 				</argument>
 			</xsl:if>
 	  </application-desc>
