@@ -40,7 +40,7 @@ public class NetworkIdentifier implements Comparable, Serializable {
   }
   
   public static NetworkIdentifier getInstance(String value) {
-    return new NetworkIdentifier(Long.parseLong(value));
+    return new NetworkIdentifier(Long.parseLong(value, 16));
   }
 
   private static Random random = new Random();
