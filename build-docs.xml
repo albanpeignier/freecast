@@ -1,6 +1,13 @@
 <project xmlns:ivy="antlib:fr.jayasoft.ivy.ant" name="freecast-docs" default="dist.docs" basedir=".">
+	
+  <!-- fake targets defined by build.xml in reality -->
+  <target name="prepare.ivy"/>
+  <target name="prepare.libraries"/>
+  <target name="prepare.version"/>
+  <target name="build"/>
+  <target name="build.test"/>
 
-	<!-- don't use this build file directly, use build-complete.xml -->
+  <!-- don't use this build file directly, use build-complete.xml -->
 
   <target name="prepare.docbook" depends="prepare.docbook.retrieve, prepare.docbook.install">
   	<path id="path.docbook">
