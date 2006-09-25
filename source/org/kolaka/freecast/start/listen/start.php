@@ -64,6 +64,8 @@ $jnlp_file='../cache/freecast-' . $id . '.jnlp';
 
 if (isset($_GET["descriptor"])) {
   $descriptor=$_GET["descriptor"];
+  $descriptor = ereg_replace("^http://", "", $descriptor);
+  
   $descriptor_content = download_descriptor($descriptor);
  }
 

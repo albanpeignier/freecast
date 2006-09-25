@@ -50,6 +50,8 @@ $descriptor_content = FALSE;
 
 if (isset($_GET["descriptor"])) {
   $descriptor=$_GET["descriptor"];
+  $descriptor = ereg_replace("^http://", "", $descriptor);
+  
   $descriptor_content = download_descriptor($descriptor);
 
 	$id = md5($descriptor);
