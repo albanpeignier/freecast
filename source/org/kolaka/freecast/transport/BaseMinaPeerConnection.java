@@ -29,7 +29,6 @@ import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.logging.LogFactory;
 import org.apache.mina.common.IoSession;
-import org.apache.mina.common.WriteFuture;
 import org.kolaka.freecast.peer.BasePeerConnection;
 import org.kolaka.freecast.peer.PeerConnection;
 import org.kolaka.freecast.peer.event.PeerConnectionStatusAdapter;
@@ -136,7 +135,8 @@ public abstract class BaseMinaPeerConnection extends BasePeerConnection {
 			
 			LogFactory.getLog(getClass()).trace("message sent " + message + " to " + session.getRemoteAddress());
 
-			WriteFuture future = session.write(message);
+			// WriteFuture future = 
+      session.write(message);
 			// future.join();
 			ackProcessor.messageSent(message);
 			

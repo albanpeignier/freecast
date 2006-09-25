@@ -23,14 +23,12 @@
 
 package org.kolaka.freecast.transport.cas;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
 import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.LogFactory;
 import org.apache.mina.transport.socket.nio.SocketConnector;
-import org.kolaka.freecast.net.StunClient;
 import org.kolaka.freecast.peer.InetPeerReference;
 import org.kolaka.freecast.peer.PeerReference;
 import org.kolaka.freecast.peer.PeerReferenceProcessor;

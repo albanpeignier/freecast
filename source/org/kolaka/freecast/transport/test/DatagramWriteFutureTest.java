@@ -26,17 +26,14 @@ package org.kolaka.freecast.transport.test;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
+import junit.framework.TestCase;
+
 import org.apache.mina.common.ByteBuffer;
 import org.apache.mina.common.ConnectFuture;
-import org.apache.mina.common.IoAcceptor;
 import org.apache.mina.common.IoConnector;
 import org.apache.mina.common.IoHandlerAdapter;
 import org.apache.mina.common.IoSession;
-import org.apache.mina.common.WriteFuture;
-import org.apache.mina.transport.socket.nio.DatagramAcceptor;
 import org.apache.mina.transport.socket.nio.DatagramConnector;
-
-import junit.framework.TestCase;
 
 public class DatagramWriteFutureTest extends TestCase {
 
@@ -46,8 +43,8 @@ public class DatagramWriteFutureTest extends TestCase {
 		InetSocketAddress address = new InetSocketAddress("noemie.tryphon.org", port);
 		byte[] data = new byte[450];
 
-		IoAcceptor acceptor = new DatagramAcceptor();
 		/*
+    IoAcceptor acceptor = new DatagramAcceptor();
 		acceptor.bind(address, new IoHandlerAdapter() {
 			public void messageReceived(IoSession session, Object message) throws Exception {
 				System.out.print('+');
@@ -62,7 +59,8 @@ public class DatagramWriteFutureTest extends TestCase {
 		IoSession session = connectFuture.getSession();
 		for (int i=0; i < 100; i++) {
 			System.out.print(".");
-			WriteFuture writeFuture = session.write(ByteBuffer.wrap(data));
+			// WriteFuture writeFuture = 
+      session.write(ByteBuffer.wrap(data));
 			// writeFuture.join();
 			Thread.sleep(500);
 		}

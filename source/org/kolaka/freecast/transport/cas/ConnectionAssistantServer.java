@@ -30,7 +30,6 @@ import java.net.SocketAddress;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.LogFactory;
 import org.apache.mina.common.IoAcceptor;
-import org.apache.mina.filter.LoggingFilter;
 import org.apache.mina.transport.socket.nio.SocketAcceptor;
 import org.kolaka.freecast.service.ControlException;
 import org.kolaka.freecast.service.Startable;

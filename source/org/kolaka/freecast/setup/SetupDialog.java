@@ -453,7 +453,12 @@ public class SetupDialog extends JDialog {
 
 		JFormattedTextField.AbstractFormatter urlFormatter = new JFormattedTextField.AbstractFormatter() {
 
-			public Object stringToValue(String text) throws ParseException {
+			/**
+       * 
+       */
+      private static final long serialVersionUID = 470473741669841009L;
+
+      public Object stringToValue(String text) throws ParseException {
 				if (StringUtils.isEmpty(text)) {
 					return null;
 				}
@@ -514,7 +519,12 @@ public class SetupDialog extends JDialog {
 
 		Action shoutClientReceiverAction = new BaseAction("Retrieve ogg stream at this URL: ") {
 
-			protected void init() throws ResourcesException {
+			/**
+       * 
+       */
+      private static final long serialVersionUID = 1678306932925518378L;
+
+      protected void init() throws ResourcesException {
 				loadIcons(resources, "receiver.shoutclient");
 			}
 
@@ -555,7 +565,12 @@ public class SetupDialog extends JDialog {
 		final ShoutServerReceiverConfiguration shoutServerReceiverConfiguration = new ShoutServerReceiverConfiguration(new InetSocketAddress(8000));
 		Action shoutServerReceiverAction = new BaseAction("Accept Ogg stream on port: ") {
 
-			protected void init() throws ResourcesException {
+			/**
+       * 
+       */
+      private static final long serialVersionUID = -1939668511109741703L;
+
+      protected void init() throws ResourcesException {
 				loadIcons(resources, "receiver.shoutserver");
 			}
 

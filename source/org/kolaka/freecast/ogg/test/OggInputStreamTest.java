@@ -23,7 +23,6 @@
 
 package org.kolaka.freecast.ogg.test;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -31,7 +30,6 @@ import java.util.Arrays;
 import junit.framework.TestCase;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.io.HexDump;
 import org.apache.commons.io.IOUtils;
 import org.kolaka.freecast.ogg.OggSourceInputStream;
 import org.kolaka.freecast.ogg.OggStreamSource;

@@ -23,7 +23,6 @@
 
 package org.kolaka.freecast.peer;
 
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.HashSet;
 import java.util.Iterator;
