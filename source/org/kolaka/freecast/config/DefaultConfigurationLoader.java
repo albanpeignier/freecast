@@ -34,6 +34,7 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConfigurationFactory;
 import org.apache.commons.configuration.MapConfiguration;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.resource.ResourceLocator;
@@ -106,13 +107,15 @@ public class DefaultConfigurationLoader implements ConfigurationLoader {
 	public Configuration getRootConfiguration() {
 		return configuration;
 	}
+  
+  private static final Configuration EMPTY_CONFIGURATION = new PropertiesConfiguration();
 
 	protected Configuration loadDefaultConfiguration(String name)
 			throws ConfigurationException {
 		URL url = getClass().getResource("resources/config-" + name + ".xml");
 		if (url == null) {
-			throw new ConfigurationException(
-					"Can't find the default configuration settings:" + name);
+      LogFactory.getLog(getClass()).warn("Can't find the default configuration settings:" + name);
+      return EMPTY_CONFIGURATION;
 		}
 		LogFactory.getLog(getClass()).debug(
 				"load the default configuration from " + url);

@@ -243,8 +243,12 @@ public class EncoderOggSource implements OggSource {
 		boolean cacheFilled = false;
 		while (!cacheFilled) {
 			int read = audioInput.read(readBuffer);
+      
+      if (read == 0) {
+        continue;
+      }
 
-			if (read == 0 || read == -1) {
+      if (read == -1) {
 				dspState.write(null, 0);
 				LogFactory.getLog(getClass()).debug("end of the read stream");
 				endOfStream = true;

@@ -205,28 +205,6 @@
 		<get dest="build/win32/jre-setup.exe" src="${export.win32.jresetup.url}" usetimestamp="true" />
 	</target>
 
-	<target name="test" depends="build.test" description="Run the unit tests">
-		<property name="build.test.results.dir" value="build/test/results" />
-		<mkdir dir="${build.test.results.dir}" />
-		<property name="test.haltonfailure" value="true" />
-		<junit printsummary="yes" haltonfailure="${test.haltonfailure}" includeantruntime="yes" fork="yes">
-			<formatter type="plain" />
-			<batchtest todir="${build.test.results.dir}">
-				<fileset dir="source">
-					<include name="**/test/*Test.java" />
-					<include name="**/test/*TestSuite.java" />
-					<exclude name="**/test/*BaseTest.java" />
-				</fileset>
-			</batchtest>
-			<classpath>
-				<pathelement path="build/core/classes" />
-				<pathelement path="build/test/classes" />
-				<path refid="path.test" />
-			</classpath>
-			<sysproperty key="java.library.path" path="${track.tritonus.dir}" />
-		</junit>
-	</target>
-
 	<target name="dist.jws.check">
 		<available file="${dist.jws.keystore}" property="dist.jws.possible" />
 	</target>

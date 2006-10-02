@@ -77,4 +77,4 @@ if [ $? != 0 ]; then
     exit 1
 fi
 
-exec $JAVA_CMD -cp $classpath -Djava.library.path=$libdir/linux/x86 -Dapp.name=$appname -Dlog.dir=$logdir -Dlib.dir=$libdir @app.mainclass@ $*
+exec $JAVA_CMD $JAVA_OPTS -cp $classpath -Djava.library.path=$libdir/linux/x86 -Dapp.name=$appname -Dlog.dir=$logdir -Dlib.dir=$libdir @app.mainclass@ $*

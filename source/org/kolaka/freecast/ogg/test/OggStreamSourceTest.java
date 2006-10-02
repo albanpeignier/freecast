@@ -40,19 +40,22 @@ public class OggStreamSourceTest extends TestCase {
 
 	public void testReadFile() throws IOException {
     InputStream resource = OggTestResources.getResourceAsStream("sample.ogg");
-
+    
 		OggStreamSource oggSource = new OggStreamSource(resource);
 
 		OggPage firstPage = oggSource.next();
 		assertTrue("page must be first", firstPage.isFirstPage());
 
+    int pageCount = 0;
 		OggPage page = firstPage;
 		while (!page.isLastPage()) {
 			page = oggSource.next();
 			assertFalse("page can't be first", page.isFirstPage());
+      pageCount++;
 		}
 
 		oggSource.close();
+    assertEquals(14, pageCount);
 	}
 
 }
