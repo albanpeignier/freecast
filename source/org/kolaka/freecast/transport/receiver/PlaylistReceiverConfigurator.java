@@ -29,11 +29,11 @@ import org.apache.commons.io.FileUtils;
 
 public class PlaylistReceiverConfigurator extends ReceiverConfigurator {
 
-	public Receiver configure(ReceiverConfiguration configuration) throws IOException {
+	public SourceReceiver configure(ReceiverConfiguration configuration) throws IOException {
 		return configure((PlaylistReceiverConfiguration) configuration);
 	}
 	
-	public Receiver configure(PlaylistReceiverConfiguration configuration)
+	public SourceReceiver configure(PlaylistReceiverConfiguration configuration)
 		throws IOException 
 	{
 		PlaylistReceiver receiver = new PlaylistReceiver(configuration.getUri().toURL());

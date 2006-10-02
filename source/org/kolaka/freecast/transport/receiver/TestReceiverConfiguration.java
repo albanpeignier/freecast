@@ -23,18 +23,19 @@
 
 package org.kolaka.freecast.transport.receiver;
 
-import java.io.IOException;
+import java.net.URI;
 
-public class ShoutClientReceiverConfigurator extends ReceiverConfigurator {
+public class TestReceiverConfiguration extends PlaylistReceiverConfiguration {
+  
+  private static final TestReceiverConfiguration INSTANCE = new TestReceiverConfiguration();
 
-	public SourceReceiver configure(ReceiverConfiguration configuration)
-			throws IOException {
-		return configure((ShoutClientReceiverConfiguration) configuration);
-	}
-	
-	public SourceReceiver configure(ShoutClientReceiverConfiguration configuration)
-		throws IOException {
-		return new ShoutClientReceiver(configuration.getUrl());
-	}
+  public TestReceiverConfiguration() {
+    setUri(URI.create("http://download.freecast.org/jws/default/audio.m3u"));
+    setBandwidth(40);
+  }
+  
+  public static boolean isInstance(ReceiverConfiguration configuration) {
+    return INSTANCE.equals(configuration);
+  }
 
 }

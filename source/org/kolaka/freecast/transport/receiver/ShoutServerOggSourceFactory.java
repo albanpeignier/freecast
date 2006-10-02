@@ -116,5 +116,9 @@ public class ShoutServerOggSourceFactory implements OggSourceFactory, Startable 
 					"Can't close the server socket", e);
 		}
 	}
+  
+  public InetSocketAddress getListenAddress() {
+    return listenAddress;
+  }
 
 }

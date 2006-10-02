@@ -25,16 +25,25 @@ package org.kolaka.freecast.transport.receiver;
 
 import java.io.IOException;
 
-public class ShoutClientReceiverConfigurator extends ReceiverConfigurator {
+import org.apache.commons.logging.LogFactory;
+import org.kolaka.freecast.node.ConfigurableNode;
+import org.kolaka.freecast.service.ControlException;
 
-	public SourceReceiver configure(ReceiverConfiguration configuration)
-			throws IOException {
-		return configure((ShoutClientReceiverConfiguration) configuration);
-	}
-	
-	public SourceReceiver configure(ShoutClientReceiverConfiguration configuration)
-		throws IOException {
-		return new ShoutClientReceiver(configuration.getUrl());
-	}
+public class ReceiverConfigurations {
 
+  public static void changeReceiver(ConfigurableNode node, SourceReceiverConfiguration configuration) throws IOException, ControlException {
+    ReceiverControler receiverControler = node.getReceiverControler();
+    receiverControler.stop();
+
+    ReceiverConfigurator configurator = ReceiverConfigurator.getInstance(configuration);
+    Receiver receiver = configurator.configure(configuration);
+
+    LogFactory.getLog(ReceiverConfigurations.class).debug("new receiver: " + receiver);
+
+    receiverControler = new StaticReceiverControler(receiver);
+    
+    node.setReceiverControler(receiverControler);
+    
+    receiverControler.start();
+  }
 }

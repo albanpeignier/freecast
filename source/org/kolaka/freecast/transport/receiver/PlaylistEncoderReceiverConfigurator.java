@@ -27,11 +27,11 @@ import java.io.IOException;
 
 public class PlaylistEncoderReceiverConfigurator extends ReceiverConfigurator {
 
-	public Receiver configure(ReceiverConfiguration configuration) throws IOException {
+	public SourceReceiver configure(ReceiverConfiguration configuration) throws IOException {
 		return configure((PlaylistEncoderReceiverConfiguration) configuration);
 	}
 	
-	public Receiver configure(PlaylistEncoderReceiverConfiguration configuration)
+	public SourceReceiver configure(PlaylistEncoderReceiverConfiguration configuration)
 		throws IOException 
 	{
 		EncoderFormat format = new EncoderFormat(2, 44100, 0);

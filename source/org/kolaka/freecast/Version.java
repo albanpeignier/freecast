@@ -27,43 +27,52 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.apache.commons.logging.LogFactory;
+
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public class Version {
 
+  private static final Version UNDEFINED = new Version("undefined");
+
 	private final String name;
 
-	private Version() {
-		Properties properties = new Properties();
-		InputStream resource = getClass().getResourceAsStream(
-				"resources/version.properties");
-		try {
-			if (resource == null) {
-				throw new IOException("can't find the version resources");
-			}
-			properties.load(resource);
-		} catch (IOException e) {
-			IllegalStateException exception = new IllegalStateException(
-					"can't load version information");
-			exception.initCause(e);
-			throw exception;
-		}
+  private Version(String name) {
+    this.name = name;
+  }
 
-		name = properties.getProperty("name");
-		if (name == null) {
-			throw new IllegalStateException("no version name found");
-		}
-	}
+  private static Version load() {
+    Properties properties = new Properties();
+    InputStream resource = Version.class.getResourceAsStream(
+        "resources/version.properties");
+    try {
+      if (resource == null) {
+        throw new IOException("can't find the version resources");
+      }
+      properties.load(resource);
+    } catch (IOException e) {
+      LogFactory.getLog(Version.class).warn("can't load version information", e);
+      return UNDEFINED;
+    }
+
+    String name = properties.getProperty("name");
+    if (name == null) {
+      LogFactory.getLog(Version.class).warn("no version name found");
+      return UNDEFINED;
+    }
+    return new Version(name);
+  }
+
 
 	public String getName() {
 		return name;
 	}
 
-	private static final Version instance = new Version();
+	private static final Version INSTANCE = load();
 
-	public static Version getInstance() {
-		return instance;
+	public static Version getINSTANCE() {
+		return INSTANCE;
 	}
 
 }

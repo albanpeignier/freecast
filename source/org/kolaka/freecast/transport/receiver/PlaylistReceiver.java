@@ -26,6 +26,8 @@ package org.kolaka.freecast.transport.receiver;
 import java.io.IOException;
 import java.net.URL;
 
+import org.apache.commons.io.FileUtils;
+
 /**
  * 
  * 
@@ -34,11 +36,27 @@ import java.net.URL;
 public class PlaylistReceiver extends OggSourceFactoryReceiver {
 
 	public PlaylistReceiver(URL playlist) throws IOException {
-		super(new PlaylistOggSourceFactory(playlist), PlaylistReceiverConfiguration.getInstance(playlist));
+		super(new PlaylistOggSourceFactory(playlist));
 	}
 
 	public PlaylistReceiver(Playlist playlist) {
-		super(new PlaylistOggSourceFactory(playlist), PlaylistReceiverConfiguration.getInstance(playlist));
+		super(new PlaylistOggSourceFactory(playlist));
 	}
+  
+  public ReceiverConfiguration getReceiverConfiguration() {
+    PlaylistReceiverConfiguration configuration = new PlaylistReceiverConfiguration();
+    
+    PlaylistOggSourceFactory factory = (PlaylistOggSourceFactory) getFactory();
+    configuration.setUri(factory.getPlaylistURI());
+    
+    BandwidthControler bandwidthControler = getBandwidthControler();
+    if (bandwidthControler instanceof StaticBandwidthControler) {
+      long bandwidth = 
+        ((StaticBandwidthControler) bandwidthControler).getBandwidth() / FileUtils.ONE_KB;
+      configuration.setBandwidth(bandwidth);
+    }
+    
+    return configuration;
+  }
 
 }

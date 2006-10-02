@@ -72,7 +72,7 @@ public class DescriptorServlet extends HttpServlet {
 		transformer.setParameter("host", host);
 		transformer.setParameter("homepage", "http://" + host + ":"
 				+ httpServletRequest.getServerPort());
-		transformer.setParameter("version", Version.getInstance().getName());
+		transformer.setParameter("version", Version.getINSTANCE().getName());
 
 		try {
 			transformer.transform(new StreamSource(new StringReader(

@@ -30,6 +30,8 @@ public class EncoderFormat {
 	private final int sampleRate;
 
 	private final float quality;
+  
+  public static final EncoderFormat DEFAULT = new EncoderFormat(2, 44100, 0);
 
 	/**
 	 * @param channels

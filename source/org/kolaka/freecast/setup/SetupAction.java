@@ -24,8 +24,6 @@
 package org.kolaka.freecast.setup;
 
 import java.awt.event.ActionEvent;
-import java.util.Observable;
-import java.util.Observer;
 
 import javax.swing.JFrame;
 
@@ -35,11 +33,11 @@ import org.kolaka.freecast.swing.BaseAction;
 import org.kolaka.freecast.swing.ErrorPane;
 import org.kolaka.freecast.swing.Resources;
 import org.kolaka.freecast.swing.ResourcesException;
-import org.kolaka.freecast.transport.receiver.Receiver;
-import org.kolaka.freecast.transport.receiver.ReceiverConfiguration;
-import org.kolaka.freecast.transport.receiver.ReceiverConfigurator;
-import org.kolaka.freecast.transport.receiver.ReceiverControler;
-import org.kolaka.freecast.transport.receiver.StaticReceiverControler;
+import org.kolaka.freecast.transport.receiver.ReceiverConfigurations;
+import org.kolaka.freecast.transport.receiver.SourceReceiverConfiguration;
+import org.pietschy.wizard.Wizard;
+import org.pietschy.wizard.WizardEvent;
+import org.pietschy.wizard.WizardListener;
 
 public class SetupAction extends BaseAction {
 
@@ -59,58 +57,37 @@ public class SetupAction extends BaseAction {
 		loadIcons(resources, "main");
 	}
 	
-	private SetupDialog dialog;
-
 	public void actionPerformed(ActionEvent event) {
-		if (dialog != null && dialog.isVisible()) {
-			dialog.toFront();
-			return;
-		}
-		
-		try {
-			dialog = new SetupDialog(resources, parent);
-		} catch (ResourcesException exception) {
-			LogFactory.getLog(getClass()).error("Can't create setup dialog",exception);
-			return;
-		}
-		
-		dialog.setReceiverConfiguration(node.getReceiverControler().getReceiverConfiguration());
-		
-		dialog.getReceiverConfiguration().addObserver(new Observer() {
-			public void update(Observable o, Object arg) {
-				ReceiverConfiguration configuration = (ReceiverConfiguration) arg;
-				LogFactory.getLog(getClass()).debug("configuration returns by setup dialog: " + configuration);
-				
-				if (configuration == null) {
-					return;
-				}
-				
-				if (configuration.equals(node.getReceiverControler().getReceiverConfiguration())) {
-					LogFactory.getLog(getClass()).debug("configuration not changed");
-					return;
-				}
-				
-				try {
-					ReceiverControler receiverControler = node.getReceiverControler();
-					receiverControler.stop();
+    final ReceiverWizardModel model = new ReceiverWizardModel();
+    
+    SourceReceiverConfiguration configuration = (SourceReceiverConfiguration) node.getReceiverControler().getReceiverConfiguration();
+    model.setReceiverConfiguration(configuration);
 
-					ReceiverConfigurator configurator = ReceiverConfigurator.getInstance(configuration);
-					Receiver receiver = configurator.configure(configuration);
+    Wizard wizard = new Wizard(model);
+    wizard.setDefaultExitMode(Wizard.EXIT_ON_FINISH);
+    
+    wizard.addWizardListener(new WizardListener() {
+      public void wizardCancelled(WizardEvent event) {
+      }
+      
+      public void wizardClosed(WizardEvent event) {
+        SourceReceiverConfiguration configuration = model.getConfiguration();
+        LogFactory.getLog(getClass()).debug("configuration returns by setup dialog: " + configuration);
 
-					LogFactory.getLog(getClass()).debug("new receiver: " + receiver);
-
-					receiverControler = new StaticReceiverControler(receiver);
-					
-					node.setReceiverControler(receiverControler);
-					
-					receiverControler.start();
-				} catch (Throwable cause) {
-					new ErrorPane(parent).show("Can't change FreeCast setup", cause);
-				}
-			}
-		});
-		
-		dialog.setVisible(true);
+        if (configuration.equals(node.getReceiverControler().getReceiverConfiguration())) {
+          LogFactory.getLog(getClass()).debug("configuration not changed");
+          return;
+        }
+        
+        try {
+          ReceiverConfigurations.changeReceiver(node, configuration);
+        } catch (Throwable cause) {
+          new ErrorPane(parent).show("Can't change FreeCast setup", cause);
+        }
+      }
+    });
+    
+    wizard.showInDialog("FreeCast Setup", null, false);
 	}
 
 }

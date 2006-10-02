@@ -64,5 +64,9 @@ public class ShoutClientOggSourceFactory implements OggSourceFactory {
 
 		return new OggStreamSource(httpRetrieve.getResponseBodyAsStream());
 	}
+  
+  public URL getURL() {
+    return url;
+  }
 
 }

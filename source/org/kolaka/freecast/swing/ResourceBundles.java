@@ -21,20 +21,17 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.kolaka.freecast.transport.receiver;
+package org.kolaka.freecast.swing;
 
-import java.io.IOException;
+import java.util.ResourceBundle;
 
-public class ShoutClientReceiverConfigurator extends ReceiverConfigurator {
+import org.apache.commons.lang.ClassUtils;
 
-	public SourceReceiver configure(ReceiverConfiguration configuration)
-			throws IOException {
-		return configure((ShoutClientReceiverConfiguration) configuration);
-	}
-	
-	public SourceReceiver configure(ShoutClientReceiverConfiguration configuration)
-		throws IOException {
-		return new ShoutClientReceiver(configuration.getUrl());
-	}
+public class ResourceBundles {
 
+  public static ResourceBundle getBundle(Class component) {
+    String resourceName = ClassUtils.getPackageName(component) + ".resources." + ClassUtils.getShortClassName(component);
+    return ResourceBundle.getBundle(resourceName);
+  }
+  
 }

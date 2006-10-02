@@ -24,6 +24,7 @@
 package org.kolaka.freecast.transport.receiver;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 
 import javax.sound.sampled.AudioFormat;
@@ -93,5 +94,13 @@ public class PlaylistEncoderOggSourceFactory implements OggSourceFactory {
 		return new TimedOggSource(new EncoderOggSource(audioInput, entry.getDescription(), format
 				.getQuality()), format.getSampleRate());
 	}
+  
+  public EncoderFormat getFormat() {
+    return format;
+  }
+  
+  public URI getPlaylistURI() {
+    return playlist.getDefinitionURI();
+  }
 
 }

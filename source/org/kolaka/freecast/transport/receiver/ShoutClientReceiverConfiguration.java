@@ -29,7 +29,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
-public class ShoutClientReceiverConfiguration extends ReceiverConfiguration {
+public class ShoutClientReceiverConfiguration extends SourceReceiverConfiguration {
 
 	private URL url;
 	

@@ -30,12 +30,22 @@ public class PlaylistEncoderReceiver extends OggSourceFactoryReceiver {
 
 	public PlaylistEncoderReceiver(URL playlist, EncoderFormat format)
 			throws IOException {
-		super(new PlaylistEncoderOggSourceFactory(playlist, format), PlaylistEncoderReceiverConfiguration.getInstance(playlist));
+		super(new PlaylistEncoderOggSourceFactory(playlist, format));
 	}
 
 	public PlaylistEncoderReceiver(Playlist playlist, EncoderFormat format)
 			throws IOException {
-		super(new PlaylistEncoderOggSourceFactory(playlist, format), PlaylistEncoderReceiverConfiguration.getInstance(playlist));
+		super(new PlaylistEncoderOggSourceFactory(playlist, format));
 	}
+  
+  public ReceiverConfiguration getReceiverConfiguration() {
+    PlaylistEncoderReceiverConfiguration configuration = new PlaylistEncoderReceiverConfiguration();
+    
+    PlaylistEncoderOggSourceFactory factory = (PlaylistEncoderOggSourceFactory) getFactory();
+    configuration.setEncoderFormat(factory.getFormat());
+    configuration.setUri(factory.getPlaylistURI());
+    
+    return configuration;
+  }
 
 }

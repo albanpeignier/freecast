@@ -26,6 +26,7 @@ package org.kolaka.freecast.transport.receiver;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 
 import org.kolaka.freecast.ogg.OggSource;
@@ -58,5 +59,9 @@ public class PlaylistOggSourceFactory implements OggSourceFactory {
 		return new OggStreamSource(new BufferedInputStream(input), entry
 				.getDescription());
 	}
+  
+  public URI getPlaylistURI() {
+    return playlist.getDefinitionURI();
+  }
 
 }

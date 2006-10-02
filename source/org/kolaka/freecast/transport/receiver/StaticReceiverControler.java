@@ -23,6 +23,7 @@
 
 package org.kolaka.freecast.transport.receiver;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.kolaka.freecast.pipe.Pipe;
 import org.kolaka.freecast.service.ControlException;
 
@@ -66,5 +67,9 @@ public class StaticReceiverControler implements ReceiverControler {
 	public ReceiverConfiguration getReceiverConfiguration() {
 		return receiver.getReceiverConfiguration();
 	}
+
+  public String toString() {
+    return ToStringBuilder.reflectionToString(this);
+  }
 
 }

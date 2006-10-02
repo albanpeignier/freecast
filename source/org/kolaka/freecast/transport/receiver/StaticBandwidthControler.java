@@ -43,5 +43,9 @@ public class StaticBandwidthControler implements BandwidthControler {
 	public long getTimeDelay(LogicalPage page) {
 		return (long) (1000 / (bandwidth / 8.0 / page.getLength()));
 	}
+  
+  public long getBandwidth() {
+    return bandwidth;
+  }
 
 }

@@ -60,6 +60,10 @@ public abstract class OggSourceReceiver extends LoopService implements
 	private OggLogicalPageFactory pageFactory = new OggLogicalPageFactory();
 
 	private BandwidthControler bandwidthControler = new TimestampBandwidthControler();
+  
+  protected BandwidthControler getBandwidthControler() {
+    return bandwidthControler;
+  }
 
 	public void setPacketChecksummer(PacketChecksummer checksummer) {
 		pageFactory.setPacketChecksummer(checksummer);

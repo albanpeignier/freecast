@@ -23,54 +23,59 @@
 
 package org.kolaka.freecast.setup;
 
-import java.util.Observable;
-import java.util.Observer;
-
 import org.apache.commons.configuration.Configuration;
-import org.kolaka.freecast.lang.mutable.ObservableValue;
 import org.kolaka.freecast.swing.ConfigurableResources;
 import org.kolaka.freecast.swing.Resources;
 import org.kolaka.freecast.swing.SwingApplication;
+import org.kolaka.freecast.transport.receiver.TestReceiverConfiguration;
+import org.pietschy.wizard.Wizard;
+import org.pietschy.wizard.WizardEvent;
+import org.pietschy.wizard.WizardListener;
 
 public class Main extends SwingApplication {
-	
-	private SetupDialog dialog;
 
-	public Main() {
-		super("setup");
-	}
-	
-	protected void postInit(Configuration configuration) throws Exception {
-		super.postInit(configuration);
-		Resources resources = new ConfigurableResources(configuration.subset("gui.setup"));
-		dialog = new SetupDialog(resources, null);
-	}
-	
-	protected void run() throws Exception {
-		dialog.setVisible(true);
-		
-		ObservableValue configuration = dialog.getReceiverConfiguration();
-		
-		configuration.addObserver(new Observer() {
-			public void update(Observable o, Object arg) {
-				System.out.println(arg);
-				exit();
-			}
-		});
-		
-		Object lock = new Object();
+  public Main() {
+    super("setup");
+  }
 
-		synchronized (lock) {
-			lock.wait();
-		}
-	}
-	
-	protected void exitImpl() throws Exception {
-		
-	}
-	
-	public static void main(String[] args) throws Exception {
-		new Main().run(args);
-	}
+  protected void postInit(Configuration configuration) throws Exception {
+    super.postInit(configuration);
+    Resources resources = new ConfigurableResources(configuration
+        .subset("gui.setup"));
+  }
+
+  protected void run() throws Exception {
+    final ReceiverWizardModel model = new ReceiverWizardModel();
+    model.setReceiverConfiguration(new TestReceiverConfiguration());
+
+    Wizard wizard = new Wizard(model);
+    wizard.setDefaultExitMode(Wizard.EXIT_ON_FINISH);
+    
+    wizard.addWizardListener(new WizardListener() {
+      public void wizardCancelled(WizardEvent event) {
+        exit();
+      }
+      public void wizardClosed(WizardEvent event) {
+        System.out.println(model.getConfiguration());
+        exit();
+      }
+    });
+    
+    wizard.showInDialog("FreeCast Setup", null, false);
+
+    Object lock = new Object();
+
+    synchronized (lock) {
+      lock.wait();
+    }
+  }
+
+  protected void exitImpl() throws Exception {
+
+  }
+
+  public static void main(String[] args) throws Exception {
+    new Main().run(args);
+  }
 
 }

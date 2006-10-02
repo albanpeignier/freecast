@@ -21,20 +21,19 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.kolaka.freecast.transport.receiver;
+package org.kolaka.freecast.config;
 
-import java.io.IOException;
+import java.net.InetSocketAddress;
 
-public class ShoutClientReceiverConfigurator extends ReceiverConfigurator {
+import org.apache.commons.configuration.Configuration;
 
-	public SourceReceiver configure(ReceiverConfiguration configuration)
-			throws IOException {
-		return configure((ShoutClientReceiverConfiguration) configuration);
-	}
-	
-	public SourceReceiver configure(ShoutClientReceiverConfiguration configuration)
-		throws IOException {
-		return new ShoutClientReceiver(configuration.getUrl());
-	}
+public class InetSocketAddressConfigurator {
+
+  public InetSocketAddress load(Configuration configuration) {
+    String host = configuration.getString("host", "0.0.0.0");
+    int port = configuration.getInt("port");
+    
+    return new InetSocketAddress(host, port);
+  }
 
 }

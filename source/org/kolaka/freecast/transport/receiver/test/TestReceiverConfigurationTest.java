@@ -21,20 +21,26 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.kolaka.freecast.transport.receiver;
+package org.kolaka.freecast.transport.receiver.test;
 
-import java.io.IOException;
+import org.kolaka.freecast.test.BaseTestCase;
+import org.kolaka.freecast.transport.receiver.PlaylistReceiverConfiguration;
+import org.kolaka.freecast.transport.receiver.TestReceiverConfiguration;
 
-public class ShoutClientReceiverConfigurator extends ReceiverConfigurator {
-
-	public SourceReceiver configure(ReceiverConfiguration configuration)
-			throws IOException {
-		return configure((ShoutClientReceiverConfiguration) configuration);
-	}
-	
-	public SourceReceiver configure(ShoutClientReceiverConfiguration configuration)
-		throws IOException {
-		return new ShoutClientReceiver(configuration.getUrl());
-	}
+public class TestReceiverConfigurationTest extends BaseTestCase {
+  
+  public void testIsInstance() {
+    assertTrue(TestReceiverConfiguration.isInstance(new TestReceiverConfiguration()));
+  }
+  
+  public void testEquals() {
+    TestReceiverConfiguration testConfiguration = new TestReceiverConfiguration();
+    
+    PlaylistReceiverConfiguration playlistConfiguration = new PlaylistReceiverConfiguration();
+    playlistConfiguration.setUri(testConfiguration.getUri());
+    playlistConfiguration.setBandwidth(testConfiguration.getBandwidth());
+    
+    assertEquals(testConfiguration, playlistConfiguration);
+  }
 
 }

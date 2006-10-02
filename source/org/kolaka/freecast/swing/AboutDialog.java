@@ -64,7 +64,7 @@ public class AboutDialog extends JDialog {
 
 		String urlText = "<html><center><p>Visit the website<br><b>http://www.freecast.org</b></p>&nbsp;"
 				+ "<p>Free software under the GNU GPL<br>version "
-				+ Version.getInstance().getName()
+				+ Version.getINSTANCE().getName()
 				+ "<br>Copyright 2004 - Alban Peignier</p></center>";
 		JLabel urlLabel = new JLabel(urlText);
 		GridBagConstraints urlConstraints = new GridBagConstraints();

@@ -40,6 +40,7 @@
     	<artifact name="tritonus-core"/>
     </dependency>
     <dependency org="javazoom" name="vorbisspi" rev="1.0.2" conf="core->*"/>
+    <dependency org="pietschy" name="wizard-framework" rev="0.1.12" conf="core->*"/>
     
     <dependency org="docbook" name="docbook-xsl" rev="1.69.1" conf="build-docbook->*"/>
 		<dependency org="apache" name="xalan" rev="2.7.0" conf="build-docbook->*"/>

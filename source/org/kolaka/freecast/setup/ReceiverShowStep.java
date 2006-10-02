@@ -21,20 +21,32 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.kolaka.freecast.transport.receiver;
+package org.kolaka.freecast.setup;
 
-import java.io.IOException;
+import org.pietschy.wizard.PanelWizardStep;
+import org.pietschy.wizard.WizardModel;
 
-public class ShoutClientReceiverConfigurator extends ReceiverConfigurator {
+public class ReceiverShowStep extends PanelWizardStep {
+  
+  private static final long serialVersionUID = 4158908758209666698L;
 
-	public SourceReceiver configure(ReceiverConfiguration configuration)
-			throws IOException {
-		return configure((ShoutClientReceiverConfiguration) configuration);
-	}
-	
-	public SourceReceiver configure(ShoutClientReceiverConfiguration configuration)
-		throws IOException {
-		return new ShoutClientReceiver(configuration.getUrl());
-	}
+  public ReceiverShowStep() {
+    super("Broadcast content", "Confirm the configuration");
+    // setLayout(new GridBagLayout());
+    setComplete(true);
+    panel = new ReceiverShowPanel();
+    add(panel);
+  }
+  
+  private ReceiverWizardModel model;
+  private ReceiverShowPanel panel;
+
+  public void init(WizardModel model) {
+    this.model = (ReceiverWizardModel) model;
+  }
+
+  public void prepare() {
+    panel.setReceiverConfiguration(model.getConfiguration());
+  }
 
 }

@@ -62,7 +62,6 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.text.NumberFormatter;
 
 import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.UnhandledException;
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.lang.mutable.ObservableValue;
@@ -451,33 +450,7 @@ public class SetupDialog extends JDialog {
 			throw new UnhandledException("Invalid default URL", e);
 		}
 
-		JFormattedTextField.AbstractFormatter urlFormatter = new JFormattedTextField.AbstractFormatter() {
-
-			/**
-       * 
-       */
-      private static final long serialVersionUID = 470473741669841009L;
-
-      public Object stringToValue(String text) throws ParseException {
-				if (StringUtils.isEmpty(text)) {
-					return null;
-				}
-				
-				try {
-					return new URL(text);
-				} catch (MalformedURLException e) {
-					throw new ParseException("Can't parse the specified URL '" + text + "'", 0);
-				}
-			}
-
-			public String valueToString(Object value) throws ParseException {
-				if (value == null) {
-					return "";
-				}
-
-				return value.toString();
-			}
-		};
+		JFormattedTextField.AbstractFormatter urlFormatter = new URLFormatter();
 		final JFormattedTextField shoutClientURLField = new JFormattedTextField(
 				urlFormatter);
 		shoutClientURLField.setColumns(30);

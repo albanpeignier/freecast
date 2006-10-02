@@ -23,18 +23,6 @@
 
 package org.kolaka.freecast.transport.receiver;
 
-import java.io.IOException;
-
-public class ShoutClientReceiverConfigurator extends ReceiverConfigurator {
-
-	public SourceReceiver configure(ReceiverConfiguration configuration)
-			throws IOException {
-		return configure((ShoutClientReceiverConfiguration) configuration);
-	}
-	
-	public SourceReceiver configure(ShoutClientReceiverConfiguration configuration)
-		throws IOException {
-		return new ShoutClientReceiver(configuration.getUrl());
-	}
+public abstract class SourceReceiverConfiguration extends ReceiverConfiguration {
 
 }

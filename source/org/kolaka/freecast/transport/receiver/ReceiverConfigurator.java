@@ -27,7 +27,7 @@ import java.io.IOException;
 
 public abstract class ReceiverConfigurator {
 
-	public static ReceiverConfigurator getInstance(ReceiverConfiguration configuration) {
+	public static ReceiverConfigurator getInstance(SourceReceiverConfiguration configuration) {
 		if (configuration instanceof PlaylistEncoderReceiverConfiguration) {
 			return new  PlaylistEncoderReceiverConfigurator();
 		} else if (configuration instanceof PlaylistReceiverConfiguration) {
@@ -41,6 +41,6 @@ public abstract class ReceiverConfigurator {
 		throw new IllegalArgumentException("Unsupported configuration: " + configuration);
 	}
 	
-	public abstract Receiver configure(ReceiverConfiguration configuration) throws IOException;
+	public abstract SourceReceiver configure(ReceiverConfiguration configuration) throws IOException;
 
 }

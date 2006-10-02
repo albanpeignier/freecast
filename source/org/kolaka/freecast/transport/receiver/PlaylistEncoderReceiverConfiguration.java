@@ -29,7 +29,7 @@ import java.net.URL;
 import org.apache.commons.lang.Validate;
 import org.kolaka.freecast.resource.URIs;
 
-public class PlaylistEncoderReceiverConfiguration extends ReceiverConfiguration {
+public class PlaylistEncoderReceiverConfiguration extends SourceReceiverConfiguration {
 	
 	private URI uri;
 	
@@ -40,7 +40,17 @@ public class PlaylistEncoderReceiverConfiguration extends ReceiverConfiguration 
 	public void setUri(URI uri) {
 		this.uri = uri;
 	}
+  
+  private EncoderFormat encoderFormat = EncoderFormat.DEFAULT;
 
+  public EncoderFormat getEncoderFormat() {
+    return encoderFormat;
+  }
+  
+  public void setEncoderFormat(EncoderFormat encoderFormat) {
+    this.encoderFormat = encoderFormat;
+  }
+  
 	public PlaylistEncoderReceiverConfiguration(URI uri) {
 		Validate.notNull(uri, "No specified URI");
 		this.uri = uri;

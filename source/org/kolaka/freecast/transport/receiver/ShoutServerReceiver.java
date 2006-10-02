@@ -33,11 +33,16 @@ import java.net.InetSocketAddress;
 public class ShoutServerReceiver extends OggSourceFactoryReceiver {
 
 	public ShoutServerReceiver(InetSocketAddress listenAddress) {
-		super(new ShoutServerOggSourceFactory(listenAddress), new ShoutServerReceiverConfiguration(listenAddress));
+		super(new ShoutServerOggSourceFactory(listenAddress));
 	}
 
 	public ShoutServerReceiver(ShoutServerReceiverConfiguration configuration) {
 		this(configuration.getListenAddress());
 	}
+  
+  public ReceiverConfiguration getReceiverConfiguration() {
+    ShoutServerOggSourceFactory factory = (ShoutServerOggSourceFactory) getFactory();
+    return new ShoutServerReceiverConfiguration(factory.getListenAddress());
+  }
 
 }

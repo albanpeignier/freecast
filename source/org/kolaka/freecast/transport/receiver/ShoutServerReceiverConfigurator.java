@@ -27,7 +27,7 @@ import java.io.IOException;
 
 public class ShoutServerReceiverConfigurator extends ReceiverConfigurator {
 
-	public Receiver configure(ReceiverConfiguration configuration)
+	public SourceReceiver configure(ReceiverConfiguration configuration)
 			throws IOException {
 		return new ShoutServerReceiver((ShoutServerReceiverConfiguration) configuration);
 	}

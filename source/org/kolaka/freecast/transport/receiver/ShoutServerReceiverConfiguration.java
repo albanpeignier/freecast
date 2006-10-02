@@ -25,9 +25,9 @@ package org.kolaka.freecast.transport.receiver;
 
 import java.net.InetSocketAddress;
 
-public class ShoutServerReceiverConfiguration extends ReceiverConfiguration {
+public class ShoutServerReceiverConfiguration extends SourceReceiverConfiguration {
 
-	private InetSocketAddress listenAddress;
+	private InetSocketAddress listenAddress = new InetSocketAddress(8000);
 	
 	public ShoutServerReceiverConfiguration() {
 		

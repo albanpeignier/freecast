@@ -21,20 +21,34 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.kolaka.freecast.transport.receiver;
+package org.kolaka.freecast.setup;
 
-import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
-public class ShoutClientReceiverConfigurator extends ReceiverConfigurator {
+import javax.swing.JFormattedTextField;
 
-	public SourceReceiver configure(ReceiverConfiguration configuration)
-			throws IOException {
-		return configure((ShoutClientReceiverConfiguration) configuration);
-	}
-	
-	public SourceReceiver configure(ShoutClientReceiverConfiguration configuration)
-		throws IOException {
-		return new ShoutClientReceiver(configuration.getUrl());
-	}
+import org.kolaka.freecast.resource.URIParser;
 
+final class URIFormatter extends JFormattedTextField.AbstractFormatter {
+
+  private static final long serialVersionUID = 6327979522079637751L;
+
+  private URIParser parser = new URIParser();
+
+  public Object stringToValue(String text) throws ParseException {
+    try {
+      return parser.parse(text);
+    } catch (URISyntaxException e) {
+      throw new ParseException("Can't parse the specified URI", 0);
+    }
+  }
+
+  public String valueToString(Object value) throws ParseException {
+    if (value == null) {
+      return "";
+    }
+  
+    return value.toString();
+  }
 }

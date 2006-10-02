@@ -21,20 +21,25 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.kolaka.freecast.transport.receiver;
+package org.kolaka.freecast.setup;
 
-import java.io.IOException;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
-public class ShoutClientReceiverConfigurator extends ReceiverConfigurator {
+import org.kolaka.freecast.transport.receiver.ReceiverConfiguration;
 
-	public SourceReceiver configure(ReceiverConfiguration configuration)
-			throws IOException {
-		return configure((ShoutClientReceiverConfiguration) configuration);
-	}
-	
-	public SourceReceiver configure(ShoutClientReceiverConfiguration configuration)
-		throws IOException {
-		return new ShoutClientReceiver(configuration.getUrl());
-	}
+public class ReceiverShowPanel extends JPanel {
 
+  private static final long serialVersionUID = -8246297921880229260L;
+  private ReceiverConfiguration configuration;
+
+  public ReceiverShowPanel() {
+    add(new JLabel("<html>The stream broadcasted by your node will be replaced<br>to take into account your changes"));
+  }
+  
+  public void setReceiverConfiguration(ReceiverConfiguration configuration) {
+    this.configuration = configuration;
+  }
+  
+  
 }

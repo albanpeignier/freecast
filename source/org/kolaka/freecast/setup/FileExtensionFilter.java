@@ -21,20 +21,31 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.kolaka.freecast.transport.receiver;
+package org.kolaka.freecast.setup;
 
-import java.io.IOException;
+import java.io.File;
 
-public class ShoutClientReceiverConfigurator extends ReceiverConfigurator {
+import javax.swing.filechooser.FileFilter;
 
-	public SourceReceiver configure(ReceiverConfiguration configuration)
-			throws IOException {
-		return configure((ShoutClientReceiverConfiguration) configuration);
-	}
-	
-	public SourceReceiver configure(ShoutClientReceiverConfiguration configuration)
-		throws IOException {
-		return new ShoutClientReceiver(configuration.getUrl());
-	}
+public class FileExtensionFilter extends FileFilter {
+  
+  private String extension, description;
+  
+  public FileExtensionFilter(String extension, String description) {
+    this.extension = extension;
+    this.description = description;
+  }
 
+  public boolean accept(File f) {
+    if (f.isDirectory()) {
+      return true;
+    }
+  
+    String filename = f.getName().toLowerCase();
+    return filename.endsWith("." + extension);
+  }
+
+  public String getDescription() {
+    return description;
+  }
 }

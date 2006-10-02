@@ -21,20 +21,40 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.kolaka.freecast.transport.receiver;
+package org.kolaka.freecast.setup;
 
-import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.ParseException;
 
-public class ShoutClientReceiverConfigurator extends ReceiverConfigurator {
+import javax.swing.JFormattedTextField;
 
-	public SourceReceiver configure(ReceiverConfiguration configuration)
-			throws IOException {
-		return configure((ShoutClientReceiverConfiguration) configuration);
-	}
-	
-	public SourceReceiver configure(ShoutClientReceiverConfiguration configuration)
-		throws IOException {
-		return new ShoutClientReceiver(configuration.getUrl());
-	}
+import org.apache.commons.lang.StringUtils;
 
+public class URLFormatter extends
+    JFormattedTextField.AbstractFormatter {
+  /**
+   * 
+   */
+  private static final long serialVersionUID = 470473741669841009L;
+
+  public Object stringToValue(String text) throws ParseException {
+  	if (StringUtils.isEmpty(text)) {
+  		return null;
+  	}
+  	
+  	try {
+  		return new URL(text);
+  	} catch (MalformedURLException e) {
+  		throw new ParseException("Can't parse the specified URL '" + text + "'", 0);
+  	}
+  }
+
+  public String valueToString(Object value) throws ParseException {
+  	if (value == null) {
+  		return "";
+  	}
+  
+  	return value.toString();
+  }
 }

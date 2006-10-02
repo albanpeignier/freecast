@@ -41,21 +41,17 @@ import org.kolaka.freecast.timer.DefaultTimer;
  * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
-public class OggSourceFactoryReceiver extends OggSourceReceiver {
+public abstract class OggSourceFactoryReceiver extends OggSourceReceiver {
 
 	private final OggSourceFactory factory;
+  
+  protected OggSourceFactory getFactory() {
+    return factory;
+  }
 
-	private final ReceiverConfiguration configuration;
-	
-	public ReceiverConfiguration getReceiverConfiguration() {
-		return configuration;
-	}
-
-	public OggSourceFactoryReceiver(OggSourceFactory factory, ReceiverConfiguration configuration) {
+	public OggSourceFactoryReceiver(OggSourceFactory factory) {
 		Validate.notNull(factory, "No specified OggSourceFactory");
 		this.factory = factory;
-		Validate.notNull(configuration, "No specified ReceiverConfiguration");
-		this.configuration = configuration;
 	}
 
 	public void start() throws ControlException {

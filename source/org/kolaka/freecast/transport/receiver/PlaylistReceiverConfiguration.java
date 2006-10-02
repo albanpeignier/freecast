@@ -29,10 +29,10 @@ import java.net.URL;
 import org.apache.commons.lang.Validate;
 import org.kolaka.freecast.resource.URIs;
 
-public class PlaylistReceiverConfiguration extends ReceiverConfiguration {
+public class PlaylistReceiverConfiguration extends SourceReceiverConfiguration {
 	
-	URI uri;
-	long bandwidth;
+	private URI uri;
+  private long bandwidth;
 
 	public URI getUri() {
 		return uri;
