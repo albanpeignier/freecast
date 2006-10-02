@@ -31,6 +31,7 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
+import org.kolaka.freecast.node.NodeIdentifier;
 import org.kolaka.freecast.packet.Packet;
 import org.kolaka.freecast.packet.test.PacketGenerator;
 import org.kolaka.freecast.transport.PacketMessage;
@@ -41,6 +42,7 @@ public class PacketMessageTest extends TestCase {
 		Packet packet = new PacketGenerator().generate();
 
 		PacketMessage message = PacketMessage.getInstance(packet);
+    message.setSenderIdentifier(new NodeIdentifier(0));
 
 		ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
 		DataOutputStream dataOutputStream = new DataOutputStream(
