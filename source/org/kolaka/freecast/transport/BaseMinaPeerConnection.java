@@ -163,10 +163,12 @@ public abstract class BaseMinaPeerConnection extends BasePeerConnection {
 	protected abstract Task createAliveTask();
 	
 	public void close() throws IOException {
+    closeImpl();
+    
+    // close the session after the last message
 		if (session != null) {
 			session.close();
 		}
-		closeImpl();
 	}
 	
 	protected void appendFields(ToStringBuilder builder) {
