@@ -28,9 +28,7 @@ import java.net.InetSocketAddress;
 import org.kolaka.freecast.node.NodeIdentifier;
 import org.kolaka.freecast.peer.InetPeerReference;
 import org.kolaka.freecast.test.BaseTestCase;
-import org.kolaka.freecast.tracker.HttpMultiTrackerConnector;
 import org.kolaka.freecast.tracker.HttpMultiTrackerLocator;
-import org.kolaka.freecast.tracker.HttpSimpleTrackerConnector;
 import org.kolaka.freecast.tracker.HttpTracker;
 import org.kolaka.freecast.tracker.HttpTrackerLocator;
 import org.kolaka.freecast.tracker.NetworkIdentifier;
@@ -54,17 +52,17 @@ public class TrackerServletTest extends BaseTestCase {
   }
   
   public void testSingle() throws Exception {
-    testBindConnect(HttpSimpleTrackerConnector.class, new HttpTrackerLocator(address));
+    testBindConnect(false, new HttpTrackerLocator(address));
   }
 
   public void testMulti() throws Exception {
-    testBindConnect(HttpMultiTrackerConnector.class, new HttpMultiTrackerLocator(address, NetworkIdentifier.getRandomInstance()));
+    testBindConnect(true, new HttpMultiTrackerLocator(address, NetworkIdentifier.getRandomInstance()));
   }
 
-  private void testBindConnect(Class connectorClass, TrackerLocator locator) throws Exception {
+  private void testBindConnect(boolean multiTracker, TrackerLocator locator) throws Exception {
     HttpTracker tracker = new HttpTracker();
 
-    tracker.setConnectorClass(connectorClass);
+    tracker.setMultiTracker(multiTracker);
 		tracker.setListenAddress(address);
     
 		tracker.start();
