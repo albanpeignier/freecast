@@ -21,12 +21,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.kolaka.freecast.tracker;
+package org.kolaka.freecast.peer;
 
-import com.caucho.services.server.ServiceContext;
+import org.kolaka.freecast.node.Order;
 
-final class HessianClientInfoProvider implements ClientInfoProvider {
-  public String getClientHost() throws TrackerException {
-    return ServiceContext.getContextRequest().getRemoteHost();
+
+public class PeerReferences {
+
+  public static boolean isRootNode(PeerReference reference) {
+    Order order = (Order) reference.getAttribute(PeerReference.ORDER_ATTRIBUTE);
+    return order != null && order.equals(Order.ZERO);
   }
+
 }

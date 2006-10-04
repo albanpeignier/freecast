@@ -41,13 +41,13 @@ public class HttpTrackerConfigurator {
      * which creates its own Tracker instance
      */ 
     String trackerClass = configuration.getString("class", "single");
-    Class connectorClass = HttpSimpleTrackerConnector.class; 
+    boolean multiTracker = false; 
     if (trackerClass.equals("multi")) {
-      connectorClass = HttpMultiTrackerConnector.class;
+      multiTracker = true;
     } else if (trackerClass.equals("none")) {
       throw new NoConfiguredTrackerException();
     }
-    tracker.setConnectorClass(connectorClass);
+    tracker.setMultiTracker(multiTracker);
     
 		Configuration listenAddressConfiguration = configuration
 				.subset("connector.listenaddress");

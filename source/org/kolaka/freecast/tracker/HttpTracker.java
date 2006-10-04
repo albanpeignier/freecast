@@ -30,6 +30,7 @@ import org.kolaka.freecast.service.ControlException;
 import org.kolaka.freecast.transport.cas.ConnectionAssistantServer;
 import org.mortbay.http.SocketListener;
 import org.mortbay.jetty.Server;
+import org.mortbay.jetty.servlet.ServletHolder;
 import org.mortbay.jetty.servlet.ServletHttpContext;
 
 /**
@@ -54,20 +55,28 @@ public class HttpTracker implements TrackerService {
 		this.listenAddress = listenAddress;
 	}
   
-  public Class connectorClass;
-  
-  public void setConnectorClass(Class connectorClass) {
-    this.connectorClass = connectorClass;
+  private boolean multiTracker;
+
+  public void setMultiTracker(boolean multiTracker) {
+    this.multiTracker = multiTracker;
   }
 
 	public void start() throws ControlException {
     LogFactory.getLog(Main.class).info(
         "start a HttpConnector on port " + listenAddress);
+    
+    Class connectorClass = HttpSimpleTrackerConnector.class;
+    Object tracker = new DefaultTracker();
+    
+    if (multiTracker) {
+      LogFactory.getLog(Main.class).info("multi network support enabled");
+
+      connectorClass = HttpMultiTrackerConnector.class;
+      tracker = new DefaultMultiTracker();
+    }
+    
     LogFactory.getLog(Main.class).trace(
         "use connector " + connectorClass.getName());
-    if (connectorClass.equals(HttpMultiTrackerConnector.class)) {
-      LogFactory.getLog(Main.class).info("multi network support enabled");
-    }
 
     server = new Server();
 		SocketListener listener = new SocketListener();
@@ -79,10 +88,18 @@ public class HttpTracker implements TrackerService {
 				.getContext("/");
 
 		try {
-			context.addServlet("Tracker", "/tracker", connectorClass.getName());
+			ServletHolder servletHolder = context.addServlet("Tracker", "/tracker", connectorClass.getName());
+      servletHolder.getServletContext().setAttribute(HttpTrackerConnector.TRACKER_ATTRIBUTE, tracker);
 		} catch (Exception e) {
 			throw new ControlException("Can't install the tracker servlet", e);
 		}
+
+    try {
+      ServletHolder servletHolder = context.addServlet("Statistics", "/stats.xml", IceStatsServlet.class.getName());
+      servletHolder.getServletContext().setAttribute(IceStatsServlet.STATSPROVIDER_ATTRIBUTE, tracker);
+    } catch (Exception e) {
+      throw new ControlException("Can't install the statistics servlet", e);
+    }
 
 		try {
 			server.start();

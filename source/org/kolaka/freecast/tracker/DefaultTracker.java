@@ -40,6 +40,7 @@ import org.kolaka.freecast.node.NodeStatus;
 import org.kolaka.freecast.node.Order;
 import org.kolaka.freecast.peer.InetPeerReference;
 import org.kolaka.freecast.peer.PeerReference;
+import org.kolaka.freecast.peer.PeerReferences;
 import org.kolaka.freecast.service.ControlException;
 
 /**
@@ -47,19 +48,28 @@ import org.kolaka.freecast.service.ControlException;
  * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
-public class DefaultTracker implements Tracker {
+public class DefaultTracker implements Tracker, ClientInfoProviderUser, TrackerStatisticsProvider {
 
 	private Map entries = new HashMap();
 
 	private final Tracker.Auditor auditor;
 
-	private final ClientInfoProvider clientInfoProvider;
+	private ClientInfoProvider clientInfoProvider;
+  
+  private final TrackerStatisticsComputer statisticsComputer = new TrackerStatisticsComputer();
+  
+  public TrackerStatistics getStatistics() {
+    return statisticsComputer.getStatistics();
+  }
 
-	public DefaultTracker(ClientInfoProvider clientInfoProvider) {
-		this.clientInfoProvider = clientInfoProvider;
+	public DefaultTracker() {
 		this.auditor = (Tracker.Auditor) AuditorFactory.getInstance().get(
 				Tracker.Auditor.class, this);
 	}
+  
+  public void setClientInfoProvider(ClientInfoProvider clientInfoProvider) {
+    this.clientInfoProvider = clientInfoProvider;
+  }
 
 	public Set getPeerReferences(NodeIdentifier identifier) {
 		cleanEntries();
@@ -122,17 +132,30 @@ public class DefaultTracker implements Tracker {
 		LogFactory.getLog(getClass()).debug(
 				"registration performed with id " + identifier);
 
-		auditor.register(validatedReference);
-		auditor.connectedNodes(entries.size());
+		nodeConnected(validatedReference);
 
 		return identifier;
 	}
 
+  private void nodeConnected(PeerReference reference) {
+    auditor.register(reference);
+		auditor.connectedNodes(entries.size());
+    
+    statisticsComputer.nodeConnected(PeerReferences.isRootNode(reference));
+  }
+
+  private void nodeDisconnected(PeerReference reference) {
+    auditor.unregister(reference);
+    auditor.connectedNodes(entries.size());
+    
+    statisticsComputer.nodeDisconnected(PeerReferences.isRootNode(reference));
+  }
+  
 	public void unregister(NodeIdentifier identifier) {
 		NodeEntry entry = (NodeEntry) entries.remove(identifier);
 		if (entry != null) {
 			LogFactory.getLog(getClass()).debug("unregister " + entry);
-      auditor.unregister(entry.getReference());
+      nodeDisconnected(entry.getReference());
 		} else {
 			String clientHost = "unknown";
 			try {
@@ -145,8 +168,6 @@ public class DefaultTracker implements Tracker {
 					+ " from " + clientHost;
 			LogFactory.getLog(getClass()).warn(msg);
 		}
-		
-		auditor.connectedNodes(entries.size());
 	}
 
 	private PeerReference validateReference(PeerReference reference)
@@ -202,10 +223,9 @@ public class DefaultTracker implements Tracker {
 			if (oldestEntry.after(entry.getLastRefreshDate())) {
 				LogFactory.getLog(getClass()).debug("remove " + entry);
 				iter.remove();
-				auditor.unregister(entry.getReference());
+        nodeDisconnected(entry.getReference());
 			}
 		}
-		auditor.connectedNodes(entries.size());
 	}
 
 	public void start() throws ControlException {
@@ -285,12 +305,6 @@ public class DefaultTracker implements Tracker {
 		public Date getLastRefreshDate() {
 			return lastRefreshDate;
 		}
-	}
-
-	interface ClientInfoProvider {
-
-		public String getClientHost() throws TrackerException;
-
 	}
 
 }

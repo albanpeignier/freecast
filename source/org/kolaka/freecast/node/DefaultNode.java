@@ -161,10 +161,8 @@ public class DefaultNode implements ConfigurableNode {
 	public void setReceiverControler(ReceiverControler receiverControler) {
 		Validate.notNull(receiverControler, "No specified ReceiverControler");
 
-		if (receiverControler instanceof PeerReceiverControler) {
-			order = Order.UNKNOWN;
-		} else {
-			order = Order.ZERO;
+		if (!(receiverControler instanceof PeerReceiverControler)) {
+      changeOrder(Order.ZERO);
 		}
 
 		this.receiverControler = receiverControler;
@@ -228,6 +226,7 @@ public class DefaultNode implements ConfigurableNode {
 		if (!this.order.equals(order)) {
 			LogFactory.getLog(getClass()).debug("set order to " + order);
 			this.order = order;
+      reference.setAttribute(PeerReference.ORDER_ATTRIBUTE, order);
 			nodeStatusProvider.fireNodeStatus();
 		}
 	}

@@ -23,10 +23,18 @@
 
 package org.kolaka.freecast.tracker;
 
-import com.caucho.services.server.ServiceContext;
+import com.caucho.hessian.server.HessianServlet;
 
-final class HessianClientInfoProvider implements ClientInfoProvider {
-  public String getClientHost() throws TrackerException {
-    return ServiceContext.getContextRequest().getRemoteHost();
+public abstract class HttpTrackerConnector extends HessianServlet {
+
+  public static final String TRACKER_ATTRIBUTE = "tracker";
+  
+  protected Object getTracker() {
+    Object tracker = getServletContext().getAttribute(TRACKER_ATTRIBUTE);
+    if (tracker instanceof ClientInfoProviderUser) {
+      ((ClientInfoProviderUser) tracker).setClientInfoProvider(new HessianClientInfoProvider());
+    }
+    return tracker;
   }
+  
 }

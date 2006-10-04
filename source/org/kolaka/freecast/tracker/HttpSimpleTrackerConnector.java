@@ -25,19 +25,20 @@ package org.kolaka.freecast.tracker;
 
 import java.util.Set;
 
+import javax.servlet.ServletException;
+
 import org.kolaka.freecast.node.NodeIdentifier;
 import org.kolaka.freecast.node.NodeStatus;
 import org.kolaka.freecast.peer.PeerReference;
 
-import com.caucho.hessian.server.HessianServlet;
-
-public class HttpSimpleTrackerConnector extends HessianServlet implements Tracker {
+public class HttpSimpleTrackerConnector extends HttpTrackerConnector implements Tracker {
 
   private static final long serialVersionUID = 8802338594786705476L;
-  private final Tracker tracker;
-
-  public HttpSimpleTrackerConnector() {
-    tracker = new DefaultTracker(new HessianClientInfoProvider());
+  private Tracker tracker;
+  
+  public void init() throws ServletException {
+    super.init();
+    tracker = (Tracker) getTracker(); 
   }
 
   public Set getPeerReferences(NodeIdentifier identifier)

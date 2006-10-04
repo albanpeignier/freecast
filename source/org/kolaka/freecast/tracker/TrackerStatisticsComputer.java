@@ -1,0 +1,73 @@
+/*
+ * FreeCast - streaming over Internet
+ *
+ * This code was developped by Alban Peignier (http://people.tryphon.org/~alban/) 
+ * and contributors (their names can be found in the CONTRIBUTORS file).
+ *
+ * Copyright (C) 2004 Alban Peignier
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
+package org.kolaka.freecast.tracker;
+
+import org.apache.commons.logging.LogFactory;
+
+public class TrackerStatisticsComputer {
+
+  private int nodeConnections;
+  private int rootNodeConnections;
+  
+  private boolean rootNodePresents;
+  
+  private int listenerConnected;
+  
+  public TrackerStatistics getStatistics() {
+    DefaultTrackerStatistics statistics = new DefaultTrackerStatistics();
+    statistics.setNodeConnections(nodeConnections);
+    statistics.setListenerConnected(listenerConnected);
+    statistics.setRootNodeConnections(rootNodeConnections);
+    statistics.setRootNodePresents(rootNodePresents);
+    return statistics;
+  }
+  
+  public void nodeConnected(boolean rootNode) {
+    nodeConnections++;
+    if (rootNode) {
+      rootNodeConnections++;
+      rootNodePresents = rootNode;
+    } else {
+      listenerConnected++;
+    }
+    
+    logStatistics();
+  }
+
+  
+  public void nodeDisconnected(boolean rootNode) {
+    if (rootNode) {
+      rootNodePresents = false;
+    } else {
+      listenerConnected = Math.max(0, listenerConnected - 1);
+    }
+    
+    logStatistics();
+  }
+  
+  private void logStatistics() {
+    LogFactory.getLog(getClass()).info(getStatistics());
+  }
+  
+}

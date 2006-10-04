@@ -23,10 +23,8 @@
 
 package org.kolaka.freecast.tracker;
 
-import com.caucho.services.server.ServiceContext;
+public interface ClientInfoProviderUser {
 
-final class HessianClientInfoProvider implements ClientInfoProvider {
-  public String getClientHost() throws TrackerException {
-    return ServiceContext.getContextRequest().getRemoteHost();
-  }
+  void setClientInfoProvider(ClientInfoProvider provider);
+  
 }

@@ -37,37 +37,55 @@ import org.kolaka.freecast.peer.PeerReference;
 import org.kolaka.freecast.timer.DefaultTimer;
 import org.kolaka.freecast.timer.Timer;
 import org.kolaka.freecast.timer.TimerUser;
-import org.kolaka.freecast.tracker.DefaultTracker.ClientInfoProvider;
 
-public class DefaultMultiTracker implements TimerUser {
+public class DefaultMultiTracker implements MultiTracker, TimerUser, ClientInfoProviderUser, MultiTrackerStatisticsProvider {
 
   private Map trackers = new TreeMap();
 
-  private final ClientInfoProvider clientInfoProvider;
+  private ClientInfoProvider clientInfoProvider;
 
-  public DefaultMultiTracker(final ClientInfoProvider clientInfoProvider) {
-    this.clientInfoProvider = clientInfoProvider;
-
+  public DefaultMultiTracker() {
     Runnable purgeRunnable = new Runnable() {
       public void run() {
         purge();
       }
     };
     timer.executePeriodically(DefaultTimer.minutes(1), purgeRunnable , false);
-}
+  }
+  
+  public TrackerStatistics getStatistics(NetworkIdentifier identifier) {
+    Tracker tracker = (Tracker) trackers.get(identifier);
+    if (tracker == null) {
+      return new DefaultTrackerStatistics();
+    }
+    return ((TrackerStatisticsProvider) tracker).getStatistics();
+  }
+
+  public void setClientInfoProvider(ClientInfoProvider clientInfoProvider) {
+    this.clientInfoProvider = clientInfoProvider;
+  }
+  
+  private ClientInfoProvider getClientInfoProvider() {
+    if (clientInfoProvider == null) {
+      throw new IllegalStateException("No specified ClientInfoProvider");
+    }
+    return clientInfoProvider;
+  }
 
   private synchronized Tracker getTracker(NetworkIdentifier identifier) {
     Tracker tracker = (Tracker) trackers.get(identifier);
     if (tracker == null) {
       LogFactory.getLog(getClass()).info("create tracker for network " + identifier);
-      tracker = createTracker(clientInfoProvider);
+      tracker = createTracker(getClientInfoProvider());
       trackers.put(identifier, tracker);
     }
     return tracker;
   }
   
   protected Tracker createTracker(ClientInfoProvider clientInfoProvider) {
-    return new TimedTracker(new DefaultTracker(clientInfoProvider));
+    DefaultTracker tracker = new DefaultTracker();
+    tracker.setClientInfoProvider(clientInfoProvider);
+    return new TimedTracker(tracker);
   }
 
   public NodeIdentifier register(NetworkIdentifier network,
@@ -113,7 +131,7 @@ public class DefaultMultiTracker implements TimerUser {
     LogFactory.getLog(getClass()).debug(trackers.size() + " trackers kept");
   }
   
-  static class TimedTracker implements Tracker {
+  static class TimedTracker implements Tracker, TrackerStatisticsProvider {
     
     private final Tracker delegate;
     private Date lastRequest = new Date();
@@ -121,6 +139,10 @@ public class DefaultMultiTracker implements TimerUser {
     public TimedTracker(final Tracker delegate) {
       Validate.notNull(delegate);
       this.delegate = delegate;
+    }
+    
+    public TrackerStatistics getStatistics() {
+      return ((TrackerStatisticsProvider) delegate).getStatistics();
     }
 
     public Date getLastRequest() {
