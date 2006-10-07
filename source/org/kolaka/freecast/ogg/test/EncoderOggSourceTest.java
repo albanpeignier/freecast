@@ -31,13 +31,12 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 
-import junit.framework.TestCase;
-
 import org.kolaka.freecast.ogg.EncoderOggSource;
 import org.kolaka.freecast.ogg.OggPage;
 import org.kolaka.freecast.ogg.OggSource;
+import org.kolaka.freecast.test.BaseTestCase;
 
-public class EncoderOggSourceTest extends TestCase {
+public class EncoderOggSourceTest extends BaseTestCase {
 
 	public void testEncoding() throws Exception {
 		InputStream inputResources = OggTestResources

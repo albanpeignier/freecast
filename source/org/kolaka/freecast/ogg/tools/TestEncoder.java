@@ -32,7 +32,7 @@ import java.util.zip.CheckedOutputStream;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 
-import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.NullOutputStream;
 import org.apache.commons.logging.LogFactory;
@@ -57,7 +57,7 @@ public class TestEncoder extends Application {
   private URL url;
   private boolean encode;
 
-  protected void postInit(Configuration configuration) throws Exception {
+  protected void postInit(HierarchicalConfiguration configuration) throws Exception {
       url = new URL( configuration.getString("playlist") );
       encode = configuration.getBoolean("encode", true);
   }

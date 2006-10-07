@@ -64,8 +64,8 @@ public class HttpTracker implements TrackerService {
 
   private TrackerStatisticsConsumerManager consumerManager = new TrackerStatisticsConsumerManager();
   
-  public void add(TrackerStatisticsConsumer consumer) {
-    consumerManager.add(consumer);
+  public TrackerStatisticsConsumerManager getConsumerManager() {
+    return consumerManager;
   }
 
   private boolean multiTracker;

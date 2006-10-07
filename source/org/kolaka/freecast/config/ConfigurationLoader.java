@@ -25,8 +25,8 @@ package org.kolaka.freecast.config;
 
 import java.net.URI;
 
-import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.kolaka.freecast.resource.ResourceLocator;
 
 /**
@@ -38,7 +38,7 @@ public interface ConfigurationLoader {
 
 	void load() throws ConfigurationException;
 
-	Configuration getRootConfiguration();
+  HierarchicalConfiguration getRootConfiguration();
 
 	void setUserURI(URI userURI);
 

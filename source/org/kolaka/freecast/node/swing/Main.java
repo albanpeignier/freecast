@@ -25,7 +25,7 @@ package org.kolaka.freecast.node.swing;
 
 import javax.swing.JOptionPane;
 
-import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.kolaka.freecast.NodeConfigurator;
@@ -69,7 +69,7 @@ public class Main extends SwingApplication {
     return new String[] { "-config", input };
   }
 
-  protected void postInit(Configuration configuration) throws Exception {
+  protected void postInit(HierarchicalConfiguration configuration) throws Exception {
     super.postInit(configuration);
 
     ConfigurableNode node = new DefaultNode();

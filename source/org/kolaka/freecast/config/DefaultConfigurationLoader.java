@@ -28,11 +28,12 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.Properties;
 
+import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.BaseConfiguration;
-import org.apache.commons.configuration.CompositeConfiguration;
-import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.CombinedConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.ConfigurationFactory;
+import org.apache.commons.configuration.DefaultConfigurationBuilder;
+import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.MapConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
@@ -53,7 +54,7 @@ public class DefaultConfigurationLoader implements ConfigurationLoader {
 
 	protected Properties userProperties = new Properties();
 
-	protected Configuration configuration;
+	protected HierarchicalConfiguration configuration;
 
 	private ResourceLocator locator = ResourceLocators.getDefaultInstance();
 
@@ -86,7 +87,7 @@ public class DefaultConfigurationLoader implements ConfigurationLoader {
 				"loaded configuration: " + sb.toString());
 	}
 
-	protected Configuration loadUserConfiguration()
+	protected AbstractConfiguration loadUserConfiguration()
 			throws ConfigurationException {
 		if (userURI == null) {
 			return new BaseConfiguration();
@@ -104,13 +105,13 @@ public class DefaultConfigurationLoader implements ConfigurationLoader {
 		return configuration;
 	}
 
-	public Configuration getRootConfiguration() {
+	public HierarchicalConfiguration getRootConfiguration() {
 		return configuration;
 	}
   
-  private static final Configuration EMPTY_CONFIGURATION = new PropertiesConfiguration();
+  private static final AbstractConfiguration EMPTY_CONFIGURATION = new PropertiesConfiguration();
 
-	protected Configuration loadDefaultConfiguration(String name)
+	protected AbstractConfiguration loadDefaultConfiguration(String name)
 			throws ConfigurationException {
 		URL url = getClass().getResource("resources/config-" + name + ".xml");
 		if (url == null) {
@@ -119,9 +120,8 @@ public class DefaultConfigurationLoader implements ConfigurationLoader {
 		}
 		LogFactory.getLog(getClass()).debug(
 				"load the default configuration from " + url);
-		ConfigurationFactory factory = new ConfigurationFactory();
-		factory.setConfigurationURL(url);
-		Configuration configuration = factory.getConfiguration();
+    DefaultConfigurationBuilder factory = new DefaultConfigurationBuilder(url);
+    AbstractConfiguration configuration = factory.getConfiguration(true);
 		if (configuration.isEmpty()) {
 			throw new ConfigurationException(
 					"No default configuration found for " + url);
@@ -141,8 +141,8 @@ public class DefaultConfigurationLoader implements ConfigurationLoader {
 		logConfiguration();
 	}
 
-	protected Configuration loadConfiguration() throws ConfigurationException {
-		CompositeConfiguration configuration = new CompositeConfiguration();
+	protected HierarchicalConfiguration loadConfiguration() throws ConfigurationException {
+    CombinedConfiguration configuration = new CombinedConfiguration();
 		if (!userProperties.isEmpty()) {
 			LogFactory.getLog(getClass()).trace("use user properties: " + userProperties);
 			configuration
@@ -155,7 +155,7 @@ public class DefaultConfigurationLoader implements ConfigurationLoader {
 		return configuration;
 	}
 
-	protected void completeConfiguration(CompositeConfiguration configuration)
+	protected void completeConfiguration(CombinedConfiguration configuration)
 			throws ConfigurationException {
 		configuration.addConfiguration(loadDefaultConfiguration(defaultsName));
 	}

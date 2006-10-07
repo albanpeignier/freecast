@@ -35,7 +35,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.lang.builder.StandardToStringStyle;
@@ -62,7 +62,7 @@ public abstract class Application {
 
 	private final ResourceLocator resourceLocator;
 
-	private Configuration configuration;
+	private HierarchicalConfiguration configuration;
 
 	protected Application(String name) {
 		this.name = name;
@@ -175,7 +175,7 @@ public abstract class Application {
 		return new DefaultConfigurationLoader(getName());
 	}
 
-	protected abstract void postInit(Configuration configuration)
+	protected abstract void postInit(HierarchicalConfiguration configuration)
 			throws Exception;
 
 	public final void run(String args[]) {

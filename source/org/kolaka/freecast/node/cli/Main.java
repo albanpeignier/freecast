@@ -23,7 +23,7 @@
 
 package org.kolaka.freecast.node.cli;
 
-import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.Application;
 import org.kolaka.freecast.NodeConfigurator;
@@ -47,7 +47,7 @@ public class Main extends Application {
 		new Main().run(args);
 	}
 
-	protected void postInit(Configuration configuration) throws Exception {
+	protected void postInit(HierarchicalConfiguration configuration) throws Exception {
 		ConfigurableNode node = new DefaultNode();
 		NodeConfigurator nodeConfigurator = new NodeConfigurator();
 		nodeConfigurator.setResourceLocator(getResourceLocator());

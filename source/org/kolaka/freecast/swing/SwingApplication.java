@@ -34,7 +34,7 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.plaf.FontUIResource;
 
-import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.Application;
@@ -70,7 +70,7 @@ public abstract class SwingApplication extends Application {
 						: JOptionPane.INFORMATION_MESSAGE);
 	}
 
-	protected void postInit(Configuration configuration) throws Exception {
+	protected void postInit(HierarchicalConfiguration configuration) throws Exception {
 		initDefaultFont();
 	}
 

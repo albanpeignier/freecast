@@ -22,7 +22,11 @@
 	<classpathentry kind="lib" path="lib/core/mina-core.jar"/>
 	<classpathentry kind="lib" path="lib/core/org.mortbay.jetty.jar"/>
 	<classpathentry kind="lib" path="lib/core/tritonus-share.jar"/>
-	<classpathentry kind="lib" path="lib/core/tritonus-vorbis.jar"/>
+	<classpathentry kind="lib" path="lib/core/tritonus-vorbis.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="FreeCast - trunk/lib/runtime/linux/x86"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="lib/core/vorbisspi.jar"/>
 	<classpathentry kind="lib" path="lib/core/vorbisspi-tritonus.jar"/>
 	<classpathentry kind="lib" path="lib/core/servletapi.jar"/>
@@ -32,5 +36,6 @@
 	<classpathentry kind="lib" path="lib/core/wizard.jar"/>
 	<classpathentry kind="lib" path="lib/core/commons-digester.jar"/>
 	<classpathentry kind="lib" path="lib/core/commons-beanutils.jar"/>
+	<classpathentry kind="lib" path="lib/core/commons-jxpath.jar"/>
 	<classpathentry kind="output" path=".eclipse"/>
 </classpath>

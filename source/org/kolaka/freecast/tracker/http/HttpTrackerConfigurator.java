@@ -24,9 +24,12 @@
 package org.kolaka.freecast.tracker.http;
 
 import java.net.InetSocketAddress;
+import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.tracker.NoConfiguredTrackerException;
 import org.kolaka.freecast.tracker.statistics.TrackerStatisticsConsumer;
@@ -40,7 +43,7 @@ import org.kolaka.freecast.transport.cas.ConnectionAssistantServer;
  */
 public class HttpTrackerConfigurator {
 
-	public void configure(HttpTracker tracker, Configuration configuration) throws NoConfiguredTrackerException, ConfigurationException {
+	public void configure(HttpTracker tracker, HierarchicalConfiguration configuration) throws NoConfiguredTrackerException, ConfigurationException {
     /*
      * for the moment, the tracker.class changes the Connector implementation 
      * which creates its own Tracker instance
@@ -70,11 +73,14 @@ public class HttpTrackerConfigurator {
 			server.setListenAddress(casListenAddress);
 			tracker.setConnectionAssistantServer(server);
 		}
-    
-    Configuration consumerConfiguration = configuration.subset("statistics.consumer");
-    TrackerStatisticsConsumer consumer = new TrackerStatisticsConsumerLoader().load(consumerConfiguration);
-    LogFactory.getLog(getClass()).debug("add consumer : " + consumer);
-    tracker.add(consumer);
+
+    List consumerConfigurations = configuration.configurationsAt("statistics.consumer");
+    for (Iterator it = consumerConfigurations.iterator(); it.hasNext();) {
+      Configuration consumerConfiguration = (Configuration) it.next();
+      TrackerStatisticsConsumer consumer = new TrackerStatisticsConsumerLoader().load(consumerConfiguration);
+      LogFactory.getLog(getClass()).debug("add consumer : " + consumer);
+      tracker.getConsumerManager().add(consumer);
+    }
 	}
 
 }

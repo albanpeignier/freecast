@@ -27,8 +27,8 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.URL;
 
-import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.DataConfiguration;
+import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.NodeConfigurator;
 import org.kolaka.freecast.manager.http.HttpServer;
@@ -64,12 +64,12 @@ public class Main extends SwingApplication {
 		super("manager");
 	}
 
-	protected void postInit(Configuration configuration) throws Exception {
+	protected void postInit(HierarchicalConfiguration configuration) throws Exception {
 		super.postInit(configuration);
 
 		try {
       HttpTracker tracker = new HttpTracker();
-      new HttpTrackerConfigurator().configure(tracker, configuration
+      new HttpTrackerConfigurator().configure(tracker, (HierarchicalConfiguration) configuration
       		.subset("tracker"));
       this.tracker = tracker;
     } catch (NoConfiguredTrackerException e) {
