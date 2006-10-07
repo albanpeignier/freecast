@@ -105,7 +105,7 @@
 			<batchtest todir="${build.test.results.dir}">
 				<fileset dir="source">
 					<include name="**/test/*Test.java" />
-					<include name="**/test/*TestSuite.java" />
+					<exclude name="**/test/*NativeTest.java" />
 					<exclude name="**/test/*BaseTest.java" />
 				</fileset>
 			</batchtest>

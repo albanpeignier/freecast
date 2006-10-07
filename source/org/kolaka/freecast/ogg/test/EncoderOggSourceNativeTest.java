@@ -36,7 +36,7 @@ import org.kolaka.freecast.ogg.OggPage;
 import org.kolaka.freecast.ogg.OggSource;
 import org.kolaka.freecast.test.BaseTestCase;
 
-public class EncoderOggSourceTest extends BaseTestCase {
+public class EncoderOggSourceNativeTest extends BaseTestCase {
 
 	public void testEncoding() throws Exception {
 		InputStream inputResources = OggTestResources
