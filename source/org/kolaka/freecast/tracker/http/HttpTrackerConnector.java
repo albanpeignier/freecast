@@ -21,10 +21,22 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.kolaka.freecast.tracker;
+package org.kolaka.freecast.tracker.http;
 
-public interface MultiTrackerStatisticsProvider {
+import org.kolaka.freecast.tracker.ClientInfoProviderUser;
 
-  TrackerStatistics getStatistics(NetworkIdentifier identifier);
+import com.caucho.hessian.server.HessianServlet;
+
+public abstract class HttpTrackerConnector extends HessianServlet {
+
+  public static final String TRACKER_ATTRIBUTE = "tracker";
+  
+  protected Object getTracker() {
+    Object tracker = getServletContext().getAttribute(TRACKER_ATTRIBUTE);
+    if (tracker instanceof ClientInfoProviderUser) {
+      ((ClientInfoProviderUser) tracker).setClientInfoProvider(new HessianClientInfoProvider());
+    }
+    return tracker;
+  }
   
 }

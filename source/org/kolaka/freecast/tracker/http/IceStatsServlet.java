@@ -21,7 +21,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.kolaka.freecast.tracker;
+package org.kolaka.freecast.tracker.http;
 
 import java.io.IOException;
 
@@ -31,6 +31,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.LogFactory;
+import org.kolaka.freecast.tracker.NetworkIdentifier;
+import org.kolaka.freecast.tracker.statistics.MultiTrackerStatisticsProvider;
+import org.kolaka.freecast.tracker.statistics.TrackerStatistics;
+import org.kolaka.freecast.tracker.statistics.TrackerStatisticsProvider;
 
 public class IceStatsServlet extends HttpServlet {
 

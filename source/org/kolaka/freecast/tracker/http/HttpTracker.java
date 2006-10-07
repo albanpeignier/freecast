@@ -21,12 +21,19 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.kolaka.freecast.tracker;
+package org.kolaka.freecast.tracker.http;
 
 import java.net.InetSocketAddress;
 
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.service.ControlException;
+import org.kolaka.freecast.tracker.DefaultMultiTracker;
+import org.kolaka.freecast.tracker.DefaultTracker;
+import org.kolaka.freecast.tracker.Main;
+import org.kolaka.freecast.tracker.TrackerService;
+import org.kolaka.freecast.tracker.statistics.TrackerStatisticsConsumer;
+import org.kolaka.freecast.tracker.statistics.TrackerStatisticsConsumerManager;
+import org.kolaka.freecast.tracker.statistics.TrackerStatisticsSetProvider;
 import org.kolaka.freecast.transport.cas.ConnectionAssistantServer;
 import org.mortbay.http.SocketListener;
 import org.mortbay.jetty.Server;
@@ -54,13 +61,19 @@ public class HttpTracker implements TrackerService {
 	public void setListenAddress(InetSocketAddress listenAddress) {
 		this.listenAddress = listenAddress;
 	}
+
+  private TrackerStatisticsConsumerManager consumerManager = new TrackerStatisticsConsumerManager();
   
+  public void add(TrackerStatisticsConsumer consumer) {
+    consumerManager.add(consumer);
+  }
+
   private boolean multiTracker;
 
   public void setMultiTracker(boolean multiTracker) {
     this.multiTracker = multiTracker;
   }
-
+  
 	public void start() throws ControlException {
     LogFactory.getLog(Main.class).info(
         "start a HttpConnector on port " + listenAddress);
@@ -78,6 +91,10 @@ public class HttpTracker implements TrackerService {
     LogFactory.getLog(Main.class).trace(
         "use connector " + connectorClass.getName());
 
+    if (tracker instanceof TrackerStatisticsSetProvider) {
+      consumerManager.setProvider((TrackerStatisticsSetProvider) tracker);
+    }
+    
     server = new Server();
 		SocketListener listener = new SocketListener();
 		listener.setInetAddress(listenAddress.getAddress());
@@ -108,8 +125,10 @@ public class HttpTracker implements TrackerService {
 		}
 		
 		if (caServer != null) {
-			caServer.start();
+      caServer.start();
 		}
+    
+    consumerManager.start();
 	}
 
 	public void stop() throws ControlException {
@@ -122,6 +141,8 @@ public class HttpTracker implements TrackerService {
 		if (caServer != null) {
 			caServer.stop();
 		}
+    
+    consumerManager.stop();
 	}
 
 }

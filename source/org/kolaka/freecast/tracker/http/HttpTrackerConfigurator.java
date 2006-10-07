@@ -21,11 +21,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.kolaka.freecast.tracker;
+package org.kolaka.freecast.tracker.http;
 
 import java.net.InetSocketAddress;
 
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.LogFactory;
+import org.kolaka.freecast.tracker.NoConfiguredTrackerException;
+import org.kolaka.freecast.tracker.statistics.TrackerStatisticsConsumer;
+import org.kolaka.freecast.tracker.statistics.TrackerStatisticsConsumerLoader;
 import org.kolaka.freecast.transport.cas.ConnectionAssistantServer;
 
 /**
@@ -35,7 +40,7 @@ import org.kolaka.freecast.transport.cas.ConnectionAssistantServer;
  */
 public class HttpTrackerConfigurator {
 
-	public void configure(HttpTracker tracker, Configuration configuration) throws NoConfiguredTrackerException {
+	public void configure(HttpTracker tracker, Configuration configuration) throws NoConfiguredTrackerException, ConfigurationException {
     /*
      * for the moment, the tracker.class changes the Connector implementation 
      * which creates its own Tracker instance
@@ -65,6 +70,11 @@ public class HttpTrackerConfigurator {
 			server.setListenAddress(casListenAddress);
 			tracker.setConnectionAssistantServer(server);
 		}
+    
+    Configuration consumerConfiguration = configuration.subset("statistics.consumer");
+    TrackerStatisticsConsumer consumer = new TrackerStatisticsConsumerLoader().load(consumerConfiguration);
+    LogFactory.getLog(getClass()).debug("add consumer : " + consumer);
+    tracker.add(consumer);
 	}
 
 }

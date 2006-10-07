@@ -21,12 +21,19 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.kolaka.freecast.tracker;
+package org.kolaka.freecast.tracker.http;
 
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 
 import org.apache.commons.lang.Validate;
+import org.kolaka.freecast.tracker.MultiTracker;
+import org.kolaka.freecast.tracker.MultiTrackerAdapter;
+import org.kolaka.freecast.tracker.NetworkIdentifier;
+import org.kolaka.freecast.tracker.ProtectedTracker;
+import org.kolaka.freecast.tracker.Tracker;
+import org.kolaka.freecast.tracker.TrackerException;
+import org.kolaka.freecast.tracker.TrackerLocator;
 
 import com.caucho.hessian.client.HessianProxyFactory;
 
@@ -35,13 +42,16 @@ import com.caucho.hessian.client.HessianProxyFactory;
  * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
-public class HttpTrackerLocator implements TrackerLocator {
+public class HttpMultiTrackerLocator implements TrackerLocator {
 
 	private InetSocketAddress trackerAddress;
+  private NetworkIdentifier networkId;
 
-  public HttpTrackerLocator(InetSocketAddress trackerAddress) {
+  public HttpMultiTrackerLocator(InetSocketAddress trackerAddress, NetworkIdentifier networkId) {
     Validate.notNull(trackerAddress);
+    Validate.notNull(networkId);
     this.trackerAddress = trackerAddress;
+    this.networkId = networkId;
   }
 
 	public Tracker resolve() throws TrackerException {
@@ -50,9 +60,9 @@ public class HttpTrackerLocator implements TrackerLocator {
 
 		try {
 			HessianProxyFactory factory = new HessianProxyFactory();
-			Tracker hessianTracker = (Tracker) factory.create(Tracker.class,
+			MultiTracker hessianMultiTracker = (MultiTracker) factory.create(MultiTracker.class,
 					url);
-			return new ProtectedTracker(hessianTracker);
+			return new ProtectedTracker(new MultiTrackerAdapter(networkId, hessianMultiTracker));
 		} catch (MalformedURLException e) {
 			throw new TrackerException("The tracker url is invalid '" + url
 					+ "'", e);

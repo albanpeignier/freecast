@@ -21,12 +21,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.kolaka.freecast.tracker;
+package org.kolaka.freecast.tracker.http;
 
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 
 import org.apache.commons.lang.Validate;
+import org.kolaka.freecast.tracker.ProtectedTracker;
+import org.kolaka.freecast.tracker.Tracker;
+import org.kolaka.freecast.tracker.TrackerException;
+import org.kolaka.freecast.tracker.TrackerLocator;
 
 import com.caucho.hessian.client.HessianProxyFactory;
 
@@ -35,16 +39,13 @@ import com.caucho.hessian.client.HessianProxyFactory;
  * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
-public class HttpMultiTrackerLocator implements TrackerLocator {
+public class HttpTrackerLocator implements TrackerLocator {
 
 	private InetSocketAddress trackerAddress;
-  private NetworkIdentifier networkId;
 
-  public HttpMultiTrackerLocator(InetSocketAddress trackerAddress, NetworkIdentifier networkId) {
+  public HttpTrackerLocator(InetSocketAddress trackerAddress) {
     Validate.notNull(trackerAddress);
-    Validate.notNull(networkId);
     this.trackerAddress = trackerAddress;
-    this.networkId = networkId;
   }
 
 	public Tracker resolve() throws TrackerException {
@@ -53,9 +54,9 @@ public class HttpMultiTrackerLocator implements TrackerLocator {
 
 		try {
 			HessianProxyFactory factory = new HessianProxyFactory();
-			MultiTracker hessianMultiTracker = (MultiTracker) factory.create(MultiTracker.class,
+			Tracker hessianTracker = (Tracker) factory.create(Tracker.class,
 					url);
-			return new ProtectedTracker(new MultiTrackerAdapter(networkId, hessianMultiTracker));
+			return new ProtectedTracker(hessianTracker);
 		} catch (MalformedURLException e) {
 			throw new TrackerException("The tracker url is invalid '" + url
 					+ "'", e);

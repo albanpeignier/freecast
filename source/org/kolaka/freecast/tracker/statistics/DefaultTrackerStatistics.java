@@ -21,11 +21,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.kolaka.freecast.tracker;
+package org.kolaka.freecast.tracker.statistics;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.kolaka.freecast.tracker.NetworkIdentifier;
 
 public class DefaultTrackerStatistics implements TrackerStatistics {
 
@@ -35,6 +36,8 @@ public class DefaultTrackerStatistics implements TrackerStatistics {
   private boolean rootNodePresents;
   
   private int listenerConnected;
+  
+  private NetworkIdentifier networkId;
   
   public DefaultTrackerStatistics() {
     
@@ -79,6 +82,14 @@ public class DefaultTrackerStatistics implements TrackerStatistics {
 
   public void setListenerConnected(int listenerConnected) {
     this.listenerConnected = listenerConnected;
+  }
+  
+  public NetworkIdentifier getNetworkId() {
+    return networkId;
+  }
+  
+  public void setNetworkId(NetworkIdentifier networkId) {
+    this.networkId = networkId;
   }
   
   public String toString() {

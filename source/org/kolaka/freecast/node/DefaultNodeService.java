@@ -31,12 +31,12 @@ import org.kolaka.freecast.peer.PeerProvider;
 import org.kolaka.freecast.peer.PeerProviderException;
 import org.kolaka.freecast.service.ControlException;
 import org.kolaka.freecast.service.LoopService;
-import org.kolaka.freecast.tracker.HttpMultiTrackerLocator;
-import org.kolaka.freecast.tracker.HttpTrackerLocator;
 import org.kolaka.freecast.tracker.NetworkIdentifier;
 import org.kolaka.freecast.tracker.Tracker;
 import org.kolaka.freecast.tracker.TrackerException;
 import org.kolaka.freecast.tracker.TrackerLocator;
+import org.kolaka.freecast.tracker.http.HttpMultiTrackerLocator;
+import org.kolaka.freecast.tracker.http.HttpTrackerLocator;
 
 /**
  * 

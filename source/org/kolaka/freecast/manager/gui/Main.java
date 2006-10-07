@@ -41,9 +41,9 @@ import org.kolaka.freecast.node.DefaultNode;
 import org.kolaka.freecast.node.Node;
 import org.kolaka.freecast.swing.ConfigurableResources;
 import org.kolaka.freecast.swing.SwingApplication;
-import org.kolaka.freecast.tracker.HttpTracker;
-import org.kolaka.freecast.tracker.HttpTrackerConfigurator;
 import org.kolaka.freecast.tracker.NoConfiguredTrackerException;
+import org.kolaka.freecast.tracker.http.HttpTracker;
+import org.kolaka.freecast.tracker.http.HttpTrackerConfigurator;
 
 /**
  * 

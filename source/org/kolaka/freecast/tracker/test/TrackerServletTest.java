@@ -28,13 +28,13 @@ import java.net.InetSocketAddress;
 import org.kolaka.freecast.node.NodeIdentifier;
 import org.kolaka.freecast.peer.InetPeerReference;
 import org.kolaka.freecast.test.BaseTestCase;
-import org.kolaka.freecast.tracker.HttpMultiTrackerLocator;
-import org.kolaka.freecast.tracker.HttpTracker;
-import org.kolaka.freecast.tracker.HttpTrackerLocator;
 import org.kolaka.freecast.tracker.NetworkIdentifier;
 import org.kolaka.freecast.tracker.Tracker;
 import org.kolaka.freecast.tracker.TrackerException;
 import org.kolaka.freecast.tracker.TrackerLocator;
+import org.kolaka.freecast.tracker.http.HttpMultiTrackerLocator;
+import org.kolaka.freecast.tracker.http.HttpTracker;
+import org.kolaka.freecast.tracker.http.HttpTrackerLocator;
 
 /**
  * 

@@ -25,6 +25,7 @@ package org.kolaka.freecast.tracker;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -42,13 +43,17 @@ import org.kolaka.freecast.peer.InetPeerReference;
 import org.kolaka.freecast.peer.PeerReference;
 import org.kolaka.freecast.peer.PeerReferences;
 import org.kolaka.freecast.service.ControlException;
+import org.kolaka.freecast.tracker.statistics.TrackerStatistics;
+import org.kolaka.freecast.tracker.statistics.TrackerStatisticsComputer;
+import org.kolaka.freecast.tracker.statistics.TrackerStatisticsProvider;
+import org.kolaka.freecast.tracker.statistics.TrackerStatisticsSetProvider;
 
 /**
  * 
  * 
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
-public class DefaultTracker implements Tracker, ClientInfoProviderUser, TrackerStatisticsProvider {
+public class DefaultTracker implements Tracker, ClientInfoProviderUser, TrackerStatisticsProvider, TrackerStatisticsSetProvider {
 
 	private Map entries = new HashMap();
 
@@ -61,8 +66,17 @@ public class DefaultTracker implements Tracker, ClientInfoProviderUser, TrackerS
   public TrackerStatistics getStatistics() {
     return statisticsComputer.getStatistics();
   }
+  
+  public Set getStatisticsSet() {
+    return Collections.singleton(getStatistics());
+  }
 
-	public DefaultTracker() {
+	public DefaultTracker(NetworkIdentifier networkId) {
+    this();
+    statisticsComputer.setNetworkId(networkId);
+  }
+  
+  public DefaultTracker() {
 		this.auditor = (Tracker.Auditor) AuditorFactory.getInstance().get(
 				Tracker.Auditor.class, this);
 	}

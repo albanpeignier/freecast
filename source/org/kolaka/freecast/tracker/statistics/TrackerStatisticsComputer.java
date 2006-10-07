@@ -21,11 +21,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.kolaka.freecast.tracker;
+package org.kolaka.freecast.tracker.statistics;
 
 import org.apache.commons.logging.LogFactory;
+import org.kolaka.freecast.tracker.NetworkIdentifier;
 
-public class TrackerStatisticsComputer {
+public class TrackerStatisticsComputer implements TrackerStatisticsProvider {
 
   private int nodeConnections;
   private int rootNodeConnections;
@@ -40,6 +41,9 @@ public class TrackerStatisticsComputer {
     statistics.setListenerConnected(listenerConnected);
     statistics.setRootNodeConnections(rootNodeConnections);
     statistics.setRootNodePresents(rootNodePresents);
+    if (networkId != null) {
+      statistics.setNetworkId(networkId);
+    }
     return statistics;
   }
   
@@ -68,6 +72,12 @@ public class TrackerStatisticsComputer {
   
   private void logStatistics() {
     LogFactory.getLog(getClass()).info(getStatistics());
+  }
+
+  private NetworkIdentifier networkId;
+  
+  public void setNetworkId(NetworkIdentifier networkId) {
+    this.networkId = networkId;
   }
   
 }

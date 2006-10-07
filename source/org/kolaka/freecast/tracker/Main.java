@@ -25,6 +25,8 @@ package org.kolaka.freecast.tracker;
 
 import org.apache.commons.configuration.Configuration;
 import org.kolaka.freecast.Application;
+import org.kolaka.freecast.tracker.http.HttpTracker;
+import org.kolaka.freecast.tracker.http.HttpTrackerConfigurator;
 
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>

@@ -21,7 +21,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.kolaka.freecast.tracker;
+package org.kolaka.freecast.tracker.http;
+
+import org.kolaka.freecast.tracker.ClientInfoProvider;
+import org.kolaka.freecast.tracker.TrackerException;
 
 import com.caucho.services.server.ServiceContext;
 

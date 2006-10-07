@@ -25,8 +25,8 @@ package org.kolaka.freecast.tracker.test;
 
 import junit.framework.TestCase;
 
-import org.kolaka.freecast.tracker.DefaultTrackerStatistics;
-import org.kolaka.freecast.tracker.TrackerStatisticsComputer;
+import org.kolaka.freecast.tracker.statistics.DefaultTrackerStatistics;
+import org.kolaka.freecast.tracker.statistics.TrackerStatisticsComputer;
 
 public class TrackerStatisticsComputerTest extends TestCase {
 

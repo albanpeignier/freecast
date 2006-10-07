@@ -24,6 +24,7 @@
 package org.kolaka.freecast.tracker;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -37,13 +38,18 @@ import org.kolaka.freecast.peer.PeerReference;
 import org.kolaka.freecast.timer.DefaultTimer;
 import org.kolaka.freecast.timer.Timer;
 import org.kolaka.freecast.timer.TimerUser;
+import org.kolaka.freecast.tracker.statistics.DefaultTrackerStatistics;
+import org.kolaka.freecast.tracker.statistics.MultiTrackerStatisticsProvider;
+import org.kolaka.freecast.tracker.statistics.TrackerStatistics;
+import org.kolaka.freecast.tracker.statistics.TrackerStatisticsProvider;
+import org.kolaka.freecast.tracker.statistics.TrackerStatisticsSetProvider;
 
-public class DefaultMultiTracker implements MultiTracker, TimerUser, ClientInfoProviderUser, MultiTrackerStatisticsProvider {
+public class DefaultMultiTracker implements MultiTracker, TimerUser, ClientInfoProviderUser, MultiTrackerStatisticsProvider, TrackerStatisticsSetProvider {
 
-  private Map trackers = new TreeMap();
+  private final Map trackers = new TreeMap();
 
   private ClientInfoProvider clientInfoProvider;
-
+  
   public DefaultMultiTracker() {
     Runnable purgeRunnable = new Runnable() {
       public void run() {
@@ -52,7 +58,16 @@ public class DefaultMultiTracker implements MultiTracker, TimerUser, ClientInfoP
     };
     timer.executePeriodically(DefaultTimer.minutes(1), purgeRunnable , false);
   }
-  
+
+  public Set getStatisticsSet() {
+    Set statistics = new HashSet();
+    for (Iterator iterator = trackers.values().iterator(); iterator.hasNext();) {
+      Tracker tracker = (Tracker) iterator.next();
+      statistics.add(((TrackerStatisticsProvider) tracker).getStatistics());
+    }
+    return statistics;
+  }
+
   public TrackerStatistics getStatistics(NetworkIdentifier identifier) {
     Tracker tracker = (Tracker) trackers.get(identifier);
     if (tracker == null) {
@@ -76,14 +91,14 @@ public class DefaultMultiTracker implements MultiTracker, TimerUser, ClientInfoP
     Tracker tracker = (Tracker) trackers.get(identifier);
     if (tracker == null) {
       LogFactory.getLog(getClass()).info("create tracker for network " + identifier);
-      tracker = createTracker(getClientInfoProvider());
+      tracker = createTracker(identifier, getClientInfoProvider());
       trackers.put(identifier, tracker);
     }
     return tracker;
   }
   
-  protected Tracker createTracker(ClientInfoProvider clientInfoProvider) {
-    DefaultTracker tracker = new DefaultTracker();
+  protected Tracker createTracker(NetworkIdentifier identifier, ClientInfoProvider clientInfoProvider) {
+    DefaultTracker tracker = new DefaultTracker(identifier);
     tracker.setClientInfoProvider(clientInfoProvider);
     return new TimedTracker(tracker);
   }
