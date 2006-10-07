@@ -77,12 +77,12 @@ public class ConfigurableResources implements Resources {
 	}
 
 	private String getString(String name) throws ResourcesException {
-		try {
-			return configuration.getString(name);
-		} catch (NoSuchElementException e) {
-			throw new ResourcesException(
-					"Can't find the configuration value for '" + name + "'", e);
-		}
+    String string = configuration.getString(name);
+    if (string == null) {
+      throw new ResourcesException(
+          "Can't find the configuration value for '" + name + "'");
+    }
+    return string;
 	}
 
 	public String getText(String name) throws ResourcesException {
@@ -122,11 +122,11 @@ public class ConfigurableResources implements Resources {
 	}
 
 	public Color getColor(String name) throws ResourcesException {
-		try {
-			return configuration.getColor(name);
-		} catch (NoSuchElementException e) {
-			throw new ResourcesException("Can't find the color " + name, e);
-		}
+		Color color = configuration.getColor(name);
+    if (color == null) {
+      throw new ResourcesException("Can't find the color " + name);
+    }
+    return color;
 	}
 
 }

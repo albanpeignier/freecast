@@ -23,8 +23,6 @@
 
 package org.kolaka.freecast.config.test;
 
-import java.util.NoSuchElementException;
-
 import junit.framework.TestCase;
 
 import org.apache.commons.configuration.Configuration;
@@ -41,12 +39,7 @@ public class ConfigurationLoaderTest extends TestCase {
 		Configuration configuration = configurationLoader
 				.getRootConfiguration().subset("tracker");
 
-		try {
-			configuration.getString("dummy");
-			fail("should throw a NoSuchElementException");
-		} catch (NoSuchElementException e) {
-
-		}
+		assertNull(configuration.getString("dummy"));
 
 		assertEquals("http", configuration.getString("connector.class"));
 

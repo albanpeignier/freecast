@@ -113,10 +113,10 @@ public class NodeConfigurator {
 						+ trackerAddress);
 		DefaultNodeService nodeService = new DefaultNodeService(trackerAddress);
     
-    try {
+    if (peerProviderConfiguration.containsKey("networkid")) {
       nodeService.setNetworkId(NetworkIdentifier.getInstance(peerProviderConfiguration.getString("networkid")));
-    } catch (NoSuchElementException e) {
-      LogFactory.getLog(getClass()).trace("no network identifier in configuration", e);
+    } else {
+      LogFactory.getLog(getClass()).debug("no network identifier in configuration");
     }
     
     node.setNodeService(nodeService);
