@@ -42,6 +42,7 @@ import org.pietschy.wizard.models.Condition;
 import org.pietschy.wizard.models.MultiPathModel;
 import org.pietschy.wizard.models.Path;
 import org.pietschy.wizard.models.SimplePath;
+import org.pietschy.wizard.InvalidStateException;
 
 public class ReceiverWizardModel extends MultiPathModel {
   
@@ -108,14 +109,14 @@ public class ReceiverWizardModel extends MultiPathModel {
     return configuration;
   }
   
-  public void createConfiguration(String type) throws IllegalStateException {
+  public void createConfiguration(String type) throws InvalidStateException {
     this.type = type;
     
     Class configurationClass = (Class) CONFIGURATIONS.get(type);
     try {
       this.configuration = (SourceReceiverConfiguration) configurationClass.newInstance();
     } catch (Exception e) {
-      throw new IllegalStateException("Can't create configuration", e);
+      throw new InvalidStateException("Can't create configuration", e);
     }
 
     LogFactory.getLog(getClass()).debug("change configuration for " + configuration);
