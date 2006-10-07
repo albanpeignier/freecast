@@ -51,7 +51,7 @@ public class FileTrackerStatisticsConsumerTest extends TestCase {
     assertEquals(1, lines.size());
     String output = (String) lines.get(0);
     // TODO could fail in another timezone :/
-    assertEquals("19700101-010000 #0 1 2 3 true", output);
+    assertEquals("19700101-010000 0 1 2 3 true", output);
   }
 
 }
