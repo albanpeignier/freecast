@@ -29,6 +29,10 @@ import org.kolaka.freecast.node.Order;
 public class PeerReferences {
 
   public static boolean isRootNode(PeerReference reference) {
+    if (reference == null) {
+      return false;
+    }
+    
     Order order = (Order) reference.getAttribute(PeerReference.ORDER_ATTRIBUTE);
     return order != null && order.equals(Order.ZERO);
   }

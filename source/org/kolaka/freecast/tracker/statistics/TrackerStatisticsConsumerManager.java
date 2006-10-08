@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.service.ControlException;
 import org.kolaka.freecast.service.Startable;
@@ -55,9 +56,14 @@ public class TrackerStatisticsConsumerManager implements Startable {
 
   private Timer timer = DefaultTimer.getInstance();
 
-  private long delay = 60;
+  private int delay = 60;
 
   private Task task;
+  
+  public void setDelay(int delay) {
+    Validate.isTrue(delay >= 30, "Delay must be greather than 30 seconds");
+    this.delay = delay;
+  }
 
   public void start() throws ControlException {
     if (provider == null) {
