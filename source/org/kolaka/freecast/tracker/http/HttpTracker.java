@@ -31,7 +31,6 @@ import org.kolaka.freecast.tracker.DefaultMultiTracker;
 import org.kolaka.freecast.tracker.DefaultTracker;
 import org.kolaka.freecast.tracker.Main;
 import org.kolaka.freecast.tracker.TrackerService;
-import org.kolaka.freecast.tracker.statistics.TrackerStatisticsConsumer;
 import org.kolaka.freecast.tracker.statistics.TrackerStatisticsConsumerManager;
 import org.kolaka.freecast.tracker.statistics.TrackerStatisticsSetProvider;
 import org.kolaka.freecast.transport.cas.ConnectionAssistantServer;
@@ -69,6 +68,8 @@ public class HttpTracker implements TrackerService {
   }
 
   private boolean multiTracker;
+
+  private boolean statsServlet;
 
   public void setMultiTracker(boolean multiTracker) {
     this.multiTracker = multiTracker;
@@ -111,11 +112,13 @@ public class HttpTracker implements TrackerService {
 			throw new ControlException("Can't install the tracker servlet", e);
 		}
 
-    try {
-      ServletHolder servletHolder = context.addServlet("Statistics", "/stats.xml", IceStatsServlet.class.getName());
-      servletHolder.getServletContext().setAttribute(IceStatsServlet.STATSPROVIDER_ATTRIBUTE, tracker);
-    } catch (Exception e) {
-      throw new ControlException("Can't install the statistics servlet", e);
+    if (statsServlet) {
+      try {
+        ServletHolder servletHolder = context.addServlet("Statistics", "/stats.xml", IceStatsServlet.class.getName());
+        servletHolder.getServletContext().setAttribute(IceStatsServlet.STATSPROVIDER_ATTRIBUTE, tracker);
+      } catch (Exception e) {
+        throw new ControlException("Can't install the statistics servlet", e);
+      }
     }
 
 		try {
@@ -144,5 +147,9 @@ public class HttpTracker implements TrackerService {
     
     consumerManager.stop();
 	}
+
+  public void enableStatsServlet(boolean statsServlet) {
+    this.statsServlet = statsServlet;
+  }
 
 }

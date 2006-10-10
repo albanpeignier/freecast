@@ -32,9 +32,16 @@ import java.util.Date;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.logging.LogFactory;
 
-public class JDBCTrackerStatisticsConsumer implements TrackerStatisticsConsumer {
+public class JDBCTrackerStatisticsConsumer implements TrackerStatisticsConsumer, JDBCTrackerStatisticsConsumerConstants {
 
   public static final String DEFAULT_REQUEST = "insert into statistics (timestamp,networkid,node_connections,rootnode_connections,listeners,rootnode) values (?,?,?,?,?,?);";
+
+
+  public static final String[] DEFAULT_PARAMETERS = new String[] {
+      PARAMETER_TIMESTAMP, PARAMETER_NETWORKID, PARAMETER_NODECONNECTIONS, 
+      PARAMETER_ROOTNODECONNECTIONS, PARAMETER_LISTENERS, PARAMETER_ROOTNODE
+  }; 
+  
   private String user, password, url, driver;
   
   public void setUser(String user) {
@@ -79,19 +86,30 @@ public class JDBCTrackerStatisticsConsumer implements TrackerStatisticsConsumer 
     return request;
   }
   
-  private Connection connection;
+  private String[] parameters = DEFAULT_PARAMETERS;
 
+  public void setParameters(String[] parameters) {
+    this.parameters = parameters;
+  }
+  
+  private JDBCParametersSetter parametersSetter;
+  
+  private Connection connection;
+  
+  public void setConnection(Connection connection) {
+    this.connection = connection;
+  }
+  
   public void process(Date date, TrackerStatistics statistics) {
+    if (parametersSetter == null) {
+      parametersSetter = new JDBCParametersSetter(parameters);
+    }
+    
     LogFactory.getLog(getClass()).debug("update database with " + statistics);
     try {
       Connection connection = getConnection();
       PreparedStatement statement = connection.prepareStatement(request);
-      statement.setTimestamp(1, new java.sql.Timestamp(date.getTime()));
-      statement.setString(2, statistics.getNetworkId() != null ? statistics.getNetworkId().toString() : null);
-      statement.setInt(3, statistics.getNodeConnections());
-      statement.setInt(4, statistics.getRootNodeConnections());
-      statement.setInt(5, statistics.getListenerConnected());
-      statement.setBoolean(6, statistics.isRootNodePresents());
+      parametersSetter.setParameters(statement, date, statistics);
       statement.execute();
     } catch (SQLException e) {
       LogFactory.getLog(getClass()).error("can't insert statistics values in database", e);
@@ -113,6 +131,5 @@ public class JDBCTrackerStatisticsConsumer implements TrackerStatisticsConsumer 
   public String toString() {
     return ToStringBuilder.reflectionToString(this);
   }
-
 
 }

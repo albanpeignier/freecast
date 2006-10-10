@@ -50,7 +50,7 @@ public class NetworkIdentifier implements Comparable, Serializable {
   }
 
   public String toString() {
-    return Long.toHexString(value).toUpperCase();
+    return Long.toHexString(value).toLowerCase();
   }
   
   public boolean equals(Object obj) {

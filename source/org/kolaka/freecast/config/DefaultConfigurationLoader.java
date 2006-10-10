@@ -47,6 +47,10 @@ import org.kolaka.freecast.resource.ResourceLocators;
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class DefaultConfigurationLoader implements ConfigurationLoader {
+  
+  static {
+    AbstractConfiguration.setDefaultListDelimiter('#');
+  }
 
 	private final String defaultsName;
 

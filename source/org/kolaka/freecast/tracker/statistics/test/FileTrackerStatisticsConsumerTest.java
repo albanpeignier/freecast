@@ -38,11 +38,23 @@ import org.kolaka.freecast.tracker.statistics.FileTrackerStatisticsConsumer;
 
 public class FileTrackerStatisticsConsumerTest extends TestCase {
 
-  public void testProcess() throws IOException {
-    File file = File.createTempFile(getClass().getName(), "test");
-    FileTrackerStatisticsConsumer consumer = new FileTrackerStatisticsConsumer();
+  private File file;
+  private FileTrackerStatisticsConsumer consumer;
+
+  protected void setUp() throws Exception {
+    super.setUp();
+    file = File.createTempFile(getClass().getName(), "test");
+
+    consumer = new FileTrackerStatisticsConsumer();
     consumer.setFile(file);
-    
+}
+  
+  protected void tearDown() throws Exception {
+    super.tearDown();
+    file.delete();
+  }
+  
+  public void testProcess() throws IOException {
     DefaultTrackerStatistics stats = new DefaultTrackerStatistics(1, 2, true, 3);
     stats.setNetworkId(NetworkIdentifier.getInstance("0"));
     consumer.process(new Date(0), stats);

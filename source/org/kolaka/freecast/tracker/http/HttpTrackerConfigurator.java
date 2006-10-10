@@ -73,11 +73,17 @@ public class HttpTrackerConfigurator {
 			server.setListenAddress(casListenAddress);
 			tracker.setConnectionAssistantServer(server);
 		}
+    
+    HierarchicalConfiguration statisticsConfiguration = (HierarchicalConfiguration) configuration.subset("statistics");
 
-    List consumerConfigurations = configuration.configurationsAt("statistics.consumer");
+    tracker.enableStatsServlet(statisticsConfiguration.getBoolean("xml", true));
+    tracker.getConsumerManager().setDelay(statisticsConfiguration.getInt("update", 60));
+
+		TrackerStatisticsConsumerLoader consumerLoader = new TrackerStatisticsConsumerLoader();
+    List consumerConfigurations = statisticsConfiguration.configurationsAt("consumer");
     for (Iterator it = consumerConfigurations.iterator(); it.hasNext();) {
       Configuration consumerConfiguration = (Configuration) it.next();
-      TrackerStatisticsConsumer consumer = new TrackerStatisticsConsumerLoader().load(consumerConfiguration);
+      TrackerStatisticsConsumer consumer = consumerLoader.load(consumerConfiguration);
       LogFactory.getLog(getClass()).debug("add consumer : " + consumer);
       tracker.getConsumerManager().add(consumer);
     }

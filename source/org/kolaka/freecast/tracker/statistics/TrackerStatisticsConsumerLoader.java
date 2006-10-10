@@ -25,8 +25,10 @@ package org.kolaka.freecast.tracker.statistics;
 
 import java.io.File;
 
+import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.lang.StringUtils;
 
 public class TrackerStatisticsConsumerLoader {
 
@@ -44,7 +46,13 @@ public class TrackerStatisticsConsumerLoader {
       consumer.setUser(configuration.getString("user"));
       consumer.setPassword(configuration.getString("password"));
       consumer.setDriver(configuration.getString("driver"));
+      
       consumer.setRequest(configuration.getString("request", JDBCTrackerStatisticsConsumer.DEFAULT_REQUEST));
+      
+      String parameters = configuration.getString("parameters");
+      if (parameters != null) {
+        consumer.setParameters(StringUtils.split(parameters,','));
+      }
       return consumer;
     } else if (consumerClass.equals("exec")) {
       ExecTrackerStatisticsConsumer consumer = new ExecTrackerStatisticsConsumer();
