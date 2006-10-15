@@ -29,6 +29,7 @@ import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.kolaka.freecast.NodeConfigurator;
+import org.kolaka.freecast.config.Configurations;
 import org.kolaka.freecast.node.ConfigurableNode;
 import org.kolaka.freecast.node.DefaultNode;
 import org.kolaka.freecast.node.Node;
@@ -75,11 +76,10 @@ public class Main extends SwingApplication {
     ConfigurableNode node = new DefaultNode();
     NodeConfigurator nodeConfigurator = new NodeConfigurator();
     nodeConfigurator.setResourceLocator(getResourceLocator());
-    nodeConfigurator.configure(node, configuration.subset("node"));
+    nodeConfigurator.configure(node, Configurations.subset(configuration, "node"));
     this.node = node;
 
-    ConfigurableResources resources = new ConfigurableResources(configuration
-        .subset("gui"));
+    ConfigurableResources resources = new ConfigurableResources(Configurations.subset(configuration, "gui"));
     resources.setResourceLocator(getResourceLocator());
 
     frame = new MainFrame(resources, node);

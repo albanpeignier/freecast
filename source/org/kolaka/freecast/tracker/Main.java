@@ -25,6 +25,7 @@ package org.kolaka.freecast.tracker;
 
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.kolaka.freecast.Application;
+import org.kolaka.freecast.config.Configurations;
 import org.kolaka.freecast.tracker.http.HttpTracker;
 import org.kolaka.freecast.tracker.http.HttpTrackerConfigurator;
 
@@ -45,8 +46,7 @@ public class Main extends Application {
 
 	protected void postInit(HierarchicalConfiguration configuration) throws Exception {
 		HttpTracker tracker = new HttpTracker();
-		new HttpTrackerConfigurator().configure(tracker, (HierarchicalConfiguration) configuration
-				.subset("tracker"));
+		new HttpTrackerConfigurator().configure(tracker, Configurations.subset(configuration,"tracker"));
     this.tracker = tracker;
 	}
 

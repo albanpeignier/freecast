@@ -29,6 +29,7 @@ import java.net.URISyntaxException;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.DataConfiguration;
 import org.apache.commons.logging.LogFactory;
+import org.kolaka.freecast.config.Configurations;
 import org.kolaka.freecast.config.InetSocketAddressConfigurator;
 
 public class ReceiverConfigurationLoader {
@@ -54,7 +55,7 @@ public class ReceiverConfigurationLoader {
     if (receiverClass.equals("shoutserver")) {
       ShoutServerReceiverConfiguration configuration = new ShoutServerReceiverConfiguration();
       configuration.setListenAddress(new InetSocketAddressConfigurator()
-          .load(receiverConfiguration.subset("listenaddress")));
+          .load(Configurations.subset(receiverConfiguration, "listenaddress")));
       return configuration;
     }
 

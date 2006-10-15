@@ -31,6 +31,7 @@ import org.apache.commons.configuration.DataConfiguration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.NodeConfigurator;
+import org.kolaka.freecast.config.Configurations;
 import org.kolaka.freecast.manager.http.HttpServer;
 import org.kolaka.freecast.net.InetSocketAddressSpecification;
 import org.kolaka.freecast.net.InetSocketAddressSpecificationParser;
@@ -69,8 +70,7 @@ public class Main extends SwingApplication {
 
 		try {
       HttpTracker tracker = new HttpTracker();
-      new HttpTrackerConfigurator().configure(tracker, (HierarchicalConfiguration) configuration
-      		.subset("tracker"));
+      new HttpTrackerConfigurator().configure(tracker, Configurations.subset(configuration, "tracker"));
       this.tracker = tracker;
     } catch (NoConfiguredTrackerException e) {
       LogFactory.getLog(getClass()).info("no tracker configured");
@@ -81,7 +81,7 @@ public class Main extends SwingApplication {
 		ConfigurableNode node = new DefaultNode();
 		NodeConfigurator nodeConfigurator = new NodeConfigurator();
 		nodeConfigurator.setResourceLocator(getResourceLocator());
-		nodeConfigurator.configure(node, configuration.subset("node"));
+		nodeConfigurator.configure(node, Configurations.subset(configuration , "node"));
 		this.node = node;
 
     boolean localListenPage = tracker != null;
@@ -116,7 +116,7 @@ public class Main extends SwingApplication {
     LogFactory.getLog(getClass()).info("listener welcome page: " + listenPage);
 
 		ConfigurableResources resources = new ConfigurableResources(
-				configuration.subset("gui"));
+        Configurations.subset(configuration, "gui"));
 		resources.setResourceLocator(getResourceLocator());
     
 		frame = new MainFrame(resources, tracker, node, listenPage);

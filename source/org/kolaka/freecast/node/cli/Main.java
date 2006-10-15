@@ -27,6 +27,7 @@ import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.Application;
 import org.kolaka.freecast.NodeConfigurator;
+import org.kolaka.freecast.config.Configurations;
 import org.kolaka.freecast.node.ConfigurableNode;
 import org.kolaka.freecast.node.DefaultNode;
 import org.kolaka.freecast.node.Node;
@@ -51,7 +52,7 @@ public class Main extends Application {
 		ConfigurableNode node = new DefaultNode();
 		NodeConfigurator nodeConfigurator = new NodeConfigurator();
 		nodeConfigurator.setResourceLocator(getResourceLocator());
-		nodeConfigurator.configure(node, configuration.subset("node"));
+		nodeConfigurator.configure(node, Configurations.subset(configuration, "node"));
 		this.node = node;
 	}
 

@@ -23,32 +23,49 @@
 
 package org.kolaka.freecast.config.test;
 
-import junit.framework.TestCase;
+import java.util.NoSuchElementException;
 
+import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.kolaka.freecast.config.ConfigurationLoader;
+import org.kolaka.freecast.config.Configurations;
 import org.kolaka.freecast.config.DefaultConfigurationLoader;
+import org.kolaka.freecast.test.BaseTestCase;
 
-public class ConfigurationLoaderTest extends TestCase {
+public class ConfigurationLoaderTest extends BaseTestCase {
 
-	public void testTrackerLoad() throws ConfigurationException {
-		ConfigurationLoader configurationLoader = new DefaultConfigurationLoader(
-				"tracker");
-		configurationLoader.load();
-		Configuration configuration = configurationLoader
-				.getRootConfiguration().subset("tracker");
+  public void testTrackerLoad() throws ConfigurationException {
+    ConfigurationLoader configurationLoader = new DefaultConfigurationLoader("tracker");
+    configurationLoader.load();
 
-		assertNull(configuration.getString("dummy"));
+    HierarchicalConfiguration rootConfiguration = configurationLoader.getRootConfiguration();
+    assertTrue(rootConfiguration.isThrowExceptionOnMissing());
+    testNoSuchElementException(rootConfiguration);
 
-		assertEquals("http", configuration.getString("connector.class"));
+    Configuration configuration = Configurations.subset(rootConfiguration, "tracker");
 
-		Configuration connectorConfiguration = configuration
-				.subset("connector");
-		assertEquals("0.0.0.0", connectorConfiguration
-				.getString("listenaddress.host"));
-		assertEquals("1665", connectorConfiguration
-				.getString("listenaddress.port"));
-	}
+    testNoSuchElementException(configuration);
+
+    testNoSuchElementException(configuration);
+
+    assertEquals("http", configuration.getString("connector.class"));
+
+    Configuration connectorConfiguration = Configurations.subset(configuration, "connector");
+    assertEquals("0.0.0.0", connectorConfiguration.getString("listenaddress.host"));
+    assertEquals("1665", connectorConfiguration.getString("listenaddress.port"));
+  }
+
+  private void testNoSuchElementException(Configuration configuration) {
+    assertTrue(((AbstractConfiguration) configuration).isThrowExceptionOnMissing());
+    
+    try {
+      configuration.getString("dummy");
+      fail(configuration + " should throw a NoSuchElementException");
+    } catch (NoSuchElementException e) {
+
+    }
+  }
 
 }

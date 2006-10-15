@@ -24,6 +24,7 @@
 package org.kolaka.freecast.setup;
 
 import org.apache.commons.configuration.HierarchicalConfiguration;
+import org.kolaka.freecast.config.Configurations;
 import org.kolaka.freecast.swing.ConfigurableResources;
 import org.kolaka.freecast.swing.Resources;
 import org.kolaka.freecast.swing.SwingApplication;
@@ -40,8 +41,7 @@ public class Main extends SwingApplication {
 
   protected void postInit(HierarchicalConfiguration configuration) throws Exception {
     super.postInit(configuration);
-    Resources resources = new ConfigurableResources(configuration
-        .subset("gui.setup"));
+    Resources resources = new ConfigurableResources(Configurations.subset(configuration, "gui.setup"));
   }
 
   protected void run() throws Exception {

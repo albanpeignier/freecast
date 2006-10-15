@@ -4,7 +4,7 @@
  * This code was developped by Alban Peignier (http://people.tryphon.org/~alban/) 
  * and contributors (their names can be found in the CONTRIBUTORS file).
  *
- * Copyright (C) 2004-2006 Alban Peignier
+ * Copyright (C) 2004-2005 Alban Peignier
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -20,7 +20,6 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package org.kolaka.freecast.swing;
 
 import java.awt.Color;
@@ -39,6 +38,7 @@ import org.apache.commons.configuration.DataConfiguration;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.LogFactory;
+import org.kolaka.freecast.config.Configurations;
 import org.kolaka.freecast.resource.ClassResourceLocator;
 import org.kolaka.freecast.resource.CompositeResourceLocator;
 import org.kolaka.freecast.resource.ResourceLocator;
@@ -64,7 +64,7 @@ public class ConfigurableResources implements Resources {
 	}
 	
 	public Resources subset(String name) {
-		return new ConfigurableResources(configuration.subset(name));
+		return new ConfigurableResources(Configurations.subset(configuration,name));
 	}
 
 	public void setResourceLocator(ResourceLocator resourceLocator) {
@@ -77,12 +77,12 @@ public class ConfigurableResources implements Resources {
 	}
 
 	private String getString(String name) throws ResourcesException {
-    String string = configuration.getString(name);
-    if (string == null) {
-      throw new ResourcesException(
-          "Can't find the configuration value for '" + name + "'");
-    }
-    return string;
+		try {
+			return configuration.getString(name);
+		} catch (NoSuchElementException e) {
+			throw new ResourcesException(
+					"Can't find the configuration value for '" + name + "'", e);
+		}
 	}
 
 	public String getText(String name) throws ResourcesException {
@@ -122,11 +122,11 @@ public class ConfigurableResources implements Resources {
 	}
 
 	public Color getColor(String name) throws ResourcesException {
-		Color color = configuration.getColor(name);
-    if (color == null) {
-      throw new ResourcesException("Can't find the color " + name);
-    }
-    return color;
+		try {
+			return configuration.getColor(name);
+		} catch (NoSuchElementException e) {
+			throw new ResourcesException("Can't find the color " + name, e);
+		}
 	}
 
 }

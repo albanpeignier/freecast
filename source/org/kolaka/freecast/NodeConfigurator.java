@@ -26,6 +26,8 @@ package org.kolaka.freecast;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -35,9 +37,10 @@ import java.util.TreeSet;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.DataConfiguration;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.LogFactory;
-import org.kolaka.freecast.config.InetSocketAddressConfigurator;
+import org.kolaka.freecast.config.Configurations;
 import org.kolaka.freecast.net.InetSocketAddressSpecification;
 import org.kolaka.freecast.net.InetSocketAddressSpecificationParser;
 import org.kolaka.freecast.net.SpecificationDatagramSelector;
@@ -67,16 +70,20 @@ import org.kolaka.freecast.tracker.NetworkIdentifier;
 import org.kolaka.freecast.transport.MinaPeerReceivingConnectionFactory;
 import org.kolaka.freecast.transport.MinaPeerSendingConnectionFactory;
 import org.kolaka.freecast.transport.cas.ConnectionAssistantClient;
-import org.kolaka.freecast.transport.receiver.PeerReceiverConfiguration;
+import org.kolaka.freecast.transport.receiver.BandwidthControler;
+import org.kolaka.freecast.transport.receiver.EncoderFormat;
 import org.kolaka.freecast.transport.receiver.PeerReceiverControler;
+import org.kolaka.freecast.transport.receiver.Playlist;
+import org.kolaka.freecast.transport.receiver.PlaylistEncoderReceiver;
+import org.kolaka.freecast.transport.receiver.PlaylistReceiver;
 import org.kolaka.freecast.transport.receiver.Receiver;
-import org.kolaka.freecast.transport.receiver.ReceiverConfiguration;
-import org.kolaka.freecast.transport.receiver.ReceiverConfigurationLoader;
-import org.kolaka.freecast.transport.receiver.ReceiverConfigurator;
 import org.kolaka.freecast.transport.receiver.ReceiverControler;
+import org.kolaka.freecast.transport.receiver.ResourcePlaylist;
+import org.kolaka.freecast.transport.receiver.ShoutClientReceiver;
+import org.kolaka.freecast.transport.receiver.ShoutServerReceiver;
 import org.kolaka.freecast.transport.receiver.SourceReceiver;
-import org.kolaka.freecast.transport.receiver.SourceReceiverConfiguration;
 import org.kolaka.freecast.transport.receiver.SourceReceiverControler;
+import org.kolaka.freecast.transport.receiver.StaticBandwidthControler;
 import org.kolaka.freecast.transport.sender.PeerSenderControler;
 
 /**
@@ -102,8 +109,8 @@ public class NodeConfigurator {
 	 */
 	public void configure(ConfigurableNode node, Configuration configuration)
 			throws ConfigurationException, IOException {
-    Configuration peerProviderConfiguration = configuration.subset("peerprovider");
-		Configuration trackerAddressConfiguration = peerProviderConfiguration.subset("trackeraddress");
+    Configuration peerProviderConfiguration = Configurations.subset(configuration, "peerprovider");
+		Configuration trackerAddressConfiguration = Configurations.subset(peerProviderConfiguration, "trackeraddress");
 		InetSocketAddress trackerAddress = new InetSocketAddress(
 				trackerAddressConfiguration.getString("host"),
 				trackerAddressConfiguration.getInt("port"));
@@ -113,10 +120,10 @@ public class NodeConfigurator {
 						+ trackerAddress);
 		DefaultNodeService nodeService = new DefaultNodeService(trackerAddress);
     
-    if (peerProviderConfiguration.containsKey("networkid")) {
+    try {
       nodeService.setNetworkId(NetworkIdentifier.getInstance(peerProviderConfiguration.getString("networkid")));
-    } else {
-      LogFactory.getLog(getClass()).debug("no network identifier in configuration");
+    } catch (NoSuchElementException e) {
+      LogFactory.getLog(getClass()).trace("no network identifier in configuration", e);
     }
     
     node.setNodeService(nodeService);
@@ -128,7 +135,7 @@ public class NodeConfigurator {
 		PeerReference peerReference = null;
 		ConnectionAssistantClient caClient = null;
 		
-		Configuration casConfiguration = configuration.subset("connection-assistant");
+		Configuration casConfiguration = Configurations.subset(configuration, "connection-assistant");
 		if (!casConfiguration.isEmpty()) {
 			InetSocketAddress casAddress = new InetSocketAddress(
 					casConfiguration.getString("host"),
@@ -138,7 +145,7 @@ public class NodeConfigurator {
 			node.setConnectionAssistantClient(caClient);
 		}
 
-		Configuration senderConfiguration = configuration.subset("sender");
+		Configuration senderConfiguration = Configurations.subset(configuration, "sender");
 		if (!senderConfiguration.isEmpty()) {
 			String senderClass = senderConfiguration.getString("class");
 			if (senderClass.equals("socket")) {
@@ -147,8 +154,7 @@ public class NodeConfigurator {
 			} 
 			
 			if (senderClass.equals("udp")) {
-				Configuration listenAddressConfiguration = senderConfiguration
-						.subset("listenaddress");
+				Configuration listenAddressConfiguration = Configurations.subset(senderConfiguration, "listenaddress");
 
 				InetSocketAddressSpecification listenAddressSpecification = loadInetSocketAddressSpecification(listenAddressConfiguration);
 
@@ -170,8 +176,7 @@ public class NodeConfigurator {
 
 				PeerReferenceLoader peerReferenceLoader = new PeerReferenceLoader();
 				peerReferenceLoader.setListenAddress(listenAddress);
-				peerReference = peerReferenceLoader.load(senderConfiguration
-						.subset("reference"));
+				peerReference = peerReferenceLoader.load(Configurations.subset(senderConfiguration,"reference"));
 			} else if (senderClass.equals("none")) {
 				LogFactory
 						.getLog(getClass())
@@ -193,18 +198,54 @@ public class NodeConfigurator {
 			}
 		}
 
-    DataConfiguration receiverConfiguration = new DataConfiguration(
-        configuration.subset("receiver"));
-    
-		ReceiverConfiguration receiverBeanConfiguration = new ReceiverConfigurationLoader().load(receiverConfiguration);
+		DataConfiguration receiverConfiguration = new DataConfiguration(
+        Configurations.subset(configuration, "receiver"));
 
 		ReceiverControler receiverControler = null;
 		Receiver receiver = null;
 
-    if (receiverBeanConfiguration instanceof SourceReceiverConfiguration) {
-      ReceiverConfigurator configurator = ReceiverConfigurator.getInstance((SourceReceiverConfiguration) receiverBeanConfiguration);
-      receiver = configurator.configure(receiverBeanConfiguration);
-    } else if (receiverBeanConfiguration instanceof PeerReceiverConfiguration) {
+		String receiverClass = receiverConfiguration.getString("class");
+		if (receiverClass.equals("shoutclient")) {
+			receiver = new ShoutClientReceiver(receiverConfiguration
+					.getURL("url"));
+		} else if (receiverClass.equals("playlist")
+				|| receiverClass.equals("encoder-playlist")) {
+			String playlistURIString = receiverConfiguration.getString("url");
+			URI playlistURI = null;
+			try {
+				playlistURI = new URI(playlistURIString);
+			} catch (URISyntaxException e) {
+				throw new ConfigurationException("invalid playlist url: '"
+						+ playlistURIString, e);
+			}
+
+			Playlist playlist = ResourcePlaylist.getInstance(resourceLocator,
+					playlistURI);
+
+			if (receiverClass.equals("playlist")) {
+				receiver = new PlaylistReceiver(playlist);
+				int bandwidth = receiverConfiguration.getInt("bandwidth", 35);
+				LogFactory.getLog(getClass()).warn(
+						"the playlist receiver uses a static bandwidth controler at "
+								+ bandwidth);
+				BandwidthControler bandwidthControler = new StaticBandwidthControler(
+						(int) (bandwidth * FileUtils.ONE_KB));
+				((PlaylistReceiver) receiver)
+						.setBandwidthControler(bandwidthControler);
+			} else {
+				int channels = receiverConfiguration.getInt("channels", 2);
+				int sampleRate = receiverConfiguration.getInt("sampleRate",
+						44100);
+				float quality = receiverConfiguration.getFloat("quality", 0);
+				EncoderFormat format = new EncoderFormat(channels, sampleRate,
+						quality);
+				receiver = new PlaylistEncoderReceiver(playlist, format);
+			}
+		} else if (receiverClass.equals("shoutserver")) {
+			InetSocketAddress listenAddress = loadInetSocketAddress(Configurations.subset(receiverConfiguration
+,"listenaddress"));
+			receiver = new ShoutServerReceiver(listenAddress);
+		} else if (receiverClass.equals("peer")) {
 			MinaPeerReceivingConnectionFactory connectionFactory = new MinaPeerReceivingConnectionFactory();
 			peerControler.register(connectionFactory);
 			connectionFactory.setStatusProvider(node.getNodeStatusProvider());
@@ -213,8 +254,8 @@ public class NodeConfigurator {
 			}
 			receiverControler = new PeerReceiverControler(peerControler, connectionFactory);
 		} else {
-			throw new ConfigurationException("Unknown receiver configuration: '"
-					+ receiverBeanConfiguration + "'");
+			throw new ConfigurationException("Unknown receiver class: '"
+					+ receiverClass + "'");
 		}
 
 		if (receiverControler == null) {
@@ -230,7 +271,7 @@ public class NodeConfigurator {
 
 		if (receiverControler instanceof PacketChecksummerUser) {
 			DataConfiguration checksummerConfiguration = new DataConfiguration(
-					receiverConfiguration.subset("checksummer"));
+          Configurations.subset(receiverConfiguration ,"checksummer"));
 			if (!checksummerConfiguration.isEmpty()) {
 				PacketChecksummer checksummer;
 				String checksummerClass = checksummerConfiguration
@@ -259,7 +300,7 @@ public class NodeConfigurator {
 			}
 		} else if (receiverControler instanceof PacketValidatorUser) {
 			DataConfiguration validatorConfiguration = new DataConfiguration(
-					receiverConfiguration.subset("validator"));
+          Configurations.subset(receiverConfiguration, "validator"));
 			if (!validatorConfiguration.isEmpty()) {
 				PacketValidator validator;
 				String validatorClass = validatorConfiguration
@@ -294,7 +335,7 @@ public class NodeConfigurator {
 				"install ReceiverControler " + receiverControler);
 		node.setReceiverControler(receiverControler);
 
-		Configuration playersConfiguration = configuration.subset("players");
+		Configuration playersConfiguration = Configurations.subset(configuration, "players");
 
 		if (!playersConfiguration.isEmpty()) {
 			Set playerClasses = new TreeSet(playersConfiguration
@@ -316,8 +357,7 @@ public class NodeConfigurator {
 							"player.framerate", 30));
 					playerSource = videoPlayerSource;
 				} else if (playerClass.equals("http")) {
-					InetSocketAddress listenAddress = loadInetSocketAddress(playersConfiguration
-							.subset("player.listenaddress"));
+					InetSocketAddress listenAddress = loadInetSocketAddress(Configurations.subset(playersConfiguration, "player.listenaddress"));
 					playerSource = new HttpPlayerSource(listenAddress);
 				} else {
 					throw new ConfigurationException("Unknwon player class: '"
@@ -334,7 +374,9 @@ public class NodeConfigurator {
 	}
 
 	private InetSocketAddress loadInetSocketAddress(Configuration configuration) {
-		return new InetSocketAddressConfigurator().load(configuration);
+		return new InetSocketAddress(
+				configuration.getString("host", "0.0.0.0"), configuration
+						.getInt("port"));
 	}
 
 	private InetSocketAddressSpecification loadInetSocketAddressSpecification(

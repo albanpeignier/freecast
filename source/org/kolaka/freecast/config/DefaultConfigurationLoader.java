@@ -48,10 +48,6 @@ import org.kolaka.freecast.resource.ResourceLocators;
  */
 public class DefaultConfigurationLoader implements ConfigurationLoader {
   
-  static {
-    AbstractConfiguration.setDefaultListDelimiter('#');
-  }
-
 	private final String defaultsName;
 
 	private URI userURI;
@@ -147,7 +143,11 @@ public class DefaultConfigurationLoader implements ConfigurationLoader {
 
 	protected HierarchicalConfiguration loadConfiguration() throws ConfigurationException {
     CombinedConfiguration configuration = new CombinedConfiguration();
-		if (!userProperties.isEmpty()) {
+    // two special rules for Configuration
+    configuration.setThrowExceptionOnMissing(true);
+    configuration.setDelimiterParsingDisabled(true);
+
+    if (!userProperties.isEmpty()) {
 			LogFactory.getLog(getClass()).trace("use user properties: " + userProperties);
 			configuration
 					.addConfiguration(new MapConfiguration(userProperties));
@@ -155,7 +155,7 @@ public class DefaultConfigurationLoader implements ConfigurationLoader {
 		configuration.addConfiguration(loadUserConfiguration());
 		completeConfiguration(configuration);
 
-		configuration.setThrowExceptionOnMissing(true);
+    
 		return configuration;
 	}
 

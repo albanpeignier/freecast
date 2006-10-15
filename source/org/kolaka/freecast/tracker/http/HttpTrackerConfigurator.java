@@ -31,6 +31,7 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.logging.LogFactory;
+import org.kolaka.freecast.config.Configurations;
 import org.kolaka.freecast.tracker.NoConfiguredTrackerException;
 import org.kolaka.freecast.tracker.statistics.TrackerStatisticsConsumer;
 import org.kolaka.freecast.tracker.statistics.TrackerStatisticsConsumerLoader;
@@ -57,14 +58,13 @@ public class HttpTrackerConfigurator {
     }
     tracker.setMultiTracker(multiTracker);
     
-		Configuration listenAddressConfiguration = configuration
-				.subset("connector.listenaddress");
+		Configuration listenAddressConfiguration = Configurations.subset(configuration,"connector.listenaddress");
 		InetSocketAddress listenAddress = new InetSocketAddress(
 				listenAddressConfiguration.getString("host"),
 				listenAddressConfiguration.getInt("port"));
 		tracker.setListenAddress(listenAddress);
 		
-		Configuration casConfiguration = configuration.subset("connection-assistant.listenaddress");
+		Configuration casConfiguration = Configurations.subset(configuration,"connection-assistant.listenaddress");
 		if (!casConfiguration.isEmpty()) {
 			InetSocketAddress casListenAddress = new InetSocketAddress(
 					casConfiguration.getString("host"),
@@ -74,7 +74,7 @@ public class HttpTrackerConfigurator {
 			tracker.setConnectionAssistantServer(server);
 		}
     
-    HierarchicalConfiguration statisticsConfiguration = (HierarchicalConfiguration) configuration.subset("statistics");
+    HierarchicalConfiguration statisticsConfiguration = Configurations.subset(configuration,"statistics");
 
     tracker.enableStatsServlet(statisticsConfiguration.getBoolean("xml", true));
     tracker.getConsumerManager().setDelay(statisticsConfiguration.getInt("update", 60));
