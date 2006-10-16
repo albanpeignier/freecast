@@ -31,7 +31,7 @@ public class Configurations {
 
   public static Configuration subset(Configuration parent, String prefix) {
     Configuration child = parent.subset(prefix);
-     return initFrom(child, parent);
+    return initFrom(child, parent);
   }
 
   public static HierarchicalConfiguration subset(HierarchicalConfiguration parent, String prefix) {
@@ -40,7 +40,6 @@ public class Configurations {
 
   public static Configuration initFrom(Configuration child, Configuration parent) {
      if (child instanceof HierarchicalConfiguration && parent instanceof HierarchicalConfiguration) {
-       initFrom((HierarchicalConfiguration) child, (HierarchicalConfiguration) parent);
      } else  if (child instanceof AbstractConfiguration && parent instanceof AbstractConfiguration) {
        initFrom((AbstractConfiguration) child, (AbstractConfiguration) parent);
      } else {

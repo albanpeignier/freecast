@@ -23,11 +23,15 @@
 
 package org.kolaka.freecast.setup;
 
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
+import org.apache.commons.configuration.XMLConfiguration;
+import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.config.Configurations;
 import org.kolaka.freecast.swing.ConfigurableResources;
 import org.kolaka.freecast.swing.Resources;
 import org.kolaka.freecast.swing.SwingApplication;
+import org.kolaka.freecast.transport.receiver.ReceiverConfigurationLoader;
 import org.kolaka.freecast.transport.receiver.TestReceiverConfiguration;
 import org.pietschy.wizard.Wizard;
 import org.pietschy.wizard.WizardEvent;
@@ -56,7 +60,14 @@ public class Main extends SwingApplication {
         exit();
       }
       public void wizardClosed(WizardEvent event) {
-        System.out.println(model.getConfiguration());
+        // System.out.println(model.getConfiguration());
+        new ReceiverConfigurationLoader().save(model.getConfiguration(), getUserConfiguration());
+        
+        try {
+          saveUserConfiguration();
+        } catch (ConfigurationException e) {
+          LogFactory.getLog(Main.this.getClass()).error("can't save configuration", e);
+        }
         exit();
       }
     });

@@ -29,11 +29,14 @@ import org.apache.commons.configuration.Configuration;
 
 public class InetSocketAddressConfigurator {
 
+  public static final String PROPERTY_PORT = "port";
+  public static final String PROPERTY_HOST = "host";
+
   public InetSocketAddress load(Configuration configuration) {
-    String host = configuration.getString("host", "0.0.0.0");
-    int port = configuration.getInt("port");
+    String host = configuration.getString(PROPERTY_HOST, "0.0.0.0");
+    int port = configuration.getInt(PROPERTY_PORT);
     
     return new InetSocketAddress(host, port);
   }
-
+  
 }

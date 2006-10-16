@@ -32,7 +32,7 @@ import org.kolaka.freecast.resource.URIs;
 public class PlaylistReceiverConfiguration extends SourceReceiverConfiguration {
 	
 	private URI uri;
-  private long bandwidth;
+  private int bandwidth;
 
 	public URI getUri() {
 		return uri;
@@ -42,11 +42,11 @@ public class PlaylistReceiverConfiguration extends SourceReceiverConfiguration {
 		this.uri = uri;
 	}
 
-	public long getBandwidth() {
+	public int getBandwidth() {
 		return bandwidth;
 	}
 
-	public void setBandwidth(long bandwidth) {
+	public void setBandwidth(int bandwidth) {
 		this.bandwidth = bandwidth;
 	}
 	

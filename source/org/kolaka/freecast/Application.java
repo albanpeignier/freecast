@@ -35,6 +35,8 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.SystemUtils;
@@ -64,10 +66,20 @@ public abstract class Application {
 
 	private HierarchicalConfiguration configuration;
 
+  private ConfigurationLoader configurationLoader;
+
 	protected Application(String name) {
 		this.name = name;
 		this.resourceLocator = createResourceLocator();
 	}
+  
+  public Configuration getUserConfiguration() {
+    return configurationLoader.getUserConfiguration();
+  }
+  
+  public void saveUserConfiguration() throws ConfigurationException {
+    configurationLoader.saveUserConfiguration();
+  }
 
 	private ResourceLocator createResourceLocator() {
 		CompositeResourceLocator locator = new CompositeResourceLocator();
@@ -149,23 +161,23 @@ public abstract class Application {
 
 		boolean dryrun = line.hasOption(dryrunOption.getOpt());
 
-		ConfigurationLoader loader = createConfigurationLoader();
-		loader.setResourceLocator(getResourceLocator());
+		configurationLoader = createConfigurationLoader();
+    configurationLoader.setResourceLocator(getResourceLocator());
 
 		if (line.hasOption(configOption.getOpt())) {
-			URI userURI = new URI(line.getOptionValue(configOption.getOpt()));
-			loader.setUserURI(userURI);
+			URI commandLineURI = new URI(line.getOptionValue(configOption.getOpt()));
+			configurationLoader.setCommandLineURI(commandLineURI);
 		}
 		if (line.hasOption(propertyOption.getOpt())) {
 			String values[] = line.getOptionValues(propertyOption.getOpt());
 			for (int i = 0; i < values.length; i += 2) {
-				loader.addUserProperty(values[i], values[i + 1]);
+				configurationLoader.addCommandLineProperty(values[i], values[i + 1]);
 			}
 		}
 
-		loader.load();
+		configurationLoader.load();
 
-		this.configuration = loader.getRootConfiguration();
+		this.configuration = configurationLoader.getRootConfiguration();
 		postInit(configuration);
 
 		return !dryrun;

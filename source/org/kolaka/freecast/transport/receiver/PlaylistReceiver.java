@@ -53,7 +53,7 @@ public class PlaylistReceiver extends OggSourceFactoryReceiver {
     if (bandwidthControler instanceof StaticBandwidthControler) {
       long bandwidth = 
         ((StaticBandwidthControler) bandwidthControler).getBandwidth() / FileUtils.ONE_KB;
-      configuration.setBandwidth(bandwidth);
+      configuration.setBandwidth((int) bandwidth);
     }
     
     return configuration;

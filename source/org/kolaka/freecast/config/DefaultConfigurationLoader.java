@@ -23,6 +23,7 @@
 
 package org.kolaka.freecast.config;
 
+import java.io.File;
 import java.net.URI;
 import java.net.URL;
 import java.util.Iterator;
@@ -31,12 +32,15 @@ import java.util.Properties;
 import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.CombinedConfiguration;
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.DefaultConfigurationBuilder;
+import org.apache.commons.configuration.FileConfiguration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.MapConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
+import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.resource.ResourceLocator;
 import org.kolaka.freecast.resource.ResourceLocators;
@@ -50,9 +54,11 @@ public class DefaultConfigurationLoader implements ConfigurationLoader {
   
 	private final String defaultsName;
 
-	private URI userURI;
+	private URI commandLineURI;
 
-	protected Properties userProperties = new Properties();
+  private File userFile = new File(new File(SystemUtils.USER_HOME, ".freecast"), "config.xml");
+  
+	protected Properties commandLineProperties = new Properties();
 
 	protected HierarchicalConfiguration configuration;
 
@@ -61,13 +67,13 @@ public class DefaultConfigurationLoader implements ConfigurationLoader {
 	public void setResourceLocator(ResourceLocator locator) {
 		this.locator = locator;
 	}
-
-	public void setUserURI(URI userURI) {
-		this.userURI = userURI;
+  
+	public void setCommandLineURI(URI commandLineURI) {
+		this.commandLineURI = commandLineURI;
 	}
-
-	public void addUserProperty(String property, String value) {
-		userProperties.put(property, value);
+  
+	public void addCommandLineProperty(String property, String value) {
+		commandLineProperties.put(property, value);
 	}
 
 	public DefaultConfigurationLoader(String defaultsName) {
@@ -87,29 +93,56 @@ public class DefaultConfigurationLoader implements ConfigurationLoader {
 				"loaded configuration: " + sb.toString());
 	}
 
-	protected AbstractConfiguration loadUserConfiguration()
+	protected AbstractConfiguration loadCommandLineConfiguration()
 			throws ConfigurationException {
-		if (userURI == null) {
+		if (commandLineURI == null) {
 			return new BaseConfiguration();
 		}
 
 		LogFactory.getLog(getClass()).debug(
-				"load the user configuration from " + userURI);
+				"load the command line configuration from " + commandLineURI);
 		XMLConfiguration configuration = new XMLConfiguration();
 		try {
-			configuration.load(locator.openResource(userURI));
+			configuration.load(locator.openResource(commandLineURI));
 		} catch (ResourceLocator.Exception e) {
 			throw new ConfigurationException(
-					"Can't load the user configuration URI " + userURI, e);
+					"Can't load the command line configuration URI " + commandLineURI, e);
 		}
 		return configuration;
 	}
+  
+  protected XMLConfiguration loadUserConfiguration()
+  throws ConfigurationException {
+    LogFactory.getLog(getClass()).debug(
+        "load the user configuration from " + userFile);
+    XMLConfiguration configuration = new XMLConfiguration(userFile);
+    configuration.setRootElementName("freecast");
+    try {
+      configuration.load();
+    } catch (ConfigurationException e) {
+      LogFactory.getLog(getClass()).info("no user configuration found");
+      LogFactory.getLog(getClass()).debug(
+          "can't load user configuration from " + userFile, e);
+    }
+    return configuration;
+  }
+  
+  public Configuration getUserConfiguration() {
+    return userConfiguration;
+  }
+  
+  public void saveUserConfiguration() throws ConfigurationException {
+    userFile.getParentFile().mkdirs();
+    userConfiguration.save();
+  }
 
 	public HierarchicalConfiguration getRootConfiguration() {
 		return configuration;
 	}
   
   private static final AbstractConfiguration EMPTY_CONFIGURATION = new PropertiesConfiguration();
+
+  private XMLConfiguration userConfiguration;
 
 	protected AbstractConfiguration loadDefaultConfiguration(String name)
 			throws ConfigurationException {
@@ -147,12 +180,14 @@ public class DefaultConfigurationLoader implements ConfigurationLoader {
     configuration.setThrowExceptionOnMissing(true);
     configuration.setDelimiterParsingDisabled(true);
 
-    if (!userProperties.isEmpty()) {
-			LogFactory.getLog(getClass()).trace("use user properties: " + userProperties);
+    if (!commandLineProperties.isEmpty()) {
+			LogFactory.getLog(getClass()).trace("use command line properties: " + commandLineProperties);
 			configuration
-					.addConfiguration(new MapConfiguration(userProperties));
+					.addConfiguration(new MapConfiguration(commandLineProperties));
 		}
-		configuration.addConfiguration(loadUserConfiguration());
+		configuration.addConfiguration(loadCommandLineConfiguration());
+    userConfiguration = loadUserConfiguration();
+    configuration.addConfiguration(userConfiguration);
 		completeConfiguration(configuration);
 
     
