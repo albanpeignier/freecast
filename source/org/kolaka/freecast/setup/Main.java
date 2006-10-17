@@ -25,9 +25,9 @@ package org.kolaka.freecast.setup;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
-import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.config.Configurations;
+import org.kolaka.freecast.config.UserConfiguration;
 import org.kolaka.freecast.swing.ConfigurableResources;
 import org.kolaka.freecast.swing.Resources;
 import org.kolaka.freecast.swing.SwingApplication;
@@ -61,10 +61,11 @@ public class Main extends SwingApplication {
       }
       public void wizardClosed(WizardEvent event) {
         // System.out.println(model.getConfiguration());
-        new ReceiverConfigurationLoader().save(model.getConfiguration(), getUserConfiguration());
+        UserConfiguration userConfiguration = getUserConfiguration();
+        new ReceiverConfigurationLoader().save(model.getConfiguration(), userConfiguration.getConfiguration());
         
         try {
-          saveUserConfiguration();
+          userConfiguration.save();
         } catch (ConfigurationException e) {
           LogFactory.getLog(Main.this.getClass()).error("can't save configuration", e);
         }

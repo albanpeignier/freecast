@@ -4,7 +4,7 @@
  * This code was developped by Alban Peignier (http://people.tryphon.org/~alban/) 
  * and contributors (their names can be found in the CONTRIBUTORS file).
  *
- * Copyright (C) 2004-2006 Alban Peignier
+ * Copyright (C) 2004 Alban Peignier
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -23,30 +23,13 @@
 
 package org.kolaka.freecast.config;
 
-import java.net.URI;
-
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.HierarchicalConfiguration;
-import org.kolaka.freecast.resource.ResourceLocator;
 
-/**
- * 
- * 
- * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
- */
-public interface ConfigurationLoader {
+public interface UserConfiguration {
 
-	void load() throws ConfigurationException;
-
-  HierarchicalConfiguration getRootConfiguration();
-
-	void setCommandLineURI(URI userURI);
-
-	void addCommandLineProperty(String property, String value);
-
-	void setResourceLocator(ResourceLocator locator);
+  Configuration getConfiguration();
   
-  UserConfiguration getUserConfiguration();
-
+  void save() throws ConfigurationException;
+  
 }

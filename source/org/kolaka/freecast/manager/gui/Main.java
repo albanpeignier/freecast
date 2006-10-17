@@ -119,7 +119,7 @@ public class Main extends SwingApplication {
         Configurations.subset(configuration, "gui"));
 		resources.setResourceLocator(getResourceLocator());
     
-		frame = new MainFrame(resources, tracker, node, listenPage);
+		frame = new MainFrame(resources, tracker, node, listenPage, getUserConfiguration());
 		frame.setQuitAction(createQuitAction(resources));
 		frame.init();
 	}

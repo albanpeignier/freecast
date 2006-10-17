@@ -35,8 +35,6 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.SystemUtils;
@@ -47,6 +45,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.kolaka.freecast.config.ConfigurationLoader;
 import org.kolaka.freecast.config.DefaultConfigurationLoader;
+import org.kolaka.freecast.config.UserConfiguration;
 import org.kolaka.freecast.resource.ClassLoaderResourceLocator;
 import org.kolaka.freecast.resource.CompositeResourceLocator;
 import org.kolaka.freecast.resource.FileResourceLocator;
@@ -73,12 +72,8 @@ public abstract class Application {
 		this.resourceLocator = createResourceLocator();
 	}
   
-  public Configuration getUserConfiguration() {
+  public UserConfiguration getUserConfiguration() {
     return configurationLoader.getUserConfiguration();
-  }
-  
-  public void saveUserConfiguration() throws ConfigurationException {
-    configurationLoader.saveUserConfiguration();
   }
 
 	private ResourceLocator createResourceLocator() {

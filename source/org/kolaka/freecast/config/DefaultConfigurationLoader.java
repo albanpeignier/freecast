@@ -55,7 +55,7 @@ public class DefaultConfigurationLoader implements ConfigurationLoader {
 
 	private URI commandLineURI;
 
-  private File userFile = new File(new File(SystemUtils.USER_HOME, ".freecast"), "config.xml");
+  private File userFile;
   
 	protected Properties commandLineProperties = new Properties();
 
@@ -77,6 +77,7 @@ public class DefaultConfigurationLoader implements ConfigurationLoader {
 
 	public DefaultConfigurationLoader(String defaultsName) {
 		this.defaultsName = defaultsName;
+    userFile = new File(new File(SystemUtils.USER_HOME, ".freecast"), "config-" + defaultsName + ".xml");
 	}
 
 	protected void logConfiguration() {
@@ -112,11 +113,11 @@ public class DefaultConfigurationLoader implements ConfigurationLoader {
   
   protected XMLConfiguration loadUserConfiguration()
   throws ConfigurationException {
-    LogFactory.getLog(getClass()).debug(
-        "load the user configuration from " + userFile);
     XMLConfiguration configuration = new XMLConfiguration(userFile);
     
-    if (userFile.exists())
+    if (userFile.exists()) {
+      LogFactory.getLog(getClass()).debug(
+          "load the user configuration from " + userFile);
       try {
         configuration.load();
       } catch (ConfigurationException e) {
@@ -124,20 +125,28 @@ public class DefaultConfigurationLoader implements ConfigurationLoader {
         LogFactory.getLog(getClass()).debug(
             "can't load user configuration from " + userFile, e);
       } 
-    else {
+    } else {
+      LogFactory.getLog(getClass()).debug(
+          "no user configuration in " + userFile);
       configuration.setRootElementName("freecast");
     }
     
     return configuration;
   }
   
-  public Configuration getUserConfiguration() {
-    return userConfiguration;
-  }
-  
-  public void saveUserConfiguration() throws ConfigurationException {
-    userFile.getParentFile().mkdirs();
-    userConfiguration.save();
+  public UserConfiguration getUserConfiguration() {
+    return new UserConfiguration() {
+      public Configuration getConfiguration() {
+        return userConfiguration;
+      }
+      public void save() throws ConfigurationException {
+        LogFactory.getLog(getClass()).debug(
+            "save user configuration in " + userFile);
+        
+        userFile.getParentFile().mkdirs();
+        userConfiguration.save();
+      }
+    };
   }
 
 	public HierarchicalConfiguration getRootConfiguration() {
@@ -190,6 +199,7 @@ public class DefaultConfigurationLoader implements ConfigurationLoader {
 					.addConfiguration(new MapConfiguration(commandLineProperties));
 		}
 		configuration.addConfiguration(loadCommandLineConfiguration());
+    
     userConfiguration = loadUserConfiguration();
     configuration.addConfiguration(userConfiguration);
 		completeConfiguration(configuration);

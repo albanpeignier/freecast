@@ -27,12 +27,15 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JFrame;
 
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.LogFactory;
+import org.kolaka.freecast.config.UserConfiguration;
 import org.kolaka.freecast.node.ConfigurableNode;
 import org.kolaka.freecast.swing.BaseAction;
 import org.kolaka.freecast.swing.ErrorPane;
 import org.kolaka.freecast.swing.Resources;
 import org.kolaka.freecast.swing.ResourcesException;
+import org.kolaka.freecast.transport.receiver.ReceiverConfigurationLoader;
 import org.kolaka.freecast.transport.receiver.ReceiverConfigurations;
 import org.kolaka.freecast.transport.receiver.SourceReceiverConfiguration;
 import org.pietschy.wizard.Wizard;
@@ -48,12 +51,14 @@ public class SetupAction extends BaseAction {
 	private final JFrame parent;
 	private final Resources resources;
 	private final ConfigurableNode node;
+  private final UserConfiguration userConfiguration;
 	
-	public SetupAction(Resources resources, JFrame parent, ConfigurableNode node) throws ResourcesException {
+	public SetupAction(Resources resources, JFrame parent, ConfigurableNode node, UserConfiguration configuration) throws ResourcesException {
 		super("Configure FreeCast");
 		this.parent = parent;
 		this.resources = resources;
 		this.node = node;
+    this.userConfiguration = configuration;
 		loadIcons(resources, "main");
 	}
 	
@@ -73,6 +78,14 @@ public class SetupAction extends BaseAction {
       public void wizardClosed(WizardEvent event) {
         SourceReceiverConfiguration configuration = model.getConfiguration();
         LogFactory.getLog(getClass()).debug("configuration returns by setup dialog: " + configuration);
+
+        new ReceiverConfigurationLoader().save(model.getConfiguration(), userConfiguration.getConfiguration());
+        
+        try {
+          userConfiguration.save();
+        } catch (ConfigurationException e) {
+          LogFactory.getLog(getClass()).error("can't save configuration", e);
+        }
 
         if (configuration.equals(node.getReceiverControler().getReceiverConfiguration())) {
           LogFactory.getLog(getClass()).debug("configuration not changed");

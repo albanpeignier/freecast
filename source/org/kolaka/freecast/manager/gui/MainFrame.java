@@ -27,6 +27,9 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
@@ -42,6 +45,7 @@ import javax.swing.border.Border;
 
 import org.apache.commons.lang.StringUtils;
 import org.kolaka.freecast.auditor.AuditorFactory;
+import org.kolaka.freecast.config.UserConfiguration;
 import org.kolaka.freecast.lang.mutable.ObservableValue;
 import org.kolaka.freecast.node.ConfigurableNode;
 import org.kolaka.freecast.node.Node;
@@ -49,6 +53,7 @@ import org.kolaka.freecast.peer.Peer;
 import org.kolaka.freecast.peer.PeerControler;
 import org.kolaka.freecast.peer.PeerReference;
 import org.kolaka.freecast.setup.SetupAction;
+import org.kolaka.freecast.swing.ActionEventFactory;
 import org.kolaka.freecast.swing.AsyncAction;
 import org.kolaka.freecast.swing.BaseFrame;
 import org.kolaka.freecast.swing.ConfigurableResources;
@@ -79,7 +84,7 @@ public class MainFrame extends BaseFrame {
 	private final Action setupAction;
 
 	public MainFrame(Resources resources, TrackerService tracker, ConfigurableNode node,
-			URL listenPage) throws ResourcesException {
+			URL listenPage, UserConfiguration configuration) throws ResourcesException {
 		super(resources);
 
 		this.tracker = tracker;
@@ -89,7 +94,16 @@ public class MainFrame extends BaseFrame {
 		visitAction = new AsyncAction(new BrowseHomepageAction(resources, listenPage, localListenPage));
 		emailHomepageAction = new AsyncAction(new EmailHomepageAction(resources,
 				listenPage));
-		setupAction = new SetupAction(((ConfigurableResources) resources).subset("setup"), this, node);
+		setupAction = new AsyncAction(new SetupAction(((ConfigurableResources) resources).subset("setup"), this, node, configuration));
+
+    if (configuration.getConfiguration().isEmpty()) {
+      addWindowListener(new WindowAdapter() {
+        public void windowOpened(WindowEvent e) {
+          ActionEvent event = new ActionEventFactory(MainFrame.this).createActionEvent();
+          setupAction.actionPerformed(event);
+        }
+      });
+    }
 	}
 
 	protected JComponent createContentPane() {

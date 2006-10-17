@@ -73,7 +73,7 @@ public class ReceiverConfigurationLoader {
       ShoutServerReceiverConfiguration shoutServerReceiverConfiguration = (ShoutServerReceiverConfiguration) configuration;
 
       InetSocketAddress address = shoutServerReceiverConfiguration.getListenAddress();
-      String addressPrefix = PREFIX + "." + PROPERTY_LISTENADDRESS + ".";
+      String addressPrefix = PREFIX + PROPERTY_LISTENADDRESS + ".";
       
       receiverConfiguration.setProperty(addressPrefix + InetSocketAddressConfigurator.PROPERTY_HOST, address.getHostName());
       receiverConfiguration.setProperty(addressPrefix + InetSocketAddressConfigurator.PROPERTY_PORT, new Integer(address.getPort()));
