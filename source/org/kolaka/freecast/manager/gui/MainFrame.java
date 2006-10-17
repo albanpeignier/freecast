@@ -129,7 +129,7 @@ public class MainFrame extends BaseFrame {
 	}
 
 	protected Action getButtonAction() {
-		return visitAction;
+		return setupAction;
 	}
 
 	abstract class ControlPanel extends JPanel {

@@ -1,7 +1,10 @@
 <freecast>
 	<gui>
 		<setup>
-			<main>org/kolaka/freecast/setup/resources/setup.png</main>
+			<main>
+				<small>org/kolaka/freecast/setup/resources/setup-16.png</small>
+				<larg>org/kolaka/freecast/setup/resources/setup.png</larg>
+			</main>
 			<finish>org/kolaka/freecast/setup/resources/finish.png</finish>
 			<cancel>org/kolaka/freecast/setup/resources/cancel.png</cancel>
 			<receiver>
