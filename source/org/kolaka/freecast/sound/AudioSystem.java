@@ -58,8 +58,9 @@ public class AudioSystem {
 				LogFactory.getLog(AudioSystem.class).debug(
 						"stream opened with " + reader);
 				return audioStream;
-			} catch (UnsupportedAudioFileException e) {
-
+			} catch (Throwable t) {
+        LogFactory.getLog(AudioSystem.class).trace(
+            "can't stream opened with " + reader, t);
 			}
 		}
 
