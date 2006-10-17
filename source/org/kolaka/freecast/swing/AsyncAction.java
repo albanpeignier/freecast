@@ -24,8 +24,9 @@
 package org.kolaka.freecast.swing;
 
 import java.awt.event.ActionEvent;
-import javax.swing.Action;
 import java.beans.PropertyChangeListener;
+
+import javax.swing.Action;
 
 import org.apache.commons.logging.LogFactory;
 

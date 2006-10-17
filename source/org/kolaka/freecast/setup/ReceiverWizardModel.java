@@ -36,13 +36,13 @@ import org.kolaka.freecast.transport.receiver.ShoutClientReceiverConfiguration;
 import org.kolaka.freecast.transport.receiver.ShoutServerReceiverConfiguration;
 import org.kolaka.freecast.transport.receiver.SourceReceiverConfiguration;
 import org.kolaka.freecast.transport.receiver.TestReceiverConfiguration;
+import org.pietschy.wizard.InvalidStateException;
 import org.pietschy.wizard.WizardModel;
 import org.pietschy.wizard.models.BranchingPath;
 import org.pietschy.wizard.models.Condition;
 import org.pietschy.wizard.models.MultiPathModel;
 import org.pietschy.wizard.models.Path;
 import org.pietschy.wizard.models.SimplePath;
-import org.pietschy.wizard.InvalidStateException;
 
 public class ReceiverWizardModel extends MultiPathModel {
   

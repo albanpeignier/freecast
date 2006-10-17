@@ -47,7 +47,7 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.io.CopyUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.LogFactory;
@@ -221,7 +221,7 @@ public class HttpResourceLocator implements ResourceLocator {
 				throws IOException {
 			File file = getCacheFile(uri);
 			OutputStream outputStream = new FileOutputStream(file);
-			CopyUtils.copy(resource, outputStream);
+			IOUtils.copy(resource, outputStream);
 			outputStream.close();
 			file.setLastModified(lastModified.getTime());
 			LogFactory.getLog(getClass()).debug(

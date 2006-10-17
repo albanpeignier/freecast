@@ -25,7 +25,6 @@ package org.kolaka.freecast.tracker.statistics;
 
 import java.io.File;
 
-import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.lang.StringUtils;
