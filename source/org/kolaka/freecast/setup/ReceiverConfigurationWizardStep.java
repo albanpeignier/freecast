@@ -24,34 +24,24 @@
 package org.kolaka.freecast.setup;
 
 import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.ResourceBundle;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 
-import org.kolaka.freecast.swing.ResourceBundles;
+import org.kolaka.freecast.swing.Resources;
 import org.kolaka.freecast.transport.receiver.ReceiverConfiguration;
 import org.pietschy.wizard.InvalidStateException;
-import org.pietschy.wizard.PanelWizardStep;
-import org.pietschy.wizard.WizardModel;
 
-public abstract class ReceiverWizardStep extends PanelWizardStep {
+public abstract class ReceiverConfigurationWizardStep extends ReceiverWizardStep {
 
-  private final ResourceBundle bundle = ResourceBundles.getBundle(getClass());
-  
-  protected ReceiverWizardModel model;
-
-  protected ReceiverWizardStep() {
-    super("Setup Broadcast content", "");
-    setSummary(bundle.getString("summary"));
-    setLayout(new GridBagLayout());
+  protected ReceiverConfigurationWizardStep(Resources resources) {
+    super(resources);
     
     GridBagConstraints textConstraints = createConstraints();
     textConstraints.gridwidth = GridBagConstraints.REMAINDER;
     textConstraints.insets = new Insets(15, 0, 15, 0);
-    add(new JLabel(bundle.getString("explanation")), textConstraints);
+    add(new JLabel(getBundle().getString("explanation")), textConstraints);
     
     GridBagConstraints viewConstraints = createConstraints();
     viewConstraints.gridwidth = GridBagConstraints.REMAINDER;
@@ -60,23 +50,8 @@ public abstract class ReceiverWizardStep extends PanelWizardStep {
     add(view, textConstraints);
   }
   
-  protected ResourceBundle getBundle() {
-    return bundle;
-  }
-
   protected abstract JComponent createView();
 
-  /**
-   * @return
-   */
-  protected GridBagConstraints createConstraints() {
-    return new GridBagConstraints();
-  }
-
-  public void init(WizardModel model) {
-    this.model = (ReceiverWizardModel) model;
-  }
-  
   public void prepare() {
     ReceiverConfiguration configuration = model.getConfiguration();
     prepare(configuration);

@@ -44,6 +44,7 @@ public class Main extends SwingApplication {
 
   private SourceReceiverConfiguration receiverConfiguration;
   private final ReceiverConfigurationLoader receiverConfigurationLoader = new ReceiverConfigurationLoader();
+  private Resources resources;
 
   public Main() {
     super("setup");
@@ -53,7 +54,7 @@ public class Main extends SwingApplication {
     super.postInit(configuration);
     receiverConfiguration = loadReceiverConfiguration(configuration);
 
-    Resources resources = new ConfigurableResources(Configurations.subset(configuration, "gui.setup"));
+    resources = new ConfigurableResources(Configurations.subset(configuration, "gui.setup"));
   }
 
   private SourceReceiverConfiguration loadReceiverConfiguration(HierarchicalConfiguration configuration) throws ConfigurationException {
@@ -74,7 +75,7 @@ public class Main extends SwingApplication {
   }
 
   protected void run() throws Exception {
-    final ReceiverWizardModel model = new ReceiverWizardModel();
+    final ReceiverWizardModel model = new ReceiverWizardModel(resources);
     model.setReceiverConfiguration(receiverConfiguration);
 
     Wizard wizard = new Wizard(model);

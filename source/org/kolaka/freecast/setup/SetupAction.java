@@ -63,7 +63,7 @@ public class SetupAction extends BaseAction {
 	}
 	
 	public void actionPerformed(ActionEvent event) {
-    final ReceiverWizardModel model = new ReceiverWizardModel();
+    final ReceiverWizardModel model = new ReceiverWizardModel(resources);
     
     SourceReceiverConfiguration configuration = (SourceReceiverConfiguration) node.getReceiverControler().getReceiverConfiguration();
     model.setReceiverConfiguration(configuration);

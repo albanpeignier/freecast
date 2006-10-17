@@ -23,27 +23,22 @@
 
 package org.kolaka.freecast.setup;
 
-import org.pietschy.wizard.PanelWizardStep;
-import org.pietschy.wizard.WizardModel;
+import org.kolaka.freecast.swing.Resources;
 
-public class ReceiverShowStep extends PanelWizardStep {
+public class ReceiverShowStep extends ReceiverWizardStep {
   
   private static final long serialVersionUID = 4158908758209666698L;
 
-  public ReceiverShowStep() {
-    super("Broadcast content", "Confirm the configuration");
+  public ReceiverShowStep(Resources resources) {
+    super(resources);
+    
     // setLayout(new GridBagLayout());
     setComplete(true);
     panel = new ReceiverShowPanel();
     add(panel);
   }
   
-  private ReceiverWizardModel model;
   private ReceiverShowPanel panel;
-
-  public void init(WizardModel model) {
-    this.model = (ReceiverWizardModel) model;
-  }
 
   public void prepare() {
     panel.setReceiverConfiguration(model.getConfiguration());

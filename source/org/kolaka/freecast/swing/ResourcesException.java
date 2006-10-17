@@ -26,7 +26,7 @@ package org.kolaka.freecast.swing;
 /**
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
-public class ResourcesException extends Exception {
+public class ResourcesException extends RuntimeException {
 
 	/**
 	 * 

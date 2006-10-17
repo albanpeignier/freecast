@@ -34,11 +34,16 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.text.NumberFormatter;
 
+import org.kolaka.freecast.swing.Resources;
 import org.kolaka.freecast.transport.receiver.ReceiverConfiguration;
 import org.kolaka.freecast.transport.receiver.ShoutServerReceiverConfiguration;
 import org.pietschy.wizard.InvalidStateException;
 
-public class ReceiverShoutServerStep extends ReceiverWizardStep {
+public class ReceiverShoutServerStep extends ReceiverConfigurationWizardStep {
+
+  protected ReceiverShoutServerStep(Resources resources) {
+    super(resources);
+  }
 
   private static final long serialVersionUID = -7503124420884640976L;
 

@@ -24,29 +24,24 @@
 package org.kolaka.freecast.setup;
 
 import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.TreeMap;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JRadioButton;
 
 import org.apache.commons.logging.LogFactory;
-import org.kolaka.freecast.swing.ResourceBundles;
+import org.kolaka.freecast.swing.Resources;
 import org.pietschy.wizard.InvalidStateException;
-import org.pietschy.wizard.PanelWizardStep;
 import org.pietschy.wizard.WizardModel;
 
-public class ReceiverTypeStep extends PanelWizardStep {
+public class ReceiverTypeStep extends ReceiverWizardStep {
 
   private static final long serialVersionUID = 3952637776668476330L;
   
-  private ResourceBundle bundle = ResourceBundles.getBundle(getClass());
-
   private static String[] TYPES = new String[] {
     ReceiverWizardModel.TYPE_DEFAULT, ReceiverWizardModel.TYPE_PLAYLIST,
     ReceiverWizardModel.TYPE_SHOUTCLIENT, ReceiverWizardModel.TYPE_SHOUTSERVER
@@ -55,10 +50,8 @@ public class ReceiverTypeStep extends PanelWizardStep {
   private String type;
   private Map buttons = new TreeMap();
 
-  public ReceiverTypeStep() {
-    super("Setup Broadcast content","");
-    setSummary(bundle.getString("summary"));
-    setLayout(new GridBagLayout());
+  public ReceiverTypeStep(Resources resources) {
+    super(resources);
 
     GridBagConstraints constraints = new GridBagConstraints();
     constraints.gridwidth = GridBagConstraints.REMAINDER;
@@ -70,7 +63,7 @@ public class ReceiverTypeStep extends PanelWizardStep {
     for (int i=0; i < TYPES.length; i++) {
       final String type = TYPES[i];
 
-      final JRadioButton button = new JRadioButton(bundle.getString(type));
+      final JRadioButton button = new JRadioButton(getBundle().getString(type));
       buttons.put(type, button);
       button.addItemListener(new ItemListener() {
         public void itemStateChanged(ItemEvent e) {

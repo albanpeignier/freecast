@@ -30,6 +30,7 @@ import java.util.Map.Entry;
 
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.logging.LogFactory;
+import org.kolaka.freecast.swing.Resources;
 import org.kolaka.freecast.transport.receiver.PlaylistEncoderReceiverConfiguration;
 import org.kolaka.freecast.transport.receiver.ReceiverConfiguration;
 import org.kolaka.freecast.transport.receiver.ShoutClientReceiverConfiguration;
@@ -63,27 +64,27 @@ public class ReceiverWizardModel extends MultiPathModel {
       }
     ) ;
   
-  public ReceiverWizardModel() {
-    super(createPath());
+  public ReceiverWizardModel(Resources resources) {
+    super(createPath(resources));
   }
 
-  private static Path createPath() {
+  private static Path createPath(Resources resources) {
     BranchingPath path = new BranchingPath();
-    path.addStep(new ReceiverTypeStep());
+    path.addStep(new ReceiverTypeStep(resources));
     
-    Path finalStep = new SimplePath(new ReceiverShowStep());
+    Path finalStep = new SimplePath(new ReceiverShowStep(resources));
     
     path.addBranch(finalStep, new ConfigurationClassCondition(TestReceiverConfiguration.class));
     
-    SimplePath playlistPath = new SimplePath(new ReceiverPlaylistStep());
+    SimplePath playlistPath = new SimplePath(new ReceiverPlaylistStep(resources));
     path.addBranch(playlistPath, new ConfigurationClassCondition(PlaylistEncoderReceiverConfiguration.class));
     playlistPath.setNextPath(finalStep);
 
-    SimplePath shoutServerPath = new SimplePath(new ReceiverShoutServerStep());
+    SimplePath shoutServerPath = new SimplePath(new ReceiverShoutServerStep(resources));
     path.addBranch(shoutServerPath, new ConfigurationClassCondition(ShoutServerReceiverConfiguration.class));
     shoutServerPath.setNextPath(finalStep);
 
-    SimplePath shoutClientPath = new SimplePath(new ReceiverShoutClientStep());
+    SimplePath shoutClientPath = new SimplePath(new ReceiverShoutClientStep(resources));
     path.addBranch(shoutClientPath, new ConfigurationClassCondition(ShoutClientReceiverConfiguration.class));
     shoutClientPath.setNextPath(finalStep);
 

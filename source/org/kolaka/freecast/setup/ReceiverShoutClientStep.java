@@ -32,11 +32,16 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.kolaka.freecast.swing.Resources;
 import org.kolaka.freecast.transport.receiver.ReceiverConfiguration;
 import org.kolaka.freecast.transport.receiver.ShoutClientReceiverConfiguration;
 import org.pietschy.wizard.InvalidStateException;
 
-public class ReceiverShoutClientStep extends ReceiverWizardStep {
+public class ReceiverShoutClientStep extends ReceiverConfigurationWizardStep {
+
+  public ReceiverShoutClientStep(Resources resources) {
+    super(resources);
+  }
 
   private static final long serialVersionUID = -7503124420884640976L;
 

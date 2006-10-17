@@ -38,11 +38,16 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.kolaka.freecast.swing.BaseAction;
+import org.kolaka.freecast.swing.Resources;
 import org.kolaka.freecast.transport.receiver.PlaylistEncoderReceiverConfiguration;
 import org.kolaka.freecast.transport.receiver.ReceiverConfiguration;
 import org.pietschy.wizard.InvalidStateException;
 
-public class ReceiverPlaylistStep extends ReceiverWizardStep {
+public class ReceiverPlaylistStep extends ReceiverConfigurationWizardStep {
+
+  public ReceiverPlaylistStep(Resources resources) {
+    super(resources);
+  }
 
   private static final long serialVersionUID = -7503124420884640976L;
   
