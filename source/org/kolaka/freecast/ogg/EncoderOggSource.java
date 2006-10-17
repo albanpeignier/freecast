@@ -50,6 +50,10 @@ import org.tritonus.lowlevel.vorbis.Info;
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class EncoderOggSource implements OggSource {
+  
+  static {
+    NativeLoader.load();
+  }
 
 	private final static int READ = 1024;
 
