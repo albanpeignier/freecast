@@ -40,6 +40,7 @@ public class Configurations {
 
   public static Configuration initFrom(Configuration child, Configuration parent) {
      if (child instanceof HierarchicalConfiguration && parent instanceof HierarchicalConfiguration) {
+       initFrom((HierarchicalConfiguration) child, (HierarchicalConfiguration) parent);
      } else  if (child instanceof AbstractConfiguration && parent instanceof AbstractConfiguration) {
        initFrom((AbstractConfiguration) child, (AbstractConfiguration) parent);
      } else {

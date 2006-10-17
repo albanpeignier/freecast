@@ -58,7 +58,7 @@ public class ConfigurationLoaderTest extends BaseTestCase {
   }
 
   private void testNoSuchElementException(Configuration configuration) {
-    assertTrue(((AbstractConfiguration) configuration).isThrowExceptionOnMissing());
+    assertTrue(configuration + " doesn't ThrowExceptionOnMissing", ((AbstractConfiguration) configuration).isThrowExceptionOnMissing());
     
     try {
       configuration.getString("dummy");
