@@ -136,7 +136,7 @@ public class DefaultConfigurationLoader implements ConfigurationLoader {
   
   public UserConfiguration getUserConfiguration() {
     return new UserConfiguration() {
-      public Configuration getConfiguration() {
+      public HierarchicalConfiguration getConfiguration() {
         return userConfiguration;
       }
       public void save() throws ConfigurationException {

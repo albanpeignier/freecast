@@ -30,6 +30,7 @@ import java.net.URISyntaxException;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.DataConfiguration;
+import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.config.Configurations;
 import org.kolaka.freecast.config.InetSocketAddressConfigurator;
@@ -59,7 +60,9 @@ public class ReceiverConfigurationLoader {
    * 
    * TODO subset(...).setProperty doesn't work for HierarchicalConfiguration
    */
-  public void save(ReceiverConfiguration configuration, Configuration receiverConfiguration) {
+  public void save(ReceiverConfiguration configuration, HierarchicalConfiguration receiverConfiguration) {
+    receiverConfiguration.clearTree(PREFIX);
+    
     if (configuration instanceof ShoutClientReceiverConfiguration) {
       receiverConfiguration .setProperty(PREFIX + PROPERTY_CLASS, CLASS_SHOUTCLIENT);
       ShoutClientReceiverConfiguration shoutClientReceiverConfiguration = (ShoutClientReceiverConfiguration) configuration;

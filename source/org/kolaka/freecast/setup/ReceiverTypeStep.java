@@ -92,6 +92,7 @@ public class ReceiverTypeStep extends PanelWizardStep {
       LogFactory.getLog(getClass()).warn("unknown ReceiverConfiguration type: " + model.getType());
     }
     button.setSelected(true);
+    button.requestFocus();
   }
   
   public void applyState() throws InvalidStateException {

@@ -113,11 +113,13 @@ public class ReceiverWizardModel extends MultiPathModel {
     this.type = type;
     
     Class configurationClass = (Class) CONFIGURATIONS.get(type);
-    try {
-      this.configuration = (SourceReceiverConfiguration) configurationClass.newInstance();
-    } catch (Exception e) {
-      throw new InvalidStateException("Can't create configuration", e);
-    }
+    
+    if (!configurationClass.isInstance(configuration))
+      try {
+        this.configuration = (SourceReceiverConfiguration) configurationClass.newInstance();
+      } catch (Exception e) {
+        throw new InvalidStateException("Can't create configuration", e);
+      }
 
     LogFactory.getLog(getClass()).debug("change configuration for " + configuration);
   }

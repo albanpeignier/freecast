@@ -23,12 +23,12 @@
 
 package org.kolaka.freecast.config;
 
-import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.HierarchicalConfiguration;
 
 public interface UserConfiguration {
 
-  Configuration getConfiguration();
+  HierarchicalConfiguration getConfiguration();
   
   void save() throws ConfigurationException;
   
