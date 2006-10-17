@@ -35,7 +35,6 @@ import org.apache.commons.configuration.CombinedConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.DefaultConfigurationBuilder;
-import org.apache.commons.configuration.FileConfiguration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.MapConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -116,14 +115,19 @@ public class DefaultConfigurationLoader implements ConfigurationLoader {
     LogFactory.getLog(getClass()).debug(
         "load the user configuration from " + userFile);
     XMLConfiguration configuration = new XMLConfiguration(userFile);
-    configuration.setRootElementName("freecast");
-    try {
-      configuration.load();
-    } catch (ConfigurationException e) {
-      LogFactory.getLog(getClass()).info("no user configuration found");
-      LogFactory.getLog(getClass()).debug(
-          "can't load user configuration from " + userFile, e);
+    
+    if (userFile.exists())
+      try {
+        configuration.load();
+      } catch (ConfigurationException e) {
+        LogFactory.getLog(getClass()).info("no user configuration found");
+        LogFactory.getLog(getClass()).debug(
+            "can't load user configuration from " + userFile, e);
+      } 
+    else {
+      configuration.setRootElementName("freecast");
     }
+    
     return configuration;
   }
   
