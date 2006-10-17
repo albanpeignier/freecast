@@ -30,7 +30,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.LogFactory;
@@ -50,136 +49,131 @@ import org.kolaka.freecast.timer.TimerUser;
  */
 public class HttpPlayer extends BaseService implements Player, TimerUser {
 
-	private Socket socket;
+  private Socket socket;
 
-	private Consumer consumer;
+  private Consumer consumer;
 
-	private boolean stopped;
+  private boolean stopped;
 
-	private ConsumerInputStreamFactory inputFactory;
+  private ConsumerInputStreamFactory inputFactory;
 
-	public HttpPlayer(Socket socket) {
-		Validate.notNull(socket, "No specified socket");
-		this.socket = socket;
-	}
+  public HttpPlayer(Socket socket) {
+    Validate.notNull(socket, "No specified socket");
+    this.socket = socket;
+  }
 
-	private Task sending = new Task() {
+  private Task sending = new Task() {
 
-		public void run() {
-			OutputStream output = null;
+    public void run() {
+      OutputStream output = null;
 
-			try {
-				ByteArrayOutputStream lineBuffer = new ByteArrayOutputStream();
+      try {
+        ByteArrayOutputStream lineBuffer = new ByteArrayOutputStream();
 
-				while (true) {
-					int read = socket.getInputStream().read();
-					if (read == -1) {
-						throw new EOFException("incomplete header");
-					}
+        while (true) {
+          int read = socket.getInputStream().read();
+          if (read == -1) {
+            throw new EOFException("incomplete header");
+          }
 
-					if (read == '\n') {
-						String headerLine = new String(lineBuffer.toByteArray())
-								.trim();
-						lineBuffer.reset();
+          if (read == '\n') {
+            String headerLine = new String(lineBuffer.toByteArray()).trim();
+            lineBuffer.reset();
 
-						if (headerLine.length() == 0) {
-							LogFactory.getLog(getClass()).trace("header ended");
-							break;
-						}
-						LogFactory.getLog(getClass()).trace(
-								"received header: " + headerLine);
-					} else {
-						lineBuffer.write(read);
-					}
-				}
+            if (headerLine.length() == 0) {
+              LogFactory.getLog(getClass()).trace("header ended");
+              break;
+            }
+            LogFactory.getLog(getClass()).trace("received header: " + headerLine);
+          } else {
+            lineBuffer.write(read);
+          }
+        }
 
-				// socket.setSendBufferSize(1024);
-				output = socket.getOutputStream();
+        // socket.setSendBufferSize(1024);
+        output = socket.getOutputStream();
 
-				String reply = "HTTP/1.0 200 OK\r\n"
-						+ "Content-Type: application/ogg\r\nice-name: FreeCast\r\n\r\n";
+        String reply = "HTTP/1.0 200 OK\r\n" + "Content-Type: application/ogg\r\nice-name: FreeCast\r\n\r\n";
 
-				output.write(reply.getBytes());
-				output.flush();
+        output.write(reply.getBytes());
+        output.flush();
 
-				while (!stopped) {
-					InputStream input = inputFactory.next();
-					CopyUtils.copy(input, output);
-					IOUtils.closeQuietly(input);
-				}
-			} catch (IOException e) {
-				LogFactory.getLog(getClass()).info(
-						"connection with http player ended", e);
-			} catch (Exception e) {
-				LogFactory.getLog(getClass()).error(
-						"error in the http player connection", e);
-			} finally {
-				stopImpl();
-			}
-		}
+        while (!stopped) {
+          InputStream input = inputFactory.next();
+          IOUtils.copy(input, output);
+          IOUtils.closeQuietly(input);
+        }
+      } catch (IOException e) {
+        String message = "connection with http player ended";
+        LogFactory.getLog(getClass()).info(message);
+        LogFactory.getLog(getClass()).debug(message, e);
+      } catch (Exception e) {
+        LogFactory.getLog(getClass()).error("error in the http player connection", e);
+      } finally {
+        stopImpl();
+      }
+    }
 
-	};
+  };
 
-	protected void stopImpl() {
-		stopped = true;
+  protected void stopImpl() {
+    stopped = true;
 
-		LogFactory.getLog(getClass()).debug("dispose http player resources");
+    LogFactory.getLog(getClass()).debug("dispose http player resources");
 
-		try {
-			socket.close();
-		} catch (IOException e) {
-			LogFactory.getLog(getClass()).error(
-					"can't close the http player socket", e);
-		}
+    try {
+      socket.close();
+    } catch (IOException e) {
+      LogFactory.getLog(getClass()).error("can't close the http player socket", e);
+    }
 
-		if (inputFactory != null) {
-			inputFactory.close();
-		}
+    if (inputFactory != null) {
+      inputFactory.close();
+    }
 
-		try {
-			super.stop();
-		} catch (ControlException e) {
-			LogFactory.getLog(getClass()).error("can't stop this http player",
-					e);
-		}
-	}
+    try {
+      super.stop();
+    } catch (ControlException e) {
+      LogFactory.getLog(getClass()).error("can't stop this http player", e);
+    }
+  }
 
-	public void start() throws ControlException {
-		stopped = false;
+  public void start() throws ControlException {
+    stopped = false;
 
-		inputFactory = new ConsumerInputStreamFactory(consumer);
+    inputFactory = new ConsumerInputStreamFactory(consumer);
 
-		timer.executeLater(sending);
+    timer.executeLater(sending);
 
-		super.start();
-	}
+    super.start();
+  }
 
-	public void stop() throws ControlException {
-		sending.cancel();
-		stopImpl();
-	}
+  public void stop() throws ControlException {
+    sending.cancel();
+    stopImpl();
+  }
 
-	public void init() throws ControlException {
-		super.init();
-	}
+  public void init() throws ControlException {
+    super.init();
+  }
 
-	public void dispose() throws ControlException {
-		super.dispose();
-	}
+  public void dispose() throws ControlException {
+    super.dispose();
+  }
 
-	public PlayerStatus getPlayerStatus() {
-		return PlayerStatus.INACTIVE;
-	}
+  public PlayerStatus getPlayerStatus() {
+    return PlayerStatus.INACTIVE;
+  }
 
-	public void setConsumer(Consumer consumer) {
-		this.consumer = consumer;
-	}
+  public void setConsumer(Consumer consumer) {
+    this.consumer = consumer;
+  }
 
-	private Timer timer = DefaultTimer.getInstance();
+  private Timer timer = DefaultTimer.getInstance();
 
-	public void setTimer(Timer timer) {
-		Validate.notNull(timer, "No specified Timer");
-		this.timer = timer;
-	}
+  public void setTimer(Timer timer) {
+    Validate.notNull(timer, "No specified Timer");
+    this.timer = timer;
+  }
 
 }
