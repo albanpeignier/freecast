@@ -35,18 +35,21 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.apache.commons.logging.LogFactory;
 import org.kolaka.freecast.player.Player;
 import org.kolaka.freecast.player.PlayerSource;
 import org.kolaka.freecast.player.VolumeControl;
 import org.kolaka.freecast.player.VolumeControlable;
 import org.kolaka.freecast.player.PlayerSource.Listener;
 import org.kolaka.freecast.service.Service;
+import org.kolaka.freecast.service.Startable;
 import org.kolaka.freecast.swing.Resources;
 import org.kolaka.freecast.swing.ResourcesException;
 
 public class VolumePane extends JPanel {
 
   private static final long serialVersionUID = -6343034639160378478L;
+
   private VolumeControl volumeControl;
 
   public VolumePane(Resources resources, PlayerSource source) throws ResourcesException {
@@ -82,6 +85,19 @@ public class VolumePane extends JPanel {
     volumeSlider.addMouseWheelListener(wheelListener);
     
     final Player.Listener playerListener = new Player.Adapter() {
+      public void serviceStarted(Service service) {
+        VolumeControlable player = (VolumeControlable) service;
+        
+        VolumeControl control = player.getVolumeControl();
+        LogFactory.getLog(getClass()).debug("try to use volume control : " + control);
+        if (control != null && control.isEnabled()) {
+          volumeControl = control;
+          
+          sliderModel.setValue(volumeControl.getVolume());
+          volumeSlider.setEnabled(true);
+        }
+      }
+      
       public void serviceStopped(Service service) {
         volumeControl = null;
         sliderModel.setValue(0);
@@ -92,14 +108,9 @@ public class VolumePane extends JPanel {
     source.addListener(new Listener() {
       public void playerCreated(Player player) {
         if (player instanceof VolumeControlable) {
-          VolumeControl control = ((VolumeControlable) player).getVolumeControl();
-          if (control != null && control.isEnabled()) {
-            volumeControl = control;
-            
-            sliderModel.setValue(volumeControl.getVolume());
-            volumeSlider.setEnabled(true);
-            
-            player.add(playerListener);
+          player.add(playerListener);
+          if (player.getStatus().equals(Startable.Status.STARTED)) {
+            playerListener.serviceStarted(player);
           }
         }
       }
@@ -115,5 +126,4 @@ public class VolumePane extends JPanel {
       }
     });
   }
-  
 }
