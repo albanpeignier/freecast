@@ -36,7 +36,7 @@ import org.kolaka.freecast.timer.Task;
  */
 public class TimerTest extends TestCase {
 
-	private static final long LATENCY = 50;
+	private static final long LATENCY = 100;
 
 	public void testExecuteLater() throws InterruptedException {
 		TestRunnable testRunnable = new TestRunnable();
