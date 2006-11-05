@@ -520,9 +520,11 @@
 	<target name="ccontrol.loop" depends="clean.all, dist, test, export" />
 
 	<target name="install.export" depends="export">
-		<property name="install.export.target" value="${user.name}@download.freecast.org:/var/www/kolaka.org/freecast/export" />
+		<property name="install.export.target" value="${user.name}@download.freecast.org:/var/www/freecast.org/download" />
+		<property name="rsync.options" value=""/>
 		<exec executable="rsync" failonerror="true">
 			<arg value="-avc" />
+			<arg line="${rsync.options}" />
 			<arg line="--exclude '*.deb'"/>
 			<arg value="export/" />
 			<arg value="${install.export.target}" />
