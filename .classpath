@@ -33,9 +33,10 @@
 	<classpathentry kind="lib" path="lib/test/easymock.jar"/>
 	<classpathentry kind="lib" path="lib/test/mockobjects-core.jar"/>
 	<classpathentry kind="lib" path="lib/test/junit.jar"/>
-	<classpathentry kind="lib" path="lib/core/wizard.jar"/>
 	<classpathentry kind="lib" path="lib/core/commons-digester.jar"/>
 	<classpathentry kind="lib" path="lib/core/commons-beanutils.jar"/>
 	<classpathentry kind="lib" path="lib/core/commons-jxpath.jar"/>
+	<classpathentry kind="lib" path="lib/runtime/slf4j-log4j12.jar"/>
+	<classpathentry kind="lib" path="lib/core/wizard.jar"/>
 	<classpathentry kind="output" path=".eclipse"/>
 </classpath>
