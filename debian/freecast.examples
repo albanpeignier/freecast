@@ -1,4 +1,4 @@
-dist/docs/examples/audio
-dist/docs/examples/video
-dist/docs/examples/jws
-dist/docs/examples/tracker
+docs/examples/audio
+docs/examples/video
+docs/examples/jws
+docs/examples/tracker
