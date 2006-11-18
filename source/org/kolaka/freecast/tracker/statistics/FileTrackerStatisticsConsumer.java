@@ -59,9 +59,9 @@ public class FileTrackerStatisticsConsumer implements TrackerStatisticsConsumer 
   
   public void process(Date date, TrackerStatistics statistics) {
     LogFactory.getLog(getClass()).debug("append statistics to " + file);
-    PrintWriter writer = getWriter();
+    PrintWriter writer = createWriter();
     writer.println(format(date, statistics));
-    writer.flush();
+    writer.close();
   }
 
   private MessageFormat messageFormat;
@@ -81,22 +81,17 @@ public class FileTrackerStatisticsConsumer implements TrackerStatisticsConsumer 
     return messageFormat.format(arguments);
   }
 
-  private PrintWriter writer;
-  
-  private PrintWriter getWriter() {
+  private PrintWriter createWriter() {
     if (file == null) {
       LogFactory.getLog(getClass()).error("no specified output file");
     }
     
-    if (writer == null) {
-      try {
-        writer = new PrintWriter(new FileWriter(file));
-      } catch (IOException e) {
-        LogFactory.getLog(getClass()).error("can't create a writer to " + file, e);
-        return new PrintWriter(new StringWriter());
-      }
+    try {
+      return new PrintWriter(new FileWriter(file,true));
+    } catch (IOException e) {
+      LogFactory.getLog(getClass()).error("can't create a writer to " + file, e);
+      return new PrintWriter(new StringWriter());
     }
-    return writer;
   }
   
   public String toString() {
