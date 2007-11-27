@@ -71,7 +71,7 @@ done
 JAVA_CMD=java
 [ -n "$JAVA_HOME" ] && JAVA_CMD=$JAVA_HOME/bin/java
 
-$JAVA_CMD -version 2>&1 | egrep '(java version "1.[45]|java full version "kaffe-1.[45])' > /dev/null
+$JAVA_CMD -version 2>&1 | egrep '(java version "1.[456]|java full version "kaffe-1.[45])' > /dev/null
 if [ $? != 0 ]; then
     echo "A jdk 1.4 is needed to run @app.name@. Check your JAVA_HOME variable." >&2
     exit 1
