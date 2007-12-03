@@ -1,7 +1,7 @@
 /*
  * FreeCast - streaming over Internet
  *
- * This code was developped by Alban Peignier (http://people.tryphon.org/~alban/) 
+ * This code was developped by Alban Peignier (http://people.tryphon.org/~alban/)
  * and contributors (their names can be found in the CONTRIBUTORS file).
  *
  * Copyright (C) 2004-2006 Alban Peignier
@@ -43,6 +43,8 @@ public abstract class ProtocolMessage {
 				1);
 
 		public static final Type CONNECTION_REQUEST = new Type("request", 2);
+
+		public static final Type PING = new Type("ping", 3);
 
 		Type(String name, int value) {
 			super(name, value);
@@ -110,6 +112,20 @@ public abstract class ProtocolMessage {
 
 		public ConnectionRequest(PendingConnection connection) {
 			super(connection);
+		}
+
+		public Type getType() {
+			return TYPE;
+		}
+
+	}
+
+	public static class Ping extends ProtocolMessage {
+
+		public static final Type TYPE = Type.PING;
+
+		public Ping() {
+			super();
 		}
 
 		public Type getType() {

@@ -1,7 +1,7 @@
 /*
  * FreeCast - streaming over Internet
  *
- * This code was developped by Alban Peignier (http://people.tryphon.org/~alban/) 
+ * This code was developped by Alban Peignier (http://people.tryphon.org/~alban/)
  * and contributors (their names can be found in the CONTRIBUTORS file).
  *
  * Copyright (C) 2004-2006 Alban Peignier
@@ -38,6 +38,7 @@ import org.apache.mina.filter.codec.ProtocolEncoderOutput;
 import org.kolaka.freecast.transport.cas.ProtocolMessage.ConnectionMessage;
 import org.kolaka.freecast.transport.cas.ProtocolMessage.Registration;
 import org.kolaka.freecast.transport.cas.ProtocolMessage.Type;
+import org.kolaka.freecast.transport.cas.ProtocolMessage.Ping;
 
 public class ProtocolCodec implements ProtocolEncoder, ProtocolDecoder {
 
@@ -62,6 +63,8 @@ public class ProtocolCodec implements ProtocolEncoder, ProtocolDecoder {
 		} else if (type.equals(ProtocolMessage.ConnectionRequest.TYPE)) {
 			PendingConnection connection = decodeConnection(buffer);
 			message = new ProtocolMessage.ConnectionRequest(connection);
+		} else if (type.equals(ProtocolMessage.Ping.TYPE)) {
+			message = new ProtocolMessage.Ping();
 		} else {
 			throw new ProtocolDecoderException("Unsupported message type: "
 					+ type);
@@ -85,6 +88,8 @@ public class ProtocolCodec implements ProtocolEncoder, ProtocolDecoder {
 		} else if (message instanceof ConnectionMessage) {
 			ProtocolMessage.ConnectionMessage connectionMessage = (ConnectionMessage) message;
 			encodeConnection(buffer, connectionMessage.getPendingConnection());
+		} else if (message instanceof Ping) {
+
 		} else {
 			throw new ProtocolEncoderException("Unsupported message type: "
 					+ type);

@@ -1,7 +1,7 @@
 /*
  * FreeCast - streaming over Internet
  *
- * This code was developped by Alban Peignier (http://people.tryphon.org/~alban/) 
+ * This code was developped by Alban Peignier (http://people.tryphon.org/~alban/)
  * and contributors (their names can be found in the CONTRIBUTORS file).
  *
  * Copyright (C) 2004-2006 Alban Peignier
@@ -29,6 +29,7 @@ import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.LogFactory;
 import org.apache.mina.common.IoHandlerAdapter;
 import org.apache.mina.common.IoSession;
+import org.apache.mina.common.IdleStatus;
 import org.kolaka.freecast.transport.cas.ConnectionAssistantService.ConnectionHandler;
 import org.kolaka.freecast.transport.cas.ConnectionAssistantService.Session;
 import org.kolaka.freecast.transport.cas.ProtocolMessage.ConnectionAssistance;
@@ -45,6 +46,7 @@ public class ConnectionAssistantServiceSkeleton extends IoHandlerAdapter {
 	public void sessionCreated(IoSession session) throws Exception {
 		session.getFilterChain().addLast("codec",
 				ConnectionProtocolCodecFactory.FILTER);
+		session.setIdleTime(IdleStatus.BOTH_IDLE, 120);
 	}
 
 	public void sessionOpened(IoSession session) throws Exception {
@@ -55,9 +57,16 @@ public class ConnectionAssistantServiceSkeleton extends IoHandlerAdapter {
 	}
 
 	public void sessionClosed(IoSession session) throws Exception {
+		LogFactory.getLog(getClass()).info("sessionClosed");
+
 		Session serviceSession = (Session) session.getAttachment();
 		serviceSession.close();
 	}
+
+	public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
+		LogFactory.getLog(getClass()).info("sessionIdle");
+    session.close();
+  }
 
 	public void messageReceived(IoSession session, Object object)
 			throws Exception {

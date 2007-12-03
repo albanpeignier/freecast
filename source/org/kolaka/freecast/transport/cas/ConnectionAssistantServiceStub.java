@@ -1,7 +1,7 @@
 /*
  * FreeCast - streaming over Internet
  *
- * This code was developped by Alban Peignier (http://people.tryphon.org/~alban/) 
+ * This code was developped by Alban Peignier (http://people.tryphon.org/~alban/)
  * and contributors (their names can be found in the CONTRIBUTORS file).
  *
  * Copyright (C) 2004-2006 Alban Peignier
@@ -35,6 +35,7 @@ import org.apache.mina.common.IoConnector;
 import org.apache.mina.common.IoHandler;
 import org.apache.mina.common.IoHandlerAdapter;
 import org.apache.mina.common.IoSession;
+import org.apache.mina.common.IdleStatus;
 import org.kolaka.freecast.transport.cas.ProtocolMessage.ConnectionRequest;
 
 public class ConnectionAssistantServiceStub implements
@@ -89,7 +90,7 @@ public class ConnectionAssistantServiceStub implements
 						throws java.lang.Exception {
 					session.getFilterChain().addLast("codec",
 							ConnectionProtocolCodecFactory.FILTER);
-
+					session.setIdleTime(IdleStatus.BOTH_IDLE, 60);
 				}
 
 				public void messageReceived(IoSession session, Object message)
@@ -97,6 +98,10 @@ public class ConnectionAssistantServiceStub implements
 					ConnectionRequest request = (ConnectionRequest) message;
 					processConnectionRequest(request.getPendingConnection());
 				}
+
+				public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
+          protocolSession.write(new ProtocolMessage.Ping());
+        }
 
 				public void exceptionCaught(IoSession session, Throwable t)
 						throws Exception {
