@@ -1,7 +1,7 @@
 /*
  * FreeCast - streaming over Internet
  *
- * This code was developped by Alban Peignier (http://people.tryphon.org/~alban/) 
+ * This code was developped by Alban Peignier (http://people.tryphon.org/~alban/)
  * and contributors (their names can be found in the CONTRIBUTORS file).
  *
  * Copyright (C) 2004-2006 Alban Peignier
@@ -25,6 +25,7 @@ package org.kolaka.freecast.ogg.test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.EOFException;
 
 import junit.framework.TestCase;
 
@@ -32,16 +33,25 @@ import org.kolaka.freecast.ogg.OggPage;
 import org.kolaka.freecast.ogg.OggStreamSource;
 
 /**
- * 
- * 
+ *
+ *
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public class OggStreamSourceTest extends TestCase {
 
-	public void testReadFile() throws IOException {
-    InputStream resource = OggTestResources.getResourceAsStream("sample.ogg");
-    
-		OggStreamSource oggSource = new OggStreamSource(resource);
+	public void testValidFile() throws IOException {
+    testStream("sample.ogg", 14);
+	}
+
+	public void testInvalidStream() throws IOException {
+    testStream("invalid-stream.ogg", 60);
+	}
+
+
+	private void testStream(String resourceName, int expectedPageCount)
+	  throws IOException
+	{
+		OggStreamSource oggSource = new OggStreamSource(OggTestResources.getResourceAsStream(resourceName));
 
 		OggPage firstPage = oggSource.next();
 		assertTrue("page must be first", firstPage.isFirstPage());
@@ -49,13 +59,23 @@ public class OggStreamSourceTest extends TestCase {
     int pageCount = 0;
 		OggPage page = firstPage;
 		while (!page.isLastPage()) {
-			page = oggSource.next();
+		  try {
+  			page = oggSource.next();
+  		} catch (EOFException e) {
+        if (pageCount < expectedPageCount) {
+          throw e;
+        }
+
+        break;
+  		}
+
 			assertFalse("page can't be first", page.isFirstPage());
       pageCount++;
 		}
 
 		oggSource.close();
-    assertEquals(14, pageCount);
+    assertEquals(expectedPageCount, pageCount);
 	}
+
 
 }

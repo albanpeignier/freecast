@@ -1,7 +1,7 @@
 /*
  * FreeCast - streaming over Internet
  *
- * This code was developped by Alban Peignier (http://people.tryphon.org/~alban/) 
+ * This code was developped by Alban Peignier (http://people.tryphon.org/~alban/)
  * and contributors (their names can be found in the CONTRIBUTORS file).
  *
  * Copyright (C) 2004-2006 Alban Peignier
@@ -38,11 +38,12 @@ import org.apache.commons.io.input.SwappedDataInputStream;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.logging.LogFactory;
+import org.kolaka.freecast.lang.ArrayUtils;
 import org.kolaka.freecast.io.ReminderInputStream;
 
 /**
- * 
- * 
+ *
+ *
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier </a>
  */
 public class OggStreamSource implements OggSource {
@@ -64,7 +65,7 @@ public class OggStreamSource implements OggSource {
 		dataInput = new SwappedDataInputStream(new DataInputStream(
 				reminderInput));
 	}
-	
+
 	public String getDescription() {
 		return description;
 	}
@@ -76,15 +77,17 @@ public class OggStreamSource implements OggSource {
 	}
 
 	private final byte[] capturePatternBuffer = new byte[4];
-	
+
 	private boolean beginOfStream = true;
-	
+
 	public OggPage next() throws IOException {
 		dataInput.readFully(capturePatternBuffer, 0, 4);
 
 		if (!Arrays.equals(OggPage.CAPTURE_PATTERN, capturePatternBuffer)) {
-			LogFactory.getLog(getClass()).trace(createHexDump(capturePatternBuffer));
-			throw createIOException("Missing capture pattern");
+			LogFactory.getLog(getClass()).warn("invalid ogg stream");
+			LogFactory.getLog(getClass()).trace(OggPages.createHexDump(capturePatternBuffer));
+
+			findNextCapturePattern();
 		}
 
 		int streamStructureVersion = dataInput.readUnsignedByte();
@@ -98,7 +101,7 @@ public class OggStreamSource implements OggSource {
 
 		try {
 			int headerTypeFlag = dataInput.readUnsignedByte();
-			
+
 			page.setFirstPage((headerTypeFlag & 0x02) != 0);
 			page.setLastPage((headerTypeFlag & 0x04) != 0);
 
@@ -113,9 +116,9 @@ public class OggStreamSource implements OggSource {
 			for (int segmentIndex = 0; segmentIndex < pageSegments; segmentIndex++) {
 				pageSize += dataInput.readUnsignedByte();
 			}
-			
+
       LogFactory.getLog(getClass()).trace("payload size: " + pageSize);
-      
+
       byte payload[] = new byte[pageSize];
 			dataInput.readFully(payload);
       page.setPayload(payload);
@@ -125,35 +128,70 @@ public class OggStreamSource implements OggSource {
 		} catch (EOFException e) {
 			throw e;
 		} catch (IOException e) {
-		
+
 			LogFactory.getLog(getClass()).error("io error while reading " + page);
 			lastPages.log();
 			byte[] readData = reminderInput.toByteArray();
 			if (readData.length > 0) {
 				LogFactory.getLog(getClass()).trace("last bytes read");
-				LogFactory.getLog(getClass()).trace(createHexDump(readData));
+				LogFactory.getLog(getClass()).trace(OggPages.createHexDump(readData));
 			}
 			throw e;
 		}
-		
+
 		if (beginOfStream) {
 			if (!page.isFirstPage()) {
 				throw createIOException("stream must begin with a first page: " + page);
 			}
 			beginOfStream = false;
 		}
-		
+
 		if (page.isLastPage()) {
 			beginOfStream = true;
 		}
 
-		LogFactory.getLog(getClass()).trace("returns " + page);
-		// LogFactory.getLog(getClass()).trace(createHexDump(page.getRawBytes()));
-		
+    if (LogFactory.getLog(getClass()).isTraceEnabled()) {
+  		LogFactory.getLog(getClass()).trace("returns " + page);
+
+      int capturePatternInPayload =
+        ArrayUtils.indexOf(page.getPayload(), OggPage.CAPTURE_PATTERN);
+      if (capturePatternInPayload > -1) {
+    		LogFactory.getLog(getClass()).warn("capture pattern found into payload : 0x" + Integer.toHexString( capturePatternInPayload));
+		    LogFactory.getLog(getClass()).trace(OggPages.createHexDump(page.getPayload()));
+      }
+	  }
+
 		lastPages.add(page);
-		
+
 		return page;
 	}
+
+  private void findNextCapturePattern() throws IOException {
+		LogFactory.getLog(getClass()).info("try to find next valid Ogg page");
+
+		final int searchLimit = 10 * 1024;
+		int searchLength = 0;
+
+    int patternIndex = 0;
+    byte[] pattern = OggPage.CAPTURE_PATTERN;
+
+    while (searchLength < searchLimit && patternIndex < pattern.length) {
+  		int nextByte = dataInput.readUnsignedByte();
+
+  		if (nextByte == pattern[patternIndex]) {
+    		patternIndex++;
+  		} else {
+    		patternIndex = 0;
+  		}
+  		searchLength++;
+  	}
+
+    if (patternIndex < pattern.length) {
+      throw createIOException("Invalid Ogg stream");
+    }
+
+		LogFactory.getLog(getClass()).info("next valid Ogg page found after " + searchLength + " bytes");
+  }
 
 	/**
 	 * @param message
@@ -164,27 +202,14 @@ public class OggStreamSource implements OggSource {
 		return new IOException(message);
 	}
 
-	/**
-	 * @param buffer TODO
-	 * @return
-	 * @throws IOException
-	 */
-	private String createHexDump(byte[] buffer) throws IOException {
-		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		HexDump.dump(buffer, 0, output, 0);
-		String hexdump = output.toString();
-		output.close();
-		return hexdump;
-	}
-
 	public void close() throws IOException {
 		dataInput.close();
 	}
-	
+
 	private final LastPages lastPages = new LastPages();
-	
+
 	class LastPages {
-		
+
 		private final int remaindedPages = 5;
 		private final List pages = new LinkedList();
 
@@ -201,15 +226,15 @@ public class OggStreamSource implements OggSource {
 				OggPage page = (OggPage) iter.next();
 				LogFactory.getLog(getClass()).trace(page);
 				try {
-					LogFactory.getLog(getClass()).trace(createHexDump(page.getRawBytes()));
+					LogFactory.getLog(getClass()).trace(OggPages.createHexDump(page));
 				} catch (IOException e) {
 					LogFactory.getLog(getClass()).error("can't dump " + page);
 				}
 			}
 		}
-		
-		
-		
+
+
+
 	}
 
 }

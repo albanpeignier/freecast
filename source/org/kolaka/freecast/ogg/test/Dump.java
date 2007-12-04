@@ -1,7 +1,7 @@
 /*
  * FreeCast - streaming over Internet
  *
- * This code was developped by Alban Peignier (http://people.tryphon.org/~alban/) 
+ * This code was developped by Alban Peignier (http://people.tryphon.org/~alban/)
  * and contributors (their names can be found in the CONTRIBUTORS file).
  *
  * Copyright (C) 2004-2006 Alban Peignier
@@ -30,12 +30,13 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.kolaka.freecast.ogg.OggPage;
+import org.kolaka.freecast.ogg.OggPages;
 import org.kolaka.freecast.ogg.OggSource;
 import org.kolaka.freecast.ogg.OggStreamSource;
 
 /**
- * 
- * 
+ *
+ *
  * @author <a href="mailto:alban.peignier@free.fr">Alban Peignier</a>
  */
 public class Dump {
@@ -46,10 +47,12 @@ public class Dump {
 
 		Map absolutePositions = new TreeMap();
 
-		for (int i = 0; i < 20; i++) {
+    int pageCount = 0;
+
+		while (true) {
 			OggPage page = source.next();
 
-			writer.println("page " + i);
+			writer.println("page " + pageCount);
 			writer.println("\tfirstpage: " + page.isFirstPage()
 					+ "\tlastpage: " + page.isLastPage());
 			long absolutePosition = page.getAbsoluteGranulePosition();
@@ -67,10 +70,17 @@ public class Dump {
 								+ (absolutePosition - lastAbsolutePosition
 										.longValue()));
 			}
+
+      writer.println();
+			writer.println(page);
+			writer.println(OggPages.createHexDump(page));
+
 			absolutePositions.put(streamSerialNumberString, new Long(
 					absolutePosition));
+			pageCount++;
+			writer.flush();
 		}
-		writer.close();
+		// writer.close();
 	}
 
 }
