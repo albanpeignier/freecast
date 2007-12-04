@@ -15,7 +15,7 @@
 	  <taskdef name="ivy-artifactreport" classname="fr.jayasoft.ivy.ant.IvyArtifactReport" classpathref="path.ivy" loaderRef="ivy.loader"/>
   	<ivy-configure />
   </target>
-  
+
   <target name="prepare.version.tstamp">
 		<tstamp />
   </target>
@@ -28,7 +28,7 @@
 		<property name="project.version" value="${DSTAMP}" />
 		<property name="project.fullname" value="freecast-${project.version}" />
 	</target>
-	
+
 	<target name="prepare.libraries.check">
 		<available property="prepare.library.retrieve.notRequired" file="lib/.touch"/>
 	</target>
@@ -39,7 +39,7 @@
 		<patternset id="patternset.nometainf">
 			<exclude name="META-INF/**"/>
 		</patternset>
-  	
+
   	<macrodef name="unjar-natives">
   		<attribute name="platform"/>
   		<attribute name="arch"/>
@@ -50,12 +50,12 @@
 				</unjar>
   		</sequential>
   	</macrodef>
-  	
-		<unjar-natives platform="linux" arch="x86"/>  	
-		<unjar-natives platform="windows" arch="x86"/>  	
-		<unjar-natives platform="sunos" arch="x86"/>  	
-		<unjar-natives platform="sunos" arch="sparc"/>  	
-		
+
+		<unjar-natives platform="linux" arch="x86"/>
+		<unjar-natives platform="windows" arch="x86"/>
+		<unjar-natives platform="sunos" arch="x86"/>
+		<unjar-natives platform="sunos" arch="sparc"/>
+
 		<copy todir="lib/runtime/linux/x86">
 			<fileset dir="${track.tritonus.dir}">
 				<include name="*.so" />
@@ -66,17 +66,17 @@
 				<include name="**/*.dll" />
 			</fileset>
 		</copy>
-		
+
 		<copy todir="lib/runtime">
 			<fileset dir="lib/runtime">
 				<include name="jdic-stub*"/>
 			</fileset>
 			<mapper type="regexp" from="jdic-stub-([a-z]+).jar" to="\1/jdic-stub.jar"/>
 		</copy>
-		
+
 		<touch file="lib/.touch"/>
 	</target>
-	
+
   <target name="prepare.libraries" depends="prepare.libraries.check, prepare.libraries.retrieve" >
   	<path id="path.build">
   		<fileset dir="lib/core"/>
@@ -166,7 +166,7 @@
 			</filesets>
 		</thumbnails>
 	</target>
-	
+
 	<target name="build.start" depends="prepare.version">
 		<property name="build.start.site" value="start.freecast.org"/>
 		<copy todir="build/start">
@@ -180,11 +180,11 @@
 		</copy>
 
 		<mkdir dir="build/start/broadcast"/>
-		
+
 		<echo message="&lt;empty&gt;&lt;/empty&gt;" file="build/empty.xml"/>
-		<style 
+		<style
 			style="source/org/kolaka/freecast/start/broadcast/jnlp.xsl"
-			in="build/empty.xml" 
+			in="build/empty.xml"
 			out="build/start/broadcast/freecast-manager.jnlp">
 			<param name="codebase" expression="http://${build.start.site}/broadcast"/>
 			<param name="href" expression="freecast-manager.jnlp"/>
@@ -205,6 +205,18 @@
 		<get dest="build/win32/jre-setup.exe" src="${export.win32.jresetup.url}" usetimestamp="true" />
 	</target>
 
+  <target name="test.gui" depends="build.test" description="Run the unit tests GUI">
+		<java classname="junit.swingui.TestRunner" fork="yes">
+			<classpath>
+				<pathelement path="build/core/classes" />
+				<pathelement path="build/test/classes" />
+				<path refid="path.test" />
+			</classpath>
+			<sysproperty key="java.library.path" path="${track.tritonus.dir}" />
+		</java>
+	</target>
+
+
 	<target name="dist.jws.check">
 		<available file="${dist.jws.keystore}" property="dist.jws.possible" />
 	</target>
@@ -212,7 +224,7 @@
 	<target name="dist.jws.libfreecast" depends="prepare.version, build.etc, dist.jar, dist.lib, dist.jws.check" if="dist.jws.possible">
 		<property name="dist.jws.libfreecast.dir" value="dist/jws" />
 		<property name="dist.jws.codebase" value="http://jws.freecast.org/${project.version}/"/>
-		
+
 		<mkdir dir="build/jws"/>
 		<ivy-artifactreport tofile="build/jws/ivy-report.xml" conf="core,runtime"/>
 		<style in="build/jws/ivy-report.xml" out="build/jws/jnlp-resources.xml" style="source/org/kolaka/freecast/jnlp-resources.xsl">
@@ -223,7 +235,7 @@
 		    <headfilter lines="-1" skip="1"/>
       </filterchain>
 		</loadfile>
-		
+
 		<copy tofile="${dist.jws.libfreecast.dir}/libfreecast.jnlp" file="source/org/kolaka/freecast/node/swing/libfreecast.jnlp">
 			<filterset>
 				<filter token="project.version" value="${project.version}" />
@@ -355,7 +367,7 @@
 			</fileset>
 		</copy>
 	</target>
-	
+
 	<target name="dist.start" depends="build.start">
 		<copy todir="dist/start">
 			<fileset dir="build/start"/>
@@ -364,7 +376,7 @@
 			</fileset>
 		</copy>
 	</target>
-	
+
 	<target name="dist.sources" depends="prepare.version">
 		<copy todir="dist/sources/source">
 			<fileset dir="source">
@@ -397,7 +409,7 @@
 			</fileset>
 		</copy>
 	</target>
-	
+
 	<target name="dist.debian" depends="prepare.version, dist.sources, dist.docs">
 		<property name="dist.debian.dir" value="dist/debian/${project.fullname}"/>
 		<copy todir="${dist.debian.dir}">
@@ -423,8 +435,8 @@
 				<exclude name="api/**" />
 			</fileset>
 		</copy>
-	</target> 
-	
+	</target>
+
 	<target name="export.tar.prepare" depends="prepare.version, build.changelog, dist, dist.docs">
 		<mkdir dir="export" />
 	</target>
@@ -449,7 +461,7 @@
 			</tarfileset>
 		</tar>
 	</target>
-	
+
 	<target name="export.tar.sources" depends="export.tar.prepare, dist.sources">
 		<tar tarfile="export/${project.fullname}-src.tar.bz" compression="bzip2">
 			<tarfileset dir="dist/sources" prefix="${project.fullname}"/>
@@ -459,7 +471,7 @@
 			</tarfileset>
 		</tar>
 	</target>
-	
+
 	<target name="export.tar" depends="export.tar.bin, export.tar.sources" description="Packages binaries and sources distributions"/>
 
 	<target name="export.win32" depends="dist.win32">
@@ -477,16 +489,17 @@
 			<arg file="build/win32/freecast.nsi" />
 		</exec>
 	</target>
-	
+
 	<target name="export.debian.check">
 		<uptodate property="export.debian.notRequired" targetfile="export/debian/.touch">
 			<srcfiles dir="${dist.debian.dir}"/>
 		</uptodate>
 	</target>
-	
+
 	<target name="export.debian" depends="dist.debian, export.debian.check" unless="export.debian.notRequired">
+	  <property name="dpkg-buildpackage.options" value=""/>
 		<exec executable="dpkg-buildpackage" dir="${dist.debian.dir}" failonerror="true">
-			<arg line="-rfakeroot -I.svn"/>
+			<arg line="-rfakeroot -I.svn ${dpkg-buildpackage.options}"/>
 		</exec>
 		<copy todir="export/debian">
 			<fileset dir="dist/debian">
@@ -566,5 +579,5 @@
 			<arg value="${install.start.target}" />
 		</exec>
 	</target>
-	
+
 </project>
